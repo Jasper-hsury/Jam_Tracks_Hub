@@ -1,0 +1,9 @@
+api-server/__pycache__/
+api-server/analysis_history.csv
+api-server/*.wav
+api-server/*.webm
+api-server/*.mp3
+.git/
+.venv/
+__pycache__/
+

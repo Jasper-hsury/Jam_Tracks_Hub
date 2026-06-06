@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: jasper-key-finder-api
+    env: docker
+    plan: free
+    healthCheckPath: /api/health
+

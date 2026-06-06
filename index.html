@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jasper's Music Space</title>
+
+    <link rel="icon" href="icon.png" type="image/png">
+    <meta name="description" content="Jasper's Music Space features guitar backing tracks, piano backing tracks, and original music for practice, jam sessions, and creative inspiration.">
+    <link rel="canonical" href="https://jasper-music.onrender.com/">
+    <meta property="og:title" content="Jasper's Music Space - Backing Tracks and Original Music">
+    <meta property="og:description" content="A collection of backing tracks, piano arrangements, and original sounds for musicians to practice, jam, and create.">
+    <meta property="og:image" content="https://jasper-music.onrender.com/cover.jpeg">
+    <meta property="og:url" content="https://jasper-music.onrender.com/">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_US">
+
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="index.html#home" class="logo">Jasper's Music</a>
+        <ul class="nav-links">
+            <li><a href="index.html#home" class="active" aria-current="page">Home</a></li>
+            <li><a href="tracks.html">Tracks</a></li>
+            <li><a href="chords.html">Chord</a></li>
+            <li><a href="index.html#about">About</a></li>
+        </ul>
+    </nav>
+
+    <main class="content-container">
+        <section class="left-column">
+            <h1 id="home">Jasper's Music Space</h1>
+            <p class="hero-tagline signature-slogan">Capture the Feeling. Compose the Meaning.</p>
+
+            <div class="hero-actions">
+                <a href="#piano-track" class="primary-button" id="listenNowBtn">Listen Now</a>
+                <a href="#about" class="secondary-button">About Jasper</a>
+            </div>
+
+            <div class="hero-badges" aria-label="Music focus">
+                <span>Backing Tracks</span>
+                <span>Piano Ideas</span>
+                <span>Guitar Practice</span>
+            </div>
+
+            <img src="cover.jpeg" class="cover-photo" alt="Jasper playing acoustic guitar on stage" width="600" height="900">
+
+            <hr class="section-divider">
+
+            <h2 id="about" class="section-title">About Me</h2>
+            <p class="about-text">
+                Hi, I'm Jasper. This is my personal space for capturing musical ideas, guitar backing tracks, and original sounds.<br>
+                All backing tracks here are made for musicians to practice, jam, and spark new creative ideas.
+            </p>
+
+            <div class="start-grid" aria-label="Start here">
+                <a href="tracks.html" class="start-card">
+                    <span class="start-kicker">Practice</span>
+                    <strong>Browse backing tracks</strong>
+                    <span>Find tracks by key, style, and mood.</span>
+                </a>
+                <a href="chords.html" class="start-card">
+                    <span class="start-kicker">Create</span>
+                    <strong>Explore chord ideas</strong>
+                    <span>Check scale notes, progressions, and harmonic colors.</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="right-column">
+            <h2 id="tracks" class="section-title">Latest Backing Track</h2>
+
+            <iframe
+                src="https://www.youtube.com/embed/r_Tpphaa8bI?si=FmDZI5Vp1dgXwRDL"
+                title="Emotional Ballad Backing Track in C YouTube preview"
+                loading="lazy"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen>
+            </iframe>
+
+            <h2 id="piano-track" class="section-title section-title-spaced">Piano Backing Track</h2>
+            <div class="audio-player-card">
+                <p class="audio-title">Piano backing track in A</p>
+                <audio id="pianoAudio" controls preload="metadata" controlslist="nodownload">
+                    <source src="Piano_backing_track_in_A_20260215_1.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+
+            <h2 class="section-title section-title-spaced">
+                <a href="tracks.html" class="section-title-link">More Backing Tracks</a>
+            </h2>
+
+            <div class="track-card-list">
+                <article class="track-card">
+                    <div class="track-card-main">
+                        <h3>Lonesome Midnight Rock</h3>
+                        <p class="track-meta"><span>G major</span><span>Rock</span><span>90 BPM</span></p>
+                    </div>
+                    <a href="https://youtu.be/VgWI15MovKI?si=4IGrLz7Jt3TewKtq" class="track-link" target="_blank" rel="noopener noreferrer">Listen</a>
+                </article>
+
+                <article class="track-card">
+                    <div class="track-card-main">
+                        <h3>Aerial Backing Track in E minor</h3>
+                        <p class="track-meta"><span>E minor</span><span>Atmospheric</span></p>
+                    </div>
+                    <a href="https://youtu.be/a3OaoGit_FU?si=VQVJRMWDAOymzhIG" class="track-link" target="_blank" rel="noopener noreferrer">Listen</a>
+                </article>
+
+                <article class="track-card">
+                    <div class="track-card-main">
+                        <h3>Emotional Ballad Backing Track in C</h3>
+                        <p class="track-meta"><span>C major</span><span>Emotional Ballad</span></p>
+                    </div>
+                    <a href="https://youtu.be/r_Tpphaa8bI?si=_ivxyFnF6hmzpup3" class="track-link" target="_blank" rel="noopener noreferrer">Listen</a>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 Jasper's Music. All rights reserved.</p>
+        <div class="social-links">
+            <a href="https://youtube.com/@weekly_backing_track?si=-Rp6XDvP0A8fclp3" target="_blank" rel="noopener noreferrer" aria-label="Visit Jasper's YouTube channel">YouTube</a>
+            <a href="https://www.instagram.com/reyu_jasper?igsh=dmVsazFvb2pwMmsw&utm_source=qr" target="_blank" rel="noopener noreferrer" aria-label="Visit Jasper's Instagram profile">Instagram</a>
+        </div>
+    </footer>
+
+    <button id="backToTopBtn" type="button" aria-label="Back to top">&uarr;</button>
+
+    <script src="site.js"></script>
+    <script src="home.js"></script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tracks | Jasper's Music Space</title>
+
+    <link rel="icon" href="icon.png" type="image/png">
+    <meta name="description" content="Browse all backing tracks from Jasper's Music Space by key, style, and mood.">
+    <link rel="canonical" href="https://jasper-music.onrender.com/tracks.html">
+    <meta property="og:title" content="Backing Tracks | Jasper's Music Space">
+    <meta property="og:description" content="Browse Jasper's guitar and piano backing tracks by key, style, and mood.">
+    <meta property="og:image" content="https://jasper-music.onrender.com/cover.jpeg">
+    <meta property="og:url" content="https://jasper-music.onrender.com/tracks.html">
+    <meta property="og:type" content="website">
+
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="index.html#home" class="logo">Jasper's Music</a>
+        <ul class="nav-links">
+            <li><a href="index.html#home">Home</a></li>
+            <li><a href="tracks.html" class="active" aria-current="page">Tracks</a></li>
+            <li><a href="chords.html">Chord</a></li>
+            <li><a href="index.html#about">About</a></li>
+        </ul>
+    </nav>
+
+    <main class="tracks-page">
+        <div class="page-heading-row">
+            <div>
+                <h1>All Backing Tracks</h1>
+                <p class="hero-tagline signature-slogan">Capture the Feeling. Compose the Meaning.</p>
+            </div>
+            <button id="openAddTrackButton" class="primary-button add-track-button" type="button">+ Add Track</button>
+        </div>
+
+        <section class="track-controls" aria-label="Track filters">
+            <label class="search-field">
+                <span>Search</span>
+                <input id="trackSearchInput" type="search" placeholder="Search title, key, style...">
+            </label>
+
+            <label>
+                <span>Key</span>
+                <select id="trackKeyFilter">
+                    <option value="all">All keys</option>
+                    <option value="C major">C major</option>
+                    <option value="D major">D major</option>
+                    <option value="E minor">E minor</option>
+                    <option value="F major">F major</option>
+                    <option value="F# minor">F# minor</option>
+                    <option value="G major">G major</option>
+                </select>
+            </label>
+
+            <label>
+                <span>Style</span>
+                <select id="trackStyleFilter">
+                    <option value="all">All styles</option>
+                    <option value="Atmospheric">Atmospheric</option>
+                    <option value="Ballad">Ballad</option>
+                    <option value="Funk">Funk</option>
+                    <option value="Lyrical">Lyrical</option>
+                    <option value="Rock">Rock</option>
+                </select>
+            </label>
+
+            <label>
+                <span>Sort</span>
+                <select id="trackSortSelect">
+                    <option value="newest">Newest first</option>
+                    <option value="oldest">Oldest first</option>
+                    <option value="key">Key A-Z</option>
+                    <option value="style">Style A-Z</option>
+                    <option value="bpm">BPM low to high</option>
+                </select>
+            </label>
+
+            <button id="resetTrackFilters" class="secondary-button" type="button">Reset</button>
+        </section>
+
+        <p id="trackResultCount" class="track-result-count" aria-live="polite"></p>
+
+        <div class="all-tracks-grid" id="tracksGrid" aria-live="polite">
+            <p class="track-loading">Loading tracks...</p>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 Jasper's Music. All rights reserved.</p>
+        <div class="social-links">
+            <a href="https://youtube.com/@weekly_backing_track?si=-Rp6XDvP0A8fclp3" target="_blank" rel="noopener noreferrer" aria-label="Visit Jasper's YouTube channel">YouTube</a>
+            <a href="https://www.instagram.com/reyu_jasper?igsh=dmVsazFvb2pwMmsw&utm_source=qr" target="_blank" rel="noopener noreferrer" aria-label="Visit Jasper's Instagram profile">Instagram</a>
+        </div>
+    </footer>
+
+    <button id="backToTopBtn" type="button" aria-label="Back to top">&uarr;</button>
+
+    <div id="addTrackModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="addTrackTitle">
+        <div class="modal-content">
+            <h2 id="addTrackTitle">Add a Backing Track</h2>
+
+            <div id="inputFieldsContainer">
+                <label for="newId">Number</label>
+                <input type="text" id="newId" placeholder="W9">
+
+                <label for="newTitle">Title</label>
+                <input type="text" id="newTitle" placeholder="Lyrical Backing Track in C">
+
+                <label for="newSub">Subtitle</label>
+                <input type="text" id="newSub" placeholder="C major / Lyrical">
+
+                <label for="newYt">YouTube Link</label>
+                <input type="text" id="newYt" placeholder="https://youtu.be/...">
+            </div>
+
+            <div class="modal-buttons" id="primaryButtons">
+                <button id="cancelAddTrackButton" class="secondary-button" type="button">Cancel</button>
+                <button id="previewTrackButton" class="primary-button" type="button">Preview and Show Code</button>
+            </div>
+
+            <div class="modal-buttons" id="reviseButtons" hidden>
+                <button id="reviseTrackButton" class="secondary-button" type="button">Revise</button>
+                <button id="doneTrackButton" class="primary-button" type="button">Done</button>
+            </div>
+
+            <div id="instructionText" class="instruction-panel" hidden></div>
+            <textarea id="codeOutput" readonly hidden></textarea>
+        </div>
+    </div>
+
+    <script src="site.js"></script>
+    <script src="tracks.js"></script>
+</body>
+</html>

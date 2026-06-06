@@ -1,0 +1,82 @@
+[
+  {
+    "id": "W1",
+    "title": "Lyrical Backing Track in C",
+    "key": "C major",
+    "style": "Lyrical",
+    "bpm": "",
+    "youtubeUrl": "#",
+    "slidesUrl": "slides/w1.html",
+    "downloadUrl": "slides/W1_Lyrical_Backing_Track_in_C.pdf"
+  },
+  {
+    "id": "W2",
+    "title": "Aerial Backing Track in E Minor",
+    "key": "E minor",
+    "style": "Atmospheric",
+    "bpm": "",
+    "youtubeUrl": "https://youtu.be/a3OaoGit_FU?si=kgfyiO9ICb7j7wiL",
+    "slidesUrl": "slides/w2.html",
+    "downloadUrl": "slides/W2_Aerial_Backing_Track_in_E_Minor.pdf"
+  },
+  {
+    "id": "W3",
+    "title": "Aspiring Backing Track in F",
+    "key": "F major",
+    "style": "Lyrical",
+    "bpm": "",
+    "youtubeUrl": "https://youtu.be/kH2cxyO95bs?si=lTs9ALLue4Mj3JND",
+    "slidesUrl": "slides/w3.html",
+    "downloadUrl": "slides/W3_Aspiring_Backing_Track_in_F.pdf"
+  },
+  {
+    "id": "W4",
+    "title": "Poignant Backing Track in D",
+    "key": "D major",
+    "style": "Ballad",
+    "bpm": "",
+    "youtubeUrl": "https://youtu.be/Gx07Akexr4Q?si=EJ8nLISgl3KwHG6Y",
+    "slidesUrl": "slides/w4.html",
+    "downloadUrl": "slides/W4_Poignant_Backing_Track_in_D.pdf"
+  },
+  {
+    "id": "W5",
+    "title": "Emotional Ballad Backing Track in C",
+    "key": "C major",
+    "style": "Ballad",
+    "bpm": "",
+    "youtubeUrl": "https://youtu.be/r_Tpphaa8bI?si=_ivxyFnF6hmzpup3",
+    "slidesUrl": "slides/w5.html",
+    "downloadUrl": "slides/W5_Emotional_Ballad_Backing_Track_in_C.pdf"
+  },
+  {
+    "id": "W6",
+    "title": "Lonesome Midnight Rock Backing Track in G",
+    "key": "G major",
+    "style": "Rock",
+    "bpm": "90",
+    "youtubeUrl": "https://youtu.be/VgWI15MovKI?si=4IGrLz7Jt3TewKtq",
+    "slidesUrl": "slides/w6.html",
+    "downloadUrl": "slides/W6_Lonesome_Midnight_Rock_Backing_Track_in_G.pdf"
+  },
+  {
+    "id": "W7",
+    "title": "Whispering Rock Backing Track in G",
+    "key": "G major",
+    "style": "Rock",
+    "bpm": "80",
+    "youtubeUrl": "https://youtu.be/kb4k-9mOs_U?si=_x_N-jvfs1LQbd0U",
+    "slidesUrl": "slides/w7.html",
+    "downloadUrl": "slides/W7_Whispering_Rock_Backing_Track_in_G.pdf"
+  },
+  {
+    "id": "W8",
+    "title": "Funky Backing Track in F#m",
+    "key": "F# minor",
+    "style": "Funk",
+    "bpm": "",
+    "youtubeUrl": "https://youtu.be/gfz6a-_kJ7I?si=OjYYmk9HVkk7lmQq",
+    "slidesUrl": "slides/w8.html",
+    "downloadUrl": "slides/W8_Funky_Backing_Track_in_FSharp_Minor.pdf"
+  }
+]

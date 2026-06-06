@@ -1,0 +1,12 @@
+[build]
+  publish = "."
+
+# Add the API proxy after your Python/FastAPI backend is deployed.
+# Example:
+#
+# [[redirects]]
+#   from = "/api/*"
+#   to = "https://YOUR-KEY-FINDER-API-HOST/api/:splat"
+#   status = 200
+#   force = true
+

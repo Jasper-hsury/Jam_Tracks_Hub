@@ -1,0 +1,10 @@
+__pycache__/
+.venv/
+*.wav
+*.webm
+*.mp3
+analysis_history.csv
+training_data_audit.csv
+features.csv
+labeled_songs.csv
+

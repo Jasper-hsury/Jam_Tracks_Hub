@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chord | Jasper's Music Space</title>
+
+    <link rel="icon" href="icon.png" type="image/png">
+    <meta name="description" content="Detect song keys from YouTube links and explore chord progressions from Jasper's Music Space.">
+    <link rel="canonical" href="https://jasper-music.onrender.com/chords.html">
+    <meta property="og:title" content="Chord Tools | Jasper's Music Space">
+    <meta property="og:description" content="Detect YouTube song keys and explore common chord progressions by key.">
+    <meta property="og:image" content="https://jasper-music.onrender.com/cover.jpeg">
+    <meta property="og:url" content="https://jasper-music.onrender.com/chords.html">
+    <meta property="og:type" content="website">
+
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=20260602-continuous-rhythm-guitar">
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="index.html#home" class="logo">Jasper's Music</a>
+        <ul class="nav-links">
+            <li><a href="index.html#home">Home</a></li>
+            <li><a href="tracks.html">Tracks</a></li>
+            <li><a href="chords.html" class="active" aria-current="page">Chord</a></li>
+            <li><a href="index.html#about">About</a></li>
+        </ul>
+    </nav>
+
+    <main class="tracks-page">
+        <h1>Chord Progressions</h1>
+        <p class="hero-tagline signature-slogan">Capture the Feeling. Compose the Meaning.</p>
+
+        <section class="key-finder-panel" aria-labelledby="keyFinderTitle">
+            <div class="tool-section-heading compact-heading">
+                <h2 id="keyFinderTitle" class="section-title">YouTube Key Finder</h2>
+                <p>Paste a YouTube link and get a clean key estimate with a short candidate list.</p>
+            </div>
+
+            <div class="api-status" id="apiStatus" aria-live="polite">
+                <span class="status-dot"></span>
+                <span class="status-text">Checking API...</span>
+            </div>
+
+            <div class="key-finder-form">
+                <input id="youtubeKeyUrl" type="url" placeholder="https://youtu.be/..." autocomplete="off" aria-label="YouTube link">
+                <button id="analyzeKeyButton" class="primary-button" type="button">Analyze</button>
+                <button id="cancelAnalyzeButton" class="secondary-button" type="button" hidden>Cancel</button>
+            </div>
+
+            <div class="key-finder-result key-finder-empty" id="keyFinderResult" aria-live="polite">
+                <span>Ready when you are.</span>
+            </div>
+
+            <div class="analysis-history" id="analysisHistory" hidden>
+                <div class="history-heading">
+                    <h3>Recent analyses</h3>
+                    <button id="clearHistoryButton" class="text-button" type="button">Clear</button>
+                </div>
+                <ul id="analysisHistoryList"></ul>
+            </div>
+        </section>
+
+        <section class="key-selector" aria-labelledby="progressionExplorerTitle">
+            <div class="tool-section-heading">
+                <h2 id="progressionExplorerTitle" class="section-title">Chord Progression Explorer</h2>
+                <p>Choose a key to view scale notes, interval colors, and common progressions.</p>
+            </div>
+
+            <button class="select-key-button" id="selectKeyButton" type="button" hidden>Select Another Key</button>
+
+            <div class="key-options" id="keyOptions">
+                <h2 class="section-title">Major Keys</h2>
+                <div class="key-button-grid">
+                    <button class="key-button" type="button" data-key="C major" data-notes="C, D, E, F, G, A, B">C</button>
+                    <button class="key-button" type="button" data-key="Db major" data-notes="Db, Eb, F, Gb, Ab, Bb, C">Db</button>
+                    <button class="key-button" type="button" data-key="D major" data-notes="D, E, F#, G, A, B, C#">D</button>
+                    <button class="key-button" type="button" data-key="Eb major" data-notes="Eb, F, G, Ab, Bb, C, D">Eb</button>
+                    <button class="key-button" type="button" data-key="E major" data-notes="E, F#, G#, A, B, C#, D#">E</button>
+                    <button class="key-button" type="button" data-key="F major" data-notes="F, G, A, Bb, C, D, E">F</button>
+                    <button class="key-button" type="button" data-key="Gb major" data-notes="Gb, Ab, Bb, Cb, Db, Eb, F">Gb</button>
+                    <button class="key-button" type="button" data-key="G major" data-notes="G, A, B, C, D, E, F#">G</button>
+                    <button class="key-button" type="button" data-key="Ab major" data-notes="Ab, Bb, C, Db, Eb, F, G">Ab</button>
+                    <button class="key-button" type="button" data-key="A major" data-notes="A, B, C#, D, E, F#, G#">A</button>
+                    <button class="key-button" type="button" data-key="Bb major" data-notes="Bb, C, D, Eb, F, G, A">Bb</button>
+                    <button class="key-button" type="button" data-key="B major" data-notes="B, C#, D#, E, F#, G#, A#">B</button>
+                </div>
+
+                <h2 class="section-title section-title-spaced">Minor Keys</h2>
+                <div class="key-button-grid">
+                    <button class="key-button" type="button" data-key="A minor" data-notes="A, B, C, D, E, F, G">Am</button>
+                    <button class="key-button" type="button" data-key="Bb minor" data-notes="Bb, C, Db, Eb, F, Gb, Ab">Bbm</button>
+                    <button class="key-button" type="button" data-key="B minor" data-notes="B, C#, D, E, F#, G, A">Bm</button>
+                    <button class="key-button" type="button" data-key="C minor" data-notes="C, D, Eb, F, G, Ab, Bb">Cm</button>
+                    <button class="key-button" type="button" data-key="C# minor" data-notes="C#, D#, E, F#, G#, A, B">C#m</button>
+                    <button class="key-button" type="button" data-key="D minor" data-notes="D, E, F, G, A, Bb, C">Dm</button>
+                    <button class="key-button" type="button" data-key="Eb minor" data-notes="Eb, F, Gb, Ab, Bb, Cb, Db">Ebm</button>
+                    <button class="key-button" type="button" data-key="E minor" data-notes="E, F#, G, A, B, C, D">Em</button>
+                    <button class="key-button" type="button" data-key="F minor" data-notes="F, G, Ab, Bb, C, Db, Eb">Fm</button>
+                    <button class="key-button" type="button" data-key="F# minor" data-notes="F#, G#, A, B, C#, D, E">F#m</button>
+                    <button class="key-button" type="button" data-key="G minor" data-notes="G, A, Bb, C, D, Eb, F">Gm</button>
+                    <button class="key-button" type="button" data-key="Ab minor" data-notes="Ab, Bb, Cb, Db, Eb, Fb, Gb">Abm</button>
+                </div>
+            </div>
+
+            <div class="key-result" id="keyResult">
+                <h3>Select a key</h3>
+                <p>Click a key above to see its notes.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 Jasper's Music. All rights reserved.</p>
+        <div class="social-links">
+            <a href="https://youtube.com/@weekly_backing_track?si=-Rp6XDvP0A8fclp3" target="_blank" rel="noopener noreferrer" aria-label="Visit Jasper's YouTube channel">YouTube</a>
+            <a href="https://www.instagram.com/reyu_jasper?igsh=dmVsazFvb2pwMmsw&utm_source=qr" target="_blank" rel="noopener noreferrer" aria-label="Visit Jasper's Instagram profile">Instagram</a>
+        </div>
+    </footer>
+
+    <button id="backToTopBtn" type="button" aria-label="Back to top">&uarr;</button>
+
+    <script src="site.js"></script>
+    <script src="site-config.js?v=20260603-render-api"></script>
+    <script src="key-finder.js?v=20260603-render-api"></script>
+    <script src="chords.js?v=20260602-continuous-rhythm-guitar"></script>
+</body>
+</html>

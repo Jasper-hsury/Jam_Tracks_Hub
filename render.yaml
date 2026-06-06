@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: jasper-music
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
