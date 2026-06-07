@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 import subprocess
 import sys
 import tempfile
@@ -38,6 +39,8 @@ FAMILY_PRIORITY_TOP_GAP_MARGIN = 0.06
 PROJECT_DIR = Path(__file__).resolve().parent
 MODEL_DIR = PROJECT_DIR / "models"
 YOUTUBE_ID_RE = re.compile(r"^[A-Za-z0-9_-]{11}$")
+DEFAULT_COOKIES_FILE = PROJECT_DIR / "youtube_cookies.txt"
+RENDER_COOKIES_FILE = Path("/etc/secrets/youtube_cookies.txt")
 
 # This is an approximate instrument-priority model, not true source separation.
 # Keyboard and bass are intentionally dominant; guitar and full mix are secondary.
@@ -96,6 +99,24 @@ def run_command(command):
     return result.stdout.strip()
 
 
+def youtube_cookie_args():
+    cookie_candidates = [
+        os.environ.get("YOUTUBE_COOKIES_FILE"),
+        RENDER_COOKIES_FILE,
+        DEFAULT_COOKIES_FILE,
+    ]
+
+    for candidate in cookie_candidates:
+        if not candidate:
+            continue
+
+        cookie_path = Path(candidate)
+        if cookie_path.exists() and cookie_path.is_file() and cookie_path.stat().st_size > 0:
+            return ["--cookies", str(cookie_path)]
+
+    return []
+
+
 def get_video_id(youtube_url):
     parsed_id = parse_youtube_video_id(youtube_url)
     if parsed_id:
@@ -104,6 +125,7 @@ def get_video_id(youtube_url):
     command = [
         "yt-dlp",
         "--no-playlist",
+        *youtube_cookie_args(),
         "--get-id",
         youtube_url,
     ]
@@ -142,6 +164,7 @@ def download_audio(youtube_url, download_dir):
     command = [
         "yt-dlp",
         "--no-playlist",
+        *youtube_cookie_args(),
         "--quiet",
         "--no-warnings",
         "--force-overwrites",

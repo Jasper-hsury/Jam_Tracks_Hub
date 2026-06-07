@@ -171,9 +171,14 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function renderErrorReport(message) {
-        const suggestedFix = apiBaseUrl
+        const lowerMessage = String(message || "").toLowerCase();
+        let suggestedFix = apiBaseUrl
             ? 'Run <code>powershell -ExecutionPolicy Bypass -File ".\\start_render_local.ps1"</code> and open <code>http://127.0.0.1:8000/chords.html</code>.'
             : "The API is reachable, but the YouTube analysis failed. Check the Render service logs; this is usually a yt-dlp / YouTube extraction issue.";
+
+        if (!apiBaseUrl && (lowerMessage.includes("not a bot") || lowerMessage.includes("cookies"))) {
+            suggestedFix = 'YouTube is blocking Render as a bot. Add <code>youtube_cookies.txt</code> as a Render Secret File, then redeploy.';
+        }
 
         keyFinderResult.className = "key-finder-result is-error";
         keyFinderResult.innerHTML = `

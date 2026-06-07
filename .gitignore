@@ -3,6 +3,8 @@ __pycache__/
 api-server/__pycache__/
 *.pyc
 api-server/analysis_history.csv
+api-server/youtube_cookies.txt
+youtube_cookies.txt
 .env
 .DS_Store
 Thumbs.db
