@@ -2,11 +2,15 @@ FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV DENO_INSTALL=/usr/local
+ENV PATH="/usr/local/bin:${PATH}"
 
 WORKDIR /app
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends ffmpeg \
+    && apt-get install -y --no-install-recommends ffmpeg curl unzip ca-certificates \
+    && curl -fsSL https://deno.land/install.sh | sh \
+    && deno --version \
     && rm -rf /var/lib/apt/lists/*
 
 COPY api-server/requirements_api.txt ./api-server/requirements_api.txt
@@ -17,4 +21,3 @@ COPY . .
 WORKDIR /app/api-server
 
 CMD ["sh", "-c", "uvicorn app:app --host 0.0.0.0 --port ${PORT:-8000}"]
-

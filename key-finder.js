@@ -171,6 +171,10 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function renderErrorReport(message) {
+        const suggestedFix = apiBaseUrl
+            ? 'Run <code>powershell -ExecutionPolicy Bypass -File ".\\start_render_local.ps1"</code> and open <code>http://127.0.0.1:8000/chords.html</code>.'
+            : "The API is reachable, but the YouTube analysis failed. Check the Render service logs; this is usually a yt-dlp / YouTube extraction issue.";
+
         keyFinderResult.className = "key-finder-result is-error";
         keyFinderResult.innerHTML = `
             <div class="error-report">
@@ -187,7 +191,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     </div>
                     <div>
                         <dt>Suggested fix</dt>
-                        <dd><code>powershell -ExecutionPolicy Bypass -File ".\\start_render_local.ps1"</code></dd>
+                        <dd>${suggestedFix}</dd>
                     </div>
                 </dl>
             </div>

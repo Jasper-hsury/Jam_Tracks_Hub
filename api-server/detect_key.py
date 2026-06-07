@@ -3,7 +3,9 @@
 import subprocess
 import sys
 import tempfile
+import re
 from pathlib import Path
+from urllib.parse import parse_qs, urlparse
 
 import joblib
 import librosa
@@ -35,6 +37,7 @@ FAMILY_PRIORITY_OVERRIDE_MARGIN = 0.12
 FAMILY_PRIORITY_TOP_GAP_MARGIN = 0.06
 PROJECT_DIR = Path(__file__).resolve().parent
 MODEL_DIR = PROJECT_DIR / "models"
+YOUTUBE_ID_RE = re.compile(r"^[A-Za-z0-9_-]{11}$")
 
 # This is an approximate instrument-priority model, not true source separation.
 # Keyboard and bass are intentionally dominant; guitar and full mix are secondary.
@@ -75,18 +78,29 @@ ANALYSIS_LAYERS = [
 
 
 def run_command(command):
-    result = subprocess.run(
-        command,
-        check=True,
-        capture_output=True,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-    )
+    try:
+        result = subprocess.run(
+            command,
+            check=True,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+    except subprocess.CalledProcessError as error:
+        stdout = (error.stdout or "").strip()
+        stderr = (error.stderr or "").strip()
+        details = stderr or stdout or str(error)
+        raise RuntimeError(f"yt-dlp failed: {details[-1200:]}") from error
+
     return result.stdout.strip()
 
 
 def get_video_id(youtube_url):
+    parsed_id = parse_youtube_video_id(youtube_url)
+    if parsed_id:
+        return parsed_id
+
     command = [
         "yt-dlp",
         "--no-playlist",
@@ -94,6 +108,27 @@ def get_video_id(youtube_url):
         youtube_url,
     ]
     return run_command(command).splitlines()[-1]
+
+
+def parse_youtube_video_id(youtube_url):
+    parsed = urlparse(youtube_url.strip())
+    host = parsed.netloc.lower()
+    if host.startswith("www."):
+        host = host[4:]
+
+    candidate = ""
+
+    if host == "youtu.be":
+        candidate = parsed.path.strip("/").split("/")[0]
+    elif host in {"youtube.com", "m.youtube.com", "music.youtube.com", "youtube-nocookie.com"}:
+        if parsed.path == "/watch":
+            candidate = parse_qs(parsed.query).get("v", [""])[0]
+        else:
+            parts = [part for part in parsed.path.split("/") if part]
+            if len(parts) >= 2 and parts[0] in {"embed", "shorts", "live"}:
+                candidate = parts[1]
+
+    return candidate if YOUTUBE_ID_RE.match(candidate) else ""
 
 
 def download_audio(youtube_url, download_dir):
@@ -111,6 +146,12 @@ def download_audio(youtube_url, download_dir):
         "--no-warnings",
         "--force-overwrites",
         "--no-continue",
+        "--retries",
+        "3",
+        "--fragment-retries",
+        "3",
+        "--socket-timeout",
+        "20",
         "-x",
         "--audio-format",
         "wav",
@@ -119,7 +160,7 @@ def download_audio(youtube_url, download_dir):
         youtube_url,
     ]
 
-    subprocess.run(command, check=True)
+    run_command(command)
 
     if not audio_path.exists():
         raise FileNotFoundError(f"Audio file was not created: {audio_path}")
