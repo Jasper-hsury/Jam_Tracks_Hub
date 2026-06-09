@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -99,7 +100,7 @@ def run_command(command):
     return result.stdout.strip()
 
 
-def youtube_cookie_args():
+def youtube_cookie_args(work_dir=None):
     cookie_candidates = [
         os.environ.get("YOUTUBE_COOKIES_FILE"),
         RENDER_COOKIES_FILE,
@@ -112,6 +113,11 @@ def youtube_cookie_args():
 
         cookie_path = Path(candidate)
         if cookie_path.exists() and cookie_path.is_file() and cookie_path.stat().st_size > 0:
+            if work_dir:
+                writable_cookie_path = Path(work_dir) / "youtube_cookies_working.txt"
+                shutil.copyfile(cookie_path, writable_cookie_path)
+                return ["--cookies", str(writable_cookie_path)]
+
             return ["--cookies", str(cookie_path)]
 
     return []
@@ -164,7 +170,7 @@ def download_audio(youtube_url, download_dir):
     command = [
         "yt-dlp",
         "--no-playlist",
-        *youtube_cookie_args(),
+        *youtube_cookie_args(download_dir),
         "--quiet",
         "--no-warnings",
         "--force-overwrites",
