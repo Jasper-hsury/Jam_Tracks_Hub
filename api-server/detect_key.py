@@ -123,6 +123,32 @@ def youtube_cookie_args(work_dir=None):
     return []
 
 
+def youtube_cookie_status():
+    cookie_candidates = [
+        ("environment", os.environ.get("YOUTUBE_COOKIES_FILE")),
+        ("render_secret", RENDER_COOKIES_FILE),
+        ("local_file", DEFAULT_COOKIES_FILE),
+    ]
+
+    for source, candidate in cookie_candidates:
+        if not candidate:
+            continue
+
+        cookie_path = Path(candidate)
+        if cookie_path.exists() and cookie_path.is_file() and cookie_path.stat().st_size > 0:
+            return {
+                "configured": True,
+                "source": source,
+                "size": cookie_path.stat().st_size,
+            }
+
+    return {
+        "configured": False,
+        "source": None,
+        "size": 0,
+    }
+
+
 def get_video_id(youtube_url):
     parsed_id = parse_youtube_video_id(youtube_url)
     if parsed_id:

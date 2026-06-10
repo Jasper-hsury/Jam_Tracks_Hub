@@ -121,7 +121,11 @@ def append_analysis_history(row):
 
 @app.get("/api/health")
 def health():
-    return {"status": "ok", "model_version": MODEL_VERSION}
+    return {
+        "status": "ok",
+        "model_version": MODEL_VERSION,
+        "youtube_cookies": detect_key.youtube_cookie_status(),
+    }
 
 
 @app.post("/api/analyze")
