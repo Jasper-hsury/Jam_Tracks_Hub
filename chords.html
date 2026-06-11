@@ -15,7 +15,7 @@
     <meta property="og:type" content="website">
 
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=20260602-continuous-rhythm-guitar">
+    <link rel="stylesheet" href="style.css?v=20260611-refined-analyze-file-button">
 </head>
 
 <body>
@@ -35,8 +35,8 @@
 
         <section class="key-finder-panel" aria-labelledby="keyFinderTitle">
             <div class="tool-section-heading compact-heading">
-                <h2 id="keyFinderTitle" class="section-title">YouTube Key Finder</h2>
-                <p>Paste a YouTube link and get a clean key estimate with a short candidate list.</p>
+                <h2 id="keyFinderTitle" class="section-title">Song Key Finder</h2>
+                <p>Upload an audio file for the most stable key estimate. YouTube links are still available as a backup.</p>
             </div>
 
             <div class="api-status" id="apiStatus" aria-live="polite">
@@ -44,9 +44,26 @@
                 <span class="status-text">Checking API...</span>
             </div>
 
+            <div class="key-finder-upload">
+                <input id="audioKeyFile" type="file" accept="audio/*,.aac,.aiff,.flac,.m4a,.mp3,.mp4,.ogg,.wav,.webm" aria-label="Audio file">
+                <label class="upload-file-label" for="audioKeyFile">
+                    <span>Primary</span>
+                    <strong id="audioFileName">Choose an audio file</strong>
+                    <small>MP3, WAV, M4A, FLAC, OGG, WEBM, AAC, AIFF, or MP4 up to 60 MB</small>
+                </label>
+                <button id="analyzeFileButton" class="primary-button analyze-file-button" type="button">
+                    <span>Analyze</span>
+                    <small>File</small>
+                </button>
+            </div>
+
+            <div class="key-finder-divider">
+                <span>Backup: YouTube link</span>
+            </div>
+
             <div class="key-finder-form">
                 <input id="youtubeKeyUrl" type="url" placeholder="https://youtu.be/..." autocomplete="off" aria-label="YouTube link">
-                <button id="analyzeKeyButton" class="primary-button" type="button">Analyze</button>
+                <button id="analyzeKeyButton" class="secondary-button" type="button">Analyze link</button>
                 <button id="cancelAnalyzeButton" class="secondary-button" type="button" hidden>Cancel</button>
             </div>
 
@@ -124,7 +141,7 @@
 
     <script src="site.js"></script>
     <script src="site-config.js?v=20260603-render-api"></script>
-    <script src="key-finder.js?v=20260603-render-api"></script>
+    <script src="key-finder.js?v=20260611-refined-analyze-file-button"></script>
     <script src="chords.js?v=20260602-continuous-rhythm-guitar"></script>
 </body>
 </html>

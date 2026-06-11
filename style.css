@@ -318,6 +318,120 @@ h1 {
     line-height: 1.7;
 }
 
+.key-finder-upload {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 116px;
+    gap: 12px;
+    align-items: stretch;
+    margin-top: 18px;
+}
+
+.key-finder-upload input[type="file"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.upload-file-label {
+    display: grid;
+    gap: 4px;
+    min-width: 0;
+    padding: 16px 18px;
+    background:
+        linear-gradient(90deg, rgba(127, 183, 173, 0.08), transparent 38%),
+        rgba(42, 42, 42, 0.96);
+    border: 1px solid rgba(127, 183, 173, 0.28);
+    border-radius: 12px;
+    color: #e0e0e0;
+    cursor: pointer;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+}
+
+.upload-file-label:hover,
+.key-finder-upload input[type="file"]:focus + .upload-file-label {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(127, 183, 173, 0.12);
+}
+
+.upload-file-label span {
+    color: var(--teal);
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.upload-file-label strong {
+    overflow: hidden;
+    color: var(--gold-light);
+    font-size: 16px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.upload-file-label small {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.analyze-file-button {
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 2px;
+    min-width: 0;
+    min-height: 74px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.18);
+}
+
+.analyze-file-button span {
+    font-size: 14px;
+    line-height: 1.1;
+}
+
+.analyze-file-button small {
+    color: rgba(18, 18, 18, 0.72);
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.analyze-file-button:hover {
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.24);
+}
+
+.analyze-file-button:disabled {
+    opacity: 0.62;
+    cursor: wait;
+    transform: none;
+    box-shadow: none;
+}
+
+.key-finder-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 18px;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.key-finder-divider::before,
+.key-finder-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: rgba(196, 164, 132, 0.16);
+}
+
 .key-finder-form {
     display: flex;
     gap: 12px;
@@ -421,12 +535,40 @@ h1 {
 .analysis-history li {
     display: grid;
     gap: 5px;
-    padding: 10px 0;
+    padding: 0;
     border-top: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .analysis-history li:first-child {
     border-top: none;
+}
+
+.history-item-button {
+    display: grid;
+    gap: 5px;
+    width: 100%;
+    padding: 10px 0;
+    color: inherit;
+    background: transparent;
+    border: 0;
+    text-align: left;
+    cursor: pointer;
+}
+
+.history-item-button:hover strong,
+.history-item-button:focus-visible strong {
+    color: var(--teal);
+}
+
+.history-item-button:focus-visible {
+    outline: 2px solid rgba(127, 183, 173, 0.65);
+    outline-offset: 4px;
+    border-radius: 6px;
+}
+
+.history-item-button:disabled {
+    cursor: default;
+    opacity: 0.72;
 }
 
 .analysis-history li div {
@@ -440,9 +582,19 @@ h1 {
 }
 
 .analysis-history span,
-.analysis-history a {
+.analysis-history a,
+.analysis-history em {
     color: var(--muted);
     font-size: 13px;
+}
+
+.analysis-history em {
+    color: rgba(127, 183, 173, 0.82);
+    font-style: normal;
+}
+
+.history-item-button:disabled em {
+    color: rgba(224, 183, 186, 0.72);
 }
 
 .analysis-history a {
@@ -1028,6 +1180,15 @@ audio {
         display: grid;
     }
 
+    .key-finder-upload {
+        grid-template-columns: 1fr;
+    }
+
+    .key-finder-upload .primary-button {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
     .key-finder-final {
         font-size: 26px;
     }
@@ -1572,6 +1733,105 @@ iframe {
     flex-shrink: 0;
 }
 
+.result-details-secondary {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.result-evidence-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.result-evidence-grid div {
+    display: grid;
+    gap: 4px;
+    padding: 10px 12px;
+    background: rgba(42, 42, 42, 0.72);
+    border: 1px solid rgba(196, 164, 132, 0.14);
+    border-radius: 8px;
+}
+
+.result-evidence-grid span,
+.result-analysis-notes span,
+.result-ranking-block h4 {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.result-evidence-grid strong {
+    color: var(--gold-light);
+    font-size: 17px;
+}
+
+.result-ranking-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 14px;
+}
+
+.result-ranking-block {
+    padding: 12px;
+    background: rgba(18, 18, 18, 0.38);
+    border: 1px solid rgba(127, 183, 173, 0.16);
+    border-radius: 8px;
+}
+
+.result-ranking-block h4 {
+    margin: 0 0 9px;
+}
+
+.result-ranking-block ul {
+    display: grid;
+    gap: 7px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.result-ranking-block li {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    color: var(--text);
+    font-size: 13px;
+}
+
+.result-ranking-block li span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.result-ranking-block li strong {
+    color: var(--gold-light);
+    flex-shrink: 0;
+}
+
+.result-analysis-notes {
+    display: grid;
+    gap: 8px;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.result-analysis-notes p {
+    display: grid;
+    gap: 3px;
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
 .key-finder-candidates li strong {
     color: var(--gold-light);
     font-size: 14px;
@@ -1683,6 +1943,11 @@ iframe {
     .confidence-label {
         display: grid;
         gap: 3px;
+    }
+
+    .result-evidence-grid,
+    .result-ranking-grid {
+        grid-template-columns: 1fr;
     }
 
     .progression-toolbar,

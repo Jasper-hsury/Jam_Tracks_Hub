@@ -5,7 +5,7 @@ import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -17,6 +17,19 @@ app = FastAPI(title="Jasper's Music Key Finder")
 MODEL_VERSION = "2026-06-02-r1"
 SITE_DIR = Path(__file__).resolve().parent.parent
 ANALYSIS_HISTORY_PATH = Path(__file__).with_name("analysis_history.csv")
+MAX_UPLOAD_BYTES = 60 * 1024 * 1024
+UPLOAD_CHUNK_BYTES = 1024 * 1024
+SUPPORTED_UPLOAD_EXTENSIONS = {
+    ".aac",
+    ".aiff",
+    ".flac",
+    ".m4a",
+    ".mp3",
+    ".mp4",
+    ".ogg",
+    ".wav",
+    ".webm",
+}
 ANALYSIS_HISTORY_FIELDS = [
     "timestamp",
     "url",
@@ -53,6 +66,12 @@ class AnalyzeRequest(BaseModel):
     url: str
 
 
+def analyze_audio_path(audio_path):
+    result = detect_key.detect_key_weighted_segments(audio_path)
+    result["ml_prediction"] = detect_key.predict_with_ml(result)
+    return result
+
+
 def model_confidence(ml_prediction, final_key):
     if not ml_prediction:
         return None
@@ -66,6 +85,119 @@ def model_confidence(ml_prediction, final_key):
         return None
 
     return round(confidence * 100, 1)
+
+
+def final_ml_confidence(ml_prediction, final_key):
+    direct_confidence = model_confidence(ml_prediction, final_key)
+    if direct_confidence is not None:
+        return direct_confidence, "ML direct-key confidence"
+
+    if not ml_prediction:
+        return None, None
+
+    family_prediction = ml_prediction.get("family")
+    mode_prediction = ml_prediction.get("mode")
+    if not family_prediction or not mode_prediction:
+        return None, None
+
+    family_confidence = family_prediction.get("confidence")
+    mode_confidence = mode_prediction.get("confidence")
+    if family_confidence is None or mode_confidence is None:
+        return None, None
+
+    _, final_mode = final_key.split()
+    final_family = detect_key.key_to_family_key(final_key)
+    if (
+        family_prediction.get("prediction") != final_family
+        or mode_prediction.get("prediction") != final_mode
+    ):
+        return None, None
+
+    # Conservative combined confidence: the weaker part of family/mode evidence limits the result.
+    return round(min(family_confidence, mode_confidence) * 100, 1), "ML combined confidence"
+
+
+def prediction_summary(prediction, formatter=None):
+    if not prediction:
+        return None
+
+    value = prediction.get("prediction")
+    confidence = prediction.get("confidence")
+
+    return {
+        "prediction": formatter(value) if formatter and value else value,
+        "confidence": round(confidence * 100, 1) if confidence is not None else None,
+    }
+
+
+def ranking_relative_score(ranking, target_key):
+    if not ranking:
+        return None
+
+    top_score = ranking[0][1]
+    if not top_score:
+        return None
+
+    for key, score in ranking:
+        if key == target_key:
+            return round(score / top_score * 100, 1)
+
+    return None
+
+
+def ranking_gap(ranking):
+    if len(ranking) < 2 or not ranking[0][1]:
+        return None
+
+    return round((ranking[0][1] - ranking[1][1]) / ranking[0][1] * 100, 1)
+
+
+def ranked_keys(ranking, max_items=5):
+    if not ranking:
+        return []
+
+    top_score = ranking[0][1] or 1
+    return [
+        {
+            "key": detect_key.format_key_name(key),
+            "relative_score": round(score / top_score * 100, 1),
+        }
+        for key, score in ranking[:max_items]
+    ]
+
+
+def ranked_families(ranking, max_items=5):
+    if not ranking:
+        return []
+
+    top_score = ranking[0][1] or 1
+    return [
+        {
+            "family": detect_key.key_family_label(family_key),
+            "relative_score": round(score / top_score * 100, 1),
+        }
+        for family_key, score in ranking[:max_items]
+    ]
+
+
+def strongest_notes(result, max_items=7):
+    strengths = result.get("note_strengths")
+    if strengths is None:
+        return []
+
+    note_scores = sorted(
+        (
+            {
+                "note": note,
+                "strength": round(float(strength) * 100, 1),
+            }
+            for note, strength in zip(detect_key.NOTES, strengths)
+        ),
+        key=lambda item: item["strength"],
+        reverse=True,
+    )
+
+    return note_scores[:max_items]
 
 
 def possible_keys(result, final_key):
@@ -97,6 +229,59 @@ def possible_keys(result, final_key):
     return candidates
 
 
+def build_analysis_response(result, input_type):
+    ml_prediction = result.get("ml_prediction")
+    final_key = result["selected_key"]
+    source = "rule"
+
+    if ml_prediction and ml_prediction.get("final_key"):
+        final_key = ml_prediction["final_key"]
+        source = "machine learning"
+
+    ml_confidence, ml_confidence_label = final_ml_confidence(ml_prediction, final_key)
+    rule_confidence = ranking_relative_score(result["ranking"], result["selected_key"])
+    final_rule_strength = ranking_relative_score(result["ranking"], final_key)
+    confidence = ml_confidence if ml_confidence is not None else final_rule_strength
+    confidence_label = ml_confidence_label if ml_confidence is not None else "Rule relative strength"
+
+    return {
+        "final_key": detect_key.format_key_name(final_key),
+        "source": source,
+        "confidence": confidence,
+        "confidence_label": confidence_label,
+        "ml_confidence": ml_confidence,
+        "rule_confidence": rule_confidence,
+        "rule_gap": ranking_gap(result["ranking"]),
+        "priority_gap": ranking_gap(result["priority_ranking"]),
+        "rule_key": detect_key.format_key_name(result["selected_key"]),
+        "priority_key": detect_key.format_key_name(result["priority_ranking"][0][0]),
+        "key_family": detect_key.key_family_label(final_key),
+        "main_notes": result["active_notes"],
+        "strongest_notes": strongest_notes(result),
+        "possible_keys": possible_keys(result, final_key),
+        "overall_ranking": ranked_keys(result["ranking"]),
+        "priority_ranking": ranked_keys(result["priority_ranking"]),
+        "family_ranking": ranked_families(result["family_ranking"]),
+        "priority_family_ranking": ranked_families(result["priority_family_ranking"]),
+        "mode_resolution": result.get("relative_resolution"),
+        "conflict_resolution": result.get("resolution"),
+        "ml_details": {
+            "family": prediction_summary(
+                ml_prediction.get("family") if ml_prediction else None,
+                detect_key.key_family_label,
+            ),
+            "mode": prediction_summary(ml_prediction.get("mode") if ml_prediction else None),
+            "key": prediction_summary(
+                ml_prediction.get("key") if ml_prediction else None,
+                detect_key.format_key_name,
+            ),
+            "basis": ml_prediction.get("basis") if ml_prediction else None,
+        },
+        "model_version": MODEL_VERSION,
+        "input_type": input_type,
+    }
+
+
 def append_analysis_history(row):
     expected_header = ",".join(ANALYSIS_HISTORY_FIELDS)
 
@@ -119,6 +304,21 @@ def append_analysis_history(row):
         writer.writerow(row)
 
 
+def record_analysis_history(reference, response):
+    append_analysis_history(
+        {
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "url": reference,
+            "final_key": response["final_key"],
+            "rule_key": response["rule_key"],
+            "confidence": response["confidence"] if response["confidence"] is not None else "",
+            "source": response["source"],
+            "model_version": response["model_version"],
+            "main_notes": ", ".join(response["main_notes"]),
+        }
+    )
+
+
 @app.get("/api/health")
 def health():
     return {
@@ -138,42 +338,60 @@ def analyze(request: AnalyzeRequest):
     try:
         with tempfile.TemporaryDirectory(prefix="youtube_key_api_") as temp_dir:
             audio_path = detect_key.download_audio(youtube_url, temp_dir)
-            result = detect_key.detect_key_weighted_segments(audio_path)
-            result["ml_prediction"] = detect_key.predict_with_ml(result)
+            result = analyze_audio_path(audio_path)
     except Exception as error:
         raise HTTPException(status_code=500, detail=str(error)) from error
 
-    ml_prediction = result.get("ml_prediction")
-    final_key = result["selected_key"]
-    source = "rule"
+    response = build_analysis_response(result, "youtube")
+    record_analysis_history(youtube_url, response)
 
-    if ml_prediction and ml_prediction.get("final_key"):
-        final_key = ml_prediction["final_key"]
-        source = "machine learning"
+    return response
 
-    response = {
-        "final_key": detect_key.format_key_name(final_key),
-        "source": source,
-        "confidence": model_confidence(ml_prediction, final_key),
-        "rule_key": detect_key.format_key_name(result["selected_key"]),
-        "main_notes": result["active_notes"],
-        "possible_keys": possible_keys(result, final_key),
-        "model_version": MODEL_VERSION,
-    }
 
-    append_analysis_history(
-        {
-            "timestamp": datetime.now(timezone.utc).isoformat(),
-            "url": youtube_url,
-            "final_key": response["final_key"],
-            "rule_key": response["rule_key"],
-            "confidence": response["confidence"] if response["confidence"] is not None else "",
-            "source": response["source"],
-            "model_version": response["model_version"],
-            "main_notes": ", ".join(response["main_notes"]),
-        }
-    )
+@app.post("/api/analyze-file")
+async def analyze_file(file: UploadFile = File(...)):
+    filename = Path(file.filename or "").name
+    extension = Path(filename).suffix.lower()
 
+    if extension not in SUPPORTED_UPLOAD_EXTENSIONS:
+        raise HTTPException(
+            status_code=400,
+            detail="Please upload an audio file: MP3, WAV, M4A, FLAC, OGG, WEBM, AAC, AIFF, or MP4.",
+        )
+
+    try:
+        with tempfile.TemporaryDirectory(prefix="uploaded_key_api_") as temp_dir:
+            audio_path = Path(temp_dir) / f"uploaded_audio{extension}"
+            uploaded_bytes = 0
+
+            with audio_path.open("wb") as output_file:
+                while True:
+                    chunk = await file.read(UPLOAD_CHUNK_BYTES)
+                    if not chunk:
+                        break
+
+                    uploaded_bytes += len(chunk)
+                    if uploaded_bytes > MAX_UPLOAD_BYTES:
+                        raise HTTPException(
+                            status_code=413,
+                            detail="Audio file is too large. Please upload a file under 60 MB.",
+                        )
+
+                    output_file.write(chunk)
+
+            if uploaded_bytes == 0:
+                raise HTTPException(status_code=400, detail="Uploaded audio file is empty.")
+
+            result = analyze_audio_path(audio_path)
+    except HTTPException:
+        raise
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=str(error)) from error
+    finally:
+        await file.close()
+
+    response = build_analysis_response(result, "file")
+    record_analysis_history(f"uploaded:{filename}", response)
     return response
 
 
