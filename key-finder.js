@@ -61,6 +61,12 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         if (!response.ok) {
+            if (!data && [502, 503, 504].includes(response.status)) {
+                throw new Error(
+                    `Render returned ${response.status}. The audio analysis worker likely timed out or restarted.`
+                );
+            }
+
             throw new Error(data?.detail || `Analysis failed with status ${response.status}.`);
         }
 
@@ -423,6 +429,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 || lowerMessage.includes("empty response")
                 || lowerMessage.includes("instead of json")
                 || lowerMessage.includes("restarted")
+                || lowerMessage.includes("render returned")
             )
         ) {
             suggestedFix = "Render likely timed out during audio decoding. Export the song as an audio-only MP3 or WAV under 25 MB, then upload that file.";

@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import csv
+import subprocess
 import tempfile
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -14,13 +16,19 @@ import detect_key
 
 
 app = FastAPI(title="Jasper's Music Key Finder")
-MODEL_VERSION = "2026-06-02-r1"
+MODEL_VERSION = "2026-06-12-render-fast-audio"
 SITE_DIR = Path(__file__).resolve().parent.parent
 ANALYSIS_HISTORY_PATH = Path(__file__).with_name("analysis_history.csv")
 MAX_UPLOAD_BYTES = 60 * 1024 * 1024
 MAX_CONTAINER_UPLOAD_BYTES = 25 * 1024 * 1024
 UPLOAD_CHUNK_BYTES = 1024 * 1024
 HEAVY_CONTAINER_EXTENSIONS = {".mp4", ".webm"}
+ANALYSIS_SAMPLE_RATE = 22050
+ANALYSIS_EXCERPT_DURATION = 18
+ANALYSIS_EXCERPT_ANCHORS = (0.18, 0.50, 0.74)
+API_SEGMENT_DURATION = 15
+API_MAX_SEGMENTS = 3
+FFMPEG_TIMEOUT_SECONDS = 90
 SUPPORTED_UPLOAD_EXTENSIONS = {
     ".aac",
     ".aiff",
@@ -68,8 +76,150 @@ class AnalyzeRequest(BaseModel):
     url: str
 
 
+@contextmanager
+def fast_analysis_settings():
+    original_segment_duration = detect_key.SEGMENT_DURATION
+    original_max_segments = detect_key.MAX_SEGMENTS
+
+    detect_key.SEGMENT_DURATION = API_SEGMENT_DURATION
+    detect_key.MAX_SEGMENTS = API_MAX_SEGMENTS
+
+    try:
+        yield
+    finally:
+        detect_key.SEGMENT_DURATION = original_segment_duration
+        detect_key.MAX_SEGMENTS = original_max_segments
+
+
+def run_media_command(command, timeout=FFMPEG_TIMEOUT_SECONDS):
+    try:
+        result = subprocess.run(
+            command,
+            capture_output=True,
+            encoding="utf-8",
+            errors="replace",
+            text=True,
+            timeout=timeout,
+            check=False,
+        )
+    except subprocess.TimeoutExpired as error:
+        raise RuntimeError("Audio preprocessing timed out. Try a shorter MP3 or WAV file.") from error
+
+    if result.returncode != 0:
+        error_text = (result.stderr or result.stdout or "Unknown ffmpeg error").strip()
+        raise RuntimeError(f"Audio preprocessing failed: {error_text[-500:]}")
+
+    return result
+
+
+def probe_audio_duration(audio_path):
+    command = [
+        "ffprobe",
+        "-v",
+        "error",
+        "-show_entries",
+        "format=duration",
+        "-of",
+        "default=noprint_wrappers=1:nokey=1",
+        str(audio_path),
+    ]
+
+    try:
+        result = run_media_command(command, timeout=20)
+        return max(0, float(result.stdout.strip()))
+    except Exception:
+        return None
+
+
+def excerpt_offsets(duration):
+    if not duration or duration <= ANALYSIS_EXCERPT_DURATION:
+        return [0]
+
+    max_offset = max(0, duration - ANALYSIS_EXCERPT_DURATION)
+    offsets = []
+
+    for anchor in ANALYSIS_EXCERPT_ANCHORS:
+        offset = min(max_offset, max(0, duration * anchor))
+        if all(abs(offset - existing) >= 8 for existing in offsets):
+            offsets.append(offset)
+
+    return offsets or [0]
+
+
+def concat_file_line(path):
+    safe_path = path.resolve().as_posix().replace("'", "'\\''")
+    return f"file '{safe_path}'"
+
+
+def prepare_audio_for_analysis(source_path, temp_dir):
+    duration = probe_audio_duration(source_path)
+    offsets = excerpt_offsets(duration)
+    chunk_paths = []
+
+    for index, offset in enumerate(offsets, start=1):
+        chunk_path = Path(temp_dir) / f"analysis_chunk_{index}.wav"
+        command = [
+            "ffmpeg",
+            "-hide_banner",
+            "-loglevel",
+            "error",
+            "-y",
+            "-ss",
+            f"{offset:.2f}",
+            "-i",
+            str(source_path),
+            "-vn",
+            "-t",
+            str(ANALYSIS_EXCERPT_DURATION),
+            "-ac",
+            "1",
+            "-ar",
+            str(ANALYSIS_SAMPLE_RATE),
+            str(chunk_path),
+        ]
+        run_media_command(command)
+
+        if chunk_path.exists() and chunk_path.stat().st_size > 0:
+            chunk_paths.append(chunk_path)
+
+    if not chunk_paths:
+        raise RuntimeError("No usable audio could be extracted from the uploaded file.")
+
+    if len(chunk_paths) == 1:
+        return chunk_paths[0]
+
+    list_path = Path(temp_dir) / "analysis_chunks.txt"
+    prepared_path = Path(temp_dir) / "analysis_audio.wav"
+    list_path.write_text(
+        "\n".join(concat_file_line(path) for path in chunk_paths),
+        encoding="utf-8",
+    )
+
+    command = [
+        "ffmpeg",
+        "-hide_banner",
+        "-loglevel",
+        "error",
+        "-y",
+        "-f",
+        "concat",
+        "-safe",
+        "0",
+        "-i",
+        str(list_path),
+        "-c",
+        "copy",
+        str(prepared_path),
+    ]
+    run_media_command(command)
+
+    return prepared_path
+
+
 def analyze_audio_path(audio_path):
-    result = detect_key.detect_key_weighted_segments(audio_path)
+    with fast_analysis_settings():
+        result = detect_key.detect_key_weighted_segments(audio_path)
+
     result["ml_prediction"] = detect_key.predict_with_ml(result)
     return result
 
@@ -340,7 +490,8 @@ def analyze(request: AnalyzeRequest):
     try:
         with tempfile.TemporaryDirectory(prefix="youtube_key_api_") as temp_dir:
             audio_path = detect_key.download_audio(youtube_url, temp_dir)
-            result = analyze_audio_path(audio_path)
+            prepared_audio_path = prepare_audio_for_analysis(audio_path, temp_dir)
+            result = analyze_audio_path(prepared_audio_path)
     except Exception as error:
         raise HTTPException(status_code=500, detail=str(error)) from error
 
@@ -396,7 +547,8 @@ async def analyze_file(file: UploadFile = File(...)):
                     ),
                 )
 
-            result = analyze_audio_path(audio_path)
+            prepared_audio_path = prepare_audio_for_analysis(audio_path, temp_dir)
+            result = analyze_audio_path(prepared_audio_path)
     except HTTPException:
         raise
     except Exception as error:
