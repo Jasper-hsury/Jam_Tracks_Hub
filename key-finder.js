@@ -2,6 +2,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const HISTORY_KEY = "jasperMusicKeyFinderHistory";
     const apiBaseUrl = window.JASPER_MUSIC_CONFIG?.apiBaseUrl ?? "http://127.0.0.1:8000";
     const MAX_UPLOAD_BYTES = 60 * 1024 * 1024;
+    const MAX_CONTAINER_UPLOAD_BYTES = 25 * 1024 * 1024;
+    const HEAVY_CONTAINER_EXTENSIONS = new Set([".mp4", ".webm"]);
     const audioKeyFile = document.getElementById("audioKeyFile");
     const analyzeFileButton = document.getElementById("analyzeFileButton");
     const audioFileName = document.getElementById("audioFileName");
@@ -36,6 +38,40 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function apiDisplayUrl() {
         return apiBaseUrl || `${window.location.origin}/api`;
+    }
+
+    function getFileExtension(fileName) {
+        const dotIndex = fileName.lastIndexOf(".");
+        return dotIndex >= 0 ? fileName.slice(dotIndex).toLowerCase() : "";
+    }
+
+    async function readApiResponse(response) {
+        const text = await response.text();
+        let data = null;
+
+        if (text.trim()) {
+            try {
+                data = JSON.parse(text);
+            } catch (error) {
+                throw new Error(
+                    `API returned ${response.status} ${response.statusText || "response"} instead of JSON. ` +
+                    "This usually means Render timed out or restarted while analyzing the file."
+                );
+            }
+        }
+
+        if (!response.ok) {
+            throw new Error(data?.detail || `Analysis failed with status ${response.status}.`);
+        }
+
+        if (!data) {
+            throw new Error(
+                "The API returned an empty response. Render probably timed out during analysis. " +
+                "Try exporting the song as a shorter MP3 or WAV file."
+            );
+        }
+
+        return data;
     }
 
     function apiOfflineHint() {
@@ -377,7 +413,19 @@ document.addEventListener("DOMContentLoaded", function() {
             : "The API is reachable, but the YouTube analysis failed. Check the Render service logs; this is usually a yt-dlp / YouTube extraction issue.";
 
         if (inputType === "file") {
-            suggestedFix = "Try a shorter MP3, WAV, M4A, or FLAC file under 60 MB. If the file is protected or unusual, export it as MP3 first.";
+            suggestedFix = "For Render, MP3 or WAV is the most stable. If you uploaded MP4/WEBM, export the audio as MP3, WAV, M4A, or FLAC under 25 MB and try again.";
+        }
+
+        if (
+            inputType === "file"
+            && (
+                lowerMessage.includes("timed out")
+                || lowerMessage.includes("empty response")
+                || lowerMessage.includes("instead of json")
+                || lowerMessage.includes("restarted")
+            )
+        ) {
+            suggestedFix = "Render likely timed out during audio decoding. Export the song as an audio-only MP3 or WAV under 25 MB, then upload that file.";
         }
 
         if (!apiBaseUrl && (lowerMessage.includes("not a bot") || lowerMessage.includes("cookies"))) {
@@ -543,6 +591,12 @@ document.addEventListener("DOMContentLoaded", function() {
             return;
         }
 
+        const extension = getFileExtension(file.name);
+        if (HEAVY_CONTAINER_EXTENSIONS.has(extension) && file.size > MAX_CONTAINER_UPLOAD_BYTES) {
+            setStatus("MP4/WEBM files are heavy on Render. Please export this as MP3 or WAV under 25 MB.", "is-error");
+            return;
+        }
+
         activeController = new AbortController();
         setAnalyzingState(true);
         loadingTimer = startLoadingMessages("file");
@@ -559,11 +613,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 signal: activeController.signal
             });
 
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.detail || `Analysis failed with status ${response.status}.`);
-            }
+            const data = await readApiResponse(response);
 
             renderKeyFinderResult(data);
             addHistoryItem(file.name, data, "file");
@@ -602,11 +652,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 signal: activeController.signal
             });
 
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.detail || `Analysis failed with status ${response.status}.`);
-            }
+            const data = await readApiResponse(response);
 
             renderKeyFinderResult(data);
             addHistoryItem(url, data, "youtube");

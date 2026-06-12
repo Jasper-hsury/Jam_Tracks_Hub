@@ -18,7 +18,9 @@ MODEL_VERSION = "2026-06-02-r1"
 SITE_DIR = Path(__file__).resolve().parent.parent
 ANALYSIS_HISTORY_PATH = Path(__file__).with_name("analysis_history.csv")
 MAX_UPLOAD_BYTES = 60 * 1024 * 1024
+MAX_CONTAINER_UPLOAD_BYTES = 25 * 1024 * 1024
 UPLOAD_CHUNK_BYTES = 1024 * 1024
+HEAVY_CONTAINER_EXTENSIONS = {".mp4", ".webm"}
 SUPPORTED_UPLOAD_EXTENSIONS = {
     ".aac",
     ".aiff",
@@ -381,6 +383,18 @@ async def analyze_file(file: UploadFile = File(...)):
 
             if uploaded_bytes == 0:
                 raise HTTPException(status_code=400, detail="Uploaded audio file is empty.")
+
+            if (
+                extension in HEAVY_CONTAINER_EXTENSIONS
+                and uploaded_bytes > MAX_CONTAINER_UPLOAD_BYTES
+            ):
+                raise HTTPException(
+                    status_code=413,
+                    detail=(
+                        "MP4 and WEBM files are too heavy for stable Render analysis. "
+                        "Please export the audio as MP3, WAV, M4A, or FLAC under 25 MB."
+                    ),
+                )
 
             result = analyze_audio_path(audio_path)
     except HTTPException:
