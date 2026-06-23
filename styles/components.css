@@ -1375,18 +1375,26 @@ audio {
 }
 
 .track-secondary-actions {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(86px, 1fr));
     align-items: center;
-    gap: 5px;
+    justify-items: stretch;
+    gap: 4px;
     padding-left: 9px;
     border-left: 1px solid var(--border-soft);
 }
 
 .track-secondary-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     min-height: 36px;
+    min-width: 0;
     padding: 7px 9px;
     border-radius: 6px;
     font-size: 13px;
+    line-height: 1;
+    text-align: center;
 }
 
 .footer .social-links {
