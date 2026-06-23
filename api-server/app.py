@@ -1,16 +1,25 @@
 # -*- coding: utf-8 -*-
 
 import csv
+import hashlib
+import json
+import shutil
 import subprocess
 import tempfile
+import threading
+import time
+import uuid
+from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 
-from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi import FastAPI, File, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 import detect_key
 
@@ -19,6 +28,8 @@ app = FastAPI(title="Jasper's Music Key Finder")
 MODEL_VERSION = "2026-06-12-render-fast-audio"
 SITE_DIR = Path(__file__).resolve().parent.parent
 ANALYSIS_HISTORY_PATH = Path(__file__).with_name("analysis_history.csv")
+ANALYSIS_JOB_ROOT = Path(tempfile.gettempdir()) / "jasper_music_analysis_jobs"
+ANALYSIS_CACHE_PATH = Path(tempfile.gettempdir()) / "jasper_music_analysis_cache.json"
 MAX_UPLOAD_BYTES = 60 * 1024 * 1024
 MAX_CONTAINER_UPLOAD_BYTES = 25 * 1024 * 1024
 UPLOAD_CHUNK_BYTES = 1024 * 1024
@@ -29,6 +40,8 @@ ANALYSIS_EXCERPT_ANCHORS = (0.18, 0.50, 0.74)
 API_SEGMENT_DURATION = 15
 API_MAX_SEGMENTS = 3
 FFMPEG_TIMEOUT_SECONDS = 90
+ANALYSIS_JOB_TTL_SECONDS = 60 * 60
+ANALYSIS_JOB_LIMIT = 60
 SUPPORTED_UPLOAD_EXTENSIONS = {
     ".aac",
     ".aiff",
@@ -50,6 +63,11 @@ ANALYSIS_HISTORY_FIELDS = [
     "model_version",
     "main_notes",
 ]
+ANALYSIS_JOB_ROOT.mkdir(parents=True, exist_ok=True)
+ANALYSIS_EXECUTOR = ThreadPoolExecutor(max_workers=1, thread_name_prefix="key-analysis")
+ANALYSIS_JOBS = {}
+ANALYSIS_JOBS_LOCK = threading.Lock()
+ANALYSIS_CACHE_LOCK = threading.Lock()
 
 app.add_middleware(
     CORSMiddleware,
@@ -77,6 +95,188 @@ BLOCKED_STATIC_FILES = [
 
 class AnalyzeRequest(BaseModel):
     url: str
+
+
+def utc_timestamp():
+    return datetime.now(timezone.utc).isoformat()
+
+
+def load_analysis_cache():
+    if not ANALYSIS_CACHE_PATH.exists():
+        return {}
+
+    try:
+        data = json.loads(ANALYSIS_CACHE_PATH.read_text(encoding="utf-8"))
+        return data if isinstance(data, dict) else {}
+    except (OSError, json.JSONDecodeError):
+        return {}
+
+
+ANALYSIS_CACHE = load_analysis_cache()
+
+
+def save_analysis_cache():
+    temporary_path = ANALYSIS_CACHE_PATH.with_suffix(".tmp")
+    temporary_path.write_text(
+        json.dumps(ANALYSIS_CACHE, ensure_ascii=True, separators=(",", ":")),
+        encoding="utf-8",
+    )
+    temporary_path.replace(ANALYSIS_CACHE_PATH)
+
+
+def analysis_cache_key(file_digest):
+    return f"{MODEL_VERSION}:{file_digest}"
+
+
+def get_cached_analysis(cache_key):
+    with ANALYSIS_CACHE_LOCK:
+        cached = ANALYSIS_CACHE.get(cache_key)
+        return dict(cached) if isinstance(cached, dict) else None
+
+
+def store_cached_analysis(cache_key, response):
+    with ANALYSIS_CACHE_LOCK:
+        ANALYSIS_CACHE[cache_key] = response
+
+        if len(ANALYSIS_CACHE) > 100:
+            oldest_keys = list(ANALYSIS_CACHE)[: len(ANALYSIS_CACHE) - 100]
+            for key in oldest_keys:
+                ANALYSIS_CACHE.pop(key, None)
+
+        save_analysis_cache()
+
+
+def prune_analysis_jobs():
+    cutoff = time.time() - ANALYSIS_JOB_TTL_SECONDS
+
+    with ANALYSIS_JOBS_LOCK:
+        stale_ids = [
+            job_id
+            for job_id, job in ANALYSIS_JOBS.items()
+            if job.get("updated_epoch", 0) < cutoff
+        ]
+
+        for job_id in stale_ids:
+            ANALYSIS_JOBS.pop(job_id, None)
+
+        if len(ANALYSIS_JOBS) > ANALYSIS_JOB_LIMIT:
+            ordered_ids = sorted(
+                ANALYSIS_JOBS,
+                key=lambda job_id: ANALYSIS_JOBS[job_id].get("updated_epoch", 0),
+            )
+            for job_id in ordered_ids[: len(ANALYSIS_JOBS) - ANALYSIS_JOB_LIMIT]:
+                ANALYSIS_JOBS.pop(job_id, None)
+
+
+def create_analysis_job_record(filename):
+    prune_analysis_jobs()
+    job_id = uuid.uuid4().hex
+    now_epoch = time.time()
+    record = {
+        "job_id": job_id,
+        "filename": filename,
+        "status": "queued",
+        "stage": "Queued",
+        "progress": 4,
+        "cached": False,
+        "created_at": utc_timestamp(),
+        "updated_at": utc_timestamp(),
+        "updated_epoch": now_epoch,
+    }
+
+    with ANALYSIS_JOBS_LOCK:
+        ANALYSIS_JOBS[job_id] = record
+
+    return job_id
+
+
+def update_analysis_job(job_id, **updates):
+    with ANALYSIS_JOBS_LOCK:
+        job = ANALYSIS_JOBS.get(job_id)
+        if not job:
+            return
+
+        job.update(updates)
+        job["updated_at"] = utc_timestamp()
+        job["updated_epoch"] = time.time()
+
+
+def read_analysis_job(job_id):
+    with ANALYSIS_JOBS_LOCK:
+        job = ANALYSIS_JOBS.get(job_id)
+        if not job:
+            return None
+
+        return {
+            key: value
+            for key, value in job.items()
+            if key != "updated_epoch"
+        }
+
+
+def file_digest(path):
+    digest = hashlib.sha256()
+
+    with Path(path).open("rb") as source:
+        while True:
+            chunk = source.read(1024 * 1024)
+            if not chunk:
+                break
+            digest.update(chunk)
+
+    return digest.hexdigest()
+
+
+def run_analysis_job(job_id, source_path, filename, cache_key, job_directory):
+    try:
+        update_analysis_job(
+            job_id,
+            status="processing",
+            stage="Preparing audio",
+            progress=16,
+        )
+        prepared_audio_path = prepare_audio_for_analysis(source_path, job_directory)
+
+        update_analysis_job(
+            job_id,
+            stage="Extracting musical features",
+            progress=44,
+        )
+        result = analyze_audio_path(prepared_audio_path)
+
+        update_analysis_job(
+            job_id,
+            stage="Comparing key candidates",
+            progress=78,
+        )
+        response = build_analysis_response(result, "file")
+        response["filename"] = filename
+
+        update_analysis_job(
+            job_id,
+            stage="Saving result",
+            progress=92,
+        )
+        store_cached_analysis(cache_key, response)
+        record_analysis_history(f"uploaded:{filename}", response)
+
+        update_analysis_job(
+            job_id,
+            status="completed",
+            stage="Complete",
+            progress=100,
+            result=response,
+        )
+    except Exception as error:
+        update_analysis_job(
+            job_id,
+            status="failed",
+            stage="Analysis failed",
+            progress=100,
+            error=str(error),
+        )
+    finally:
+        shutil.rmtree(job_directory, ignore_errors=True)
 
 
 @contextmanager
@@ -398,6 +598,18 @@ def build_analysis_response(result, input_type):
     final_rule_strength = ranking_relative_score(result["ranking"], final_key)
     confidence = ml_confidence if ml_confidence is not None else final_rule_strength
     confidence_label = ml_confidence_label if ml_confidence is not None else "Rule relative strength"
+    rule_gap = ranking_gap(result["ranking"])
+    confidence_value = confidence if confidence is not None else 0
+
+    if confidence_value >= 65 and (rule_gap is None or rule_gap >= 18):
+        certainty = "high"
+        confidence_note = "The main evidence sources are clearly separated from the alternatives."
+    elif confidence_value >= 42 and (rule_gap is None or rule_gap >= 8):
+        certainty = "medium"
+        confidence_note = "The result is plausible, but nearby keys still share meaningful evidence."
+    else:
+        certainty = "low"
+        confidence_note = "The evidence is ambiguous. Treat the final key as a leading candidate, not a certainty."
 
     return {
         "final_key": detect_key.format_key_name(final_key),
@@ -406,8 +618,11 @@ def build_analysis_response(result, input_type):
         "confidence_label": confidence_label,
         "ml_confidence": ml_confidence,
         "rule_confidence": rule_confidence,
-        "rule_gap": ranking_gap(result["ranking"]),
+        "rule_gap": rule_gap,
         "priority_gap": ranking_gap(result["priority_ranking"]),
+        "certainty": certainty,
+        "uncertain": certainty == "low",
+        "confidence_note": confidence_note,
         "rule_key": detect_key.format_key_name(result["selected_key"]),
         "priority_key": detect_key.format_key_name(result["priority_ranking"][0][0]),
         "key_family": detect_key.key_family_label(final_key),
@@ -476,9 +691,20 @@ def record_analysis_history(reference, response):
 
 @app.get("/api/health")
 def health():
+    with ANALYSIS_JOBS_LOCK:
+        active_jobs = sum(
+            1
+            for job in ANALYSIS_JOBS.values()
+            if job.get("status") in {"queued", "uploading", "processing"}
+        )
+
     return {
         "status": "ok",
         "model_version": MODEL_VERSION,
+        "analysis_queue": {
+            "active_jobs": active_jobs,
+            "max_workers": 1,
+        },
         "youtube_cookies": detect_key.youtube_cookie_status(),
     }
 
@@ -502,6 +728,127 @@ def analyze(request: AnalyzeRequest):
     record_analysis_history(youtube_url, response)
 
     return response
+
+
+@app.post("/api/analyze-file/jobs", status_code=202)
+async def create_file_analysis_job(file: UploadFile = File(...)):
+    filename = Path(file.filename or "").name
+    extension = Path(filename).suffix.lower()
+
+    if extension not in SUPPORTED_UPLOAD_EXTENSIONS:
+        raise HTTPException(
+            status_code=400,
+            detail="Please upload an audio file: MP3, WAV, M4A, FLAC, OGG, WEBM, AAC, AIFF, or MP4.",
+        )
+
+    job_id = create_analysis_job_record(filename)
+    job_directory = ANALYSIS_JOB_ROOT / job_id
+    job_directory.mkdir(parents=True, exist_ok=True)
+    audio_path = job_directory / f"uploaded_audio{extension}"
+    uploaded_bytes = 0
+    digest = hashlib.sha256()
+
+    try:
+        update_analysis_job(
+            job_id,
+            status="uploading",
+            stage="Receiving audio",
+            progress=8,
+        )
+
+        with audio_path.open("wb") as output_file:
+            while True:
+                chunk = await file.read(UPLOAD_CHUNK_BYTES)
+                if not chunk:
+                    break
+
+                uploaded_bytes += len(chunk)
+                if uploaded_bytes > MAX_UPLOAD_BYTES:
+                    raise HTTPException(
+                        status_code=413,
+                        detail="Audio file is too large. Please upload a file under 60 MB.",
+                    )
+
+                digest.update(chunk)
+                output_file.write(chunk)
+
+        if uploaded_bytes == 0:
+            raise HTTPException(status_code=400, detail="Uploaded audio file is empty.")
+
+        if (
+            extension in HEAVY_CONTAINER_EXTENSIONS
+            and uploaded_bytes > MAX_CONTAINER_UPLOAD_BYTES
+        ):
+            raise HTTPException(
+                status_code=413,
+                detail=(
+                    "MP4 and WEBM files are too heavy for stable analysis. "
+                    "Please export the audio as MP3, WAV, M4A, or FLAC under 25 MB."
+                ),
+            )
+
+        cache_key = analysis_cache_key(digest.hexdigest())
+        cached_response = get_cached_analysis(cache_key)
+
+        if cached_response:
+            cached_response["filename"] = filename
+            update_analysis_job(
+                job_id,
+                status="completed",
+                stage="Loaded cached result",
+                progress=100,
+                cached=True,
+                result=cached_response,
+            )
+            shutil.rmtree(job_directory, ignore_errors=True)
+        else:
+            update_analysis_job(
+                job_id,
+                status="queued",
+                stage="Waiting for analyzer",
+                progress=12,
+            )
+            ANALYSIS_EXECUTOR.submit(
+                run_analysis_job,
+                job_id,
+                audio_path,
+                filename,
+                cache_key,
+                job_directory,
+            )
+
+        return read_analysis_job(job_id)
+    except HTTPException as error:
+        update_analysis_job(
+            job_id,
+            status="failed",
+            stage="Upload failed",
+            progress=100,
+            error=error.detail,
+        )
+        shutil.rmtree(job_directory, ignore_errors=True)
+        raise
+    except Exception as error:
+        update_analysis_job(
+            job_id,
+            status="failed",
+            stage="Upload failed",
+            progress=100,
+            error=str(error),
+        )
+        shutil.rmtree(job_directory, ignore_errors=True)
+        raise HTTPException(status_code=500, detail=str(error)) from error
+    finally:
+        await file.close()
+
+
+@app.get("/api/analyze-file/jobs/{job_id}")
+def get_file_analysis_job(job_id: str):
+    job = read_analysis_job(job_id)
+    if not job:
+        raise HTTPException(status_code=404, detail="Analysis job was not found or has expired.")
+
+    return job
 
 
 @app.post("/api/analyze-file")
@@ -569,6 +916,15 @@ def hide_api_server_files(path: str):
     raise HTTPException(status_code=404, detail="Not found.")
 
 
+@app.api_route(
+    "/api/{path:path}",
+    methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    include_in_schema=False,
+)
+def api_not_found(path: str):
+    raise HTTPException(status_code=404, detail="API route not found.")
+
+
 def hide_internal_static_file():
     raise HTTPException(status_code=404, detail="Not found.")
 
@@ -579,6 +935,23 @@ for blocked_file in BLOCKED_STATIC_FILES:
         hide_internal_static_file,
         methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
         include_in_schema=False,
+    )
+
+
+@app.exception_handler(StarletteHTTPException)
+async def custom_http_exception_handler(request: Request, error: StarletteHTTPException):
+    if request.url.path.startswith("/api/"):
+        return JSONResponse(
+            status_code=error.status_code,
+            content={"detail": error.detail},
+        )
+
+    if error.status_code == 404:
+        return FileResponse(SITE_DIR / "404.html", status_code=404)
+
+    return JSONResponse(
+        status_code=error.status_code,
+        content={"detail": error.detail},
     )
 
 

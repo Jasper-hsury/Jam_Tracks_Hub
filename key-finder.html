@@ -14,8 +14,9 @@
     <meta property="og:url" content="https://jasper-music.onrender.com/key-finder.html">
     <meta property="og:type" content="website">
 
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=20260623-key-finder-page">
+    <script src="theme-init.js?v=20260623-dark-light"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=20260623-chord-soft">
 </head>
 
 <body>
@@ -25,7 +26,7 @@
             <li><a href="index.html#home">Home</a></li>
             <li><a href="tracks.html">Tracks</a></li>
             <li><a href="key-finder.html" class="active" aria-current="page">Key Finder</a></li>
-            <li><a href="chords.html">Chord</a></li>
+            <li><a href="chords.html">Chord Progressions</a></li>
             <li><a href="index.html#about">About</a></li>
         </ul>
     </nav>
@@ -40,23 +41,39 @@
                 <p>Upload an audio file for the most stable estimate. YouTube links remain available as a backup.</p>
             </div>
 
-            <div class="api-status" id="apiStatus" aria-live="polite">
-                <span class="status-dot"></span>
-                <span class="status-text">Checking API...</span>
+            <div class="key-finder-status-row">
+                <div class="api-status" id="apiStatus" role="status" aria-live="polite">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Checking API...</span>
+                </div>
+
+                <div class="segmented-control" role="group" aria-label="Result detail">
+                    <button class="result-mode-button active" type="button" data-result-mode="quick" aria-pressed="true">Quick</button>
+                    <button class="result-mode-button" type="button" data-result-mode="detailed" aria-pressed="false">Detailed</button>
+                </div>
+            </div>
+
+            <div class="service-wake-panel" id="serviceWakePanel" role="status" aria-live="polite" hidden>
+                <span class="wake-spinner" aria-hidden="true"></span>
+                <div>
+                    <strong id="serviceWakeTitle">Waking the analyzer</strong>
+                    <p id="serviceWakeCopy">The first request after an idle period can take a few seconds.</p>
+                    <a class="service-wake-link" href="service-waking.html">Open service status</a>
+                </div>
             </div>
 
             <div class="key-finder-upload">
-                <input id="audioKeyFile" type="file" accept="audio/*,.aac,.aiff,.flac,.m4a,.mp3,.mp4,.ogg,.wav,.webm" aria-label="Audio file">
+                <input id="audioKeyFile" type="file" accept="audio/*,.aac,.aiff,.flac,.m4a,.mp3,.mp4,.ogg,.wav,.webm" aria-label="Audio file" aria-describedby="audioFileRequirements uploadPrivacyNote">
                 <label class="upload-file-label" for="audioKeyFile">
                     <span>Primary</span>
                     <strong id="audioFileName">Choose an audio file</strong>
-                    <small>MP3/WAV recommended. MP4 or WEBM should be audio-only and under 25 MB.</small>
+                    <small id="audioFileRequirements">MP3/WAV recommended. MP4 or WEBM should be audio-only and under 25 MB.</small>
                 </label>
-                <button id="analyzeFileButton" class="primary-button analyze-file-button" type="button">
-                    <span>Analyze</span>
-                    <small>File</small>
-                </button>
+                <button id="analyzeFileButton" class="primary-button analyze-file-button" type="button">Analyze File</button>
             </div>
+            <p class="upload-privacy-note" id="uploadPrivacyNote">
+                Your upload is used only for analysis and is deleted from temporary storage when the job finishes.
+            </p>
 
             <div class="key-finder-divider">
                 <span>Backup: YouTube link</span>
@@ -68,7 +85,7 @@
                 <button id="cancelAnalyzeButton" class="secondary-button" type="button" hidden>Cancel</button>
             </div>
 
-            <div class="key-finder-result key-finder-empty" id="keyFinderResult" aria-live="polite">
+            <div class="key-finder-result key-finder-empty" id="keyFinderResult" role="status" aria-live="polite" aria-atomic="false">
                 <span>Ready when you are.</span>
             </div>
 
@@ -92,8 +109,8 @@
 
     <button id="backToTopBtn" type="button" aria-label="Back to top">&uarr;</button>
 
-    <script src="site.js"></script>
+    <script src="site.js?v=20260623-dark-light"></script>
     <script src="site-config.js?v=20260603-render-api"></script>
-    <script src="key-finder.js?v=20260623-key-finder-page"></script>
+    <script src="key-finder.js?v=20260623-product-refresh"></script>
 </body>
 </html>

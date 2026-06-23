@@ -15,8 +15,9 @@
     <meta property="og:type" content="website">
     <meta property="og:locale" content="en_US">
 
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=20260623-key-finder-page">
+    <script src="theme-init.js?v=20260623-dark-light"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=20260623-chord-soft">
 </head>
 
 <body>
@@ -26,105 +27,134 @@
             <li><a href="index.html#home" class="active" aria-current="page">Home</a></li>
             <li><a href="tracks.html">Tracks</a></li>
             <li><a href="key-finder.html">Key Finder</a></li>
-            <li><a href="chords.html">Chord</a></li>
+            <li><a href="chords.html">Chord Progressions</a></li>
             <li><a href="index.html#about">About</a></li>
         </ul>
     </nav>
 
-    <main class="content-container">
-        <section class="left-column">
-            <h1 id="home">Jasper's Music Space</h1>
-            <p class="hero-tagline signature-slogan">Capture the Feeling. Compose the Meaning.</p>
+    <main class="home-page">
+        <section class="home-hero" id="home">
+            <div class="home-section-inner">
+                <p class="home-eyebrow">Backing tracks · harmonic tools · song analysis</p>
+                <h1>Jasper's Music</h1>
+                <p class="signature-slogan">Capture the Feeling. Compose the Meaning.</p>
+                <p class="home-lead">
+                    Original practice tracks and focused music tools for musicians who want to listen,
+                    understand, and create with purpose.
+                </p>
 
-            <div class="hero-actions">
-                <a href="#piano-track" class="primary-button" id="listenNowBtn">Listen Now</a>
-                <a href="#about" class="secondary-button">About Jasper</a>
-            </div>
+                <div class="hero-actions">
+                    <a href="tracks.html" class="primary-button">Explore Tracks</a>
+                    <a href="key-finder.html" class="secondary-button">Analyze a Song</a>
+                </div>
 
-            <div class="hero-badges" aria-label="Music focus">
-                <span>Backing Tracks</span>
-                <span>Piano Ideas</span>
-                <span>Guitar Practice</span>
-            </div>
-
-            <img src="cover.jpeg" class="cover-photo" alt="Jasper playing acoustic guitar on stage" width="600" height="900">
-
-            <hr class="section-divider">
-
-            <h2 id="about" class="section-title">About Me</h2>
-            <p class="about-text">
-                Hi, I'm Jasper. This is my personal space for capturing musical ideas, guitar backing tracks, and original sounds.<br>
-                All backing tracks here are made for musicians to practice, jam, and spark new creative ideas.
-            </p>
-
-            <div class="start-grid" aria-label="Start here">
-                <a href="tracks.html" class="start-card">
-                    <span class="start-kicker">Practice</span>
-                    <strong>Browse backing tracks</strong>
-                    <span>Find tracks by key, style, and mood.</span>
-                </a>
-                <a href="chords.html" class="start-card">
-                    <span class="start-kicker">Create</span>
-                    <strong>Explore chord ideas</strong>
-                    <span>Check scale notes, progressions, and harmonic colors.</span>
-                </a>
-                <a href="key-finder.html" class="start-card">
-                    <span class="start-kicker">Analyze</span>
-                    <strong>Find a song key</strong>
-                    <span>Upload audio and review tonal evidence and likely keys.</span>
-                </a>
+                <dl class="home-metrics" aria-label="Site overview">
+                    <div><dt>8</dt><dd>Original tracks</dd></div>
+                    <div><dt>24</dt><dd>Major and minor keys</dd></div>
+                    <div><dt>3</dt><dd>Creative tools</dd></div>
+                </dl>
             </div>
         </section>
 
-        <section class="right-column">
-            <h2 id="tracks" class="section-title">Latest Backing Track</h2>
+        <section class="home-tools" aria-labelledby="homeToolsTitle">
+            <div class="home-section-inner">
+                <div class="home-section-heading">
+                    <p class="home-eyebrow">Start here</p>
+                    <h2 id="homeToolsTitle">Choose your next step</h2>
+                </div>
 
-            <iframe
-                src="https://www.youtube.com/embed/r_Tpphaa8bI?si=FmDZI5Vp1dgXwRDL"
-                title="Emotional Ballad Backing Track in C YouTube preview"
-                loading="lazy"
-                referrerpolicy="strict-origin-when-cross-origin"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen>
-            </iframe>
-
-            <h2 id="piano-track" class="section-title section-title-spaced">Piano Backing Track</h2>
-            <div class="audio-player-card">
-                <p class="audio-title">Piano backing track in A</p>
-                <audio id="pianoAudio" controls preload="metadata" controlslist="nodownload">
-                    <source src="Piano_backing_track_in_A_20260215_1.mp3" type="audio/mpeg">
-                    Your browser does not support the audio element.
-                </audio>
+                <div class="start-grid home-start-grid">
+                    <a href="tracks.html" class="start-card">
+                        <span class="start-kicker">Practice</span>
+                        <strong>Backing Tracks</strong>
+                        <span>Browse by key, style, mood, and instrument.</span>
+                    </a>
+                    <a href="key-finder.html" class="start-card">
+                        <span class="start-kicker">Analyze</span>
+                        <strong>Key Finder</strong>
+                        <span>Upload audio and inspect the likely tonal center.</span>
+                    </a>
+                    <a href="chords.html" class="start-card">
+                        <span class="start-kicker">Create</span>
+                        <strong>Chord Progressions</strong>
+                        <span>Explore voicings, inversions, and common progressions.</span>
+                    </a>
+                </div>
             </div>
+        </section>
 
-            <h2 class="section-title section-title-spaced">
-                <a href="tracks.html" class="section-title-link">More Backing Tracks</a>
-            </h2>
+        <section class="home-feature-band" id="piano-track" aria-labelledby="featuredAudioTitle">
+            <div class="home-feature-inner">
+                <div>
+                    <p class="home-eyebrow">Featured practice audio</p>
+                    <h2 id="featuredAudioTitle">Piano Backing Track in A</h2>
+                    <p>A restrained piano foundation for improvisation, phrasing, and melodic practice.</p>
+                </div>
+                <div class="audio-player-card home-audio-player">
+                    <audio id="pianoAudio" controls preload="metadata" controlslist="nodownload">
+                        <source src="Piano_backing_track_in_A_20260215_1.mp3" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+            </div>
+        </section>
 
-            <div class="track-card-list">
-                <article class="track-card">
-                    <div class="track-card-main">
-                        <h3>Lonesome Midnight Rock</h3>
+        <section class="home-releases" id="tracks" aria-labelledby="latestReleasesTitle">
+            <div class="home-section-inner">
+                <div class="home-section-heading home-section-heading-row">
+                    <div>
+                        <p class="home-eyebrow">Recent work</p>
+                        <h2 id="latestReleasesTitle">Latest Releases</h2>
+                    </div>
+                    <a href="tracks.html" class="text-link">View all tracks</a>
+                </div>
+
+                <div class="home-release-grid">
+                    <article class="home-release-card">
+                        <p class="release-number">W8</p>
+                        <h3>Funky Backing Track in F#m</h3>
+                        <p class="track-meta"><span>F# minor</span><span>Funk</span><span>Energetic</span></p>
+                        <a href="https://youtu.be/gfz6a-_kJ7I?si=OjYYmk9HVkk7lmQq" class="text-link" target="_blank" rel="noopener noreferrer">Listen on YouTube</a>
+                    </article>
+                    <article class="home-release-card">
+                        <p class="release-number">W7</p>
+                        <h3>Whispering Rock Backing Track in G</h3>
+                        <p class="track-meta"><span>G major</span><span>Rock</span><span>80 BPM</span></p>
+                        <a href="https://youtu.be/kb4k-9mOs_U?si=_x_N-jvfs1LQbd0U" class="text-link" target="_blank" rel="noopener noreferrer">Listen on YouTube</a>
+                    </article>
+                    <article class="home-release-card">
+                        <p class="release-number">W6</p>
+                        <h3>Lonesome Midnight Rock in G</h3>
                         <p class="track-meta"><span>G major</span><span>Rock</span><span>90 BPM</span></p>
-                    </div>
-                    <a href="https://youtu.be/VgWI15MovKI?si=4IGrLz7Jt3TewKtq" class="track-link" target="_blank" rel="noopener noreferrer">Listen</a>
-                </article>
+                        <a href="https://youtu.be/VgWI15MovKI?si=4IGrLz7Jt3TewKtq" class="text-link" target="_blank" rel="noopener noreferrer">Listen on YouTube</a>
+                    </article>
+                </div>
+            </div>
+        </section>
 
-                <article class="track-card">
-                    <div class="track-card-main">
-                        <h3>Aerial Backing Track in E minor</h3>
-                        <p class="track-meta"><span>E minor</span><span>Atmospheric</span></p>
-                    </div>
-                    <a href="https://youtu.be/a3OaoGit_FU?si=VQVJRMWDAOymzhIG" class="track-link" target="_blank" rel="noopener noreferrer">Listen</a>
-                </article>
+        <section class="home-about" id="about" aria-labelledby="aboutTitle">
+            <div class="home-section-inner home-about-layout">
+                <figure class="about-portrait">
+                    <img src="cover.jpeg" alt="Jasper playing acoustic guitar on stage" width="600" height="900">
+                    <figcaption>Jasper · guitarist and music creator</figcaption>
+                </figure>
 
-                <article class="track-card">
-                    <div class="track-card-main">
-                        <h3>Emotional Ballad Backing Track in C</h3>
-                        <p class="track-meta"><span>C major</span><span>Emotional Ballad</span></p>
+                <div class="about-copy">
+                    <p class="home-eyebrow">About Jasper</p>
+                    <h2 id="aboutTitle">Music made for the space between practice and creation.</h2>
+                    <p>
+                        I build backing tracks, piano ideas, and practical music tools for players who
+                        want more than a metronome, but less distraction than a full production.
+                    </p>
+                    <p>
+                        This site is where those ideas meet: material to play with, tools to understand
+                        what you hear, and room to discover your own direction.
+                    </p>
+                    <div class="about-links">
+                        <a href="https://youtube.com/@weekly_backing_track?si=-Rp6XDvP0A8fclp3" class="primary-button" target="_blank" rel="noopener noreferrer">YouTube</a>
+                        <a href="https://www.instagram.com/reyu_jasper?igsh=dmVsazFvb2pwMmsw&utm_source=qr" class="secondary-button" target="_blank" rel="noopener noreferrer">Instagram</a>
                     </div>
-                    <a href="https://youtu.be/r_Tpphaa8bI?si=_ivxyFnF6hmzpup3" class="track-link" target="_blank" rel="noopener noreferrer">Listen</a>
-                </article>
+                </div>
             </div>
         </section>
     </main>
@@ -139,7 +169,6 @@
 
     <button id="backToTopBtn" type="button" aria-label="Back to top">&uarr;</button>
 
-    <script src="site.js"></script>
-    <script src="home.js"></script>
+    <script src="site.js?v=20260623-dark-light"></script>
 </body>
 </html>

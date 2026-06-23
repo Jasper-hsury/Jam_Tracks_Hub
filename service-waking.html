@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waking the Analyzer | Jasper's Music</title>
+    <meta name="robots" content="noindex">
+    <link rel="icon" href="icon.png" type="image/png">
+    <script src="theme-init.js?v=20260623-dark-light"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=20260623-chord-soft">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html#home" class="logo">Jasper's Music</a>
+        <ul class="nav-links">
+            <li><a href="index.html#home">Home</a></li>
+            <li><a href="tracks.html">Tracks</a></li>
+            <li><a href="key-finder.html" class="active" aria-current="page">Key Finder</a></li>
+            <li><a href="chords.html">Chord Progressions</a></li>
+            <li><a href="index.html#about">About</a></li>
+        </ul>
+    </nav>
+
+    <main class="status-page" id="main-content">
+        <span class="status-page-spinner" aria-hidden="true"></span>
+        <p class="status-page-code">KEY FINDER</p>
+        <h1>Waking the analyzer</h1>
+        <p id="wakeMessage" role="status" aria-live="polite">
+            The service is starting. This can take a short moment after it has been idle.
+        </p>
+        <div class="status-page-actions">
+            <button class="primary-button" id="retryWakeButton" type="button">Check Again</button>
+            <a class="secondary-button" href="key-finder.html">Back to Key Finder</a>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 Jasper's Music. All rights reserved.</p>
+        <div class="social-links">
+            <a href="https://youtube.com/@weekly_backing_track?si=-Rp6XDvP0A8fclp3" target="_blank" rel="noopener noreferrer" aria-label="Visit Jasper's YouTube channel">YouTube</a>
+            <a href="https://www.instagram.com/reyu_jasper?igsh=dmVsazFvb2pwMmsw&utm_source=qr" target="_blank" rel="noopener noreferrer" aria-label="Visit Jasper's Instagram profile">Instagram</a>
+        </div>
+    </footer>
+
+    <script src="site-config.js?v=20260603-render-api"></script>
+    <script src="site.js?v=20260623-dark-light"></script>
+    <script>
+        const message = document.getElementById("wakeMessage");
+        const retryButton = document.getElementById("retryWakeButton");
+        const apiBase = (window.KEY_FINDER_API_BASE || window.location.origin).replace(/\/$/, "");
+        let attempts = 0;
+
+        async function checkService() {
+            attempts += 1;
+            retryButton.disabled = true;
+            message.textContent = "Checking the analyzer...";
+
+            try {
+                const response = await fetch(`${apiBase}/api/health`, { cache: "no-store" });
+                if (!response.ok) {
+                    throw new Error("Service is still starting");
+                }
+
+                message.textContent = "The analyzer is ready. Returning to Key Finder...";
+                window.setTimeout(function() {
+                    window.location.href = "key-finder.html";
+                }, 700);
+                return;
+            } catch (error) {
+                message.textContent = attempts < 6
+                    ? "Still waking up. We will check again automatically."
+                    : "The analyzer is taking longer than expected. Please check again.";
+                retryButton.disabled = false;
+            }
+
+            if (attempts < 6) {
+                window.setTimeout(checkService, 4000);
+            }
+        }
+
+        retryButton.addEventListener("click", checkService);
+        checkService();
+    </script>
+</body>
+</html>

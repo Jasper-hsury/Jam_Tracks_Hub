@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
+    const SAVED_PROGRESSIONS_KEY = "jasperMusicSavedProgressions";
     const keyButtons = document.querySelectorAll(".key-button");
     const keyResult = document.getElementById("keyResult");
     const keyOptions = document.getElementById("keyOptions");
@@ -15,6 +16,7 @@ document.addEventListener("DOMContentLoaded", function() {
     let guitarSampleFailed = false;
     let guitarStrokeCount = 0;
     let noiseBuffer = null;
+    let selectedKeyButton = null;
 
     if (!keyButtons.length || !keyResult || !keyOptions || !selectKeyButton) {
         return;
@@ -85,7 +87,18 @@ document.addEventListener("DOMContentLoaded", function() {
         Cb: 11
     };
 
-    function buildMajorDiatonicChords(notes) {
+    function buildMajorDiatonicChords(notes, useSevenths) {
+        if (useSevenths) {
+            return {
+                I: `${notes[0]}maj7`,
+                ii: `${notes[1]}m7`,
+                iii: `${notes[2]}m7`,
+                IV: `${notes[3]}maj7`,
+                V: `${notes[4]}7`,
+                vi: `${notes[5]}m7`
+            };
+        }
+
         return {
             I: notes[0],
             ii: `${notes[1]}m`,
@@ -96,7 +109,19 @@ document.addEventListener("DOMContentLoaded", function() {
         };
     }
 
-    function buildMinorDiatonicChords(notes) {
+    function buildMinorDiatonicChords(notes, useSevenths) {
+        if (useSevenths) {
+            return {
+                i: `${notes[0]}m7`,
+                III: `${notes[2]}maj7`,
+                iv: `${notes[3]}m7`,
+                v: `${notes[4]}m7`,
+                V: `${notes[4]}7`,
+                VI: `${notes[5]}maj7`,
+                VII: `${notes[6]}7`
+            };
+        }
+
         return {
             i: `${notes[0]}m`,
             III: notes[2],
@@ -113,19 +138,33 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function renderProgressions(progressions, chordMap) {
-        return progressions.map(function(progression) {
+        return progressions.map(function(progression, index) {
             const chords = progression.numerals.map(function(numeral) {
                 return chordMap[numeral] || numeral;
             });
 
             return `
-                <article class="progression-card">
+                <article class="progression-card" data-progression-index="${index}">
                     <div class="progression-main">
                         <span class="progression-numerals">${progression.numerals.join(" - ")}</span>
-                        <span class="progression-chords">${chords.join(" - ")}</span>
+                        <span class="progression-chords">
+                            ${chords.map(function(chord, chordIndex) {
+                                return `<span class="progression-chord-token" data-chord-index="${chordIndex}">${chord}</span>`;
+                            }).join('<span class="progression-separator">-</span>')}
+                        </span>
                         <span class="progression-style">${progression.style}</span>
                     </div>
-                    <button class="progression-play-button" type="button" data-chords="${encodeChords(chords)}">Loop</button>
+                    <div class="progression-card-actions">
+                        <button class="progression-play-button" type="button" data-chords="${encodeChords(chords)}">Loop</button>
+                        <button class="progression-save-button" type="button"
+                            data-chords="${encodeChords(chords)}"
+                            data-numerals="${encodeChords(progression.numerals)}"
+                            data-style="${encodeURIComponent(progression.style)}">Save</button>
+                        <button class="progression-export-button" type="button"
+                            data-chords="${encodeChords(chords)}"
+                            data-numerals="${encodeChords(progression.numerals)}"
+                            data-style="${encodeURIComponent(progression.style)}">Export</button>
+                    </div>
                 </article>
             `;
         }).join("");
@@ -191,6 +230,12 @@ document.addEventListener("DOMContentLoaded", function() {
         document.querySelectorAll(".progression-card.is-playing").forEach(function(card) {
             card.classList.remove("is-playing");
         });
+        document.querySelectorAll(".progression-card.is-current, .progression-card.is-next").forEach(function(card) {
+            card.classList.remove("is-current", "is-next");
+        });
+        document.querySelectorAll(".progression-play-button").forEach(function(button) {
+            button.textContent = "Loop";
+        });
     }
 
     function trackScheduledNodes(...nodes) {
@@ -207,10 +252,16 @@ document.addEventListener("DOMContentLoaded", function() {
     function parseChordName(chordName) {
         const quality = chordName.endsWith("dim")
             ? "dim"
-            : chordName.endsWith("m")
-                ? "minor"
-                : "major";
-        const root = chordName.replace("dim", "").replace(/m$/, "");
+            : chordName.endsWith("maj7")
+                ? "major7"
+                : chordName.endsWith("m7")
+                    ? "minor7"
+                    : chordName.endsWith("7")
+                        ? "dominant7"
+                        : chordName.endsWith("m")
+                            ? "minor"
+                            : "major";
+        const root = chordName.replace(/(maj7|m7|7|dim|m)$/, "");
         const pitchClass = pitchClasses[root];
 
         if (pitchClass === undefined) {
@@ -255,14 +306,24 @@ document.addEventListener("DOMContentLoaded", function() {
             return [];
         }
 
-        const intervals = parsed.quality === "dim"
-            ? [0, 3, 6]
-            : parsed.quality === "minor"
-                ? [0, 3, 7]
-                : [0, 4, 7];
+        const intervalMap = {
+            dim: [0, 3, 6],
+            minor: [0, 3, 7],
+            major: [0, 4, 7],
+            major7: [0, 4, 7, 11],
+            minor7: [0, 3, 7, 10],
+            dominant7: [0, 4, 7, 10]
+        };
+        const intervals = intervalMap[parsed.quality] || intervalMap.major;
+        const inversion = Math.max(0, Math.min(2, Number(document.getElementById("chordInversion")?.value || 0)));
+        const voicedIntervals = intervals.map(function(interval, index) {
+            return index < inversion ? interval + 12 : interval;
+        }).sort(function(a, b) {
+            return a - b;
+        });
         const rootMidi = 48 + parsed.pitchClass;
 
-        return intervals.map(function(interval) {
+        return voicedIntervals.map(function(interval) {
             return midiToFrequency(rootMidi + interval);
         });
     }
@@ -723,6 +784,15 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
+    function updateChordHighlight(card, currentIndex, chordCount) {
+        const tokens = card.querySelectorAll(".progression-chord-token");
+        tokens.forEach(function(token) {
+            const index = Number(token.dataset.chordIndex);
+            token.classList.toggle("is-current", index === currentIndex);
+            token.classList.toggle("is-next", index === (currentIndex + 1) % chordCount);
+        });
+    }
+
     async function playProgression(chords, card) {
         stopPlayback();
         const sessionId = playbackSessionId;
@@ -746,6 +816,11 @@ document.addEventListener("DOMContentLoaded", function() {
         const shouldSchedule = function() {
             return sessionId === playbackSessionId;
         };
+        const playButton = card.querySelector(".progression-play-button");
+
+        if (playButton) {
+            playButton.textContent = "Playing";
+        }
 
         function scheduleCycle(cycleStartTime, cycleIndex) {
             if (!shouldSchedule()) {
@@ -775,6 +850,15 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
             }
 
+            chords.forEach(function(chord, index) {
+                const delay = Math.max(0, (cycleStartTime - context.currentTime + index * chordDuration) * 1000);
+                playbackTimers.push(window.setTimeout(function() {
+                    if (shouldSchedule()) {
+                        updateChordHighlight(card, index, chords.length);
+                    }
+                }, delay));
+            });
+
             playbackTimers.push(window.setTimeout(function() {
                 scheduleCycle(cycleStartTime + cycleDuration, cycleIndex + 1);
             }, Math.max(250, (cycleDuration - 0.35) * 1000)));
@@ -784,12 +868,144 @@ document.addEventListener("DOMContentLoaded", function() {
         card.classList.add("is-playing");
     }
 
+    function readSavedProgressions() {
+        try {
+            return JSON.parse(localStorage.getItem(SAVED_PROGRESSIONS_KEY) || "[]");
+        } catch (error) {
+            return [];
+        }
+    }
+
+    function writeSavedProgressions(items) {
+        localStorage.setItem(SAVED_PROGRESSIONS_KEY, JSON.stringify(items.slice(0, 20)));
+    }
+
+    function renderSavedProgressions() {
+        const container = document.getElementById("savedProgressions");
+        if (!container) {
+            return;
+        }
+
+        const items = readSavedProgressions();
+        container.innerHTML = items.length
+            ? items.map(function(item) {
+                return `
+                    <article class="saved-progression-item">
+                        <div>
+                            <strong>${item.key}</strong>
+                            <span>${item.numerals.join(" - ")}</span>
+                            <span>${item.chords.join(" - ")}</span>
+                        </div>
+                        <button class="saved-progression-delete" type="button" data-saved-id="${item.id}" aria-label="Delete saved progression">Delete</button>
+                    </article>
+                `;
+            }).join("")
+            : `<p class="saved-progression-empty">No saved progressions yet.</p>`;
+    }
+
+    function saveProgression(button) {
+        const chords = JSON.parse(decodeURIComponent(button.dataset.chords));
+        const numerals = JSON.parse(decodeURIComponent(button.dataset.numerals));
+        const style = decodeURIComponent(button.dataset.style || "");
+        const item = {
+            id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+            key: selectedKeyButton?.dataset.key || "Selected key",
+            chords,
+            numerals,
+            style
+        };
+
+        writeSavedProgressions([item, ...readSavedProgressions()]);
+        renderSavedProgressions();
+        button.textContent = "Saved";
+        window.setTimeout(function() {
+            button.textContent = "Save";
+        }, 1200);
+    }
+
+    function exportProgression(button) {
+        const chords = JSON.parse(decodeURIComponent(button.dataset.chords));
+        const numerals = JSON.parse(decodeURIComponent(button.dataset.numerals));
+        const style = decodeURIComponent(button.dataset.style || "");
+        const keyName = selectedKeyButton?.dataset.key || "Selected key";
+        const content = [
+            "Jasper's Music - Chord Progression",
+            "",
+            `Key: ${keyName}`,
+            `Roman numerals: ${numerals.join(" - ")}`,
+            `Chords: ${chords.join(" - ")}`,
+            `Style: ${style}`,
+            `BPM: ${document.getElementById("progressionBpm")?.value || 72}`,
+            `Voicing: ${document.getElementById("chordInversion")?.selectedOptions?.[0]?.textContent || "Root position"}`
+        ].join("\n");
+        const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `${keyName.replace(/\s+/g, "_")}_progression.txt`;
+        link.click();
+        URL.revokeObjectURL(url);
+    }
+
+    function transposeSelectedKey(delta) {
+        if (!selectedKeyButton) {
+            return;
+        }
+
+        const currentKey = selectedKeyButton.dataset.key;
+        const currentRoot = currentKey.split(" ")[0];
+        const currentMode = currentKey.includes("minor") ? "minor" : "major";
+        const targetPitchClass = (pitchClasses[currentRoot] + delta + 12) % 12;
+        const targetButton = Array.from(keyButtons).find(function(button) {
+            const keyName = button.dataset.key;
+            const root = keyName.split(" ")[0];
+            const mode = keyName.includes("minor") ? "minor" : "major";
+            return mode === currentMode && pitchClasses[root] === targetPitchClass;
+        });
+
+        targetButton?.click();
+    }
+
     keyResult.addEventListener("click", function(event) {
         const playButton = event.target.closest(".progression-play-button");
         const stopButton = event.target.closest("#stopProgressionButton");
+        const saveButton = event.target.closest(".progression-save-button");
+        const exportButton = event.target.closest(".progression-export-button");
+        const deleteButton = event.target.closest(".saved-progression-delete");
+        const transposeDownButton = event.target.closest("#transposeDownButton");
+        const transposeUpButton = event.target.closest("#transposeUpButton");
 
         if (stopButton) {
             stopPlayback();
+            return;
+        }
+
+        if (saveButton) {
+            saveProgression(saveButton);
+            return;
+        }
+
+        if (exportButton) {
+            exportProgression(exportButton);
+            return;
+        }
+
+        if (deleteButton) {
+            const nextItems = readSavedProgressions().filter(function(item) {
+                return item.id !== deleteButton.dataset.savedId;
+            });
+            writeSavedProgressions(nextItems);
+            renderSavedProgressions();
+            return;
+        }
+
+        if (transposeDownButton) {
+            transposeSelectedKey(-1);
+            return;
+        }
+
+        if (transposeUpButton) {
+            transposeSelectedKey(1);
             return;
         }
 
@@ -801,75 +1017,157 @@ document.addEventListener("DOMContentLoaded", function() {
         playProgression(chords, playButton.closest(".progression-card"));
     });
 
-    keyButtons.forEach(function(button) {
-        button.addEventListener("click", function() {
-            const keyName = button.dataset.key;
-            const keyNotes = button.dataset.notes.split(", ");
-            const isMinor = keyName.includes("minor");
-            const intervals = isMinor ? minorIntervals : majorIntervals;
-            const progressions = isMinor ? minorProgressions : majorProgressions;
-            const chordMap = isMinor ? buildMinorDiatonicChords(keyNotes) : buildMajorDiatonicChords(keyNotes);
+    function readCurrentControls() {
+        return {
+            bpm: document.getElementById("progressionBpm")?.value || 72,
+            metronome: document.getElementById("progressionMetronome")?.checked || false,
+            guitarVolume: document.getElementById("guitarVolume")?.value || 130,
+            metronomeVolume: document.getElementById("metronomeVolume")?.value || 80,
+            backing: document.getElementById("backingTrackMode")?.checked ?? true,
+            backingVolume: document.getElementById("backingVolume")?.value || 70,
+            extension: document.getElementById("chordExtension")?.value || "triads",
+            inversion: document.getElementById("chordInversion")?.value || 0
+        };
+    }
 
-            const noteCards = keyNotes.map(function(note, index) {
-                return `
-                    <article class="note-card">
-                        <span class="note-name">${note}</span>
-                        <span class="interval-name">${intervals[index]}</span>
-                    </article>
-                `;
-            }).join("");
-
-            keyResult.innerHTML = `
-                <h3>${keyName}</h3>
-                <div class="note-grid">${noteCards}</div>
-                <section class="progression-section">
-                    <div class="progression-toolbar">
-                        <h4>Common Progressions</h4>
-                        <div class="progression-controls">
-                            <label>
-                                BPM
-                                <input id="progressionBpm" type="number" min="50" max="180" value="72">
-                            </label>
-                            <label class="metronome-toggle">
-                                <input id="progressionMetronome" type="checkbox">
-                                Metronome
-                            </label>
-                            <label class="volume-control">
-                                Guitar
-                                <input id="guitarVolume" type="range" min="0" max="200" value="130">
-                            </label>
-                            <label class="volume-control">
-                                Click
-                                <input id="metronomeVolume" type="range" min="0" max="200" value="80">
-                            </label>
-                            <label class="backing-toggle">
-                                <input id="backingTrackMode" type="checkbox" checked>
-                                Band
-                            </label>
-                            <label class="volume-control">
-                                Band
-                                <input id="backingVolume" type="range" min="0" max="200" value="70">
-                            </label>
-                            <button id="stopProgressionButton" class="secondary-button" type="button">Stop</button>
-                        </div>
-                    </div>
-                    <div class="progression-grid">${renderProgressions(progressions, chordMap)}</div>
-                </section>
-            `;
-
-            keyOptions.hidden = true;
-            selectKeyButton.hidden = false;
-            keyResult.scrollIntoView({ behavior: "smooth", block: "start" });
+    function renderSelectedKey(button, shouldScroll) {
+        stopPlayback();
+        const settings = readCurrentControls();
+        selectedKeyButton = button;
+        keyButtons.forEach(function(keyButton) {
+            const isSelected = keyButton === button;
+            keyButton.classList.toggle("is-selected", isSelected);
+            keyButton.setAttribute("aria-pressed", String(isSelected));
         });
+
+        const keyName = button.dataset.key;
+        const keyNotes = button.dataset.notes.split(", ");
+        const isMinor = keyName.includes("minor");
+        const intervals = isMinor ? minorIntervals : majorIntervals;
+        const progressions = isMinor ? minorProgressions : majorProgressions;
+        const useSevenths = settings.extension === "sevenths";
+        const chordMap = isMinor
+            ? buildMinorDiatonicChords(keyNotes, useSevenths)
+            : buildMajorDiatonicChords(keyNotes, useSevenths);
+        const noteCards = keyNotes.map(function(note, index) {
+            return `
+                <article class="note-card">
+                    <span class="note-name">${note}</span>
+                    <span class="interval-name">${intervals[index]}</span>
+                </article>
+            `;
+        }).join("");
+
+        keyResult.innerHTML = `
+            <div class="selected-key-heading">
+                <div>
+                    <span class="result-kicker">Selected key</span>
+                    <h3>${keyName}</h3>
+                </div>
+                <div class="transpose-controls" aria-label="Transpose selected key">
+                    <button id="transposeDownButton" type="button" aria-label="Transpose down one semitone">&minus;1</button>
+                    <button id="transposeUpButton" type="button" aria-label="Transpose up one semitone">+1</button>
+                </div>
+            </div>
+            <div class="note-grid">${noteCards}</div>
+            <section class="progression-section">
+                <div class="progression-toolbar">
+                    <h4>Common Progressions</h4>
+                    <div class="progression-controls progression-controls-expanded">
+                        <label>
+                            Chords
+                            <select id="chordExtension">
+                                <option value="triads" ${settings.extension === "triads" ? "selected" : ""}>Triads</option>
+                                <option value="sevenths" ${settings.extension === "sevenths" ? "selected" : ""}>Seventh chords</option>
+                            </select>
+                        </label>
+                        <label>
+                            Voicing
+                            <select id="chordInversion">
+                                <option value="0" ${String(settings.inversion) === "0" ? "selected" : ""}>Root position</option>
+                                <option value="1" ${String(settings.inversion) === "1" ? "selected" : ""}>First inversion</option>
+                                <option value="2" ${String(settings.inversion) === "2" ? "selected" : ""}>Second inversion</option>
+                            </select>
+                        </label>
+                        <label>
+                            BPM
+                            <input id="progressionBpm" type="number" min="50" max="180" value="${settings.bpm}">
+                        </label>
+                        <label class="metronome-toggle">
+                            <input id="progressionMetronome" type="checkbox" ${settings.metronome ? "checked" : ""}>
+                            Metronome
+                        </label>
+                        <label class="volume-control">
+                            Guitar
+                            <input id="guitarVolume" type="range" min="0" max="200" value="${settings.guitarVolume}">
+                        </label>
+                        <label class="volume-control">
+                            Click
+                            <input id="metronomeVolume" type="range" min="0" max="200" value="${settings.metronomeVolume}">
+                        </label>
+                        <label class="backing-toggle">
+                            <input id="backingTrackMode" type="checkbox" ${settings.backing ? "checked" : ""}>
+                            Band
+                        </label>
+                        <label class="volume-control">
+                            Band
+                            <input id="backingVolume" type="range" min="0" max="200" value="${settings.backingVolume}">
+                        </label>
+                        <button id="stopProgressionButton" class="secondary-button" type="button">Stop</button>
+                    </div>
+                </div>
+                <div class="progression-grid">${renderProgressions(progressions, chordMap)}</div>
+            </section>
+            <section class="saved-progression-section">
+                <h4>Saved Progressions</h4>
+                <div id="savedProgressions"></div>
+            </section>
+        `;
+
+        keyOptions.hidden = true;
+        selectKeyButton.hidden = false;
+        renderSavedProgressions();
+
+        if (shouldScroll) {
+            keyResult.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+    }
+
+    keyButtons.forEach(function(button) {
+        button.setAttribute("aria-pressed", "false");
+        button.addEventListener("click", function() {
+            renderSelectedKey(button, true);
+        });
+    });
+
+    keyResult.addEventListener("change", function(event) {
+        if (event.target.id === "chordExtension" && selectedKeyButton) {
+            renderSelectedKey(selectedKeyButton, false);
+        }
     });
 
     selectKeyButton.addEventListener("click", function() {
         stopPlayback();
         keyOptions.hidden = false;
         selectKeyButton.hidden = true;
+        selectedKeyButton = null;
+        keyButtons.forEach(function(button) {
+            button.classList.remove("is-selected");
+            button.setAttribute("aria-pressed", "false");
+        });
         keyResult.innerHTML = `
             <h3>Select a key</h3>
             <p>Click a key above to see its notes.</p>
         `;
     });
+
+    const requestedKey = new URLSearchParams(window.location.search).get("key");
+    if (requestedKey) {
+        const requestedButton = Array.from(keyButtons).find(function(button) {
+            return button.dataset.key.toLowerCase() === requestedKey.toLowerCase();
+        });
+        if (requestedButton) {
+            renderSelectedKey(requestedButton, false);
+        }
+    }
 });

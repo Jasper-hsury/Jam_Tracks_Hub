@@ -1,14 +1,19 @@
 document.addEventListener("DOMContentLoaded", function() {
     const STORAGE_KEY = "jasperMusicCustomTracks";
+    const FAVORITES_KEY = "jasperMusicFavoriteTracks";
     const grid = document.getElementById("tracksGrid");
     const searchInput = document.getElementById("trackSearchInput");
     const keyFilter = document.getElementById("trackKeyFilter");
     const styleFilter = document.getElementById("trackStyleFilter");
+    const moodFilter = document.getElementById("trackMoodFilter");
+    const instrumentFilter = document.getElementById("trackInstrumentFilter");
     const sortSelect = document.getElementById("trackSortSelect");
+    const favoritesOnly = document.getElementById("favoriteTracksOnly");
     const resetButton = document.getElementById("resetTrackFilters");
     const resultCount = document.getElementById("trackResultCount");
 
     const modal = document.getElementById("addTrackModal");
+    const modalContent = modal?.querySelector(".modal-content");
     const openModalButton = document.getElementById("openAddTrackButton");
     const cancelButton = document.getElementById("cancelAddTrackButton");
     const previewButton = document.getElementById("previewTrackButton");
@@ -48,11 +53,55 @@ document.addEventListener("DOMContentLoaded", function() {
             title: String(track.title || "").trim(),
             key: String(track.key || "Unknown key").trim(),
             style: String(track.style || "Unknown style").trim(),
+            mood: String(track.mood || "Unspecified").trim(),
+            instrument: String(track.instrument || "Full band").trim(),
             bpm: String(track.bpm || "").trim(),
             youtubeUrl: String(track.youtubeUrl || "#").trim(),
             slidesUrl: String(track.slidesUrl || "#").trim(),
             downloadUrl: String(track.downloadUrl || "#").trim()
         };
+    }
+
+    function readFavorites() {
+        try {
+            return new Set(JSON.parse(localStorage.getItem(FAVORITES_KEY) || "[]"));
+        } catch (error) {
+            return new Set();
+        }
+    }
+
+    function writeFavorites(favorites) {
+        localStorage.setItem(FAVORITES_KEY, JSON.stringify(Array.from(favorites)));
+    }
+
+    function isFavorite(trackId) {
+        return readFavorites().has(trackId);
+    }
+
+    function toggleFavorite(trackId) {
+        const favorites = readFavorites();
+        if (favorites.has(trackId)) {
+            favorites.delete(trackId);
+        } else {
+            favorites.add(trackId);
+        }
+        writeFavorites(favorites);
+    }
+
+    function getYouTubeVideoId(url) {
+        try {
+            const parsed = new URL(url);
+            if (parsed.hostname.includes("youtu.be")) {
+                return parsed.pathname.slice(1).split("/")[0];
+            }
+            if (parsed.hostname.includes("youtube.com")) {
+                return parsed.searchParams.get("v") || parsed.pathname.split("/").filter(Boolean).pop();
+            }
+        } catch (error) {
+            return "";
+        }
+
+        return "";
     }
 
     function readCustomTracks() {
@@ -125,6 +174,8 @@ document.addEventListener("DOMContentLoaded", function() {
         const isPreview = options?.isPreview;
         const bpmTag = track.bpm ? `<span>${escapeHtml(track.bpm)} BPM</span>` : "";
         const previewBadge = isPreview ? `<span>Preview</span>` : "";
+        const favorite = isFavorite(track.id);
+        const videoId = getYouTubeVideoId(track.youtubeUrl);
 
         return `
             <article class="track-card${isPreview ? " preview-track-card" : ""}"
@@ -132,21 +183,33 @@ document.addEventListener("DOMContentLoaded", function() {
                 data-title="${escapeHtml(`${track.id} ${track.title}`)}"
                 data-key="${escapeHtml(track.key)}"
                 data-style="${escapeHtml(track.style)}"
+                data-mood="${escapeHtml(track.mood)}"
+                data-instrument="${escapeHtml(track.instrument)}"
                 data-bpm="${escapeHtml(track.bpm)}">
                 <div class="track-card-main">
-                    <h2>${escapeHtml(track.id)} ${escapeHtml(track.title)}</h2>
+                    <div class="track-card-title-row">
+                        <h2>${escapeHtml(track.id)} ${escapeHtml(track.title)}</h2>
+                        <button class="favorite-track-button${favorite ? " is-favorite" : ""}" type="button"
+                            data-track-id="${escapeHtml(track.id)}"
+                            aria-label="${favorite ? "Remove from favorites" : "Add to favorites"}"
+                            aria-pressed="${favorite}">${favorite ? "♥" : "♡"}</button>
+                    </div>
                     <p class="track-meta">
                         <span>${escapeHtml(track.key)}</span>
                         <span>${escapeHtml(track.style)}</span>
+                        <span>${escapeHtml(track.mood)}</span>
+                        <span>${escapeHtml(track.instrument)}</span>
                         ${bpmTag}
                         ${previewBadge}
                     </p>
                 </div>
                 <div class="track-actions">
-                    <a href="${escapeHtml(track.youtubeUrl)}" class="track-link" target="_blank" rel="noopener noreferrer">Listen</a>
+                    ${videoId ? `<button class="track-link inline-play-button" type="button" data-video-id="${escapeHtml(videoId)}">Play Here</button>` : ""}
+                    ${videoId ? `<a href="${escapeHtml(track.youtubeUrl)}" class="track-link" target="_blank" rel="noopener noreferrer" aria-label="Open ${escapeHtml(track.title)} on YouTube">YouTube</a>` : ""}
                     <a href="${escapeHtml(track.slidesUrl)}" class="track-link secondary-track-link" target="_blank" rel="noopener noreferrer">Slides</a>
                     <a href="${escapeHtml(track.downloadUrl)}" class="track-link download-track-link" download>Download</a>
                 </div>
+                <div class="inline-track-player" hidden></div>
             </article>
         `;
     }
@@ -155,6 +218,9 @@ document.addEventListener("DOMContentLoaded", function() {
         const query = (searchInput?.value || "").trim().toLowerCase();
         const selectedKey = keyFilter?.value || "all";
         const selectedStyle = styleFilter?.value || "all";
+        const selectedMood = moodFilter?.value || "all";
+        const selectedInstrument = instrumentFilter?.value || "all";
+        const favorites = readFavorites();
 
         return tracks.filter(function(track) {
             const searchable = [
@@ -162,14 +228,24 @@ document.addEventListener("DOMContentLoaded", function() {
                 track.title,
                 track.key,
                 track.style,
+                track.mood,
+                track.instrument,
                 track.bpm
             ].join(" ").toLowerCase();
 
             const matchesSearch = !query || searchable.includes(query);
             const matchesKey = selectedKey === "all" || track.key === selectedKey;
             const matchesStyle = selectedStyle === "all" || track.style === selectedStyle;
+            const matchesMood = selectedMood === "all" || track.mood === selectedMood;
+            const matchesInstrument = selectedInstrument === "all" || track.instrument === selectedInstrument;
+            const matchesFavorite = !favoritesOnly?.checked || favorites.has(track.id);
 
-            return matchesSearch && matchesKey && matchesStyle;
+            return matchesSearch
+                && matchesKey
+                && matchesStyle
+                && matchesMood
+                && matchesInstrument
+                && matchesFavorite;
         });
     }
 
@@ -181,6 +257,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }).join("");
 
         grid.innerHTML = previewHtml + cardsHtml || `<p class="track-loading">No tracks match these filters.</p>`;
+        grid.setAttribute("aria-busy", "false");
 
         if (resultCount) {
             resultCount.textContent = `${visibleTracks.length} track${visibleTracks.length === 1 ? "" : "s"} shown`;
@@ -190,10 +267,15 @@ document.addEventListener("DOMContentLoaded", function() {
     function refreshFilterOptions() {
         populateSelect(keyFilter, uniqueSorted(tracks.map(track => track.key)), "All keys");
         populateSelect(styleFilter, uniqueSorted(tracks.map(track => track.style)), "All styles");
+        populateSelect(moodFilter, uniqueSorted(tracks.map(track => track.mood)), "All moods");
+        populateSelect(instrumentFilter, uniqueSorted(tracks.map(track => track.instrument)), "All instruments");
     }
 
     async function loadTracks() {
-        grid.innerHTML = `<p class="track-loading">Loading tracks...</p>`;
+        grid.setAttribute("aria-busy", "true");
+        grid.innerHTML = Array.from({ length: 3 }, function() {
+            return `<article class="track-card track-skeleton" aria-hidden="true"></article>`;
+        }).join("");
 
         try {
             const response = await fetch("tracks.json", { cache: "no-store" });
@@ -204,6 +286,12 @@ document.addEventListener("DOMContentLoaded", function() {
             const baseTracks = await response.json();
             tracks = [...baseTracks.map(normalizeTrack), ...readCustomTracks()];
             refreshFilterOptions();
+            const requestedKey = new URLSearchParams(window.location.search).get("key");
+            if (requestedKey && keyFilter) {
+                keyFilter.value = Array.from(keyFilter.options).some(option => option.value.toLowerCase() === requestedKey.toLowerCase())
+                    ? Array.from(keyFilter.options).find(option => option.value.toLowerCase() === requestedKey.toLowerCase()).value
+                    : "all";
+            }
             renderTracks();
         } catch (error) {
             grid.innerHTML = `
@@ -224,14 +312,33 @@ document.addEventListener("DOMContentLoaded", function() {
         renderTracks();
     }
 
+    let modalReturnFocus = null;
+
+    function getModalFocusTargets() {
+        return Array.from(modal.querySelectorAll(
+            'button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), a[href]'
+        )).filter(function(element) {
+            return !element.hidden && element.offsetParent !== null;
+        });
+    }
+
     function openModal() {
+        modalReturnFocus = document.activeElement;
         modal.style.display = "flex";
+        modal.setAttribute("aria-hidden", "false");
+        document.body.classList.add("modal-open");
         resetModalState();
+        window.setTimeout(function() {
+            document.getElementById("newId")?.focus();
+        }, 0);
     }
 
     function closeModal() {
         modal.style.display = "none";
+        modal.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("modal-open");
         resetModalState();
+        modalReturnFocus?.focus();
     }
 
     function buildTrackFromForm() {
@@ -291,7 +398,7 @@ document.addEventListener("DOMContentLoaded", function() {
         closeModal();
     }
 
-    [searchInput, keyFilter, styleFilter, sortSelect].forEach(function(control) {
+    [searchInput, keyFilter, styleFilter, moodFilter, instrumentFilter, sortSelect, favoritesOnly].forEach(function(control) {
         if (control) {
             control.addEventListener("input", renderTracks);
             control.addEventListener("change", renderTracks);
@@ -302,8 +409,49 @@ document.addEventListener("DOMContentLoaded", function() {
         searchInput.value = "";
         keyFilter.value = "all";
         styleFilter.value = "all";
+        moodFilter.value = "all";
+        instrumentFilter.value = "all";
         sortSelect.value = "newest";
+        favoritesOnly.checked = false;
         renderTracks();
+    });
+
+    grid.addEventListener("click", function(event) {
+        const favoriteButton = event.target.closest(".favorite-track-button");
+        const playButton = event.target.closest(".inline-play-button");
+
+        if (favoriteButton) {
+            toggleFavorite(favoriteButton.dataset.trackId);
+            renderTracks();
+            return;
+        }
+
+        if (playButton) {
+            const card = playButton.closest(".track-card");
+            const player = card.querySelector(".inline-track-player");
+            const isOpen = !player.hidden;
+
+            document.querySelectorAll(".inline-track-player").forEach(function(otherPlayer) {
+                otherPlayer.hidden = true;
+                otherPlayer.innerHTML = "";
+            });
+            document.querySelectorAll(".inline-play-button").forEach(function(otherButton) {
+                otherButton.textContent = "Play Here";
+            });
+
+            if (!isOpen) {
+                player.innerHTML = `
+                    <iframe
+                        src="https://www.youtube.com/embed/${encodeURIComponent(playButton.dataset.videoId)}?autoplay=1"
+                        title="Inline backing track player"
+                        loading="lazy"
+                        allow="autoplay; encrypted-media; picture-in-picture"
+                        allowfullscreen></iframe>
+                `;
+                player.hidden = false;
+                playButton.textContent = "Close Player";
+            }
+        }
     });
 
     openModalButton?.addEventListener("click", openModal);
@@ -311,6 +459,41 @@ document.addEventListener("DOMContentLoaded", function() {
     doneButton?.addEventListener("click", confirmPreviewTrack);
     reviseButton?.addEventListener("click", resetModalState);
     previewButton?.addEventListener("click", processNewTrack);
+
+    modal?.addEventListener("click", function(event) {
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
+
+    modal?.addEventListener("keydown", function(event) {
+        if (event.key === "Escape") {
+            closeModal();
+            return;
+        }
+
+        if (event.key !== "Tab") {
+            return;
+        }
+
+        const focusTargets = getModalFocusTargets();
+        if (!focusTargets.length) {
+            event.preventDefault();
+            modalContent?.focus();
+            return;
+        }
+
+        const firstTarget = focusTargets[0];
+        const lastTarget = focusTargets[focusTargets.length - 1];
+
+        if (event.shiftKey && document.activeElement === firstTarget) {
+            event.preventDefault();
+            lastTarget.focus();
+        } else if (!event.shiftKey && document.activeElement === lastTarget) {
+            event.preventDefault();
+            firstTarget.focus();
+        }
+    });
 
     loadTracks();
 });

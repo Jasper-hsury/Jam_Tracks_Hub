@@ -14,8 +14,9 @@
     <meta property="og:url" content="https://jasper-music.onrender.com/tracks.html">
     <meta property="og:type" content="website">
 
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=20260623-key-finder-page">
+    <script src="theme-init.js?v=20260623-dark-light"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=20260623-chord-soft">
 </head>
 
 <body>
@@ -25,7 +26,7 @@
             <li><a href="index.html#home">Home</a></li>
             <li><a href="tracks.html" class="active" aria-current="page">Tracks</a></li>
             <li><a href="key-finder.html">Key Finder</a></li>
-            <li><a href="chords.html">Chord</a></li>
+            <li><a href="chords.html">Chord Progressions</a></li>
             <li><a href="index.html#about">About</a></li>
         </ul>
     </nav>
@@ -71,6 +72,20 @@
             </label>
 
             <label>
+                <span>Mood</span>
+                <select id="trackMoodFilter">
+                    <option value="all">All moods</option>
+                </select>
+            </label>
+
+            <label>
+                <span>Instrument</span>
+                <select id="trackInstrumentFilter">
+                    <option value="all">All instruments</option>
+                </select>
+            </label>
+
+            <label>
                 <span>Sort</span>
                 <select id="trackSortSelect">
                     <option value="newest">Newest first</option>
@@ -81,13 +96,23 @@
                 </select>
             </label>
 
-            <button id="resetTrackFilters" class="secondary-button" type="button">Reset</button>
+            <div class="track-filter-actions">
+                <label class="favorites-filter">
+                    <input id="favoriteTracksOnly" type="checkbox">
+                    <span class="favorites-toggle-indicator" aria-hidden="true"></span>
+                    <span>Favorites only</span>
+                </label>
+
+                <button id="resetTrackFilters" class="track-reset-button" type="button">Reset</button>
+            </div>
         </section>
 
         <p id="trackResultCount" class="track-result-count" aria-live="polite"></p>
 
-        <div class="all-tracks-grid" id="tracksGrid" aria-live="polite">
-            <p class="track-loading">Loading tracks...</p>
+        <div class="all-tracks-grid" id="tracksGrid" aria-live="polite" aria-busy="true">
+            <article class="track-card track-skeleton" aria-hidden="true"></article>
+            <article class="track-card track-skeleton" aria-hidden="true"></article>
+            <article class="track-card track-skeleton" aria-hidden="true"></article>
         </div>
     </main>
 
@@ -101,8 +126,8 @@
 
     <button id="backToTopBtn" type="button" aria-label="Back to top">&uarr;</button>
 
-    <div id="addTrackModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="addTrackTitle">
-        <div class="modal-content">
+    <div id="addTrackModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="addTrackTitle" aria-hidden="true">
+        <div class="modal-content" tabindex="-1">
             <h2 id="addTrackTitle">Add a Backing Track</h2>
 
             <div id="inputFieldsContainer">
@@ -134,7 +159,7 @@
         </div>
     </div>
 
-    <script src="site.js"></script>
-    <script src="tracks.js"></script>
+    <script src="site.js?v=20260623-dark-light"></script>
+    <script src="tracks.js?v=20260623-track-links"></script>
 </body>
 </html>
