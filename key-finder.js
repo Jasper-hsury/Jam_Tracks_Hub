@@ -4,6 +4,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const MAX_UPLOAD_BYTES = 60 * 1024 * 1024;
     const MAX_CONTAINER_UPLOAD_BYTES = 25 * 1024 * 1024;
     const HEAVY_CONTAINER_EXTENSIONS = new Set([".mp4", ".webm"]);
+    const API_RETRY_DELAY_MS = 2000;
+    const API_RETRY_LIMIT = 30;
     const audioKeyFile = document.getElementById("audioKeyFile");
     const analyzeFileButton = document.getElementById("analyzeFileButton");
     const audioFileName = document.getElementById("audioFileName");
@@ -18,6 +20,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
     let activeController = null;
     let loadingTimer = null;
+    let apiRetryTimer = null;
+    let apiRetryCount = 0;
 
     if (!keyFinderResult || (!audioKeyFile && !youtubeKeyUrl)) {
         return;
@@ -537,8 +541,20 @@ document.addEventListener("DOMContentLoaded", function() {
         try {
             setApiStatus("is-checking", "Checking API...");
             await ensureApiIsReachable();
+            apiRetryCount = 0;
+
+            if (apiRetryTimer) {
+                window.clearTimeout(apiRetryTimer);
+                apiRetryTimer = null;
+            }
         } catch (error) {
-            setApiStatus("is-offline", "API offline");
+            if (apiRetryCount < API_RETRY_LIMIT) {
+                apiRetryCount += 1;
+                setApiStatus("is-checking", "API starting...");
+                apiRetryTimer = window.setTimeout(checkApiStatus, API_RETRY_DELAY_MS);
+            } else {
+                setApiStatus("is-offline", "API offline");
+            }
         }
     }
 

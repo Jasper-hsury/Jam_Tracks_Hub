@@ -68,7 +68,10 @@ BLOCKED_STATIC_FILES = [
     "netlify.toml",
     "render.yaml",
     "start_all.ps1",
+    "start_local_api_background.ps1",
     "start_render_local.ps1",
+    "install_local_api_autostart.ps1",
+    "uninstall_local_api_autostart.ps1",
 ]
 
 
