@@ -1072,48 +1072,68 @@ document.addEventListener("DOMContentLoaded", function() {
             <div class="note-grid">${noteCards}</div>
             <section class="progression-section">
                 <div class="progression-toolbar">
-                    <h4>Common Progressions</h4>
-                    <div class="progression-controls progression-controls-expanded">
-                        <label>
-                            Chords
-                            <select id="chordExtension">
-                                <option value="triads" ${settings.extension === "triads" ? "selected" : ""}>Triads</option>
-                                <option value="sevenths" ${settings.extension === "sevenths" ? "selected" : ""}>Seventh chords</option>
-                            </select>
-                        </label>
-                        <label>
-                            Voicing
-                            <select id="chordInversion">
-                                <option value="0" ${String(settings.inversion) === "0" ? "selected" : ""}>Root position</option>
-                                <option value="1" ${String(settings.inversion) === "1" ? "selected" : ""}>First inversion</option>
-                                <option value="2" ${String(settings.inversion) === "2" ? "selected" : ""}>Second inversion</option>
-                            </select>
-                        </label>
-                        <label>
-                            BPM
-                            <input id="progressionBpm" type="number" min="50" max="180" value="${settings.bpm}">
-                        </label>
-                        <label class="metronome-toggle">
-                            <input id="progressionMetronome" type="checkbox" ${settings.metronome ? "checked" : ""}>
-                            Metronome
-                        </label>
-                        <label class="volume-control">
-                            Guitar
-                            <input id="guitarVolume" type="range" min="0" max="200" value="${settings.guitarVolume}">
-                        </label>
-                        <label class="volume-control">
-                            Click
-                            <input id="metronomeVolume" type="range" min="0" max="200" value="${settings.metronomeVolume}">
-                        </label>
-                        <label class="backing-toggle">
-                            <input id="backingTrackMode" type="checkbox" ${settings.backing ? "checked" : ""}>
-                            Band
-                        </label>
-                        <label class="volume-control">
-                            Band
-                            <input id="backingVolume" type="range" min="0" max="200" value="${settings.backingVolume}">
-                        </label>
-                        <button id="stopProgressionButton" class="secondary-button" type="button">Stop</button>
+                    <div class="progression-toolbar-heading">
+                        <h4>Common Progressions</h4>
+                        <p>Shape the chords, then balance the accompaniment.</p>
+                    </div>
+                    <div class="progression-control-groups">
+                        <details class="progression-control-group" open>
+                            <summary>
+                                <span>Chord Settings</span>
+                                <small>Harmony and voicing</small>
+                            </summary>
+                            <div class="progression-controls chord-setting-controls">
+                                <label>
+                                    Chords
+                                    <select id="chordExtension">
+                                        <option value="triads" ${settings.extension === "triads" ? "selected" : ""}>Triads</option>
+                                        <option value="sevenths" ${settings.extension === "sevenths" ? "selected" : ""}>Seventh chords</option>
+                                    </select>
+                                </label>
+                                <label>
+                                    Voicing
+                                    <select id="chordInversion">
+                                        <option value="0" ${String(settings.inversion) === "0" ? "selected" : ""}>Root position</option>
+                                        <option value="1" ${String(settings.inversion) === "1" ? "selected" : ""}>First inversion</option>
+                                        <option value="2" ${String(settings.inversion) === "2" ? "selected" : ""}>Second inversion</option>
+                                    </select>
+                                </label>
+                            </div>
+                        </details>
+
+                        <details class="progression-control-group playback-control-group" open>
+                            <summary>
+                                <span>Playback</span>
+                                <small>Tempo and mix</small>
+                            </summary>
+                            <div class="progression-controls playback-controls">
+                                <label class="tempo-control">
+                                    BPM
+                                    <input id="progressionBpm" type="number" min="50" max="180" value="${settings.bpm}">
+                                </label>
+                                <label class="metronome-toggle">
+                                    <input id="progressionMetronome" type="checkbox" ${settings.metronome ? "checked" : ""}>
+                                    Metronome
+                                </label>
+                                <label class="volume-control guitar-volume-control">
+                                    Guitar
+                                    <input id="guitarVolume" type="range" min="0" max="200" value="${settings.guitarVolume}">
+                                </label>
+                                <label class="volume-control click-volume-control">
+                                    Click
+                                    <input id="metronomeVolume" type="range" min="0" max="200" value="${settings.metronomeVolume}">
+                                </label>
+                                <label class="backing-toggle">
+                                    <input id="backingTrackMode" type="checkbox" ${settings.backing ? "checked" : ""}>
+                                    Band
+                                </label>
+                                <label class="volume-control band-volume-control">
+                                    Band
+                                    <input id="backingVolume" type="range" min="0" max="200" value="${settings.backingVolume}">
+                                </label>
+                                <button id="stopProgressionButton" class="secondary-button" type="button">Stop</button>
+                            </div>
+                        </details>
                     </div>
                 </div>
                 <div class="progression-grid">${renderProgressions(progressions, chordMap)}</div>

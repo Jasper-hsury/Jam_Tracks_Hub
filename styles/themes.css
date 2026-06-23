@@ -1,0 +1,690 @@
+/* Themes: dark/light tokens, contrast, and interaction overrides
+   Generated from the original stylesheet and kept in cascade order. */
+
+/* ====================
+   Theme system
+   ==================== */
+:root {
+    color-scheme: dark;
+    --text-strong: #f3eee7;
+    --text-body: #d8d1c8;
+    --text-subtle: #b8b0a7;
+    --copy-text: #d2cbc2;
+    --copy-weight: 500;
+    --control-text: #f3eee7;
+    --placeholder-text: #918a82;
+    --primary-button-background: #c4a484;
+    --primary-button-hover-background: #e5d3b3;
+    --primary-button-text: #17130f;
+    --primary-button-hover-text: #17130f;
+    --accent-button-text: #17130f;
+    --chord-accent: #7fb7ad;
+    --chord-accent-hover: #9bc8c0;
+    --chord-accent-text: #17130f;
+    --chord-control: #7fb7ad;
+    --chord-accent-soft: rgba(127, 183, 173, 0.16);
+    --body-background: linear-gradient(135deg, #101010 0%, #15120f 52%, #101817 100%);
+    --nav-background: rgba(20, 20, 20, 0.9);
+    --footer-background: #0a0a0a;
+    --panel-background: rgba(27, 27, 27, 0.92);
+    --panel-raised-background: rgba(36, 36, 36, 0.94);
+    --control-background: rgba(20, 20, 20, 0.88);
+    --soft-background: rgba(44, 43, 41, 0.72);
+    --border-soft: rgba(196, 164, 132, 0.18);
+    --shadow-color: rgba(0, 0, 0, 0.28);
+    --panel-hover-background: #090909;
+    --control-hover-background: #161616;
+    --subpanel-background: rgba(18, 18, 18, 0.5);
+    --secondary-hover-background: #0d0d0d;
+    --secondary-hover-text: var(--gold-light);
+    --hover-border: rgba(229, 211, 179, 0.58);
+    --hover-shadow: 0 16px 34px rgba(0, 0, 0, 0.4);
+    --focus-ring: rgba(229, 211, 179, 0.42);
+    --divider-color: rgba(255, 255, 255, 0.08);
+}
+
+html[data-theme="light"] {
+    color-scheme: light;
+    --bg: #f4f1ec;
+    --surface: #ffffff;
+    --surface-raised: #faf7f2;
+    --surface-soft: #ebe5dc;
+    --line: #d3cbc0;
+    --text: #28211b;
+    --muted: #5f564d;
+    --gold: #8a603e;
+    --gold-light: #5f3e28;
+    --teal: #2d7b76;
+    --wine: #985463;
+    --text-strong: #241d17;
+    --text-body: #4f463d;
+    --text-subtle: #685e54;
+    --copy-text: #493f36;
+    --copy-weight: 500;
+    --control-text: #28211b;
+    --placeholder-text: #7c7167;
+    --primary-button-background: #8a603e;
+    --primary-button-hover-background: #684329;
+    --primary-button-text: #fffaf4;
+    --primary-button-hover-text: #fffaf4;
+    --accent-button-text: #fffdf9;
+    --chord-accent: #dfc5a7;
+    --chord-accent-hover: #cfa77d;
+    --chord-accent-text: #342419;
+    --chord-control: #9a6b44;
+    --chord-accent-soft: rgba(154, 107, 68, 0.11);
+    --body-background: linear-gradient(135deg, #f7f4ef 0%, #eee8df 54%, #eef5f3 100%);
+    --nav-background: rgba(250, 248, 244, 0.92);
+    --footer-background: #e8e1d8;
+    --panel-background: rgba(255, 255, 255, 0.88);
+    --panel-raised-background: rgba(249, 246, 241, 0.96);
+    --control-background: rgba(255, 255, 255, 0.92);
+    --soft-background: rgba(235, 229, 220, 0.74);
+    --border-soft: rgba(88, 72, 58, 0.2);
+    --shadow-color: rgba(75, 61, 49, 0.13);
+    --panel-hover-background: #f3e9dd;
+    --control-hover-background: #faf5ee;
+    --subpanel-background: rgba(247, 241, 233, 0.9);
+    --secondary-hover-background: #efe2d2;
+    --secondary-hover-text: #563b29;
+    --hover-border: rgba(152, 113, 78, 0.5);
+    --hover-shadow: 0 16px 34px rgba(91, 70, 52, 0.16);
+    --focus-ring: rgba(45, 123, 118, 0.3);
+    --divider-color: rgba(88, 72, 58, 0.14);
+}
+
+body {
+    background: var(--body-background);
+    color: var(--text);
+    transition: background 0.28s ease, color 0.2s ease;
+}
+
+.navbar {
+    background-color: var(--nav-background);
+    border-bottom-color: var(--border-soft);
+    transition: background-color 0.28s ease, border-color 0.2s ease;
+}
+
+.logo,
+h1,
+.section-title,
+.signature-slogan,
+.home-section-heading h2,
+.home-feature-band h2,
+.about-copy h2 {
+    color: var(--gold);
+}
+
+.nav-links a {
+    color: var(--text);
+}
+
+.footer {
+    color: var(--muted);
+    background-color: var(--footer-background);
+    border-top: 1px solid var(--border-soft);
+    transition: background-color 0.28s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.track-card,
+.key-result,
+.key-finder-panel,
+.audio-player-card,
+.progression-card,
+.note-card,
+.modal-content,
+.home-release-card,
+.start-card {
+    color: var(--text);
+    background: var(--panel-background);
+    border-color: var(--border-soft);
+    box-shadow: 0 10px 26px var(--shadow-color);
+}
+
+.track-card {
+    border-left-color: var(--gold);
+}
+
+.key-finder-panel {
+    border-left-color: var(--teal);
+}
+
+.track-controls,
+.key-finder-result,
+.key-finder-form input,
+.track-controls input:not([type="checkbox"]),
+.track-controls select,
+.progression-controls select,
+.progression-controls input,
+.modal-content input,
+.footer-theme-toggle {
+    color: var(--text);
+    background-color: var(--control-background);
+    border-color: var(--border-soft);
+}
+
+.analysis-history,
+.key-finder-candidates li,
+.result-evidence-grid div,
+.result-ranking-block {
+    color: var(--text);
+    background: var(--subpanel-background);
+    border-color: var(--border-soft);
+}
+
+.analysis-history li,
+.result-details-secondary,
+.result-analysis-notes {
+    border-color: var(--divider-color);
+}
+
+.confidence-bar {
+    background: var(--divider-color);
+}
+
+.track-controls {
+    background:
+        linear-gradient(90deg, color-mix(in srgb, var(--teal) 5%, transparent), transparent 28%),
+        color-mix(in srgb, var(--panel-background) 44%, transparent);
+    border-top-color: var(--border-soft);
+    border-bottom-color: var(--border-soft);
+}
+
+.favorites-filter,
+.segmented-control,
+.api-status {
+    color: var(--text);
+    background: var(--soft-background);
+    border-color: var(--border-soft);
+}
+
+.hero-tagline,
+.track-card p,
+.interval-name,
+.upload-file-label small,
+.key-finder-copy,
+.tool-section-heading p {
+    color: var(--text-body);
+}
+
+.audio-title,
+.track-card h2,
+.track-card h3,
+.track-card h5,
+.key-finder-result {
+    color: var(--text);
+}
+
+.key-finder-final,
+.analysis-history strong,
+.note-name {
+    color: var(--gold-light);
+}
+
+.section-divider {
+    border-color: var(--border-soft);
+}
+
+.key-finder-divider::before,
+.key-finder-divider::after {
+    background: var(--border-soft);
+}
+
+.footer-theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 32px;
+    padding: 5px 10px;
+    color: var(--teal);
+    background: transparent;
+    border: 1px solid var(--border-soft);
+    border-radius: 999px;
+    font: inherit;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    transition:
+        color 0.2s ease,
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.theme-toggle-icon {
+    font-size: 15px;
+    line-height: 1;
+}
+
+.footer-theme-toggle:hover {
+    color: var(--secondary-hover-text);
+    background: var(--secondary-hover-background);
+    border-color: var(--hover-border);
+    transform: translateY(-2px) scale(1.02);
+}
+
+.footer-theme-toggle:focus-visible {
+    outline: 3px solid var(--focus-ring);
+    outline-offset: 3px;
+}
+
+/* Theme-aware interaction states */
+.logo:hover,
+.nav-links a:hover,
+.nav-links a.active,
+.section-title-link:hover,
+.text-link:hover,
+.footer .social-links a:hover {
+    color: var(--gold-light);
+}
+
+.nav-menu-button {
+    color: var(--text);
+    background: var(--panel-background);
+    border-color: var(--border-soft);
+}
+
+.primary-button,
+.track-link,
+.select-key-button,
+.key-button {
+    color: var(--primary-button-text);
+    background-color: var(--primary-button-background);
+    border-color: var(--primary-button-background);
+}
+
+.primary-button:hover,
+.track-link:hover,
+.select-key-button:hover,
+.key-button:hover,
+#backToTopBtn:hover {
+    color: var(--primary-button-hover-text);
+    background-color: var(--primary-button-hover-background);
+    border-color: var(--primary-button-hover-background);
+    box-shadow: 0 10px 22px var(--shadow-color);
+    transform: translateY(-2px) scale(1.025);
+}
+
+.secondary-button,
+.secondary-track-link {
+    color: var(--gold);
+    background: transparent;
+    border-color: var(--gold);
+}
+
+.secondary-button:hover,
+.secondary-track-link:hover {
+    color: var(--secondary-hover-text);
+    background: var(--secondary-hover-background);
+    border-color: var(--hover-border);
+    box-shadow: 0 10px 22px var(--shadow-color);
+    transform: translateY(-2px) scale(1.025);
+}
+
+.download-track-link {
+    color: var(--text);
+    background: var(--surface-raised);
+    border-color: var(--line);
+}
+
+.download-track-link:hover {
+    color: var(--secondary-hover-text);
+    background: var(--secondary-hover-background);
+    border-color: var(--hover-border);
+}
+
+.track-card,
+.start-card,
+.home-release-card,
+.audio-player-card,
+.progression-card,
+.note-card {
+    transition:
+        transform 0.25s ease,
+        background-color 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.track-card,
+.key-finder-panel,
+.key-finder-result,
+.analysis-history,
+.result-evidence-grid div,
+.result-ranking-block,
+.home-release-card,
+.start-card,
+.audio-player-card,
+.progression-card,
+.note-card {
+    transition:
+        color 0.2s ease,
+        background-color 0.28s ease,
+        border-color 0.2s ease,
+        box-shadow 0.25s ease,
+        transform 0.25s ease;
+}
+
+.track-card:hover,
+.start-card:hover,
+.home-release-card:hover,
+.audio-player-card:hover,
+.progression-card:hover,
+.note-card:hover {
+    color: var(--text);
+    background: var(--panel-hover-background);
+    border-color: var(--hover-border);
+    box-shadow: var(--hover-shadow);
+    transform: translateY(-3px) scale(1.008);
+}
+
+.upload-file-label {
+    color: var(--text);
+    background:
+        linear-gradient(90deg, color-mix(in srgb, var(--teal) 8%, transparent), transparent 38%),
+        var(--panel-raised-background);
+    border-color: color-mix(in srgb, var(--teal) 34%, transparent);
+}
+
+.upload-file-label:hover,
+.key-finder-upload input[type="file"]:focus + .upload-file-label {
+    background:
+        linear-gradient(90deg, color-mix(in srgb, var(--teal) 12%, transparent), transparent 42%),
+        var(--control-hover-background);
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+.key-finder-form input,
+.progression-controls select,
+.transpose-controls button {
+    color: var(--text);
+    background: var(--control-background);
+    border-color: var(--border-soft);
+}
+
+.key-finder-form input:hover,
+.track-controls input:not([type="checkbox"]):hover,
+.track-controls select:hover,
+.progression-controls select:hover,
+.modal-content input:hover {
+    background: var(--control-hover-background);
+    border-color: var(--hover-border);
+}
+
+.key-finder-form input:focus,
+.track-controls input:not([type="checkbox"]):focus,
+.track-controls select:focus,
+.progression-controls select:focus,
+.modal-content input:focus {
+    color: var(--text);
+    background: var(--control-hover-background);
+    border-color: var(--teal);
+    outline: 3px solid var(--focus-ring);
+}
+
+.progression-save-button:hover,
+.progression-export-button:hover,
+.transpose-controls button:hover {
+    color: var(--secondary-hover-text);
+    background: var(--secondary-hover-background);
+    border-color: var(--hover-border);
+    transform: translateY(-1px) scale(1.02);
+}
+
+.progression-play-button:hover {
+    color: var(--primary-button-hover-text);
+    background: var(--primary-button-hover-background);
+    box-shadow: 0 9px 20px var(--shadow-color);
+    transform: translateY(-2px) scale(1.025);
+}
+
+.favorites-filter:hover {
+    color: var(--secondary-hover-text) !important;
+    background: var(--secondary-hover-background);
+    border-color: var(--hover-border);
+}
+
+.favorite-track-button {
+    color: var(--muted);
+    background: var(--control-background);
+    border-color: var(--border-soft);
+}
+
+.favorite-track-button:hover {
+    color: var(--wine);
+    background: var(--secondary-hover-background);
+    border-color: color-mix(in srgb, var(--wine) 48%, transparent);
+    transform: scale(1.08);
+}
+
+#backToTopBtn {
+    color: var(--primary-button-text);
+    background: var(--primary-button-background);
+    box-shadow: 0 4px 15px var(--shadow-color);
+}
+
+.primary-button:focus-visible,
+.secondary-button:focus-visible,
+.track-link:focus-visible,
+.key-button:focus-visible,
+.select-key-button:focus-visible,
+.favorite-track-button:focus-visible,
+.progression-play-button:focus-visible,
+.progression-save-button:focus-visible,
+.progression-export-button:focus-visible,
+.transpose-controls button:focus-visible,
+#backToTopBtn:focus-visible {
+    outline-color: var(--gold-light);
+}
+
+html[data-theme="light"] .key-finder-result.is-error,
+html[data-theme="light"] .error-report {
+    color: #7c3f49;
+}
+
+html[data-theme="light"] .track-meta span,
+html[data-theme="light"] .hero-badges span {
+    background-color: color-mix(in srgb, currentColor 8%, transparent);
+}
+
+html[data-theme="light"] .modal-overlay {
+    background-color: rgba(68, 56, 46, 0.48);
+}
+
+html[data-theme="light"] ::-webkit-scrollbar-track {
+    background: #eee8df;
+}
+
+html[data-theme="light"] ::-webkit-scrollbar-thumb {
+    background: #c8baaa;
+}
+
+html[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+    background: var(--gold);
+}
+
+html[data-theme="light"] ::selection {
+    color: #201811;
+    background: #dbc8ae;
+}
+
+/* Theme contrast normalization */
+.home-lead,
+.home-metrics dd,
+.home-feature-inner > div > p:last-child,
+.about-copy > p:not(.home-eyebrow),
+.start-card span:last-child,
+.track-card p,
+.key-finder-copy,
+.key-finder-meta,
+.key-finder-notes,
+.confidence-note,
+.upload-privacy-note,
+.service-wake-panel p,
+.tool-section-heading p,
+.status-page > p:not(.status-page-code),
+.track-result-count,
+.key-result p {
+    color: var(--copy-text);
+    font-weight: var(--copy-weight);
+    line-height: 1.72;
+}
+
+.home-lead {
+    color: var(--copy-text);
+    font-weight: 500;
+    letter-spacing: 0.004em;
+}
+
+.track-card-title-row h2,
+.track-card-title-row h3 {
+    margin: 0;
+}
+
+.start-card span:last-child,
+.home-metrics dd,
+.track-result-count,
+.upload-privacy-note {
+    line-height: 1.58;
+}
+
+.progression-chords,
+.audio-title,
+.history-item-button,
+.saved-progression-item {
+    color: var(--text-strong);
+}
+
+.key-result h3,
+.selected-key-heading h3,
+.progression-section h4,
+.saved-progression-section h4 {
+    color: var(--gold-light);
+}
+
+.key-result p {
+    color: var(--text-body);
+}
+
+.progression-numerals {
+    color: var(--gold);
+}
+
+.progression-style,
+.interval-name,
+.progression-separator,
+.saved-progression-item span,
+.saved-progression-empty,
+.analysis-history span,
+.analysis-history a,
+.analysis-history em,
+.key-finder-candidates p span {
+    color: var(--text-subtle);
+}
+
+.progression-controls label {
+    color: var(--text-body);
+}
+
+.progression-controls select,
+.progression-controls input[type="number"],
+.transpose-controls button {
+    color: var(--control-text);
+    background: var(--control-background);
+    border-color: var(--border-soft);
+}
+
+.progression-controls input[type="number"]:hover,
+.transpose-controls button:hover {
+    border-color: var(--hover-border);
+}
+
+.progression-controls input[type="number"]:focus {
+    color: var(--control-text);
+    background: var(--control-hover-background);
+    border-color: var(--chord-control);
+    outline: 3px solid var(--focus-ring);
+}
+
+.result-mode-button.active {
+    color: var(--accent-button-text);
+}
+
+.progression-play-button,
+.key-button.is-selected {
+    color: var(--chord-accent-text);
+    background: var(--chord-accent);
+    border-color: var(--chord-accent);
+}
+
+.progression-play-button:hover {
+    color: var(--chord-accent-text);
+    background: var(--chord-accent-hover);
+    border-color: var(--chord-accent-hover);
+}
+
+.progression-controls input[type="range"],
+.metronome-toggle input,
+.backing-toggle input {
+    accent-color: var(--chord-control);
+}
+
+.progression-chord-token.is-current {
+    color: var(--chord-accent-text);
+    background: var(--chord-accent);
+}
+
+.progression-chord-token.is-next {
+    color: var(--chord-control);
+    background: var(--chord-accent-soft);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--chord-control) 42%, transparent);
+}
+
+.progression-card.is-playing {
+    border-color: color-mix(in srgb, var(--chord-control) 62%, transparent);
+    box-shadow:
+        0 0 0 1px color-mix(in srgb, var(--chord-control) 18%, transparent),
+        0 10px 26px var(--shadow-color);
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: var(--placeholder-text);
+    opacity: 1;
+}
+
+html[data-theme="light"] button:disabled,
+html[data-theme="light"] input:disabled,
+html[data-theme="light"] select:disabled {
+    opacity: 0.72;
+}
+
+html[data-theme="light"] .progression-card,
+html[data-theme="light"] .note-card,
+html[data-theme="light"] .start-card {
+    border-color: rgba(88, 72, 58, 0.24);
+}
+
+html[data-theme="light"] .progression-card-actions button {
+    color: var(--gold-light);
+    border-color: rgba(95, 62, 40, 0.32);
+}
+
+html[data-theme="light"] .progression-card-actions button:hover {
+    color: var(--secondary-hover-text);
+}
+
+html[data-theme="light"] .progression-card-actions .progression-play-button {
+    color: var(--chord-accent-text);
+    background: var(--chord-accent);
+    border-color: color-mix(in srgb, var(--chord-control) 46%, transparent);
+    box-shadow: 0 7px 16px rgba(91, 70, 52, 0.14);
+}
+
+html[data-theme="light"] .progression-card-actions .progression-play-button:hover {
+    color: var(--chord-accent-text);
+    background: var(--chord-accent-hover);
+    border-color: var(--chord-control);
+    box-shadow: 0 10px 22px rgba(91, 70, 52, 0.2);
+}

@@ -1,0 +1,258 @@
+/* Base: tokens, document defaults, navigation, and shared layout
+   Generated from the original stylesheet and kept in cascade order. */
+
+/* ====================
+   全域與基礎設定
+   ==================== */
+html {
+    scroll-behavior: smooth;
+}
+
+:root {
+    --bg: #111111;
+    --surface: #1b1b1b;
+    --surface-raised: #242424;
+    --surface-soft: #2c2b29;
+    --line: #343434;
+    --text: #e6e2dc;
+    --muted: #aaa39a;
+    --gold: #c4a484;
+    --gold-light: #e5d3b3;
+    --teal: #7fb7ad;
+    --wine: #a76f73;
+    --radius: 8px;
+}
+
+/* ====================
+   專屬質感捲軸 (Scrollbar)
+   ==================== */
+::-webkit-scrollbar {
+    width: 8px; /* 讓捲軸變細緻一點 */
+}
+
+::-webkit-scrollbar-track {
+    background: #121212; /* 軌道顏色跟背景一樣 */
+}
+
+::-webkit-scrollbar-thumb {
+    background: #333; /* 捲軸本體的顏色 */
+    border-radius: 10px; /* 圓角設計 */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #c4a484; /* 滑鼠移過去時亮起你的品牌金色 */
+}
+
+body {
+    background: linear-gradient(135deg, #101010 0%, #15120f 52%, #101817 100%);
+    color: var(--text);
+    font-family: 'Noto Sans TC', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: clamp(38px, 5vw, 56px);
+    color: var(--gold);
+    margin-bottom: 10px;
+    margin-top: 0;
+    line-height: 1.05;
+}
+
+#home,
+#tracks,
+#about {
+    scroll-margin-top: 100px;
+}
+
+
+/* ====================
+   導覽列 (Navbar)
+   ==================== */
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* 改為 80% 透明度的深色背景 */
+    background-color: rgba(20, 20, 20, 0.84); 
+    /* 新增：毛玻璃模糊特效 */
+    backdrop-filter: blur(12px); 
+    -webkit-backdrop-filter: blur(12px); /* 支援 Safari */
+    padding: 15px 50px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    border-bottom: 1px solid rgba(196, 164, 132, 0.16);
+}
+
+.logo {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 24px;
+    color: #c4a484;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.logo:hover {
+    color: #e5d3b3;
+}
+
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-menu-button {
+    display: none;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    gap: 4px;
+    padding: 9px;
+    color: var(--text);
+    background: rgba(27, 27, 27, 0.82);
+    border: 1px solid rgba(196, 164, 132, 0.24);
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+.nav-menu-button span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: currentColor;
+    border-radius: 2px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.skip-link {
+    position: fixed;
+    top: 10px;
+    left: 12px;
+    z-index: 1000;
+    padding: 9px 13px;
+    color: #111;
+    background: var(--gold-light);
+    border-radius: 6px;
+    font-weight: bold;
+    text-decoration: none;
+    transform: translateY(-160%);
+    transition: transform 0.18s ease;
+}
+
+.skip-link:focus {
+    transform: translateY(0);
+}
+
+.nav-links a {
+    color: #e0e0e0;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #c4a484;
+}
+
+/* 新增：當前所在頁面的專屬高亮顏色 */
+.nav-links a.active {
+    color: #c4a484;
+}
+
+.nav-links a:focus-visible,
+.nav-menu-button:focus-visible,
+.primary-button:focus-visible,
+.secondary-button:focus-visible,
+.result-mode-button:focus-visible,
+.favorite-track-button:focus-visible,
+.progression-play-button:focus-visible,
+.progression-save-button:focus-visible,
+.progression-export-button:focus-visible,
+.transpose-controls button:focus-visible,
+.track-link:focus-visible,
+.footer .social-links a:focus-visible,
+#backToTopBtn:focus-visible {
+    outline: 3px solid #e5d3b3;
+    outline-offset: 4px;
+}
+
+
+/* ====================
+   進場淡入動畫 (Animation)
+   ==================== */
+@keyframes fadeInSlideUp {
+    0% {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ====================
+   版面大架構 (Flexbox)
+   ==================== */
+.content-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 60px;
+    max-width: 1200px;
+    margin: 60px auto;
+    padding: 0 40px; 
+}
+
+.left-column {
+    flex: 1;
+    animation: fadeInSlideUp 1s ease-out forwards;
+}
+
+.right-column {
+    flex: 1;
+    animation: fadeInSlideUp 1s ease-out 0.4s forwards;
+    opacity: 0; 
+}
+
+/* ====================
+   區塊標題與文字
+   ==================== */
+.section-title {
+    color: #c4a484;
+    font-size: 24px;
+}
+
+.section-title-spaced {
+    margin-top: 40px;
+}
+
+.section-title-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.section-title-link:hover {
+    color: #e5d3b3;
+}
+
+.section-divider {
+    border-color: #333;
+    margin: 30px 0;
+}
+
+.about-text {
+    line-height: 1.8;
+}
+
+.track-list {
+    list-style-position: inside;
+    padding: 0;
+}
