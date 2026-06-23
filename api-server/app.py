@@ -279,6 +279,57 @@ def run_analysis_job(job_id, source_path, filename, cache_key, job_directory):
         shutil.rmtree(job_directory, ignore_errors=True)
 
 
+def run_youtube_analysis_job(job_id, youtube_url, job_directory):
+    try:
+        update_analysis_job(
+            job_id,
+            status="processing",
+            stage="Downloading YouTube audio",
+            progress=18,
+        )
+        audio_path = detect_key.download_audio(youtube_url, job_directory)
+
+        update_analysis_job(
+            job_id,
+            stage="Preparing audio",
+            progress=38,
+        )
+        prepared_audio_path = prepare_audio_for_analysis(audio_path, job_directory)
+
+        update_analysis_job(
+            job_id,
+            stage="Extracting musical features",
+            progress=58,
+        )
+        result = analyze_audio_path(prepared_audio_path)
+
+        update_analysis_job(
+            job_id,
+            stage="Comparing key candidates",
+            progress=82,
+        )
+        response = build_analysis_response(result, "youtube")
+        record_analysis_history(youtube_url, response)
+
+        update_analysis_job(
+            job_id,
+            status="completed",
+            stage="Complete",
+            progress=100,
+            result=response,
+        )
+    except Exception as error:
+        update_analysis_job(
+            job_id,
+            status="failed",
+            stage="YouTube analysis failed",
+            progress=100,
+            error=str(error),
+        )
+    finally:
+        shutil.rmtree(job_directory, ignore_errors=True)
+
+
 @contextmanager
 def fast_analysis_settings():
     original_segment_duration = detect_key.SEGMENT_DURATION
@@ -711,10 +762,10 @@ def health():
 
 @app.post("/api/analyze")
 def analyze(request: AnalyzeRequest):
-    youtube_url = request.url.strip()
-
-    if not youtube_url:
-        raise HTTPException(status_code=400, detail="YouTube link is required.")
+    try:
+        youtube_url = detect_key.normalize_youtube_url(request.url)
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
 
     try:
         with tempfile.TemporaryDirectory(prefix="youtube_key_api_") as temp_dir:
@@ -728,6 +779,43 @@ def analyze(request: AnalyzeRequest):
     record_analysis_history(youtube_url, response)
 
     return response
+
+
+@app.post("/api/analyze/jobs", status_code=202)
+def create_youtube_analysis_job(request: AnalyzeRequest):
+    try:
+        youtube_url = detect_key.normalize_youtube_url(request.url)
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+    video_id = detect_key.parse_youtube_video_id(youtube_url)
+    job_id = create_analysis_job_record(f"youtube:{video_id}")
+    job_directory = ANALYSIS_JOB_ROOT / job_id
+    job_directory.mkdir(parents=True, exist_ok=True)
+
+    update_analysis_job(
+        job_id,
+        status="queued",
+        stage="Waiting for YouTube downloader",
+        progress=8,
+    )
+    ANALYSIS_EXECUTOR.submit(
+        run_youtube_analysis_job,
+        job_id,
+        youtube_url,
+        job_directory,
+    )
+
+    return read_analysis_job(job_id)
+
+
+@app.get("/api/analyze/jobs/{job_id}")
+def get_youtube_analysis_job(job_id: str):
+    job = read_analysis_job(job_id)
+    if not job:
+        raise HTTPException(status_code=404, detail="Analysis job was not found or has expired.")
+
+    return job
 
 
 @app.post("/api/analyze-file/jobs", status_code=202)

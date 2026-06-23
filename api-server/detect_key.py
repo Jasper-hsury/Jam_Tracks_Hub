@@ -81,7 +81,7 @@ ANALYSIS_LAYERS = [
 ]
 
 
-def run_command(command):
+def run_command(command, timeout=150):
     try:
         result = subprocess.run(
             command,
@@ -90,12 +90,31 @@ def run_command(command):
             text=True,
             encoding="utf-8",
             errors="replace",
+            timeout=timeout,
         )
+    except subprocess.TimeoutExpired as error:
+        raise RuntimeError(
+            "YouTube audio download timed out. The video may be restricted or YouTube may be blocking the server."
+        ) from error
     except subprocess.CalledProcessError as error:
         stdout = (error.stdout or "").strip()
         stderr = (error.stderr or "").strip()
         details = stderr or stdout or str(error)
-        raise RuntimeError(f"yt-dlp failed: {details[-1200:]}") from error
+        lower_details = details.lower()
+
+        if "sign in to confirm" in lower_details or "not a bot" in lower_details:
+            message = (
+                "YouTube blocked the server download. The server cookies may have expired; "
+                "refresh the YouTube cookies on Render and try again."
+            )
+        elif "video unavailable" in lower_details or "private video" in lower_details:
+            message = "This YouTube video is private, unavailable, or region restricted."
+        elif "unsupported url" in lower_details:
+            message = "Please paste a valid YouTube video URL."
+        else:
+            message = f"YouTube download failed: {details[-800:]}"
+
+        raise RuntimeError(message) from error
 
     return result.stdout.strip()
 
@@ -165,7 +184,11 @@ def get_video_id(youtube_url):
 
 
 def parse_youtube_video_id(youtube_url):
-    parsed = urlparse(youtube_url.strip())
+    normalized_url = youtube_url.strip()
+    if normalized_url and "://" not in normalized_url:
+        normalized_url = f"https://{normalized_url}"
+
+    parsed = urlparse(normalized_url)
     host = parsed.netloc.lower()
     if host.startswith("www."):
         host = host[4:]
@@ -185,7 +208,18 @@ def parse_youtube_video_id(youtube_url):
     return candidate if YOUTUBE_ID_RE.match(candidate) else ""
 
 
+def normalize_youtube_url(youtube_url):
+    video_id = parse_youtube_video_id(youtube_url)
+    if not video_id:
+        raise ValueError(
+            "Please paste a valid YouTube video link, such as https://www.youtube.com/watch?v=..."
+        )
+
+    return f"https://www.youtube.com/watch?v={video_id}"
+
+
 def download_audio(youtube_url, download_dir):
+    youtube_url = normalize_youtube_url(youtube_url)
     video_id = get_video_id(youtube_url)
     download_dir = Path(download_dir)
     download_dir.mkdir(exist_ok=True)

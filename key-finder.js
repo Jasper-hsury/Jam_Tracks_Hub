@@ -494,10 +494,14 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    async function pollAnalysisJob(jobId, signal) {
+    async function pollAnalysisJob(jobId, signal, inputType) {
+        const jobPath = inputType === "youtube"
+            ? `/api/analyze/jobs/${encodeURIComponent(jobId)}`
+            : `/api/analyze-file/jobs/${encodeURIComponent(jobId)}`;
+
         while (true) {
             await wait(JOB_POLL_DELAY_MS, signal);
-            const response = await fetch(apiUrl(`/api/analyze-file/jobs/${encodeURIComponent(jobId)}`), {
+            const response = await fetch(apiUrl(jobPath), {
                 cache: "no-store",
                 signal
             });
@@ -531,7 +535,24 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         renderJobProgress(job);
-        return pollAnalysisJob(job.job_id, activeController.signal);
+        return pollAnalysisJob(job.job_id, activeController.signal, "file");
+    }
+
+    async function analyzeYoutubeUrl(url) {
+        const response = await fetch(apiUrl("/api/analyze/jobs"), {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ url }),
+            signal: activeController.signal
+        });
+        const job = await readApiResponse(response);
+
+        if (job.status === "completed") {
+            return job;
+        }
+
+        renderJobProgress(job);
+        return pollAnalysisJob(job.job_id, activeController.signal, "youtube");
     }
 
     function applyResultMode(mode) {
@@ -647,18 +668,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
         try {
             await ensureApiIsReachable(activeController.signal);
-            const response = await fetch(apiUrl("/api/analyze"), {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ url }),
-                signal: activeController.signal
-            });
-            const data = await readApiResponse(response);
+            const job = await analyzeYoutubeUrl(url);
+            const data = job.result;
             renderKeyFinderResult(data);
             addHistoryItem(url, data, "youtube");
         } catch (error) {
             if (error.name === "AbortError") {
-                setStatus("Analysis canceled.", "is-error");
+                setStatus("Stopped waiting for the analysis. The server may finish the job in the background.", "is-error");
             } else {
                 renderErrorReport(error.message, "youtube");
             }
