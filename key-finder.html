@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Song Key Finder | Jasper's Music Space</title>
+
+    <link rel="icon" href="icon.png" type="image/png">
+    <meta name="description" content="Upload an audio file to estimate its musical key with rule-based and machine-learning analysis.">
+    <link rel="canonical" href="https://jasper-music.onrender.com/key-finder.html">
+    <meta property="og:title" content="Song Key Finder | Jasper's Music Space">
+    <meta property="og:description" content="Find the likely key of an uploaded song and review confidence, alternate keys, and note evidence.">
+    <meta property="og:image" content="https://jasper-music.onrender.com/cover.jpeg">
+    <meta property="og:url" content="https://jasper-music.onrender.com/key-finder.html">
+    <meta property="og:type" content="website">
+
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=20260623-key-finder-page">
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="index.html#home" class="logo">Jasper's Music</a>
+        <ul class="nav-links">
+            <li><a href="index.html#home">Home</a></li>
+            <li><a href="tracks.html">Tracks</a></li>
+            <li><a href="key-finder.html" class="active" aria-current="page">Key Finder</a></li>
+            <li><a href="chords.html">Chord</a></li>
+            <li><a href="index.html#about">About</a></li>
+        </ul>
+    </nav>
+
+    <main class="tracks-page key-finder-page">
+        <h1>Song Key Finder</h1>
+        <p class="hero-tagline signature-slogan">Listen deeper. Find the tonal center.</p>
+
+        <section class="key-finder-panel" aria-labelledby="keyFinderTitle">
+            <div class="tool-section-heading compact-heading">
+                <h2 id="keyFinderTitle" class="section-title">Analyze a Song</h2>
+                <p>Upload an audio file for the most stable estimate. YouTube links remain available as a backup.</p>
+            </div>
+
+            <div class="api-status" id="apiStatus" aria-live="polite">
+                <span class="status-dot"></span>
+                <span class="status-text">Checking API...</span>
+            </div>
+
+            <div class="key-finder-upload">
+                <input id="audioKeyFile" type="file" accept="audio/*,.aac,.aiff,.flac,.m4a,.mp3,.mp4,.ogg,.wav,.webm" aria-label="Audio file">
+                <label class="upload-file-label" for="audioKeyFile">
+                    <span>Primary</span>
+                    <strong id="audioFileName">Choose an audio file</strong>
+                    <small>MP3/WAV recommended. MP4 or WEBM should be audio-only and under 25 MB.</small>
+                </label>
+                <button id="analyzeFileButton" class="primary-button analyze-file-button" type="button">
+                    <span>Analyze</span>
+                    <small>File</small>
+                </button>
+            </div>
+
+            <div class="key-finder-divider">
+                <span>Backup: YouTube link</span>
+            </div>
+
+            <div class="key-finder-form">
+                <input id="youtubeKeyUrl" type="url" placeholder="https://youtu.be/..." autocomplete="off" aria-label="YouTube link">
+                <button id="analyzeKeyButton" class="secondary-button" type="button">Analyze link</button>
+                <button id="cancelAnalyzeButton" class="secondary-button" type="button" hidden>Cancel</button>
+            </div>
+
+            <div class="key-finder-result key-finder-empty" id="keyFinderResult" aria-live="polite">
+                <span>Ready when you are.</span>
+            </div>
+
+            <div class="analysis-history" id="analysisHistory" hidden>
+                <div class="history-heading">
+                    <h3>Recent analyses</h3>
+                    <button id="clearHistoryButton" class="text-button" type="button">Clear</button>
+                </div>
+                <ul id="analysisHistoryList"></ul>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 Jasper's Music. All rights reserved.</p>
+        <div class="social-links">
+            <a href="https://youtube.com/@weekly_backing_track?si=-Rp6XDvP0A8fclp3" target="_blank" rel="noopener noreferrer" aria-label="Visit Jasper's YouTube channel">YouTube</a>
+            <a href="https://www.instagram.com/reyu_jasper?igsh=dmVsazFvb2pwMmsw&utm_source=qr" target="_blank" rel="noopener noreferrer" aria-label="Visit Jasper's Instagram profile">Instagram</a>
+        </div>
+    </footer>
+
+    <button id="backToTopBtn" type="button" aria-label="Back to top">&uarr;</button>
+
+    <script src="site.js"></script>
+    <script src="site-config.js?v=20260603-render-api"></script>
+    <script src="key-finder.js?v=20260623-key-finder-page"></script>
+</body>
+</html>

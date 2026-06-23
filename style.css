@@ -1534,6 +1534,18 @@ iframe {
     margin-top: 24px;
 }
 
+.start-grid .start-card:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+}
+
+.key-finder-page {
+    max-width: 920px;
+}
+
+.key-finder-page .key-finder-panel {
+    margin-top: 34px;
+}
+
 .start-card {
     display: grid;
     gap: 7px;

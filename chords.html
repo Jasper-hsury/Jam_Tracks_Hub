@@ -6,16 +6,16 @@
     <title>Chord | Jasper's Music Space</title>
 
     <link rel="icon" href="icon.png" type="image/png">
-    <meta name="description" content="Detect song keys from YouTube links and explore chord progressions from Jasper's Music Space.">
+    <meta name="description" content="Explore chord progressions, scale notes, and harmonic colors by key from Jasper's Music Space.">
     <link rel="canonical" href="https://jasper-music.onrender.com/chords.html">
     <meta property="og:title" content="Chord Tools | Jasper's Music Space">
-    <meta property="og:description" content="Detect YouTube song keys and explore common chord progressions by key.">
+    <meta property="og:description" content="Explore common chord progressions, scale notes, and harmonic colors by key.">
     <meta property="og:image" content="https://jasper-music.onrender.com/cover.jpeg">
     <meta property="og:url" content="https://jasper-music.onrender.com/chords.html">
     <meta property="og:type" content="website">
 
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=20260623-local-api-autostart">
+    <link rel="stylesheet" href="style.css?v=20260623-key-finder-page">
 </head>
 
 <body>
@@ -24,6 +24,7 @@
         <ul class="nav-links">
             <li><a href="index.html#home">Home</a></li>
             <li><a href="tracks.html">Tracks</a></li>
+            <li><a href="key-finder.html">Key Finder</a></li>
             <li><a href="chords.html" class="active" aria-current="page">Chord</a></li>
             <li><a href="index.html#about">About</a></li>
         </ul>
@@ -32,53 +33,6 @@
     <main class="tracks-page">
         <h1>Chord Progressions</h1>
         <p class="hero-tagline signature-slogan">Capture the Feeling. Compose the Meaning.</p>
-
-        <section class="key-finder-panel" aria-labelledby="keyFinderTitle">
-            <div class="tool-section-heading compact-heading">
-                <h2 id="keyFinderTitle" class="section-title">Song Key Finder</h2>
-                <p>Upload an audio file for the most stable key estimate. YouTube links are still available as a backup.</p>
-            </div>
-
-            <div class="api-status" id="apiStatus" aria-live="polite">
-                <span class="status-dot"></span>
-                <span class="status-text">Checking API...</span>
-            </div>
-
-            <div class="key-finder-upload">
-                <input id="audioKeyFile" type="file" accept="audio/*,.aac,.aiff,.flac,.m4a,.mp3,.mp4,.ogg,.wav,.webm" aria-label="Audio file">
-                <label class="upload-file-label" for="audioKeyFile">
-                    <span>Primary</span>
-                    <strong id="audioFileName">Choose an audio file</strong>
-                    <small>MP3/WAV recommended. MP4 or WEBM should be audio-only and under 25 MB.</small>
-                </label>
-                <button id="analyzeFileButton" class="primary-button analyze-file-button" type="button">
-                    <span>Analyze</span>
-                    <small>File</small>
-                </button>
-            </div>
-
-            <div class="key-finder-divider">
-                <span>Backup: YouTube link</span>
-            </div>
-
-            <div class="key-finder-form">
-                <input id="youtubeKeyUrl" type="url" placeholder="https://youtu.be/..." autocomplete="off" aria-label="YouTube link">
-                <button id="analyzeKeyButton" class="secondary-button" type="button">Analyze link</button>
-                <button id="cancelAnalyzeButton" class="secondary-button" type="button" hidden>Cancel</button>
-            </div>
-
-            <div class="key-finder-result key-finder-empty" id="keyFinderResult" aria-live="polite">
-                <span>Ready when you are.</span>
-            </div>
-
-            <div class="analysis-history" id="analysisHistory" hidden>
-                <div class="history-heading">
-                    <h3>Recent analyses</h3>
-                    <button id="clearHistoryButton" class="text-button" type="button">Clear</button>
-                </div>
-                <ul id="analysisHistoryList"></ul>
-            </div>
-        </section>
 
         <section class="key-selector" aria-labelledby="progressionExplorerTitle">
             <div class="tool-section-heading">
@@ -140,8 +94,6 @@
     <button id="backToTopBtn" type="button" aria-label="Back to top">&uarr;</button>
 
     <script src="site.js"></script>
-    <script src="site-config.js?v=20260603-render-api"></script>
-    <script src="key-finder.js?v=20260623-local-api-autostart"></script>
     <script src="chords.js?v=20260602-continuous-rhythm-guitar"></script>
 </body>
 </html>
