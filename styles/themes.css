@@ -333,6 +333,41 @@ h1,
     border-color: var(--hover-border);
 }
 
+.track-actions .track-primary-action {
+    color: var(--primary-button-text);
+    background: var(--primary-button-background);
+    border-color: var(--primary-button-background);
+    box-shadow: 0 8px 18px var(--shadow-color);
+}
+
+.track-actions .track-primary-action:hover {
+    color: var(--primary-button-hover-text);
+    background: var(--primary-button-hover-background);
+    border-color: var(--primary-button-hover-background);
+    box-shadow: 0 11px 24px var(--shadow-color);
+}
+
+.track-actions .track-secondary-action {
+    color: var(--text-body);
+    background: transparent;
+    border: 1px solid transparent;
+    box-shadow: none;
+}
+
+.track-actions .track-secondary-action:hover {
+    color: var(--gold-light);
+    background: var(--secondary-hover-background);
+    border-color: var(--border-soft);
+    box-shadow: none;
+    transform: translateY(-1px);
+}
+
+.track-actions .download-track-link {
+    color: var(--text-body);
+    background: transparent;
+    border-color: transparent;
+}
+
 .track-card,
 .start-card,
 .home-release-card,

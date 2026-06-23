@@ -204,10 +204,12 @@ document.addEventListener("DOMContentLoaded", function() {
                     </p>
                 </div>
                 <div class="track-actions">
-                    ${videoId ? `<button class="track-link inline-play-button" type="button" data-video-id="${escapeHtml(videoId)}">Play Here</button>` : ""}
-                    ${videoId ? `<a href="${escapeHtml(track.youtubeUrl)}" class="track-link" target="_blank" rel="noopener noreferrer" aria-label="Open ${escapeHtml(track.title)} on YouTube">YouTube</a>` : ""}
-                    <a href="${escapeHtml(track.slidesUrl)}" class="track-link secondary-track-link" target="_blank" rel="noopener noreferrer">Slides</a>
-                    <a href="${escapeHtml(track.downloadUrl)}" class="track-link download-track-link" download>Download</a>
+                    ${videoId ? `<button class="track-link track-primary-action inline-play-button" type="button" data-video-id="${escapeHtml(videoId)}">Play Here</button>` : ""}
+                    <div class="track-secondary-actions">
+                        ${videoId ? `<a href="${escapeHtml(track.youtubeUrl)}" class="track-link track-secondary-action track-youtube-link" target="_blank" rel="noopener noreferrer" aria-label="Open ${escapeHtml(track.title)} on YouTube">YouTube</a>` : ""}
+                        <a href="${escapeHtml(track.slidesUrl)}" class="track-link track-secondary-action secondary-track-link" target="_blank" rel="noopener noreferrer">Slides</a>
+                        <a href="${escapeHtml(track.downloadUrl)}" class="track-link track-secondary-action download-track-link" download>Download</a>
+                    </div>
                 </div>
                 <div class="inline-track-player" hidden></div>
             </article>

@@ -1107,31 +1107,35 @@ document.addEventListener("DOMContentLoaded", function() {
                                 <small>Tempo and mix</small>
                             </summary>
                             <div class="progression-controls playback-controls">
-                                <label class="tempo-control">
-                                    BPM
-                                    <input id="progressionBpm" type="number" min="50" max="180" value="${settings.bpm}">
-                                </label>
-                                <label class="metronome-toggle">
-                                    <input id="progressionMetronome" type="checkbox" ${settings.metronome ? "checked" : ""}>
-                                    Metronome
-                                </label>
-                                <label class="volume-control guitar-volume-control">
-                                    Guitar
-                                    <input id="guitarVolume" type="range" min="0" max="200" value="${settings.guitarVolume}">
-                                </label>
-                                <label class="volume-control click-volume-control">
-                                    Click
-                                    <input id="metronomeVolume" type="range" min="0" max="200" value="${settings.metronomeVolume}">
-                                </label>
-                                <label class="backing-toggle">
-                                    <input id="backingTrackMode" type="checkbox" ${settings.backing ? "checked" : ""}>
-                                    Band
-                                </label>
-                                <label class="volume-control band-volume-control">
-                                    Band
-                                    <input id="backingVolume" type="range" min="0" max="200" value="${settings.backingVolume}">
-                                </label>
-                                <button id="stopProgressionButton" class="secondary-button" type="button">Stop</button>
+                                <div class="playback-level-row">
+                                    <label class="tempo-control">
+                                        BPM
+                                        <input id="progressionBpm" type="number" min="50" max="180" value="${settings.bpm}">
+                                    </label>
+                                    <label class="volume-control guitar-volume-control">
+                                        Guitar
+                                        <input id="guitarVolume" type="range" min="0" max="200" value="${settings.guitarVolume}">
+                                    </label>
+                                    <label class="volume-control click-volume-control">
+                                        Click
+                                        <input id="metronomeVolume" type="range" min="0" max="200" value="${settings.metronomeVolume}">
+                                    </label>
+                                </div>
+                                <div class="playback-option-row">
+                                    <label class="metronome-toggle">
+                                        <input id="progressionMetronome" type="checkbox" ${settings.metronome ? "checked" : ""}>
+                                        Metronome
+                                    </label>
+                                    <label class="backing-toggle">
+                                        <input id="backingTrackMode" type="checkbox" ${settings.backing ? "checked" : ""}>
+                                        Band
+                                    </label>
+                                    <label class="volume-control band-volume-control">
+                                        Band level
+                                        <input id="backingVolume" type="range" min="0" max="200" value="${settings.backingVolume}">
+                                    </label>
+                                    <button id="stopProgressionButton" class="secondary-button" type="button">Stop</button>
+                                </div>
                             </div>
                         </details>
                     </div>

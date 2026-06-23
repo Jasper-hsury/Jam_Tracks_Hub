@@ -344,8 +344,9 @@ h1 {
 .track-actions {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     justify-content: flex-end;
-    gap: 8px;
+    gap: 10px;
 }
 
 .key-finder-panel {
@@ -1027,6 +1028,10 @@ iframe {
     .progression-control-groups {
         grid-template-columns: 1fr;
     }
+
+    .playback-level-row {
+        grid-template-columns: 82px repeat(2, minmax(130px, 1fr));
+    }
 }
 
 @media (max-width: 768px) {
@@ -1078,19 +1083,10 @@ iframe {
 
     .progression-control-groups,
     .chord-setting-controls,
-    .playback-controls {
+    .playback-controls,
+    .playback-level-row,
+    .playback-option-row {
         grid-template-columns: 1fr;
-    }
-
-    .playback-controls .tempo-control,
-    .playback-controls .guitar-volume-control,
-    .playback-controls .click-volume-control,
-    .playback-controls .metronome-toggle,
-    .playback-controls .backing-toggle,
-    .playback-controls .band-volume-control,
-    .playback-controls #stopProgressionButton {
-        grid-column: 1;
-        grid-row: auto;
     }
 
     .progression-control-group summary {
@@ -1112,6 +1108,21 @@ iframe {
     .playback-controls .metronome-toggle,
     .playback-controls .backing-toggle {
         align-self: stretch;
+    }
+
+    .track-secondary-actions {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        width: 100%;
+        padding: 8px 0 0;
+        border-top: 1px solid var(--border-soft);
+        border-left: 0;
+    }
+
+    .track-secondary-action {
+        width: 100%;
+        box-sizing: border-box;
+        text-align: center;
     }
 }
 

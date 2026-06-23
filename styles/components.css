@@ -1013,7 +1013,8 @@
 
 .progression-control-groups {
     display: grid;
-    grid-template-columns: minmax(250px, 0.65fr) minmax(540px, 1.35fr);
+    grid-template-columns: minmax(330px, 0.8fr) minmax(0, 1.2fr);
+    align-items: start;
     gap: 12px;
 }
 
@@ -1092,71 +1093,58 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.chord-setting-controls label {
+.progression-controls.chord-setting-controls label {
     display: grid;
     gap: 6px;
+    align-items: stretch;
 }
 
 .chord-setting-controls select {
+    min-width: 0;
     width: 100%;
 }
 
 .playback-controls {
     display: grid;
-    grid-template-columns: 72px minmax(120px, 1fr) minmax(120px, 1fr) auto;
-    gap: 10px 12px;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+
+.playback-level-row {
+    display: grid;
+    grid-template-columns: 82px repeat(2, minmax(145px, 1fr));
+    gap: 12px;
+    align-items: end;
+}
+
+.playback-option-row {
+    display: grid;
+    grid-template-columns: max-content max-content minmax(180px, 1fr) auto;
+    gap: 14px;
+    align-items: end;
 }
 
 .playback-controls .tempo-control,
-.playback-controls .volume-control {
+.playback-controls .volume-control,
+.playback-option-row .band-volume-control {
     display: grid;
     gap: 6px;
 }
 
 .playback-controls .tempo-control input[type="number"],
 .playback-controls .volume-control input {
+    min-width: 0;
     width: 100%;
-}
-
-.playback-controls .tempo-control {
-    grid-column: 1;
-    grid-row: 1;
-}
-
-.playback-controls .guitar-volume-control {
-    grid-column: 2;
-    grid-row: 1;
-}
-
-.playback-controls .click-volume-control {
-    grid-column: 3;
-    grid-row: 1;
-}
-
-.playback-controls .metronome-toggle {
-    grid-column: 1;
-    grid-row: 2;
-}
-
-.playback-controls .backing-toggle {
-    grid-column: 2;
-    grid-row: 2;
-}
-
-.playback-controls .band-volume-control {
-    grid-column: 3;
-    grid-row: 2;
 }
 
 .playback-controls .metronome-toggle,
 .playback-controls .backing-toggle {
     align-self: end;
     min-height: 36px;
+    white-space: nowrap;
 }
 
 .playback-controls #stopProgressionButton {
-    grid-column: 4;
-    grid-row: 1 / span 2;
     align-self: end;
     min-height: 36px;
 }
@@ -1379,6 +1367,26 @@ audio {
 
 .footer p {
     margin: 0 0 15px;
+}
+
+.track-primary-action {
+    min-height: 42px;
+    padding-inline: 18px;
+}
+
+.track-secondary-actions {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding-left: 9px;
+    border-left: 1px solid var(--border-soft);
+}
+
+.track-secondary-action {
+    min-height: 36px;
+    padding: 7px 9px;
+    border-radius: 6px;
+    font-size: 13px;
 }
 
 .footer .social-links {
