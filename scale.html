@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scale Explorer | Jasper's Music Space</title>
+
+    <link rel="icon" href="icon.png" type="image/png">
+    <meta name="description" content="Explore common guitar scales across the fretboard by root note, interval, and fret range.">
+    <link rel="canonical" href="https://jasper-music.onrender.com/scale.html">
+    <meta property="og:title" content="Scale Explorer | Jasper's Music Space">
+    <meta property="og:description" content="Generate guitar scale positions and inspect notes and intervals across the fretboard.">
+    <meta property="og:image" content="https://jasper-music.onrender.com/cover.jpeg">
+    <meta property="og:url" content="https://jasper-music.onrender.com/scale.html">
+    <meta property="og:type" content="website">
+
+    <script src="theme-init.js?v=20260623-dark-light"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/base.css?v=20260625-scale">
+    <link rel="stylesheet" href="styles/components.css?v=20260625-scale">
+    <link rel="stylesheet" href="styles/pages.css?v=20260625-scale">
+    <link rel="stylesheet" href="styles/themes.css?v=20260625-scale">
+    <link rel="stylesheet" href="styles/scale.css?v=20260625-scale">
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="index.html#home" class="logo">Jasper's Music</a>
+        <ul class="nav-links">
+            <li><a href="index.html#home">Home</a></li>
+            <li><a href="tracks.html">Tracks</a></li>
+            <li><a href="key-finder.html">Key Finder</a></li>
+            <li><a href="scale.html" class="active" aria-current="page">Scale Explorer</a></li>
+            <li><a href="chords.html">Chord Progressions</a></li>
+            <li><a href="index.html#about">About</a></li>
+        </ul>
+    </nav>
+
+    <main class="tracks-page scale-page">
+        <header class="scale-page-heading">
+            <p class="home-eyebrow">Fretboard · intervals · scale shapes</p>
+            <h1>Scale Explorer</h1>
+            <p class="hero-tagline signature-slogan">See the pattern. Hear the color. Learn the neck.</p>
+        </header>
+
+        <section class="scale-workspace" aria-labelledby="scaleControlsHeading">
+            <div class="scale-control-panel">
+                <div class="scale-control-heading">
+                    <div>
+                        <p class="scale-section-kicker">Build a scale</p>
+                        <h2 id="scaleControlsHeading">Choose the sound</h2>
+                    </div>
+                    <p>Standard tuning: E A D G B E</p>
+                </div>
+
+                <div class="scale-control-grid">
+                    <label class="scale-select-field" for="scaleType">
+                        <span>Scale type</span>
+                        <select id="scaleType">
+                            <option value="major">Major</option>
+                            <option value="natural-minor">Natural Minor</option>
+                            <option value="major-pentatonic">Major Pentatonic</option>
+                            <option value="minor-pentatonic" selected>Minor Pentatonic</option>
+                            <option value="blues">Blues</option>
+                            <option value="dorian">Dorian</option>
+                            <option value="mixolydian">Mixolydian</option>
+                            <option value="harmonic-minor">Harmonic Minor</option>
+                        </select>
+                    </label>
+
+                    <fieldset class="scale-root-field">
+                        <legend>Root note</legend>
+                        <div class="scale-root-grid" id="scaleRootGrid">
+                            <button type="button" data-root="0">C</button>
+                            <button type="button" data-root="1">C#</button>
+                            <button type="button" data-root="2">D</button>
+                            <button type="button" data-root="3">Eb</button>
+                            <button type="button" data-root="4">E</button>
+                            <button type="button" data-root="5">F</button>
+                            <button type="button" data-root="6">F#</button>
+                            <button type="button" data-root="7">G</button>
+                            <button type="button" data-root="8">Ab</button>
+                            <button type="button" data-root="9" class="is-selected" aria-pressed="true">A</button>
+                            <button type="button" data-root="10">Bb</button>
+                            <button type="button" data-root="11">B</button>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div class="scale-summary" aria-live="polite">
+                <div>
+                    <p class="scale-section-kicker">Current scale</p>
+                    <h2 id="scaleTitle">A Minor Pentatonic</h2>
+                    <p id="scaleDescription">A focused five-note sound used throughout rock, blues, and modern guitar playing.</p>
+                </div>
+                <button class="scale-play-button" id="playScaleButton" type="button">
+                    <span aria-hidden="true">&#9654;</span>
+                    Play scale
+                </button>
+                <div class="scale-interval-list" id="scaleIntervalList" aria-label="Scale intervals"></div>
+            </div>
+
+            <div class="scale-display-toolbar">
+                <fieldset class="scale-view-field">
+                    <legend>Fret range</legend>
+                    <div class="scale-range-buttons" id="scaleRangeButtons">
+                        <button type="button" class="is-selected" data-start="0" data-end="15" aria-pressed="true">Full neck</button>
+                        <button type="button" data-start="0" data-end="4">0–4</button>
+                        <button type="button" data-start="3" data-end="7">3–7</button>
+                        <button type="button" data-start="5" data-end="9">5–9</button>
+                        <button type="button" data-start="7" data-end="12">7–12</button>
+                        <button type="button" data-start="10" data-end="15">10–15</button>
+                    </div>
+                </fieldset>
+
+                <fieldset class="scale-label-field">
+                    <legend>Marker labels</legend>
+                    <div class="segmented-control scale-label-toggle">
+                        <button type="button" class="is-selected" data-label-mode="note" aria-pressed="true">Notes</button>
+                        <button type="button" data-label-mode="degree" aria-pressed="false">Degrees</button>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="fretboard-card">
+                <div class="fretboard-help">
+                    <span><i class="scale-legend-root" aria-hidden="true"></i>Root</span>
+                    <span>Scroll sideways on smaller screens</span>
+                </div>
+                <div class="fretboard-scroll" tabindex="0" aria-label="Scrollable guitar fretboard">
+                    <div class="fretboard" id="fretboard" role="img" aria-label="A minor pentatonic scale on a guitar fretboard"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 Jasper's Music. All rights reserved.</p>
+        <div class="social-links">
+            <a href="https://youtube.com/@weekly_backing_track?si=-Rp6XDvP0A8fclp3" target="_blank" rel="noopener noreferrer" aria-label="Visit Jasper's YouTube channel">YouTube</a>
+            <a href="https://www.instagram.com/reyu_jasper?igsh=dmVsazFvb2pwMmsw&utm_source=qr" target="_blank" rel="noopener noreferrer" aria-label="Visit Jasper's Instagram profile">Instagram</a>
+        </div>
+    </footer>
+
+    <button id="backToTopBtn" type="button" aria-label="Back to top">&uarr;</button>
+
+    <script src="site.js?v=20260623-dark-light"></script>
+    <script src="scale.js?v=20260625-scale"></script>
+</body>
+</html>
