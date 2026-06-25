@@ -94,6 +94,7 @@
 }
 
 .scale-root-field,
+.scale-length-field,
 .scale-view-field,
 .scale-label-field {
     min-width: 0;
@@ -103,6 +104,7 @@
 }
 
 .scale-root-field legend,
+.scale-length-field legend,
 .scale-view-field legend,
 .scale-label-field legend {
     margin-bottom: 8px;
@@ -118,6 +120,7 @@
 }
 
 .scale-root-grid button,
+.scale-length-toggle button,
 .scale-range-buttons button,
 .scale-label-toggle button {
     min-height: 38px;
@@ -137,6 +140,7 @@
 }
 
 .scale-root-grid button:hover,
+.scale-length-toggle button:hover,
 .scale-range-buttons button:hover,
 .scale-label-toggle button:hover {
     color: var(--secondary-hover-text);
@@ -146,6 +150,7 @@
 }
 
 .scale-root-grid button.is-selected,
+.scale-length-toggle button.is-selected,
 .scale-range-buttons button.is-selected,
 .scale-label-toggle button.is-selected {
     color: var(--chord-accent-text);
@@ -154,6 +159,7 @@
 }
 
 .scale-root-grid button:focus-visible,
+.scale-length-toggle button:focus-visible,
 .scale-range-buttons button:focus-visible,
 .scale-label-toggle button:focus-visible,
 .scale-play-button:focus-visible,
@@ -245,7 +251,12 @@
 }
 
 .scale-display-toolbar {
+    align-items: flex-end;
     padding: 16px 18px;
+}
+
+.scale-length-field {
+    flex: 0 0 auto;
 }
 
 .scale-view-field {
@@ -268,12 +279,14 @@
     flex: 0 0 auto;
 }
 
+.scale-length-toggle,
 .scale-label-toggle {
     display: grid;
     grid-template-columns: 1fr 1fr;
     padding: 3px;
 }
 
+.scale-length-toggle button,
 .scale-label-toggle button {
     min-height: 32px;
     padding: 4px 11px;
@@ -531,7 +544,9 @@ html[data-theme="light"] .fret-cell::before {
         min-width: 0;
     }
 
+    .scale-length-field,
     .scale-label-field,
+    .scale-length-toggle,
     .scale-label-toggle {
         width: 100%;
     }
@@ -548,6 +563,7 @@ html[data-theme="light"] .fret-cell::before {
 
 @media (prefers-reduced-motion: reduce) {
     .scale-root-grid button,
+    .scale-length-toggle button,
     .scale-range-buttons button,
     .scale-label-toggle button,
     .scale-play-button {

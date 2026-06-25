@@ -63,6 +63,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const scaleTypeSelect = document.getElementById("scaleType");
     const rootGrid = document.getElementById("scaleRootGrid");
+    const lengthToggle = document.getElementById("scaleLengthToggle");
     const rangeButtons = document.getElementById("scaleRangeButtons");
     const labelToggle = document.querySelector(".scale-label-toggle");
     const scaleTitle = document.getElementById("scaleTitle");
@@ -72,6 +73,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const playButton = document.getElementById("playScaleButton");
 
     let rootPitch = 9;
+    let neckFrets = 15;
     let fretStart = 0;
     let fretEnd = 15;
     let labelMode = "note";
@@ -124,6 +126,48 @@ document.addEventListener("DOMContentLoaded", function() {
                 <small>${noteNames[(rootPitch + interval) % 12]}</small>
             `;
             intervalList.appendChild(chip);
+        });
+    }
+
+    function getRangeOptions() {
+        const ranges = [
+            { label: "0-4", start: 0, end: 4 },
+            { label: "3-7", start: 3, end: 7 },
+            { label: "5-9", start: 5, end: 9 },
+            { label: "7-12", start: 7, end: 12 },
+            { label: "10-15", start: 10, end: 15 }
+        ];
+
+        if (neckFrets === 22) {
+            ranges.push(
+                { label: "12-17", start: 12, end: 17 },
+                { label: "17-22", start: 17, end: 22 }
+            );
+        }
+
+        return [
+            { label: `Full neck (0-${neckFrets})`, start: 0, end: neckFrets },
+            ...ranges
+        ];
+    }
+
+    function renderRangeButtons(selectFullNeck = false) {
+        if (selectFullNeck || fretEnd > neckFrets) {
+            fretStart = 0;
+            fretEnd = neckFrets;
+        }
+
+        rangeButtons.innerHTML = "";
+        getRangeOptions().forEach(option => {
+            const button = document.createElement("button");
+            const isSelected = option.start === fretStart && option.end === fretEnd;
+            button.type = "button";
+            button.dataset.start = String(option.start);
+            button.dataset.end = String(option.end);
+            button.textContent = option.label;
+            button.classList.toggle("is-selected", isSelected);
+            button.setAttribute("aria-pressed", String(isSelected));
+            rangeButtons.appendChild(button);
         });
     }
 
@@ -214,6 +258,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function render() {
         renderSummary();
+        renderRangeButtons();
         renderFretboard();
     }
 
@@ -280,6 +325,17 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     scaleTypeSelect.addEventListener("change", render);
+
+    lengthToggle.addEventListener("click", function(event) {
+        const button = event.target.closest("button[data-fret-count]");
+        if (!button) {
+            return;
+        }
+        neckFrets = Number(button.dataset.fretCount);
+        updatePressedState(lengthToggle, button);
+        renderRangeButtons(true);
+        renderFretboard();
+    });
 
     rangeButtons.addEventListener("click", function(event) {
         const button = event.target.closest("button[data-start]");
