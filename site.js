@@ -36,8 +36,11 @@ document.addEventListener("DOMContentLoaded", function() {
             <span aria-hidden="true"></span>
         `;
         navbar.insertBefore(menuButton, navLinks);
+        let menuTransitionTimer = null;
 
         function closeMenu(restoreFocus) {
+            window.clearTimeout(menuTransitionTimer);
+            navbar.classList.remove("menu-transitioning");
             navbar.classList.remove("menu-open");
             menuButton.setAttribute("aria-expanded", "false");
             menuButton.setAttribute("aria-label", "Open navigation menu");
@@ -52,6 +55,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
         menuButton.addEventListener("click", function() {
             const isOpen = navbar.classList.toggle("menu-open");
+            navbar.classList.add("menu-transitioning");
+            window.clearTimeout(menuTransitionTimer);
+            menuTransitionTimer = window.setTimeout(() => {
+                navbar.classList.remove("menu-transitioning");
+            }, 260);
             menuButton.setAttribute("aria-expanded", String(isOpen));
             menuButton.setAttribute("aria-label", isOpen ? "Close navigation menu" : "Open navigation menu");
         });

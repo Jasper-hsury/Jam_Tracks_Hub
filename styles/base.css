@@ -109,11 +109,11 @@ h1 {
 }
 
 .nav-menu-button {
+    position: relative;
     display: none;
     width: 42px;
     height: 42px;
     place-items: center;
-    gap: 4px;
     padding: 9px;
     color: var(--text);
     background: rgba(27, 27, 27, 0.82);
@@ -123,12 +123,28 @@ h1 {
 }
 
 .nav-menu-button span {
+    position: absolute;
+    left: 50%;
+    top: 50%;
     display: block;
     width: 20px;
     height: 2px;
     background: currentColor;
     border-radius: 2px;
-    transition: transform 0.2s ease, opacity 0.2s ease;
+    transform-origin: center;
+    transition: transform 0.22s ease, opacity 0.16s ease;
+}
+
+.nav-menu-button span:nth-child(1) {
+    transform: translate(-50%, -7px);
+}
+
+.nav-menu-button span:nth-child(2) {
+    transform: translate(-50%, -50%);
+}
+
+.nav-menu-button span:nth-child(3) {
+    transform: translate(-50%, 5px);
 }
 
 .skip-link {
@@ -189,6 +205,7 @@ h1 {
     height: 6px;
     border-right: 2px solid currentColor;
     border-bottom: 2px solid currentColor;
+    order: 2;
     transform: rotate(45deg) translateY(-2px);
     transition: transform 0.18s ease;
 }
