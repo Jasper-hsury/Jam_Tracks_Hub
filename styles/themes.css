@@ -293,10 +293,12 @@ h1,
     border-color: var(--border-soft);
 }
 
-.nav-submenu a:hover,
-.nav-submenu a.active {
-    color: var(--secondary-hover-text);
-    background: var(--secondary-hover-background);
+@media (min-width: 761px) {
+    .nav-submenu a:hover,
+    .nav-submenu a.active {
+        color: var(--secondary-hover-text);
+        background: var(--secondary-hover-background);
+    }
 }
 
 .primary-button,

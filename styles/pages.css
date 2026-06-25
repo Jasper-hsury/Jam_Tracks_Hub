@@ -1304,7 +1304,7 @@ iframe {
 }
 
 .home-start-grid .start-card:last-child:nth-child(odd) {
-    grid-column: auto;
+    grid-column: 1 / -1;
 }
 
 .home-start-grid .start-card {
@@ -1552,8 +1552,8 @@ iframe {
     .nav-submenu {
         position: static;
         min-width: 0;
-        margin: 2px 0 5px;
-        padding: 3px 0 3px 14px;
+        margin: 0 0 4px 8px;
+        padding: 2px 0 2px 12px;
         background: transparent;
         border: 0;
         border-left: 1px solid var(--border-soft);
@@ -1573,8 +1573,29 @@ iframe {
     }
 
     .nav-submenu a {
-        padding: 9px 10px;
-        font-size: 14px;
+        position: relative;
+        padding: 7px 10px;
+        color: var(--text-subtle);
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .nav-submenu a:hover,
+    .nav-submenu a.active {
+        color: var(--gold-light);
+        background: transparent;
+    }
+
+    .nav-submenu a.active::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 3px;
+        height: 16px;
+        background: var(--teal);
+        border-radius: 999px;
+        transform: translateY(-50%);
     }
 
     @media (prefers-reduced-motion: reduce) {
