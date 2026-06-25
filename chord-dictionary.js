@@ -6,9 +6,10 @@ document.addEventListener("DOMContentLoaded", function() {
     const NATURAL_PITCHES = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
     const TUNING_MIDI = [40, 45, 50, 55, 59, 64];
     const STRING_NAMES = ["E", "A", "D", "G", "B", "e"];
-    const MAX_FRET_SPAN = 5;
-    const DIAGRAM_FRET_ROWS = 6;
+    const MAX_FRET_SPAN = 3;
+    const DIAGRAM_FRET_ROWS = 4;
     const SHAPES_PER_PAGE = 12;
+    const POSITION_TARGETS = [0, 3, 5, 7, 9, 12];
 
     const CHORD_CATEGORIES = [
         {
@@ -100,6 +101,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const chordSymbol = document.getElementById("selectedChordSymbol");
     const chordFormula = document.getElementById("selectedChordFormula");
     const chordNotes = document.getElementById("selectedChordNotes");
+    const positionFilter = document.getElementById("shapePositionFilter");
     const shapeGrid = document.getElementById("chordShapeGrid");
     const shapeCount = document.getElementById("shapeCount");
     const shapePagination = document.getElementById("shapePagination");
@@ -111,6 +113,8 @@ document.addEventListener("DOMContentLoaded", function() {
     let rootPitch = 0;
     let selectedChord = ALL_CHORDS[0];
     let selectedVoicings = [];
+    let filteredVoicings = [];
+    let selectedPosition = "all";
     let shapePage = 0;
     let audioContext = null;
     let isPlaying = false;
@@ -325,16 +329,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function generateVoicings(chord) {
         const chordPitches = chordPitchClasses(chord);
-        const windows = [
-            [0, 5],
-            [1, 6],
-            [2, 7],
-            [3, 8],
-            [4, 9],
-            [5, 10],
-            [6, 11],
-            [7, 12]
-        ];
+        const windows = Array.from(
+            { length: POSITION_TARGETS[POSITION_TARGETS.length - 1] + 1 },
+            (_, startFret) => [startFret, startFret + MAX_FRET_SPAN]
+        );
         const candidates = [];
         const seen = new Set();
 
@@ -367,6 +365,21 @@ document.addEventListener("DOMContentLoaded", function() {
 
         candidates.sort((a, b) => b.score - a.score);
         return candidates;
+    }
+
+    function voicingPosition(frets) {
+        if (frets.includes(0)) {
+            return 0;
+        }
+        const positiveFrets = frets.filter(fret => fret > 0);
+        return positiveFrets.length ? Math.min(...positiveFrets) : 0;
+    }
+
+    function nearestPositionTarget(frets) {
+        const position = voicingPosition(frets);
+        return POSITION_TARGETS.reduce((closest, target) =>
+            Math.abs(target - position) < Math.abs(closest - position) ? target : closest
+        , POSITION_TARGETS[0]);
     }
 
     function diagramBaseFret(frets) {
@@ -438,9 +451,9 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function renderShapeResults() {
-        const pageCount = Math.ceil(selectedVoicings.length / SHAPES_PER_PAGE);
+        const pageCount = Math.ceil(filteredVoicings.length / SHAPES_PER_PAGE);
         const startIndex = shapePage * SHAPES_PER_PAGE;
-        const visibleVoicings = selectedVoicings.slice(startIndex, startIndex + SHAPES_PER_PAGE);
+        const visibleVoicings = filteredVoicings.slice(startIndex, startIndex + SHAPES_PER_PAGE);
         shapeGrid.innerHTML = visibleVoicings
             .map((voicing, index) => renderDiagram(voicing, startIndex + index))
             .join("");
@@ -451,6 +464,35 @@ document.addEventListener("DOMContentLoaded", function() {
         shapePageStatus.textContent = `Page ${shapePage + 1} of ${pageCount}`;
     }
 
+    function applyShapeFilter() {
+        filteredVoicings = selectedPosition === "all"
+            ? selectedVoicings
+            : selectedVoicings.filter(voicing =>
+                nearestPositionTarget(voicing.frets) === Number(selectedPosition)
+            );
+        shapePage = 0;
+
+        const positionLabel = selectedPosition === "all"
+            ? "all positions"
+            : `near fret ${selectedPosition}`;
+        shapeCount.textContent = selectedPosition === "all"
+            ? `${filteredVoicings.length} ${filteredVoicings.length === 1 ? "shape" : "shapes"} found`
+            : `${filteredVoicings.length} of ${selectedVoicings.length} near fret ${selectedPosition}`;
+
+        if (!filteredVoicings.length) {
+            shapePagination.hidden = true;
+            shapeGrid.innerHTML = `
+                <div class="dictionary-empty">
+                    <strong>No shapes found ${positionLabel}.</strong>
+                    <span>Choose another fret area or select All positions.</span>
+                </div>
+            `;
+            return;
+        }
+
+        renderShapeResults();
+    }
+
     function renderSelectedChord() {
         chordName.textContent = chordDisplayName(selectedChord);
         chordDescription.textContent = selectedChord.description;
@@ -459,11 +501,11 @@ document.addEventListener("DOMContentLoaded", function() {
         chordNotes.textContent = chordNoteNames(selectedChord).join(" · ");
 
         selectedVoicings = generateVoicings(selectedChord);
-        shapePage = 0;
-        shapeCount.textContent = `${selectedVoicings.length} ${selectedVoicings.length === 1 ? "shape" : "shapes"} found`;
 
         if (!selectedVoicings.length) {
+            filteredVoicings = [];
             shapePagination.hidden = true;
+            shapeCount.textContent = "No shapes found";
             shapeGrid.innerHTML = `
                 <div class="dictionary-empty">
                     <strong>No compact six-string shape was found.</strong>
@@ -471,7 +513,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 </div>
             `;
         } else {
-            renderShapeResults();
+            applyShapeFilter();
         }
     }
 
@@ -488,7 +530,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     async function playSelectedChord() {
-        if (isPlaying || !selectedVoicings.length) {
+        if (isPlaying || !filteredVoicings.length) {
             return;
         }
 
@@ -501,7 +543,7 @@ document.addEventListener("DOMContentLoaded", function() {
         playButton.disabled = true;
         playButton.lastChild.textContent = " Playing";
         const startTime = context.currentTime + 0.04;
-        const frets = selectedVoicings[0].frets;
+        const frets = filteredVoicings[0].frets;
 
         frets.forEach((fret, stringIndex) => {
             if (fret < 0) {
@@ -556,6 +598,15 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     searchInput.addEventListener("input", renderCategories);
+    positionFilter.addEventListener("click", function(event) {
+        const button = event.target.closest("button[data-position]");
+        if (!button) {
+            return;
+        }
+        selectedPosition = button.dataset.position;
+        updatePressedState(positionFilter, button);
+        applyShapeFilter();
+    });
     playButton.addEventListener("click", playSelectedChord);
     previousShapesButton.addEventListener("click", function() {
         shapePage = Math.max(0, shapePage - 1);
@@ -563,7 +614,7 @@ document.addEventListener("DOMContentLoaded", function() {
         shapeGrid.scrollIntoView({ behavior: "smooth", block: "start" });
     });
     nextShapesButton.addEventListener("click", function() {
-        const pageCount = Math.ceil(selectedVoicings.length / SHAPES_PER_PAGE);
+        const pageCount = Math.ceil(filteredVoicings.length / SHAPES_PER_PAGE);
         shapePage = Math.min(pageCount - 1, shapePage + 1);
         renderShapeResults();
         shapeGrid.scrollIntoView({ behavior: "smooth", block: "start" });

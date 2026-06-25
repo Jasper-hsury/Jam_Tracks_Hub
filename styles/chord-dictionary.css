@@ -298,6 +298,55 @@
     margin-bottom: 12px;
 }
 
+.dictionary-position-filter {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 14px;
+    padding: 10px 12px;
+    background: var(--soft-background);
+    border: 1px solid var(--border-soft);
+    border-radius: 7px;
+}
+
+.dictionary-position-filter > span {
+    margin-right: 3px;
+    color: var(--text-body);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.dictionary-position-filter button {
+    min-height: 34px;
+    padding: 6px 11px;
+    color: var(--secondary-button-text);
+    background: var(--secondary-button-background);
+    border: 1px solid var(--secondary-button-border);
+    border-radius: 999px;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.dictionary-position-filter button:hover {
+    color: var(--secondary-hover-text);
+    background: var(--secondary-hover-background);
+    border-color: var(--hover-border);
+}
+
+.dictionary-position-filter button.is-selected {
+    color: var(--chord-accent-text);
+    background: var(--chord-accent);
+    border-color: var(--chord-accent);
+}
+
+.dictionary-position-filter button:focus-visible {
+    outline: 3px solid var(--focus-ring);
+    outline-offset: 2px;
+}
+
 .dictionary-shape-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -325,16 +374,18 @@
 .chord-shape-card-heading span,
 .chord-shape-card-heading small {
     color: var(--text-subtle);
-    font-size: 10px;
+    font-size: 12px;
+    line-height: 1.35;
 }
 
 .chord-shape-card-heading strong {
     color: var(--text-strong);
-    font-size: 11px;
+    font-size: 14px;
+    letter-spacing: 0.04em;
 }
 
 .chord-diagram {
-    max-width: 184px;
+    max-width: 200px;
     margin: 0 auto;
 }
 
@@ -346,16 +397,17 @@
 }
 
 .diagram-status-row {
-    min-height: 18px;
+    min-height: 22px;
     color: var(--text-body);
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 700;
 }
 
 .diagram-string-names {
-    margin-top: 5px;
+    margin-top: 7px;
     color: var(--text-subtle);
-    font-size: 9px;
+    font-size: 11px;
+    font-weight: 600;
 }
 
 .diagram-neck {
@@ -404,10 +456,11 @@
 
 .diagram-base-fret {
     position: absolute;
-    right: calc(100% + 5px);
-    top: 1px;
-    color: var(--text-subtle);
-    font-size: 9px;
+    right: calc(100% + 7px);
+    top: -1px;
+    color: var(--text-body);
+    font-size: 12px;
+    font-weight: 700;
 }
 
 .dictionary-empty {

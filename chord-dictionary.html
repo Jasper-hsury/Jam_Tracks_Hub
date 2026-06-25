@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="styles/components.css?v=20260623-layout-v2">
     <link rel="stylesheet" href="styles/pages.css?v=20260625-chord-menu-v2">
     <link rel="stylesheet" href="styles/themes.css?v=20260625-chord-menu-v2">
-    <link rel="stylesheet" href="styles/chord-dictionary.css?v=20260625-dictionary-v2">
+    <link rel="stylesheet" href="styles/chord-dictionary.css?v=20260625-dictionary-v3">
 </head>
 
 <body>
@@ -116,9 +116,20 @@
                 <div class="dictionary-shape-heading">
                     <div>
                         <h3>Available guitar shapes</h3>
-                        <p>Standard tuning E A D G B E. Shapes stay within a five-fret span. X means mute; O means open.</p>
+                        <p>Standard tuning E A D G B E. Shapes use at most four adjacent frets. X means mute; O means open.</p>
                     </div>
                     <span id="shapeCount">Finding shapes</span>
+                </div>
+
+                <div class="dictionary-position-filter" id="shapePositionFilter" aria-label="Filter chord shapes by fret area">
+                    <span>Position</span>
+                    <button type="button" class="is-selected" data-position="all" aria-pressed="true">All</button>
+                    <button type="button" data-position="0" aria-pressed="false">Near 0</button>
+                    <button type="button" data-position="3" aria-pressed="false">Near 3</button>
+                    <button type="button" data-position="5" aria-pressed="false">Near 5</button>
+                    <button type="button" data-position="7" aria-pressed="false">Near 7</button>
+                    <button type="button" data-position="9" aria-pressed="false">Near 9</button>
+                    <button type="button" data-position="12" aria-pressed="false">Near 12</button>
                 </div>
 
                 <div class="dictionary-shape-grid" id="chordShapeGrid"></div>
@@ -142,6 +153,6 @@
     <button id="backToTopBtn" type="button" aria-label="Back to top">&uarr;</button>
 
     <script src="site.js?v=20260625-chord-menu-v2"></script>
-    <script src="chord-dictionary.js?v=20260625-dictionary-v2"></script>
+    <script src="chord-dictionary.js?v=20260625-dictionary-v3"></script>
 </body>
 </html>
