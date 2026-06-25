@@ -163,6 +163,7 @@
 .scale-range-buttons button:focus-visible,
 .scale-label-toggle button:focus-visible,
 .scale-play-button:focus-visible,
+.scale-download-button:focus-visible,
 .scale-select-field select:focus-visible,
 .fretboard-scroll:focus-visible {
     outline: 3px solid var(--focus-ring);
@@ -196,6 +197,45 @@
     font-weight: 700;
     cursor: pointer;
     transition: transform 0.18s ease, background-color 0.18s ease;
+}
+
+.scale-summary-actions {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.scale-download-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 10px 15px;
+    color: var(--secondary-button-text);
+    background: var(--secondary-button-background);
+    border: 1px solid var(--secondary-button-border);
+    border-radius: 999px;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        color 0.18s ease,
+        background-color 0.18s ease,
+        border-color 0.18s ease,
+        transform 0.18s ease;
+}
+
+.scale-download-button:hover {
+    color: var(--secondary-hover-text);
+    background: var(--secondary-hover-background);
+    border-color: var(--hover-border);
+    transform: translateY(-2px);
+}
+
+.scale-download-button:disabled {
+    cursor: wait;
+    opacity: 0.72;
 }
 
 .scale-play-button:hover {
@@ -527,6 +567,16 @@ html[data-theme="light"] .fret-cell::before {
         width: 100%;
     }
 
+    .scale-summary-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+        width: 100%;
+    }
+
+    .scale-download-button {
+        width: 100%;
+    }
+
     .scale-interval-list {
         grid-column: auto;
     }
@@ -566,7 +616,8 @@ html[data-theme="light"] .fret-cell::before {
     .scale-length-toggle button,
     .scale-range-buttons button,
     .scale-label-toggle button,
-    .scale-play-button {
+    .scale-play-button,
+    .scale-download-button {
         transition: none;
     }
 }

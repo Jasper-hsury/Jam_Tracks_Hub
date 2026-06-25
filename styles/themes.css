@@ -191,6 +191,12 @@ h1,
     border-bottom-color: var(--border-soft);
 }
 
+.track-loading {
+    color: var(--text-subtle);
+    background: var(--panel-background);
+    border-color: var(--border-soft);
+}
+
 .favorites-filter,
 .segmented-control,
 .api-status {

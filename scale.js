@@ -71,6 +71,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const intervalList = document.getElementById("scaleIntervalList");
     const fretboard = document.getElementById("fretboard");
     const playButton = document.getElementById("playScaleButton");
+    const downloadButton = document.getElementById("downloadScaleButton");
 
     let rootPitch = 9;
     let neckFrets = 15;
@@ -262,6 +263,230 @@ document.addEventListener("DOMContentLoaded", function() {
         renderFretboard();
     }
 
+    function roundedRect(context, x, y, width, height, radius) {
+        const safeRadius = Math.min(radius, width / 2, height / 2);
+        context.beginPath();
+        context.moveTo(x + safeRadius, y);
+        context.lineTo(x + width - safeRadius, y);
+        context.quadraticCurveTo(x + width, y, x + width, y + safeRadius);
+        context.lineTo(x + width, y + height - safeRadius);
+        context.quadraticCurveTo(x + width, y + height, x + width - safeRadius, y + height);
+        context.lineTo(x + safeRadius, y + height);
+        context.quadraticCurveTo(x, y + height, x, y + height - safeRadius);
+        context.lineTo(x, y + safeRadius);
+        context.quadraticCurveTo(x, y, x + safeRadius, y);
+        context.closePath();
+    }
+
+    function drawScaleImage() {
+        const visibleFrets = [];
+        for (let fret = fretStart; fret <= fretEnd; fret += 1) {
+            visibleFrets.push(fret);
+        }
+
+        const scale = getScale();
+        const noteNames = getNoteNames();
+        const intervalColors = [
+            "#b83d55",
+            "#b66c1f",
+            "#267ca6",
+            "#247f5b",
+            "#5d50b2",
+            "#96507c",
+            "#58722f"
+        ];
+        const outerPadding = 54;
+        const labelWidth = 68;
+        const cellWidth = 82;
+        const rowHeight = 66;
+        const titleHeight = 158;
+        const legendHeight = 72;
+        const markerHeight = 34;
+        const footerHeight = 58;
+        const boardWidth = labelWidth + visibleFrets.length * cellWidth;
+        const canvasWidth = Math.max(1040, outerPadding * 2 + boardWidth);
+        const boardTop = titleHeight + legendHeight;
+        const canvasHeight = boardTop + 28 + STRINGS.length * rowHeight + markerHeight + footerHeight;
+        const scaleFactor = 2;
+        const canvas = document.createElement("canvas");
+        canvas.width = canvasWidth * scaleFactor;
+        canvas.height = canvasHeight * scaleFactor;
+        const context = canvas.getContext("2d");
+        context.scale(scaleFactor, scaleFactor);
+
+        context.fillStyle = "#f5efe6";
+        context.fillRect(0, 0, canvasWidth, canvasHeight);
+
+        context.fillStyle = "#fffdf9";
+        roundedRect(context, 24, 24, canvasWidth - 48, canvasHeight - 48, 14);
+        context.fill();
+        context.strokeStyle = "#d8c8b7";
+        context.lineWidth = 1;
+        context.stroke();
+
+        context.fillStyle = "#8e613d";
+        context.font = "700 34px Georgia, serif";
+        context.fillText(`${getRootName()} ${scale.name}`, outerPadding, 74);
+        context.fillStyle = "#4d433b";
+        context.font = "600 16px Arial, sans-serif";
+        context.fillText(
+            `Guitar scale diagram · frets ${fretStart}-${fretEnd} · ${labelMode === "note" ? "note names" : "scale degrees"}`,
+            outerPadding,
+            105
+        );
+        context.fillStyle = "#766b62";
+        context.font = "14px Arial, sans-serif";
+        context.fillText("Standard tuning: E A D G B E", outerPadding, 132);
+
+        let legendX = outerPadding;
+        scale.intervals.forEach((interval, index) => {
+            const label = `${scale.degrees[index]}  ${noteNames[(rootPitch + interval) % 12]}`;
+            context.font = "700 13px Arial, sans-serif";
+            const chipWidth = Math.max(68, context.measureText(label).width + 28);
+            context.fillStyle = intervalColors[index];
+            roundedRect(context, legendX, titleHeight + 11, chipWidth, 34, 17);
+            context.fill();
+            if (index === 0) {
+                context.strokeStyle = "#6c2c3c";
+                context.lineWidth = 2;
+                context.stroke();
+            }
+            context.fillStyle = "#ffffff";
+            context.textAlign = "center";
+            context.textBaseline = "middle";
+            context.fillText(label, legendX + chipWidth / 2, titleHeight + 28);
+            legendX += chipWidth + 9;
+        });
+
+        const boardX = outerPadding;
+        context.textAlign = "center";
+        context.textBaseline = "middle";
+        context.fillStyle = "#766b62";
+        context.font = "700 13px Arial, sans-serif";
+        context.fillText("String", boardX + labelWidth / 2, boardTop + 14);
+        visibleFrets.forEach((fret, index) => {
+            context.fillText(
+                String(fret),
+                boardX + labelWidth + index * cellWidth + cellWidth / 2,
+                boardTop + 14
+            );
+        });
+
+        const stringsTop = boardTop + 28;
+        STRINGS.forEach((string, stringIndex) => {
+            const rowY = stringsTop + stringIndex * rowHeight;
+            context.fillStyle = "#f1e7db";
+            context.fillRect(boardX, rowY, labelWidth, rowHeight);
+            context.strokeStyle = "#cfbda9";
+            context.lineWidth = 1;
+            context.strokeRect(boardX, rowY, labelWidth, rowHeight);
+            context.fillStyle = "#7d5435";
+            context.font = "700 16px Arial, sans-serif";
+            context.fillText(string.name, boardX + labelWidth / 2, rowY + rowHeight / 2);
+
+            visibleFrets.forEach((fret, fretIndex) => {
+                const cellX = boardX + labelWidth + fretIndex * cellWidth;
+                context.fillStyle = fret % 2 === 0 ? "#fbf7f1" : "#f7f0e7";
+                context.fillRect(cellX, rowY, cellWidth, rowHeight);
+                context.strokeStyle = fret === 0 ? "#a77a51" : "#c7b5a2";
+                context.lineWidth = fret === 0 ? 4 : 1.4;
+                context.strokeRect(cellX, rowY, cellWidth, rowHeight);
+
+                context.strokeStyle = "#9b8c7e";
+                context.lineWidth = 1;
+                context.beginPath();
+                context.moveTo(cellX, rowY + rowHeight / 2);
+                context.lineTo(cellX + cellWidth, rowY + rowHeight / 2);
+                context.stroke();
+
+                const pitch = (string.pitch + fret) % 12;
+                const intervalIndex = getIntervalIndex(pitch);
+                if (intervalIndex === -1) {
+                    return;
+                }
+
+                const centerX = cellX + cellWidth / 2;
+                const centerY = rowY + rowHeight / 2;
+                const radius = intervalIndex === 0 ? 21 : 18;
+                context.fillStyle = intervalColors[intervalIndex];
+                context.beginPath();
+                context.arc(centerX, centerY, radius, 0, Math.PI * 2);
+                context.fill();
+                context.strokeStyle = intervalIndex === 0 ? "#ffffff" : "#f7eee6";
+                context.lineWidth = intervalIndex === 0 ? 4 : 2;
+                context.stroke();
+                if (intervalIndex === 0) {
+                    context.strokeStyle = intervalColors[0];
+                    context.lineWidth = 2;
+                    context.beginPath();
+                    context.arc(centerX, centerY, radius + 4, 0, Math.PI * 2);
+                    context.stroke();
+                }
+
+                context.fillStyle = "#ffffff";
+                context.font = "700 13px Arial, sans-serif";
+                const markerText = labelMode === "note"
+                    ? noteNames[pitch]
+                    : scale.degrees[intervalIndex];
+                context.fillText(markerText, centerX, centerY + 0.5);
+            });
+        });
+
+        const markersY = stringsTop + STRINGS.length * rowHeight + 16;
+        visibleFrets.forEach((fret, index) => {
+            if (![3, 5, 7, 9, 12, 15, 17, 19, 21].includes(fret)) {
+                return;
+            }
+            const centerX = boardX + labelWidth + index * cellWidth + cellWidth / 2;
+            context.fillStyle = "#b18a64";
+            const dots = fret === 12 ? [-7, 7] : [0];
+            dots.forEach(offset => {
+                context.beginPath();
+                context.arc(centerX + offset, markersY, 4, 0, Math.PI * 2);
+                context.fill();
+            });
+        });
+
+        context.textAlign = "right";
+        context.textBaseline = "alphabetic";
+        context.fillStyle = "#86786c";
+        context.font = "12px Arial, sans-serif";
+        context.fillText(
+            "@ 2026 Jasper's Music. All rights reserved.",
+            canvasWidth - outerPadding,
+            canvasHeight - 34
+        );
+
+        return canvas;
+    }
+
+    function downloadScaleImage() {
+        downloadButton.disabled = true;
+        const originalText = downloadButton.lastChild.textContent;
+        downloadButton.lastChild.textContent = " Preparing";
+
+        try {
+            const canvas = drawScaleImage();
+            const fileName = `${getRootName()}-${getScale().name}-frets-${fretStart}-${fretEnd}`
+                .toLowerCase()
+                .replace(/#/g, "sharp")
+                .replace(/[^a-z0-9]+/g, "-")
+                .replace(/^-|-$/g, "");
+            const link = document.createElement("a");
+            link.href = canvas.toDataURL("image/png");
+            link.download = `${fileName}.png`;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            downloadButton.disabled = false;
+            downloadButton.lastChild.textContent = originalText;
+        } catch (error) {
+            console.error("Scale image download failed:", error);
+            downloadButton.disabled = false;
+            downloadButton.lastChild.textContent = originalText;
+        }
+    }
+
     function getAudioContext() {
         if (!audioContext) {
             audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -359,5 +584,6 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     playButton.addEventListener("click", playScale);
+    downloadButton.addEventListener("click", downloadScaleImage);
     render();
 });

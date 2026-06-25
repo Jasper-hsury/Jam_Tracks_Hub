@@ -17,10 +17,10 @@
     <script src="theme-init.js?v=20260623-dark-light"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles/base.css?v=20260625-mobile-menu-v3">
-    <link rel="stylesheet" href="styles/components.css?v=20260625-scale">
-    <link rel="stylesheet" href="styles/pages.css?v=20260625-mobile-menu-v3">
-    <link rel="stylesheet" href="styles/themes.css?v=20260625-chord-menu-v2">
-    <link rel="stylesheet" href="styles/scale.css?v=20260625-neck-length">
+    <link rel="stylesheet" href="styles/components.css?v=20260625-scale-download-v2">
+    <link rel="stylesheet" href="styles/pages.css?v=20260625-scale-download-v2">
+    <link rel="stylesheet" href="styles/themes.css?v=20260625-scale-download-v2">
+    <link rel="stylesheet" href="styles/scale.css?v=20260625-download-v2">
 </head>
 
 <body>
@@ -102,10 +102,16 @@
                     <h2 id="scaleTitle">A Minor Pentatonic</h2>
                     <p id="scaleDescription">A focused five-note sound used throughout rock, blues, and modern guitar playing.</p>
                 </div>
-                <button class="scale-play-button" id="playScaleButton" type="button">
-                    <span aria-hidden="true">&#9654;</span>
-                    Play scale
-                </button>
+                <div class="scale-summary-actions">
+                    <button class="scale-play-button" id="playScaleButton" type="button">
+                        <span aria-hidden="true">&#9654;</span>
+                        Play scale
+                    </button>
+                    <button class="scale-download-button" id="downloadScaleButton" type="button">
+                        <span aria-hidden="true">&#8595;</span>
+                        Download PNG
+                    </button>
+                </div>
                 <div class="scale-interval-list" id="scaleIntervalList" aria-label="Scale intervals"></div>
             </div>
 
@@ -155,6 +161,6 @@
     <button id="backToTopBtn" type="button" aria-label="Back to top">&uarr;</button>
 
     <script src="site.js?v=20260625-mobile-menu-v3"></script>
-    <script src="scale.js?v=20260625-neck-length"></script>
+    <script src="scale.js?v=20260625-download-v2"></script>
 </body>
 </html>
