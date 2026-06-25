@@ -115,7 +115,8 @@ h1,
     color: var(--gold);
 }
 
-.nav-links a {
+.nav-links a,
+.nav-dropdown summary {
     color: var(--text);
 }
 
@@ -272,6 +273,8 @@ h1,
 .logo:hover,
 .nav-links a:hover,
 .nav-links a.active,
+.nav-dropdown summary:hover,
+.nav-dropdown summary.active,
 .section-title-link:hover,
 .text-link:hover,
 .footer .social-links a:hover {
@@ -282,6 +285,12 @@ h1,
     color: var(--text);
     background: var(--panel-background);
     border-color: var(--border-soft);
+}
+
+.nav-submenu a:hover,
+.nav-submenu a.active {
+    color: var(--secondary-hover-text);
+    background: var(--secondary-hover-background);
 }
 
 .primary-button,

@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (navbar && navLinks) {
         navbar.setAttribute("aria-label", "Primary navigation");
         navLinks.id = navLinks.id || "primaryNavigation";
+        const navDropdowns = Array.from(navLinks.querySelectorAll(".nav-dropdown details"));
 
         const menuButton = document.createElement("button");
         menuButton.className = "nav-menu-button";
@@ -40,6 +41,9 @@ document.addEventListener("DOMContentLoaded", function() {
             navbar.classList.remove("menu-open");
             menuButton.setAttribute("aria-expanded", "false");
             menuButton.setAttribute("aria-label", "Open navigation menu");
+            navDropdowns.forEach(dropdown => {
+                dropdown.open = false;
+            });
 
             if (restoreFocus) {
                 menuButton.focus();
@@ -59,9 +63,23 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         document.addEventListener("keydown", function(event) {
-            if (event.key === "Escape" && navbar.classList.contains("menu-open")) {
-                closeMenu(true);
+            if (event.key === "Escape") {
+                if (navbar.classList.contains("menu-open")) {
+                    closeMenu(true);
+                } else {
+                    navDropdowns.forEach(dropdown => {
+                        dropdown.open = false;
+                    });
+                }
             }
+        });
+
+        document.addEventListener("click", function(event) {
+            navDropdowns.forEach(dropdown => {
+                if (!dropdown.contains(event.target)) {
+                    dropdown.open = false;
+                }
+            });
         });
 
         window.addEventListener("resize", function() {
