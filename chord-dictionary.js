@@ -108,6 +108,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const previousShapesButton = document.getElementById("previousShapesButton");
     const nextShapesButton = document.getElementById("nextShapesButton");
     const shapePageStatus = document.getElementById("shapePageStatus");
+    const relatedActions = document.getElementById("dictionaryRelatedActions");
     const playButton = document.getElementById("playChordButton");
 
     let rootPitch = 0;
@@ -127,6 +128,35 @@ document.addEventListener("DOMContentLoaded", function() {
         return noteNames()[rootPitch];
     }
 
+    function pitchFromName(noteName) {
+        const normalized = String(noteName || "").trim().toLowerCase();
+        const pitchMap = {
+            "c": 0,
+            "b#": 0,
+            "c#": 1,
+            "db": 1,
+            "d": 2,
+            "d#": 3,
+            "eb": 3,
+            "e": 4,
+            "fb": 4,
+            "e#": 5,
+            "f": 5,
+            "f#": 6,
+            "gb": 6,
+            "g": 7,
+            "g#": 8,
+            "ab": 8,
+            "a": 9,
+            "a#": 10,
+            "bb": 10,
+            "b": 11,
+            "cb": 11
+        };
+
+        return pitchMap[normalized] ?? null;
+    }
+
     function chordDisplayName(chord) {
         return chord.id === "major" ? `${rootName()} Major` : `${rootName()} ${chord.name}`;
     }
@@ -137,6 +167,22 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function chordPitchClasses(chord) {
         return chord.intervals.map(interval => (rootPitch + interval) % 12);
+    }
+
+    function relatedScaleType(chord) {
+        if (chord.id.includes("minor") || chord.id.includes("diminished") || chord.id === "halfDiminished7") {
+            return "natural-minor";
+        }
+
+        if (chord.id.includes("dominant") || chord.id === "thirteenth" || chord.id === "nine" || chord.id === "eleven") {
+            return "mixolydian";
+        }
+
+        return "major";
+    }
+
+    function relatedKeyMode(chord) {
+        return relatedScaleType(chord) === "natural-minor" ? "minor" : "major";
     }
 
     function spellChordTone(pitch, formula, index) {
@@ -500,6 +546,18 @@ document.addEventListener("DOMContentLoaded", function() {
         chordFormula.textContent = selectedChord.formula.join(" · ");
         chordNotes.textContent = chordNoteNames(selectedChord).join(" · ");
 
+        if (relatedActions) {
+            const root = encodeURIComponent(rootName());
+            const scaleType = relatedScaleType(selectedChord);
+            const key = encodeURIComponent(`${rootName()} ${relatedKeyMode(selectedChord)}`);
+
+            relatedActions.innerHTML = `
+                <a href="scale.html?root=${root}&type=${scaleType}">View matching scale</a>
+                <a href="chords.html?key=${key}">Build progressions from this root</a>
+                <a href="fretboard-trainer.html">Practice fretboard notes</a>
+            `;
+        }
+
         selectedVoicings = generateVoicings(selectedChord);
 
         if (!selectedVoicings.length) {
@@ -619,5 +677,37 @@ document.addEventListener("DOMContentLoaded", function() {
         renderShapeResults();
         shapeGrid.scrollIntoView({ behavior: "smooth", block: "start" });
     });
+    function applyInitialParams() {
+        const params = new URLSearchParams(window.location.search);
+        const requestedRoot = params.get("root");
+        const requestedChord = params.get("chord");
+
+        if (requestedRoot) {
+            const pitch = pitchFromName(requestedRoot);
+            if (pitch !== null) {
+                rootPitch = pitch;
+            }
+        }
+
+        if (requestedChord) {
+            const normalizedChord = requestedChord.trim().toLowerCase();
+            const chord = ALL_CHORDS.find(item =>
+                item.id.toLowerCase() === normalizedChord ||
+                item.suffix.toLowerCase() === normalizedChord ||
+                item.name.toLowerCase().replace(/\s+/g, "-") === normalizedChord
+            );
+
+            if (chord) {
+                selectedChord = chord;
+            }
+        }
+
+        const rootButton = rootGrid.querySelector(`button[data-root="${rootPitch}"]`);
+        if (rootButton) {
+            updatePressedState(rootGrid, rootButton);
+        }
+    }
+
+    applyInitialParams();
     render();
 });

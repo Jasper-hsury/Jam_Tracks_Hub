@@ -261,7 +261,42 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
     gap: 16px;
+}
+
+.helper-status {
+    margin-right: auto;
+}
+
+.helper-start-button {
+    min-height: 32px;
+    padding: 6px 10px;
+    color: var(--teal);
+    border: 1px solid rgba(127, 183, 173, 0.22);
+    border-radius: 999px;
+}
+
+.helper-start-button:hover,
+.helper-start-button:focus-visible {
+    color: var(--text);
+    background: rgba(127, 183, 173, 0.12);
+}
+
+.helper-start-button[hidden] {
+    display: none;
+}
+
+.helper-setup-note {
+    margin: -4px 0 12px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.helper-setup-note code {
+    color: var(--gold-light);
+    font-family: inherit;
+    font-weight: 700;
 }
 
 .segmented-control {

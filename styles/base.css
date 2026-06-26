@@ -103,7 +103,7 @@ h1 {
 .nav-links {
     list-style: none;
     display: flex;
-    gap: 30px;
+    gap: 24px;
     margin: 0;
     padding: 0;
 }

@@ -4,6 +4,7 @@
     const isLocalSite = localHosts.includes(window.location.hostname);
 
     window.JASPER_MUSIC_CONFIG = {
-        apiBaseUrl: savedApiBaseUrl || (isLocalSite ? "http://127.0.0.1:8000" : "")
+        apiBaseUrl: savedApiBaseUrl || (isLocalSite ? "http://127.0.0.1:8000" : ""),
+        youtubeHelperBaseUrl: "http://127.0.0.1:8765"
     };
 })();

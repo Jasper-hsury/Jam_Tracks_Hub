@@ -1,0 +1,282 @@
+/* Fretboard Note Trainer */
+.trainer-page {
+    max-width: 1120px;
+}
+
+.trainer-heading {
+    max-width: 760px;
+    margin-bottom: 30px;
+}
+
+.trainer-heading .home-eyebrow {
+    margin-bottom: 10px;
+}
+
+.trainer-heading h1 {
+    margin-bottom: 6px;
+}
+
+.trainer-lead {
+    max-width: 720px;
+    margin: 14px 0 0;
+    color: var(--copy-text);
+    font-size: 17px;
+    font-weight: 500;
+    line-height: 1.75;
+}
+
+.trainer-workspace {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 18px;
+}
+
+.trainer-card {
+    color: var(--text);
+    background: var(--panel-background);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    box-shadow: 0 12px 28px var(--shadow-color);
+}
+
+.trainer-question-card,
+.trainer-answer-card,
+.trainer-reference {
+    padding: 22px;
+}
+
+.trainer-question-card {
+    border-left: 4px solid var(--teal);
+}
+
+.trainer-reference {
+    grid-column: 1 / -1;
+}
+
+.trainer-question-topline,
+.trainer-answer-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.trainer-kicker {
+    margin: 0;
+    color: var(--teal);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.trainer-question-topline span,
+.trainer-score {
+    color: var(--copy-text);
+    font-weight: 700;
+}
+
+.trainer-question-card h2,
+.trainer-answer-card h2,
+.trainer-reference h2 {
+    margin: 0;
+    color: var(--gold-light);
+    font-size: 24px;
+}
+
+.trainer-question-display {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin: 22px 0;
+}
+
+.trainer-question-display div {
+    padding: 20px;
+    background: var(--control-background);
+    border: 1px solid var(--border-soft);
+    border-radius: 8px;
+}
+
+.trainer-question-display span,
+.trainer-question-display small {
+    display: block;
+    color: var(--copy-text);
+    font-weight: 600;
+}
+
+.trainer-question-display strong {
+    display: block;
+    margin: 6px 0;
+    color: var(--text);
+    font-family: "Noto Serif TC", serif;
+    font-size: 56px;
+    line-height: 1;
+}
+
+.trainer-feedback {
+    min-height: 58px;
+    padding: 14px 16px;
+    color: var(--copy-text);
+    background: rgba(127, 183, 173, 0.08);
+    border: 1px solid rgba(127, 183, 173, 0.28);
+    border-radius: 8px;
+    font-weight: 600;
+    line-height: 1.55;
+}
+
+.trainer-feedback.is-correct {
+    color: var(--teal);
+    background: rgba(127, 183, 173, 0.14);
+    border-color: rgba(127, 183, 173, 0.44);
+}
+
+.trainer-feedback.is-wrong {
+    color: #e2c1c4;
+    background: rgba(167, 111, 115, 0.1);
+    border-color: rgba(167, 111, 115, 0.42);
+}
+
+html[data-theme="light"] .trainer-feedback.is-wrong {
+    color: #7d3f45;
+    background: rgba(125, 63, 69, 0.08);
+}
+
+.trainer-feedback.is-revealed {
+    color: var(--gold-light);
+}
+
+.trainer-score {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 5px;
+    padding: 9px 12px;
+    background: var(--control-background);
+    border: 1px solid var(--border-soft);
+    border-radius: 999px;
+}
+
+.trainer-score strong {
+    color: var(--gold-light);
+    font-size: 18px;
+}
+
+.note-answer-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.note-answer-grid button {
+    min-height: 48px;
+    padding: 10px;
+    color: var(--text-body);
+    background: var(--control-background);
+    border: 1px solid var(--border-soft);
+    border-radius: 7px;
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.18s ease, background-color 0.18s ease, border-color 0.18s ease;
+}
+
+.note-answer-grid button:hover:not(:disabled) {
+    color: var(--secondary-hover-text);
+    background: var(--secondary-hover-background);
+    border-color: var(--hover-border);
+    transform: translateY(-1px);
+}
+
+.note-answer-grid button.is-correct {
+    color: var(--chord-accent-text);
+    background: var(--chord-accent);
+    border-color: var(--chord-accent);
+}
+
+.note-answer-grid button.is-wrong {
+    color: #fff6f7;
+    background: #8b4a50;
+    border-color: #8b4a50;
+}
+
+html[data-theme="light"] .note-answer-grid button.is-wrong {
+    color: #fffaf4;
+    background: #7d3f45;
+    border-color: #7d3f45;
+}
+
+.note-answer-grid button:disabled {
+    cursor: default;
+}
+
+.trainer-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.trainer-actions .primary-button,
+.trainer-actions .secondary-button {
+    min-height: 42px;
+    padding: 9px 14px;
+    border-radius: 999px;
+}
+
+.string-reference-grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.string-reference-grid span {
+    padding: 12px;
+    color: var(--text-body);
+    background: var(--control-background);
+    border: 1px solid var(--border-soft);
+    border-radius: 7px;
+    font-weight: 700;
+}
+
+.string-reference-grid strong {
+    display: block;
+    color: var(--teal);
+    font-size: 18px;
+}
+
+.trainer-reference p:last-child {
+    margin-bottom: 0;
+    color: var(--copy-text);
+    font-weight: 500;
+    line-height: 1.65;
+}
+
+@media (max-width: 900px) {
+    .trainer-workspace {
+        grid-template-columns: 1fr;
+    }
+
+    .string-reference-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .trainer-question-display,
+    .note-answer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .trainer-question-topline,
+    .trainer-answer-heading,
+    .trainer-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .string-reference-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}

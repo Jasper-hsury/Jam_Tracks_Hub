@@ -72,6 +72,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const fretboard = document.getElementById("fretboard");
     const playButton = document.getElementById("playScaleButton");
     const downloadButton = document.getElementById("downloadScaleButton");
+    const toolLinks = document.getElementById("scaleToolLinks");
 
     let rootPitch = 9;
     let neckFrets = 15;
@@ -91,6 +92,48 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function getRootName() {
         return getNoteNames()[rootPitch];
+    }
+
+    function pitchFromName(noteName) {
+        const normalized = String(noteName || "").trim().toLowerCase();
+        const pitchMap = {
+            "c": 0,
+            "b#": 0,
+            "c#": 1,
+            "db": 1,
+            "d": 2,
+            "d#": 3,
+            "eb": 3,
+            "e": 4,
+            "fb": 4,
+            "e#": 5,
+            "f": 5,
+            "f#": 6,
+            "gb": 6,
+            "g": 7,
+            "g#": 8,
+            "ab": 8,
+            "a": 9,
+            "a#": 10,
+            "bb": 10,
+            "b": 11,
+            "cb": 11
+        };
+
+        return pitchMap[normalized] ?? null;
+    }
+
+    function scaleModeForTools() {
+        const scaleId = scaleTypeSelect.value;
+        if (["natural-minor", "minor-pentatonic", "blues", "dorian", "harmonic-minor"].includes(scaleId)) {
+            return "minor";
+        }
+
+        return "major";
+    }
+
+    function scaleTypeFromMode(mode) {
+        return String(mode || "").toLowerCase() === "minor" ? "natural-minor" : "major";
     }
 
     function getScalePitchClasses() {
@@ -128,6 +171,19 @@ document.addEventListener("DOMContentLoaded", function() {
             `;
             intervalList.appendChild(chip);
         });
+
+        if (toolLinks) {
+            const root = encodeURIComponent(getRootName());
+            const mode = scaleModeForTools();
+            const key = encodeURIComponent(`${getRootName()} ${mode}`);
+            const chord = mode === "minor" ? "minor" : "major";
+
+            toolLinks.innerHTML = `
+                <a href="chord-dictionary.html?root=${root}&chord=${chord}">Open ${getRootName()} ${chord} chord shapes</a>
+                <a href="chords.html?key=${key}">Build progressions in this key</a>
+                <a href="fretboard-trainer.html">Practice note names</a>
+            `;
+        }
     }
 
     function getRangeOptions() {
@@ -585,5 +641,40 @@ document.addEventListener("DOMContentLoaded", function() {
 
     playButton.addEventListener("click", playScale);
     downloadButton.addEventListener("click", downloadScaleImage);
+    function applyInitialParams() {
+        const params = new URLSearchParams(window.location.search);
+        const requestedKey = params.get("key");
+        const requestedRoot = params.get("root");
+        const requestedType = params.get("type");
+
+        if (requestedKey) {
+            const keyMatch = requestedKey.trim().match(/^([A-G](?:#|b)?)(?:\s+(major|minor))?$/i);
+            if (keyMatch) {
+                const pitch = pitchFromName(keyMatch[1]);
+                if (pitch !== null) {
+                    rootPitch = pitch;
+                }
+                scaleTypeSelect.value = scaleTypeFromMode(keyMatch[2]);
+            }
+        }
+
+        if (requestedRoot) {
+            const pitch = pitchFromName(requestedRoot);
+            if (pitch !== null) {
+                rootPitch = pitch;
+            }
+        }
+
+        if (requestedType && SCALE_TYPES[requestedType]) {
+            scaleTypeSelect.value = requestedType;
+        }
+
+        const rootButton = rootGrid.querySelector(`button[data-root="${rootPitch}"]`);
+        if (rootButton) {
+            updatePressedState(rootGrid, rootButton);
+        }
+    }
+
+    applyInitialParams();
     render();
 });

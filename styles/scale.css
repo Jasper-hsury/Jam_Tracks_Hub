@@ -260,6 +260,36 @@
     border-top: 1px solid var(--divider-color);
 }
 
+.scale-tool-links {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 2px;
+}
+
+.scale-tool-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    padding: 8px 12px;
+    color: var(--secondary-button-text);
+    background: var(--secondary-button-background);
+    border: 1px solid var(--secondary-button-border);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 800;
+    text-decoration: none;
+    transition: transform 0.18s ease, background-color 0.18s ease, border-color 0.18s ease;
+}
+
+.scale-tool-links a:hover {
+    color: var(--secondary-hover-text);
+    background: var(--secondary-hover-background);
+    border-color: var(--hover-border);
+    transform: translateY(-1px);
+}
+
 .scale-interval-chip {
     display: inline-grid;
     grid-template-columns: auto auto;

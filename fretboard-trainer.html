@@ -1,0 +1,138 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fretboard Note Trainer | Jasper's Music Space</title>
+
+    <link rel="icon" href="icon.png" type="image/png">
+    <meta name="description" content="Practice guitar fretboard note names with random string and fret questions.">
+    <link rel="canonical" href="https://jasper-music.onrender.com/fretboard-trainer.html">
+    <meta property="og:title" content="Fretboard Note Trainer | Jasper's Music Space">
+    <meta property="og:description" content="Train guitar note recognition by answering random string and fret positions.">
+    <meta property="og:image" content="https://jasper-music.onrender.com/cover.jpeg">
+    <meta property="og:url" content="https://jasper-music.onrender.com/fretboard-trainer.html">
+    <meta property="og:type" content="website">
+
+    <script src="theme-init.js?v=20260623-dark-light"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/base.css?v=20260625-mobile-menu-v3">
+    <link rel="stylesheet" href="styles/components.css?v=20260626-tool-links">
+    <link rel="stylesheet" href="styles/pages.css?v=20260626-trainer-nav">
+    <link rel="stylesheet" href="styles/themes.css?v=20260625-mobile-submenu-v4">
+    <link rel="stylesheet" href="styles/fretboard-trainer.css?v=20260626-note-trainer">
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="index.html#home" class="logo">Jasper's Music</a>
+        <ul class="nav-links">
+            <li><a href="index.html#home">Home</a></li>
+            <li><a href="tracks.html">Tracks</a></li>
+            <li><a href="key-finder.html">Key Finder</a></li>
+            <li><a href="scale.html">Scale Explorer</a></li>
+            <li><a href="fretboard-trainer.html" class="active" aria-current="page">Fretboard Trainer</a></li>
+            <li class="nav-dropdown">
+                <details>
+                    <summary>Chord</summary>
+                    <ul class="nav-submenu">
+                        <li><a href="chords.html">Chord Progressions</a></li>
+                        <li><a href="chord-dictionary.html">Chord Dictionary</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li><a href="index.html#about">About</a></li>
+        </ul>
+    </nav>
+
+    <main class="tracks-page trainer-page">
+        <header class="trainer-heading">
+            <p class="home-eyebrow">Fretboard memory / note names / daily drill</p>
+            <h1>Fretboard Note Trainer</h1>
+            <p class="hero-tagline signature-slogan">Find the note. Build the map.</p>
+            <p class="trainer-lead">
+                Answer random guitar string and fret questions in standard tuning. String 1 is the high E string;
+                string 6 is the low E string.
+            </p>
+        </header>
+
+        <section class="trainer-workspace" aria-labelledby="trainerQuestionTitle">
+            <div class="trainer-card trainer-question-card">
+                <div class="trainer-question-topline">
+                    <p class="trainer-kicker">Current question</p>
+                    <span id="trainerProgress">0 answered</span>
+                </div>
+                <h2 id="trainerQuestionTitle">What note is this?</h2>
+                <div class="trainer-question-display">
+                    <div>
+                        <span>String</span>
+                        <strong id="questionString">5</strong>
+                        <small id="questionStringName">A string</small>
+                    </div>
+                    <div>
+                        <span>Fret</span>
+                        <strong id="questionFret">7</strong>
+                        <small id="questionFretHint">standard tuning</small>
+                    </div>
+                </div>
+
+                <div class="trainer-feedback" id="trainerFeedback" aria-live="polite">
+                    Choose the note name below.
+                </div>
+            </div>
+
+            <div class="trainer-card trainer-answer-card">
+                <div class="trainer-answer-heading">
+                    <div>
+                        <p class="trainer-kicker">Answer</p>
+                        <h2>Pick a note</h2>
+                    </div>
+                    <div class="trainer-score" aria-label="Current score">
+                        <strong id="scoreCorrect">0</strong>
+                        <span>/</span>
+                        <strong id="scoreTotal">0</strong>
+                    </div>
+                </div>
+
+                <div class="note-answer-grid" id="noteAnswerGrid" aria-label="Choose the note name"></div>
+
+                <div class="trainer-actions">
+                    <button class="secondary-button" id="revealAnswerButton" type="button">Reveal answer</button>
+                    <button class="primary-button" id="nextQuestionButton" type="button">Next question</button>
+                    <button class="secondary-button" id="resetTrainerButton" type="button">Reset score</button>
+                </div>
+            </div>
+
+            <aside class="trainer-card trainer-reference" aria-labelledby="trainerReferenceTitle">
+                <p class="trainer-kicker">Reference</p>
+                <h2 id="trainerReferenceTitle">Standard tuning</h2>
+                <div class="string-reference-grid">
+                    <span><strong>6</strong> Low E</span>
+                    <span><strong>5</strong> A</span>
+                    <span><strong>4</strong> D</span>
+                    <span><strong>3</strong> G</span>
+                    <span><strong>2</strong> B</span>
+                    <span><strong>1</strong> High E</span>
+                </div>
+                <p>
+                    Example: string 5, fret 7 is E because the fifth string starts on A and moves up seven semitones.
+                </p>
+            </aside>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 Jasper's Music. All rights reserved.</p>
+        <div class="social-links">
+            <a href="https://youtube.com/@weekly_backing_track?si=-Rp6XDvP0A8fclp3" target="_blank" rel="noopener noreferrer" aria-label="Visit Jasper's YouTube channel">YouTube</a>
+            <a href="https://www.instagram.com/reyu_jasper?igsh=dmVsazFvb2pwMmsw&utm_source=qr" target="_blank" rel="noopener noreferrer" aria-label="Visit Jasper's Instagram profile">Instagram</a>
+        </div>
+    </footer>
+
+    <button id="backToTopBtn" type="button" aria-label="Back to top">&uarr;</button>
+
+    <script src="site.js?v=20260625-mobile-menu-v3"></script>
+    <script src="fretboard-trainer.js?v=20260626-note-trainer"></script>
+</body>
+</html>
+

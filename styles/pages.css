@@ -1519,6 +1519,10 @@ iframe {
         transition-delay: 0.215s;
     }
 
+    .navbar.menu-open .nav-links > li:nth-child(7) {
+        transition-delay: 0.24s;
+    }
+
     .nav-links li,
     .nav-links a,
     .nav-dropdown details,

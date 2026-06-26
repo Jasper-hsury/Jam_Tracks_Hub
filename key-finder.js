@@ -2,12 +2,15 @@ document.addEventListener("DOMContentLoaded", function() {
     const HISTORY_KEY = "jasperMusicKeyFinderHistory";
     const RESULT_MODE_KEY = "jasperMusicKeyFinderResultMode";
     const apiBaseUrl = window.JASPER_MUSIC_CONFIG?.apiBaseUrl ?? "http://127.0.0.1:8000";
+    const youtubeHelperBaseUrl = window.JASPER_MUSIC_CONFIG?.youtubeHelperBaseUrl ?? "http://127.0.0.1:8765";
     const MAX_UPLOAD_BYTES = 60 * 1024 * 1024;
     const MAX_CONTAINER_UPLOAD_BYTES = 25 * 1024 * 1024;
     const HEAVY_CONTAINER_EXTENSIONS = new Set([".mp4", ".webm"]);
     const API_RETRY_DELAY_MS = 2000;
     const API_RETRY_LIMIT = 30;
     const JOB_POLL_DELAY_MS = 1200;
+    const HELPER_PROTOCOL_URL = "jasper-helper://start";
+    const HELPER_START_POLL_LIMIT = 20;
 
     const audioKeyFile = document.getElementById("audioKeyFile");
     const analyzeFileButton = document.getElementById("analyzeFileButton");
@@ -17,6 +20,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const cancelAnalyzeButton = document.getElementById("cancelAnalyzeButton");
     const keyFinderResult = document.getElementById("keyFinderResult");
     const apiStatus = document.getElementById("apiStatus");
+    const youtubeHelperStatus = document.getElementById("youtubeHelperStatus");
+    const startYoutubeHelperButton = document.getElementById("startYoutubeHelperButton");
     const serviceWakePanel = document.getElementById("serviceWakePanel");
     const serviceWakeTitle = document.getElementById("serviceWakeTitle");
     const serviceWakeCopy = document.getElementById("serviceWakeCopy");
@@ -44,12 +49,16 @@ document.addEventListener("DOMContentLoaded", function() {
             .replace(/'/g, "&#039;");
     }
 
-    function apiUrl(path) {
-        return `${apiBaseUrl.replace(/\/$/, "")}${path}`;
+    function apiUrl(path, baseUrl = apiBaseUrl) {
+        return `${baseUrl.replace(/\/$/, "")}${path}`;
     }
 
-    function apiDisplayUrl() {
-        return apiBaseUrl || `${window.location.origin}/api`;
+    function apiDisplayUrl(baseUrl = apiBaseUrl) {
+        return baseUrl || `${window.location.origin}/api`;
+    }
+
+    function youtubeHelperDisplayUrl() {
+        return youtubeHelperBaseUrl || "http://127.0.0.1:8765";
     }
 
     function getFileExtension(fileName) {
@@ -61,6 +70,22 @@ document.addEventListener("DOMContentLoaded", function() {
         return String(keyName || "").replace(/\s+(major|minor)$/i, function(match) {
             return match.toLowerCase();
         });
+    }
+
+    function parseKeyName(keyName) {
+        const match = String(keyName || "").trim().match(/^([A-G](?:#|b)?)(?:\s+(major|minor))?$/i);
+        if (!match) {
+            return {
+                root: "",
+                mode: "major"
+            };
+        }
+
+        const root = match[1].charAt(0).toUpperCase() + match[1].slice(1);
+        return {
+            root,
+            mode: (match[2] || "major").toLowerCase()
+        };
     }
 
     function wait(milliseconds, signal) {
@@ -289,10 +314,15 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function renderResultActions(data) {
         const key = encodeURIComponent(normalizeKeyForUrl(data.final_key));
+        const parsedKey = parseKeyName(data.final_key);
+        const root = encodeURIComponent(parsedKey.root);
+        const chordType = parsedKey.mode === "minor" ? "minor" : "major";
 
         return `
             <div class="result-actions">
-                <a class="primary-button" href="chords.html?key=${key}">Open in Chord Progressions</a>
+                <a class="primary-button" href="scale.html?key=${key}">Open Scale Explorer</a>
+                <a class="secondary-button" href="chord-dictionary.html?root=${root}&chord=${chordType}">Open Chord Dictionary</a>
+                <a class="secondary-button" href="chords.html?key=${key}">Open Chord Progressions</a>
                 <a class="secondary-button" href="tracks.html?key=${key}">Find Tracks in This Key</a>
             </div>
         `;
@@ -390,15 +420,27 @@ document.addEventListener("DOMContentLoaded", function() {
         `;
     }
 
-    function renderErrorReport(message, inputType) {
+    function renderErrorReport(message, inputType, displayBaseUrl) {
         const lowerMessage = String(message || "").toLowerCase();
         let suggestedFix = inputType === "file"
             ? "MP3 or WAV is the most stable. Try an audio-only file under 25 MB."
-            : "YouTube may be blocking server-side extraction. Upload an audio file instead.";
+            : "Start Jasper YouTube Helper on this computer, then try Analyze link again.";
 
         if (lowerMessage.includes("timed out") || lowerMessage.includes("render returned")) {
             suggestedFix = "The analyzer exceeded the hosting limit. Try a shorter MP3/WAV file, or run the local API.";
         }
+
+        if (inputType === "youtube" && lowerMessage.includes("helper")) {
+            suggestedFix = 'Click Start Helper. If the browser says no app can open the link, run install_youtube_helper_protocol.ps1 once.';
+        }
+
+        if (inputType === "youtube" && lowerMessage.includes("sign in to confirm")) {
+            suggestedFix = "The local helper reached YouTube, but YouTube still requested verification. Try another link or upload an audio file.";
+        }
+
+        const statusText = inputType === "youtube"
+            ? youtubeHelperStatus?.querySelector(".status-text")?.textContent
+            : apiStatus?.querySelector(".status-text")?.textContent;
 
         keyFinderResult.className = "key-finder-result is-error";
         keyFinderResult.innerHTML = `
@@ -406,8 +448,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 <strong>Analysis failed</strong>
                 <p>${escapeHtml(message)}</p>
                 <dl>
-                    <div><dt>API URL</dt><dd>${escapeHtml(apiDisplayUrl())}</dd></div>
-                    <div><dt>Status</dt><dd>${escapeHtml(apiStatus?.querySelector(".status-text")?.textContent || "Unknown")}</dd></div>
+                    <div><dt>API URL</dt><dd>${escapeHtml(apiDisplayUrl(displayBaseUrl))}</dd></div>
+                    <div><dt>Status</dt><dd>${escapeHtml(statusText || "Unknown")}</dd></div>
                     <div><dt>Suggested fix</dt><dd>${escapeHtml(suggestedFix)}</dd></div>
                 </dl>
             </div>
@@ -451,6 +493,20 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
+    function setYoutubeHelperStatus(state, message) {
+        if (!youtubeHelperStatus) {
+            return;
+        }
+
+        youtubeHelperStatus.className = `api-status helper-status ${state}`;
+        youtubeHelperStatus.querySelector(".status-text").textContent = message;
+
+        if (startYoutubeHelperButton) {
+            startYoutubeHelperButton.hidden = state !== "is-offline";
+            startYoutubeHelperButton.disabled = state === "is-checking";
+        }
+    }
+
     async function ensureApiIsReachable(signal) {
         try {
             const response = await fetch(apiUrl("/api/health"), {
@@ -474,6 +530,32 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
+    async function ensureYoutubeHelperIsReachable(signal) {
+        try {
+            const response = await fetch(apiUrl("/api/health", youtubeHelperBaseUrl), {
+                method: "GET",
+                cache: "no-store",
+                signal
+            });
+
+            if (!response.ok) {
+                throw new Error(`YouTube Helper health check returned ${response.status}.`);
+            }
+
+            setYoutubeHelperStatus("is-online", "YouTube Helper connected");
+        } catch (error) {
+            if (error.name === "AbortError") {
+                throw error;
+            }
+
+            setYoutubeHelperStatus("is-offline", "YouTube Helper offline");
+            throw new Error(
+                `Cannot connect to Jasper YouTube Helper at ${youtubeHelperDisplayUrl()}. ` +
+                'Start it with: powershell -ExecutionPolicy Bypass -File ".\\start_youtube_helper.ps1"'
+            );
+        }
+    }
+
     async function checkApiStatus() {
         try {
             setApiStatus("is-checking", apiRetryCount ? "API starting..." : "Checking API...");
@@ -494,14 +576,83 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    async function pollAnalysisJob(jobId, signal, inputType) {
+    async function checkYoutubeHelperStatus() {
+        if (!youtubeHelperStatus) {
+            return;
+        }
+
+        const controller = new AbortController();
+        const timeout = window.setTimeout(function() {
+            controller.abort();
+        }, 1200);
+
+        try {
+            setYoutubeHelperStatus("is-checking", "Checking YouTube Helper...");
+            await ensureYoutubeHelperIsReachable(controller.signal);
+        } catch (error) {
+            if (error.name !== "AbortError") {
+                setYoutubeHelperStatus("is-offline", "YouTube Helper offline");
+            } else {
+                setYoutubeHelperStatus("is-offline", "YouTube Helper offline");
+            }
+        } finally {
+            window.clearTimeout(timeout);
+        }
+    }
+
+    async function waitForYoutubeHelperAfterLaunch() {
+        for (let attempt = 0; attempt < HELPER_START_POLL_LIMIT; attempt += 1) {
+            await wait(1000);
+
+            const controller = new AbortController();
+            const timeout = window.setTimeout(function() {
+                controller.abort();
+            }, 1500);
+
+            try {
+                await ensureYoutubeHelperIsReachable(controller.signal);
+                return true;
+            } catch (error) {
+                if (error.name !== "AbortError") {
+                    setYoutubeHelperStatus("is-checking", "Waiting for YouTube Helper...");
+                }
+            } finally {
+                window.clearTimeout(timeout);
+            }
+        }
+
+        return false;
+    }
+
+    async function startYoutubeHelperFromBrowser() {
+        setYoutubeHelperStatus("is-checking", "Opening YouTube Helper...");
+
+        try {
+            window.location.href = HELPER_PROTOCOL_URL;
+            const connected = await waitForYoutubeHelperAfterLaunch();
+
+            if (!connected) {
+                setYoutubeHelperStatus("is-offline", "YouTube Helper offline");
+                renderErrorReport(
+                    "Could not confirm that YouTube Helper started. If this is your first time, run install_youtube_helper_protocol.ps1 once, then click Start Helper again.",
+                    "youtube",
+                    youtubeHelperBaseUrl
+                );
+            }
+        } catch (error) {
+            setYoutubeHelperStatus("is-offline", "YouTube Helper offline");
+            renderErrorReport(error.message, "youtube", youtubeHelperBaseUrl);
+        }
+    }
+
+    async function pollAnalysisJob(jobId, signal, inputType, baseUrl = apiBaseUrl) {
         const jobPath = inputType === "youtube"
             ? `/api/analyze/jobs/${encodeURIComponent(jobId)}`
             : `/api/analyze-file/jobs/${encodeURIComponent(jobId)}`;
 
         while (true) {
             await wait(JOB_POLL_DELAY_MS, signal);
-            const response = await fetch(apiUrl(jobPath), {
+            const response = await fetch(apiUrl(jobPath, baseUrl), {
                 cache: "no-store",
                 signal
             });
@@ -535,11 +686,11 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         renderJobProgress(job);
-        return pollAnalysisJob(job.job_id, activeController.signal, "file");
+        return pollAnalysisJob(job.job_id, activeController.signal, "file", apiBaseUrl);
     }
 
     async function analyzeYoutubeUrl(url) {
-        const response = await fetch(apiUrl("/api/analyze/jobs"), {
+        const response = await fetch(apiUrl("/api/analyze/jobs", youtubeHelperBaseUrl), {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ url }),
@@ -552,7 +703,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         renderJobProgress(job);
-        return pollAnalysisJob(job.job_id, activeController.signal, "youtube");
+        return pollAnalysisJob(job.job_id, activeController.signal, "youtube", youtubeHelperBaseUrl);
     }
 
     function applyResultMode(mode) {
@@ -585,6 +736,10 @@ document.addEventListener("DOMContentLoaded", function() {
         currentResultData = null;
         renderHistory();
         setStatus("Ready when you are.", "key-finder-empty");
+    });
+
+    startYoutubeHelperButton?.addEventListener("click", function() {
+        startYoutubeHelperFromBrowser();
     });
 
     analysisHistoryList?.addEventListener("click", function(event) {
@@ -646,7 +801,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if (error.name === "AbortError") {
                 setStatus("Stopped waiting for the analysis. The server may finish the job in the background.", "is-error");
             } else {
-                renderErrorReport(error.message, "file");
+                renderErrorReport(error.message, "file", apiBaseUrl);
             }
         } finally {
             activeController = null;
@@ -667,7 +822,7 @@ document.addEventListener("DOMContentLoaded", function() {
         renderJobProgress({ stage: "Downloading YouTube audio", progress: 12 });
 
         try {
-            await ensureApiIsReachable(activeController.signal);
+            await ensureYoutubeHelperIsReachable(activeController.signal);
             const job = await analyzeYoutubeUrl(url);
             const data = job.result;
             renderKeyFinderResult(data);
@@ -676,7 +831,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if (error.name === "AbortError") {
                 setStatus("Stopped waiting for the analysis. The server may finish the job in the background.", "is-error");
             } else {
-                renderErrorReport(error.message, "youtube");
+                renderErrorReport(error.message, "youtube", youtubeHelperBaseUrl);
             }
         } finally {
             activeController = null;
@@ -701,4 +856,6 @@ document.addEventListener("DOMContentLoaded", function() {
         renderKeyFinderResult(latestDetailedItem.analysisData);
     }
     checkApiStatus();
+    checkYoutubeHelperStatus();
+    window.setInterval(checkYoutubeHelperStatus, 15000);
 });
