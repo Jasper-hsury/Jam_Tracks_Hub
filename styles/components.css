@@ -287,16 +287,33 @@
     display: none;
 }
 
-.helper-setup-note {
+.helper-download-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
     margin: -4px 0 12px;
+}
+
+.helper-setup-note {
+    margin: 0;
     color: var(--muted);
     font-size: 13px;
 }
 
-.helper-setup-note code {
-    color: var(--gold-light);
-    font-family: inherit;
-    font-weight: 700;
+.helper-download-link {
+    flex: 0 0 auto;
+    min-height: 34px;
+    padding: 7px 12px;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+    .helper-download-row {
+        align-items: flex-start;
+        flex-direction: column;
+    }
 }
 
 .segmented-control {
