@@ -136,8 +136,138 @@ document.addEventListener("DOMContentLoaded", function() {
     function encodeChords(chords) {
         return encodeURIComponent(JSON.stringify(chords));
     }
+    function uniqueItems(items) {
+        return Array.from(new Set(items.filter(Boolean)));
+    }
 
-    function renderProgressions(progressions, chordMap) {
+    function prefersFlatNames(notes) {
+        return notes.some(function(note) { return note.includes("b"); }) && !notes.some(function(note) { return note.includes("#"); });
+    }
+
+    function pitchClassToDisplayName(pitchClass, useFlats) {
+        const sharpNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+        const flatNames = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
+        const normalized = ((pitchClass % 12) + 12) % 12;
+        return (useFlats ? flatNames : sharpNames)[normalized];
+    }
+
+    function getChordIntervalsForAdvice(quality) {
+        if (quality === "dim") return [0, 3, 6];
+        if (quality === "minor") return [0, 3, 7];
+        if (quality === "major7") return [0, 4, 7, 11];
+        if (quality === "minor7") return [0, 3, 7, 10];
+        if (quality === "dominant7") return [0, 4, 7, 10];
+        return [0, 4, 7];
+    }
+
+    function getChordToneNames(chordName, keyNotes) {
+        const parsed = parseChordName(chordName);
+        if (!parsed) return [chordName];
+
+        const useFlats = prefersFlatNames(keyNotes) || chordName.includes("b");
+        return getChordIntervalsForAdvice(parsed.quality).map(function(interval) {
+            return pitchClassToDisplayName(parsed.pitchClass + interval, useFlats);
+        });
+    }
+
+    function getSuggestedScaleLabel(keyNotes, isMinor, progression) {
+        const tonic = keyNotes[0];
+        const numerals = progression.numerals.join("-");
+
+        if (isMinor && progression.numerals.includes("V")) {
+            return `${tonic} natural minor, with harmonic minor color on V`;
+        }
+
+        if (isMinor) {
+            return `${tonic} natural minor`;
+        }
+
+        if (numerals.includes("ii-V-I")) {
+            return `${tonic} major, with chord-tone focus through ii-V-I`;
+        }
+
+        return `${tonic} major`;
+    }
+
+    function getTargetNotes(keyNotes, useSevenths) {
+        const degrees = useSevenths ? [0, 2, 4, 6] : [0, 2, 4];
+        return degrees.map(function(degree) { return keyNotes[degree]; });
+    }
+
+    function getCarefulNoteAdvice(keyNotes, isMinor, progression) {
+        if (isMinor && progression.numerals.includes("V")) {
+            const dominantChord = `${keyNotes[4]}7`;
+            const dominantTones = getChordToneNames(dominantChord, keyNotes);
+            return `On V, lean into ${dominantTones[1]} and resolve back to ${keyNotes[0]}.`;
+        }
+
+        if (isMinor) {
+            return `${keyNotes[5]} can sound bright in minor. Resolve it by ear toward ${keyNotes[4]} or ${keyNotes[0]}.`;
+        }
+
+        return `${keyNotes[3]} can rub against I. Resolve it down to ${keyNotes[2]} for a smoother phrase.`;
+    }
+
+    function getPracticeTip(keyNotes, isMinor, progression) {
+        const tonic = keyNotes[0];
+        const fifth = keyNotes[4];
+        const hasDominant = progression.numerals.includes("V");
+
+        if (isMinor && hasDominant) {
+            return `Practice the ${tonic} minor scale, then switch to the V chord tones only when the progression reaches V.`;
+        }
+
+        return `Start with short phrases ending on ${tonic} or ${fifth}, then target each chord tone as the chord changes.`;
+    }
+
+    function buildScaleAdvice(progression, chords, keyNotes, isMinor, useSevenths) {
+        return {
+            scale: getSuggestedScaleLabel(keyNotes, isMinor, progression),
+            targetNotes: uniqueItems(getTargetNotes(keyNotes, useSevenths)),
+            carefulNote: getCarefulNoteAdvice(keyNotes, isMinor, progression),
+            practiceTip: getPracticeTip(keyNotes, isMinor, progression),
+            chordTones: chords.map(function(chord) {
+                return {
+                    chord: chord,
+                    tones: uniqueItems(getChordToneNames(chord, keyNotes))
+                };
+            })
+        };
+    }
+
+    function renderScaleAdvice(progression, chords, keyNotes, isMinor, useSevenths) {
+        const advice = buildScaleAdvice(progression, chords, keyNotes, isMinor, useSevenths);
+
+        return `
+            <div class="progression-scale-advice">
+                <div class="scale-advice-summary">
+                    <span class="scale-advice-kicker">Scale suggestion</span>
+                    <strong>${advice.scale}</strong>
+                </div>
+                <div class="scale-advice-grid">
+                    <div>
+                        <span>Target notes</span>
+                        <p>${advice.targetNotes.join(" - ")}</p>
+                    </div>
+                    <div>
+                        <span>Handle carefully</span>
+                        <p>${advice.carefulNote}</p>
+                    </div>
+                </div>
+                <details class="scale-advice-detail">
+                    <summary>Chord tones</summary>
+                    <div class="scale-advice-chord-list">
+                        ${advice.chordTones.map(function(item) {
+                            return `<span><strong>${item.chord}</strong> ${item.tones.join(" - ")}</span>`;
+                        }).join("")}
+                    </div>
+                </details>
+                <p class="scale-advice-tip">${advice.practiceTip}</p>
+            </div>
+        `;
+    }
+
+    function renderProgressions(progressions, chordMap, keyNotes, isMinor, useSevenths) {
         return progressions.map(function(progression, index) {
             const chords = progression.numerals.map(function(numeral) {
                 return chordMap[numeral] || numeral;
@@ -153,6 +283,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             }).join('<span class="progression-separator">-</span>')}
                         </span>
                         <span class="progression-style">${progression.style}</span>
+                        ${renderScaleAdvice(progression, chords, keyNotes, isMinor, useSevenths)}
                     </div>
                     <div class="progression-card-actions">
                         <button class="progression-play-button" type="button" data-chords="${encodeChords(chords)}">Loop</button>
@@ -1140,7 +1271,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         </details>
                     </div>
                 </div>
-                <div class="progression-grid">${renderProgressions(progressions, chordMap)}</div>
+                <div class="progression-grid">${renderProgressions(progressions, chordMap, keyNotes, isMinor, useSevenths)}</div>
             </section>
             <section class="saved-progression-section">
                 <h4>Saved Progressions</h4>

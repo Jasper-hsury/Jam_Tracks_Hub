@@ -871,9 +871,9 @@
 }
 
 .progression-card {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: flex-start;
     gap: 14px;
     background-color: #2a2a2a;
     border: 1px solid #3a3a3a;
@@ -883,9 +883,11 @@
 
 .progression-card-actions {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     justify-content: flex-end;
+    align-items: center;
     gap: 7px;
+    white-space: nowrap;
 }
 
 .progression-save-button,
@@ -1006,7 +1008,7 @@
 .saved-progression-item {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     gap: 14px;
     padding: 11px 12px;
     background: rgba(18, 18, 18, 0.45);
@@ -1070,6 +1072,88 @@
 .progression-style {
     color: #aaa;
     font-size: 14px;
+}
+
+.progression-scale-advice {
+    display: grid;
+    gap: 12px;
+    margin-top: 14px;
+    padding: 14px;
+    border: 1px solid color-mix(in srgb, var(--border-strong, #3a3a3a) 76%, transparent);
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--card-soft, #222) 72%, transparent);
+}
+
+.scale-advice-summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px 12px;
+}
+
+.scale-advice-kicker,
+.scale-advice-grid span,
+.scale-advice-detail summary {
+    color: var(--text-subtle, #aaa);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+.scale-advice-summary strong {
+    color: var(--text-strong, #e0e0e0);
+    font-size: 15px;
+}
+
+.scale-advice-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.scale-advice-grid div {
+    min-width: 0;
+    padding: 10px 12px;
+    border: 1px solid color-mix(in srgb, var(--border-soft, #333) 82%, transparent);
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--surface, #181818) 78%, transparent);
+}
+
+.scale-advice-grid p,
+.scale-advice-tip {
+    margin: 5px 0 0;
+    color: var(--text, #d0d0d0);
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+.scale-advice-detail {
+    border-top: 1px solid color-mix(in srgb, var(--border-soft, #333) 76%, transparent);
+    padding-top: 10px;
+}
+
+.scale-advice-detail summary {
+    cursor: pointer;
+    list-style-position: inside;
+}
+
+.scale-advice-chord-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.scale-advice-chord-list span {
+    color: var(--text, #d0d0d0);
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.scale-advice-chord-list strong {
+    color: var(--gold-light, #c4a484);
+    margin-right: 6px;
 }
 
 .progression-toolbar {
@@ -1526,4 +1610,19 @@ audio {
 #backToTopBtn:hover {
     background-color: #e5d3b3;
     transform: translateY(-5px);
+}
+
+@media (max-width: 720px) {
+    .progression-card {
+        grid-template-columns: 1fr;
+    }
+
+    .progression-card-actions {
+        justify-content: flex-start;
+        padding-top: 0;
+    }
+
+    .scale-advice-grid {
+        grid-template-columns: 1fr;
+    }
 }
