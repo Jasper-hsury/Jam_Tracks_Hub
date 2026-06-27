@@ -1,29 +1,41 @@
 Jasper's Music - YouTube Helper for Windows
 
-What this helper does
-The public website cannot directly run yt-dlp on your computer. This helper lets
-the Key Finder page start a local analyzer at http://127.0.0.1:8765, so YouTube
-link analysis runs on your own computer instead of the Render server.
+Why this helper is needed
+YouTube often blocks cloud servers from downloading audio. The helper lets
+Jasper's Music analyze a YouTube link from your own computer instead.
 
 First-time setup
-1. Extract this zip folder.
-2. Open PowerShell in the extracted folder.
-3. Run:
+1. Right-click the downloaded zip file and choose Extract All.
+2. Open the extracted folder.
+3. Double-click:
 
-   powershell -ExecutionPolicy Bypass -File ".\install_youtube_helper_dependencies.ps1"
+   1_INSTALL_HELPER_DEPENDENCIES.cmd
 
-4. Then run:
+4. When it finishes, double-click:
 
-   powershell -ExecutionPolicy Bypass -File ".\install_youtube_helper_protocol.ps1"
+   2_CONNECT_HELPER_TO_WEBSITE.cmd
 
-5. Go back to the Key Finder page and click Start Helper.
+5. Go back to the Key Finder page.
+6. Click Start Helper, then choose Open/Allow if the browser asks.
 
-After the first setup
-Open the Key Finder page. If it says YouTube Helper offline, click Start Helper.
-Your browser may ask whether you want to open Jasper Helper. Choose allow/open.
+Daily use after setup
+1. Open the Jasper's Music Key Finder page.
+2. If it says YouTube Helper offline, click Start Helper.
+3. Keep the black helper window open while analyzing YouTube links.
 
-Notes
-- Python 3.12 or a compatible Python 3 version must be installed.
-- ffmpeg must be installed for audio conversion.
-- Keep the helper PowerShell window open while using YouTube link analysis.
-- Uploaded audio analysis can still run through the website without this helper.
+If Start Helper does not work
+Double-click START_YOUTUBE_HELPER.cmd in this folder, then try the YouTube link
+again on the website.
+
+Requirements
+- Windows computer.
+- Python 3.10 or newer.
+- ffmpeg for audio conversion.
+
+Privacy
+The helper runs on your own computer at http://127.0.0.1:8765. Temporary audio
+files are deleted after analysis finishes.
+
+Note
+Uploaded audio analysis on the website does not need this helper. The helper is
+only for YouTube link analysis.

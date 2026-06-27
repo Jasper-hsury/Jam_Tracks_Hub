@@ -2,7 +2,7 @@
    Generated from the original stylesheet and kept in cascade order. */
 
 /* ====================
-   手機版排版 (RWD)
+   ??????(RWD)
    ==================== */
 
 @media (max-width: 768px) {
@@ -153,17 +153,17 @@
 }
 
 /* ====================
-   彈出視窗 (Modal) 設計
+   敶閬? (Modal) 閮剛?
    ==================== */
 .modal-overlay {
-    display: none; /* 預設隱藏 */
+    display: none; /* ?身?梯? */
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    background-color: rgba(0, 0, 0, 0.8); /* 半透明黑底 */
-    z-index: 1000; /* 確保它在最上層 */
+    background-color: rgba(0, 0, 0, 0.8); /* ??暺? */
+    z-index: 1000; /* 蝣箔?摰?銝惜 */
     justify-content: center;
     align-items: center;
-    /* 新增：讓半透明黑底平滑淡入 */
+    /* ?啣?嚗???暺?撟單?瘛∪ */
     animation: fadeInBg 0.4s ease forwards;
 }
 
@@ -174,11 +174,11 @@
     width: 90%;
     max-width: 500px;
     border: 1px solid #c4a484;
-    /* 新增：讓彈出視窗本體套用絲滑高級感淡入動畫 */
+    /* ?啣?嚗?敶閬??祇?憟蝯脫?擃??楚?亙???*/
     animation: fadeInPremium 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
-/* 新增：專給背景的簡單淡入動畫 */
+/* ?啣?嚗?蝯西??舐?蝪∪瘛∪? */
 @keyframes fadeInBg {
     0% { opacity: 0; }
     100% { opacity: 1; }
@@ -199,7 +199,7 @@
     border: 1px solid #444;
     color: white;
     border-radius: 5px;
-    box-sizing: border-box; /* 確保 padding 不會撐破寬度 */
+    box-sizing: border-box; /* Keep padding inside modal width. */
 }
 
 .modal-buttons {
@@ -1545,19 +1545,31 @@ iframe {
         width: 40px;
     }
 
+    .nav-dropdown details {
+        display: grid;
+        width: min(230px, 76vw);
+        justify-items: center;
+    }
+
     .nav-dropdown summary {
+        display: flex;
         justify-content: space-between;
+        gap: 12px;
+        width: 100%;
+        min-width: 0;
     }
 
     .nav-dropdown summary::before {
-        margin-left: auto;
+        margin-left: 0;
     }
 
     .nav-submenu {
         position: static;
         min-width: 0;
-        margin: 0 0 4px 8px;
-        padding: 2px 0 2px 12px;
+        width: 100%;
+        margin: 0 0 8px;
+        box-sizing: border-box;
+        padding: 2px 0 2px 80px;
         background: transparent;
         border: 0;
         border-left: 1px solid var(--border-soft);
@@ -1578,10 +1590,15 @@ iframe {
 
     .nav-submenu a {
         position: relative;
-        padding: 7px 10px;
+        display: inline-flex;
+        justify-content: flex-start;
+        width: 100%;
+        min-width: 0;
+        padding: 7px 0;
         color: var(--text-subtle);
         font-size: 13px;
         font-weight: 600;
+        text-align: left;
     }
 
     .nav-submenu a:hover,
@@ -1591,15 +1608,7 @@ iframe {
     }
 
     .nav-submenu a.active::before {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 50%;
-        width: 3px;
-        height: 16px;
-        background: var(--teal);
-        border-radius: 999px;
-        transform: translateY(-50%);
+        display: none;
     }
 
     @media (prefers-reduced-motion: reduce) {
