@@ -14,6 +14,11 @@ import librosa
 import numpy as np
 import pandas as pd
 
+try:
+    import imageio_ffmpeg
+except ImportError:
+    imageio_ffmpeg = None
+
 
 NOTES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
 
@@ -42,6 +47,7 @@ MODEL_DIR = PROJECT_DIR / "models"
 YOUTUBE_ID_RE = re.compile(r"^[A-Za-z0-9_-]{11}$")
 DEFAULT_COOKIES_FILE = PROJECT_DIR / "youtube_cookies.txt"
 RENDER_COOKIES_FILE = Path("/etc/secrets/youtube_cookies.txt")
+FFMPEG_COMMAND = imageio_ffmpeg.get_ffmpeg_exe() if imageio_ffmpeg else "ffmpeg"
 
 # This is an approximate instrument-priority model, not true source separation.
 # Keyboard and bass are intentionally dominant; guitar and full mix are secondary.
@@ -227,10 +233,14 @@ def download_audio(youtube_url, download_dir):
     output_template = str(download_dir / f"{video_id}.%(ext)s")
     audio_path = download_dir / f"{video_id}.wav"
 
-    command = [
-        "yt-dlp",
+    base_command = [
+        sys.executable,
+        "-m",
+        "yt_dlp",
         "--no-playlist",
         *youtube_cookie_args(download_dir),
+        "--ffmpeg-location",
+        FFMPEG_COMMAND,
         "--quiet",
         "--no-warnings",
         "--force-overwrites",
@@ -246,10 +256,30 @@ def download_audio(youtube_url, download_dir):
         "wav",
         "-o",
         output_template,
-        youtube_url,
     ]
 
-    run_command(command)
+    download_errors = []
+    format_attempts = [None, "18/best"]
+
+    for format_selector in format_attempts:
+        command = [*base_command]
+
+        if format_selector:
+            command.extend(["-f", format_selector])
+
+        command.append(youtube_url)
+
+        try:
+            run_command(command)
+            break
+        except RuntimeError as error:
+            download_errors.append(str(error))
+            lower_error = str(error).lower()
+
+            if "403" not in lower_error and "forbidden" not in lower_error:
+                raise
+    else:
+        raise RuntimeError(download_errors[-1] if download_errors else "YouTube download failed.")
 
     if not audio_path.exists():
         raise FileNotFoundError(f"Audio file was not created: {audio_path}")

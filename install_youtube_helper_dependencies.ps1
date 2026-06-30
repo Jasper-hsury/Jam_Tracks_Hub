@@ -2,33 +2,69 @@ $ErrorActionPreference = "Stop"
 
 $sitePath = Split-Path -Parent $MyInvocation.MyCommand.Path
 $requirementsPath = Join-Path $sitePath "api-server\requirements_api.txt"
-$defaultPython = Join-Path $env:LOCALAPPDATA "Programs\Python\Python312\python.exe"
-$pythonExe = if (Test-Path $defaultPython) { $defaultPython } else { "python" }
+$venvPath = Join-Path $sitePath ".venv"
+$venvPython = Join-Path $venvPath "Scripts\python.exe"
+
+function Test-PythonVersion {
+    param([string]$PythonExe)
+
+    try {
+        & $PythonExe -c "import sys; raise SystemExit(0 if sys.version_info >= (3, 10) else 1)" | Out-Null
+        return $LASTEXITCODE -eq 0
+    }
+    catch {
+        return $false
+    }
+}
+
+function Get-BasePython {
+    $candidatePaths = @(
+        (Join-Path $env:LOCALAPPDATA "Programs\Python\Python313\python.exe"),
+        (Join-Path $env:LOCALAPPDATA "Programs\Python\Python312\python.exe"),
+        (Join-Path $env:LOCALAPPDATA "Programs\Python\Python311\python.exe"),
+        (Join-Path $env:LOCALAPPDATA "Programs\Python\Python310\python.exe"),
+        "python"
+    )
+
+    foreach ($candidate in $candidatePaths) {
+        if ($candidate -ne "python" -and -not (Test-Path $candidate)) {
+            continue
+        }
+
+        if (Test-PythonVersion $candidate) {
+            return $candidate
+        }
+    }
+
+    throw "Python 3.10 or newer is required. Install Python from https://www.python.org/downloads/windows/ and run this setup again."
+}
 
 if (-not (Test-Path $requirementsPath)) {
     throw "Requirements file not found: $requirementsPath"
 }
 
 Write-Host "Checking Python..." -ForegroundColor Cyan
+$pythonExe = Get-BasePython
 & $pythonExe --version
 
-Write-Host "Upgrading pip..." -ForegroundColor Cyan
-& $pythonExe -m pip install --upgrade pip
+if ((Test-Path $venvPython) -and -not (Test-PythonVersion $venvPython)) {
+    $backupPath = "$venvPath-python39-backup-$(Get-Date -Format yyyyMMddHHmmss)"
+    Move-Item $venvPath $backupPath
+    Write-Host "Backed up old Python environment to $backupPath" -ForegroundColor Yellow
+}
+
+if (-not (Test-Path $venvPython)) {
+    Write-Host "Creating local Python environment..." -ForegroundColor Cyan
+    & $pythonExe -m venv $venvPath
+}
 
 Write-Host "Installing Jasper YouTube Helper dependencies..." -ForegroundColor Cyan
-& $pythonExe -m pip install -r $requirementsPath
+& $venvPython -m pip install --upgrade pip
+& $venvPython -m pip install -r $requirementsPath
 
-try {
-    & ffmpeg -version | Out-Null
-    Write-Host "ffmpeg found." -ForegroundColor Green
-}
-catch {
-    Write-Host ""
-    Write-Host "ffmpeg was not found." -ForegroundColor Yellow
-    Write-Host "Install it with one of these commands, then run this setup again if needed:" -ForegroundColor Yellow
-    Write-Host "  winget install Gyan.FFmpeg" -ForegroundColor Cyan
-    Write-Host "  winget install --id Gyan.FFmpeg -e" -ForegroundColor Cyan
-}
+Write-Host "Checking yt-dlp..." -ForegroundColor Cyan
+& $venvPython -m yt_dlp --version
+Write-Host "ffmpeg is provided by imageio-ffmpeg inside this helper." -ForegroundColor Green
 
 Write-Host ""
 Write-Host "Dependency setup finished." -ForegroundColor Green

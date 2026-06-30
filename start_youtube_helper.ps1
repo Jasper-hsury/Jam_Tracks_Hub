@@ -2,9 +2,21 @@ $ErrorActionPreference = "Stop"
 
 $sitePath = Split-Path -Parent $MyInvocation.MyCommand.Path
 $apiPath = Join-Path $sitePath "api-server"
-$defaultPython = Join-Path $env:LOCALAPPDATA "Programs\Python\Python312\python.exe"
-$pythonExe = if (Test-Path $defaultPython) { $defaultPython } else { "python" }
+$setupScript = Join-Path $sitePath "install_youtube_helper_dependencies.ps1"
+$venvPython = Join-Path $sitePath ".venv\Scripts\python.exe"
 $helperUrl = "http://127.0.0.1:8765"
+
+function Test-PythonVersion {
+    param([string]$PythonExe)
+
+    try {
+        & $PythonExe -c "import sys; raise SystemExit(0 if sys.version_info >= (3, 10) else 1)" | Out-Null
+        return $LASTEXITCODE -eq 0
+    }
+    catch {
+        return $false
+    }
+}
 
 function Test-YoutubeHelper {
     try {
@@ -18,6 +30,11 @@ function Test-YoutubeHelper {
 
 if (-not (Test-Path $apiPath)) {
     throw "API folder not found: $apiPath"
+}
+
+if ((-not (Test-Path $venvPython)) -or (-not (Test-PythonVersion $venvPython))) {
+    Write-Host "Preparing Jasper YouTube Helper dependencies..." -ForegroundColor Cyan
+    & powershell -NoProfile -ExecutionPolicy Bypass -File $setupScript
 }
 
 if (Test-YoutubeHelper) {
@@ -36,4 +53,4 @@ $env:MKL_NUM_THREADS = "1"
 $env:NUMEXPR_NUM_THREADS = "1"
 $env:PYTHONUNBUFFERED = "1"
 
-& $pythonExe -m uvicorn app:app --host 127.0.0.1 --port 8765 --workers 1 --app-dir $apiPath
+& $venvPython -m uvicorn app:app --host 127.0.0.1 --port 8765 --workers 1 --app-dir $apiPath

@@ -323,9 +323,17 @@
     line-height: 1.45;
 }
 
-.helper-download-link {
+.helper-download-actions {
     flex: 0 0 auto;
     justify-self: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.helper-download-link {
+    flex: 0 0 auto;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -346,6 +354,14 @@
     .helper-download-link {
         justify-self: stretch;
         text-align: center;
+    }
+
+    .helper-download-actions {
+        justify-self: stretch;
+    }
+
+    .helper-download-link {
+        flex: 1 1 160px;
     }
 }
 

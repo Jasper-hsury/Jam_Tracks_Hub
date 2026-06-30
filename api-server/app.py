@@ -23,6 +23,11 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 import detect_key
 
+try:
+    import imageio_ffmpeg
+except ImportError:
+    imageio_ffmpeg = None
+
 
 app = FastAPI(title="Jasper's Music Key Finder")
 MODEL_VERSION = "2026-06-12-render-fast-audio"
@@ -40,6 +45,7 @@ ANALYSIS_EXCERPT_ANCHORS = (0.18, 0.50, 0.74)
 API_SEGMENT_DURATION = 15
 API_MAX_SEGMENTS = 3
 FFMPEG_TIMEOUT_SECONDS = 90
+FFMPEG_COMMAND = imageio_ffmpeg.get_ffmpeg_exe() if imageio_ffmpeg else "ffmpeg"
 ANALYSIS_JOB_TTL_SECONDS = 60 * 60
 ANALYSIS_JOB_LIMIT = 60
 SUPPORTED_UPLOAD_EXTENSIONS = {
@@ -420,7 +426,7 @@ def prepare_audio_for_analysis(source_path, temp_dir):
     for index, offset in enumerate(offsets, start=1):
         chunk_path = Path(temp_dir) / f"analysis_chunk_{index}.wav"
         command = [
-            "ffmpeg",
+            FFMPEG_COMMAND,
             "-hide_banner",
             "-loglevel",
             "error",
@@ -457,7 +463,7 @@ def prepare_audio_for_analysis(source_path, temp_dir):
     )
 
     command = [
-        "ffmpeg",
+        FFMPEG_COMMAND,
         "-hide_banner",
         "-loglevel",
         "error",

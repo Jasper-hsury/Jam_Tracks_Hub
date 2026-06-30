@@ -30,7 +30,12 @@ again on the website.
 Requirements
 - Windows computer.
 - Python 3.10 or newer.
-- ffmpeg for audio conversion.
+- No separate ffmpeg install is required; the helper installs its own bundled
+  ffmpeg package.
+
+If YouTube download fails with HTTP 403
+Run 1_INSTALL_HELPER_DEPENDENCIES.cmd again. This updates yt-dlp inside the
+helper's local .venv environment, which fixes many YouTube download changes.
 
 Privacy
 The helper runs on your own computer at http://127.0.0.1:8765. Temporary audio

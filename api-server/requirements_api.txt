@@ -8,3 +8,4 @@ pandas
 joblib
 scikit-learn
 soundfile
+imageio-ffmpeg

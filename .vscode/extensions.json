@@ -1,0 +1,13 @@
+{
+  "recommendations": [
+    "ritwickdey.LiveServer",
+    "esbenp.prettier-vscode",
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "ecmel.vscode-html-css",
+    "Zignd.html-css-class-completion",
+    "ms-azuretools.vscode-docker",
+    "eamodio.gitlens",
+    "njpwerner.autodocstring"
+  ]
+}

@@ -1,4 +1,6 @@
 ﻿.venv/
+.venv-*/
+.venv-*-backup/
 __pycache__/
 api-server/__pycache__/
 *.pyc

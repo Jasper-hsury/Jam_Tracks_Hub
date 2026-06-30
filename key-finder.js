@@ -431,7 +431,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         if (inputType === "youtube" && lowerMessage.includes("helper")) {
-            suggestedFix = 'Click Start Helper. If the browser says no app can open the link, run install_youtube_helper_protocol.ps1 once.';
+            suggestedFix = "Start the local helper first. On Mac, open START_YOUTUBE_HELPER_MAC.command. On Windows, run the helper setup once, then click Start Helper.";
         }
 
         if (inputType === "youtube" && lowerMessage.includes("sign in to confirm")) {
@@ -551,7 +551,7 @@ document.addEventListener("DOMContentLoaded", function() {
             setYoutubeHelperStatus("is-offline", "YouTube Helper offline");
             throw new Error(
                 `Cannot connect to Jasper YouTube Helper at ${youtubeHelperDisplayUrl()}. ` +
-                'Start it with: powershell -ExecutionPolicy Bypass -File ".\\start_youtube_helper.ps1"'
+                "Start it with START_YOUTUBE_HELPER_MAC.command on Mac, or START_YOUTUBE_HELPER.cmd on Windows."
             );
         }
     }
@@ -634,7 +634,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if (!connected) {
                 setYoutubeHelperStatus("is-offline", "YouTube Helper offline");
                 renderErrorReport(
-                    "Could not confirm that YouTube Helper started. If this is your first time, run install_youtube_helper_protocol.ps1 once, then click Start Helper again.",
+                    "Could not confirm that YouTube Helper started. On Mac, open START_YOUTUBE_HELPER_MAC.command manually. On Windows, run install_youtube_helper_protocol.ps1 once, then click Start Helper again.",
                     "youtube",
                     youtubeHelperBaseUrl
                 );

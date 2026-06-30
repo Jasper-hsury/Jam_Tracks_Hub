@@ -1,0 +1,48 @@
+Jasper's Music - YouTube Helper for Mac
+
+Why this helper is needed
+YouTube often blocks cloud servers from downloading audio. The helper lets
+Jasper's Music analyze a YouTube link from your own computer instead.
+
+First-time setup
+1. Download jasper-youtube-helper-mac.zip.
+2. Double-click the zip file to unzip it.
+3. Open the extracted folder.
+4. Double-click START_YOUTUBE_HELPER_MAC.command.
+5. If macOS blocks the file, right-click START_YOUTUBE_HELPER_MAC.command
+   and choose Open.
+   If it still shows only Done / Move to Trash, open Terminal and run:
+
+   xattr -dr com.apple.quarantine ~/Downloads/jasper-youtube-helper-mac
+
+   Then double-click START_YOUTUBE_HELPER_MAC.command again.
+6. Keep the Terminal window open while using YouTube link analysis.
+7. Return to the Key Finder page and analyze the YouTube link.
+
+Daily use
+1. Double-click START_YOUTUBE_HELPER_MAC.command.
+2. Wait until it shows:
+
+   Uvicorn running on http://127.0.0.1:8765
+
+3. Keep that Terminal window open.
+4. Return to the Key Finder page and analyze the YouTube link.
+
+Requirements
+- macOS.
+- Python 3.10 or newer is required. Python 3.13 from python.org is recommended
+  because newer yt-dlp releases are needed when YouTube changes its download
+  behavior.
+
+If YouTube download fails with HTTP 403
+Install Python 3.13 from https://www.python.org/downloads/macos/, then run
+START_YOUTUBE_HELPER_MAC.command again. The helper will replace an old Python
+3.9 .venv with a newer local environment and update yt-dlp.
+
+Notes
+- The browser Start Helper button is automatic on Windows after protocol setup.
+  On Mac, start the helper manually with START_YOUTUBE_HELPER_MAC.command.
+- The helper runs on your own computer at http://127.0.0.1:8765.
+- Temporary audio files are deleted after analysis finishes.
+- Uploaded audio analysis on the website does not need this helper. The helper
+  is only for YouTube link analysis.
