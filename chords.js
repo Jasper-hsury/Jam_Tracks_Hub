@@ -43,25 +43,117 @@ document.addEventListener("DOMContentLoaded", function() {
     ];
 
     const majorProgressions = [
-        { numerals: ["I", "V", "vi", "IV"], style: "Pop / Rock / Worship" },
-        { numerals: ["I", "vi", "IV", "V"], style: "50s Progression / Ballad" },
-        { numerals: ["vi", "IV", "I", "V"], style: "Emotional Pop" },
-        { numerals: ["I", "IV", "V", "I"], style: "Classic / Folk / Blues Foundation" },
-        { numerals: ["I", "V", "IV", "V"], style: "Rock / Country" },
-        { numerals: ["ii", "V", "I"], style: "Jazz / Smooth Turnaround" },
-        { numerals: ["I", "iii", "IV", "V"], style: "J-pop / Emotional Pop" },
-        { numerals: ["I", "IV", "vi", "V"], style: "Ballad / Cinematic" }
+        {
+            numerals: ["I", "V", "vi", "IV"],
+            style: "Pop / Rock / Worship",
+            category: "Pop staples",
+            description: "A direct four-chord loop for modern songs and big choruses."
+        },
+        {
+            numerals: ["vi", "IV", "I", "V"],
+            style: "Emotional Pop",
+            category: "Pop staples",
+            description: "Starts on the relative minor for a more wistful version of the pop loop."
+        },
+        {
+            numerals: ["I", "vi", "IV", "V"],
+            style: "50s Progression / Ballad",
+            category: "Pop staples",
+            description: "Classic circular movement for ballads, oldies, and gentle songwriting."
+        },
+        {
+            numerals: ["I", "IV", "V", "I"],
+            style: "Classic / Folk Foundation",
+            category: "Songwriting basics",
+            description: "The plain-language foundation for folk, rock, country, and simple melodies."
+        },
+        {
+            numerals: ["I", "I", "I", "I", "IV", "IV", "I", "I", "V", "IV", "I", "V"],
+            style: "12 Bar Blues",
+            category: "12 bar blues",
+            description: "Twelve-bar form with the turnaround on the last bar."
+        },
+        {
+            numerals: ["ii", "V", "I"],
+            style: "Jazz / Smooth Turnaround",
+            category: "Jazz essentials",
+            description: "The core jazz cadence. Aim melodic lines toward the third and seventh of each chord."
+        },
+        {
+            numerals: ["I", "vi", "ii", "V"],
+            style: "Jazz / Pop Turnaround",
+            category: "Jazz essentials",
+            description: "A warm loop that can sound old-school, jazz-pop, or city-pop."
+        },
+        {
+            numerals: ["I", "iii", "vi", "ii", "V"],
+            style: "Neo Soul / Jazz",
+            category: "Neo soul / jazz colors",
+            description: "A smooth chain of diatonic movement that works well with seventh chords."
+        },
+        {
+            numerals: ["IV", "iii", "vi", "ii", "V", "I"],
+            style: "Neo Soul / R&B Resolution",
+            category: "Neo soul / jazz colors",
+            description: "Starts away from home, then gradually pulls the harmony back to I."
+        }
     ];
 
     const minorProgressions = [
-        { numerals: ["i", "VI", "III", "VII"], style: "Emotional / Pop Rock" },
-        { numerals: ["i", "iv", "VII", "III"], style: "Dark Pop / Cinematic" },
-        { numerals: ["i", "VII", "VI", "VII"], style: "Rock / Dramatic" },
-        { numerals: ["i", "iv", "v", "i"], style: "Natural Minor / Traditional" },
-        { numerals: ["i", "VI", "iv", "V"], style: "Harmonic Minor Flavor" },
-        { numerals: ["i", "v", "VI", "VII"], style: "Ballad / Sad Pop" },
-        { numerals: ["i", "III", "VII", "VI"], style: "Epic / Cinematic" },
-        { numerals: ["i", "iv", "VI", "V"], style: "Strong Minor Resolution" }
+        {
+            numerals: ["i", "VI", "III", "VII"],
+            style: "Emotional / Pop Rock",
+            category: "Minor pop staples",
+            description: "A strong minor-key loop for emotional rock, pop, and cinematic writing."
+        },
+        {
+            numerals: ["i", "VII", "VI", "VII"],
+            style: "Rock / Dramatic",
+            category: "Minor pop staples",
+            description: "A descending minor color with a lift back into the loop."
+        },
+        {
+            numerals: ["i", "iv", "VII", "III"],
+            style: "Dark Pop / Cinematic",
+            category: "Minor pop staples",
+            description: "Keeps the home chord dark, then opens up through the relative major area."
+        },
+        {
+            numerals: ["i", "iv", "v", "i"],
+            style: "Natural Minor / Traditional",
+            category: "Songwriting basics",
+            description: "A plain natural-minor movement with no raised leading tone."
+        },
+        {
+            numerals: ["i", "i", "i", "i", "iv", "iv", "i", "i", "V", "iv", "i", "V"],
+            style: "Minor 12 Bar Blues",
+            category: "12 bar blues",
+            description: "Minor blues form with a dominant V turnaround for stronger pull."
+        },
+        {
+            numerals: ["iiø", "V", "i"],
+            style: "Minor Jazz Cadence",
+            category: "Jazz essentials",
+            description: "The minor-key version of ii - V - I, with a half-diminished ii chord."
+        },
+        {
+            numerals: ["i", "VI", "iiø", "V"],
+            style: "Minor Jazz Turnaround",
+            category: "Jazz essentials",
+            description: "A compact minor loop that moves from stable minor color into dominant tension."
+        },
+        {
+            numerals: ["i", "iv", "VII", "III", "VI", "iiø", "V", "i"],
+            style: "Neo Soul / Jazz Minor",
+            category: "Neo soul / jazz colors",
+            description: "A longer minor path with a clear jazz cadence at the end."
+        },
+        {
+            numerals: ["i", "VI", "iv", "V"],
+            style: "Harmonic Minor Flavor",
+            category: "Neo soul / jazz colors",
+            description: "The major V adds a raised leading tone and a stronger pull back to i."
+        }
     ];
 
     const pitchClasses = {
@@ -95,7 +187,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 iii: `${notes[2]}m7`,
                 IV: `${notes[3]}maj7`,
                 V: `${notes[4]}7`,
-                vi: `${notes[5]}m7`
+                vi: `${notes[5]}m7`,
+                vii: `${notes[6]}m7b5`
             };
         }
 
@@ -105,7 +198,8 @@ document.addEventListener("DOMContentLoaded", function() {
             iii: `${notes[2]}m`,
             IV: notes[3],
             V: notes[4],
-            vi: `${notes[5]}m`
+            vi: `${notes[5]}m`,
+            vii: `${notes[6]}dim`
         };
     }
 
@@ -113,6 +207,8 @@ document.addEventListener("DOMContentLoaded", function() {
         if (useSevenths) {
             return {
                 i: `${notes[0]}m7`,
+                "iiø": `${notes[1]}m7b5`,
+                iidim: `${notes[1]}m7b5`,
                 III: `${notes[2]}maj7`,
                 iv: `${notes[3]}m7`,
                 v: `${notes[4]}m7`,
@@ -124,6 +220,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
         return {
             i: `${notes[0]}m`,
+            "iiø": `${notes[1]}dim`,
+            iidim: `${notes[1]}dim`,
             III: notes[2],
             iv: `${notes[3]}m`,
             v: `${notes[4]}m`,
@@ -140,6 +238,40 @@ document.addEventListener("DOMContentLoaded", function() {
         return Array.from(new Set(items.filter(Boolean)));
     }
 
+    function parseChordForDictionary(chordName) {
+        const match = String(chordName || "").match(/^([A-G](?:#|b)?)(m7b5|maj7|m7|dim|m|7)?$/);
+
+        if (!match) {
+            return null;
+        }
+
+        const qualityMap = {
+            "": "major",
+            m: "minor",
+            7: "dominant7",
+            maj7: "major7",
+            m7: "minor7",
+            dim: "diminished",
+            m7b5: "halfDiminished7"
+        };
+        const suffix = match[2] || "";
+
+        return {
+            root: match[1],
+            chord: qualityMap[suffix] || "major"
+        };
+    }
+
+    function chordDictionaryUrl(chordName) {
+        const parsed = parseChordForDictionary(chordName);
+
+        if (!parsed) {
+            return "chord-dictionary.html";
+        }
+
+        return `chord-dictionary.html?root=${encodeURIComponent(parsed.root)}&chord=${encodeURIComponent(parsed.chord)}`;
+    }
+
     function prefersFlatNames(notes) {
         return notes.some(function(note) { return note.includes("b"); }) && !notes.some(function(note) { return note.includes("#"); });
     }
@@ -153,6 +285,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function getChordIntervalsForAdvice(quality) {
         if (quality === "dim") return [0, 3, 6];
+        if (quality === "halfDiminished7") return [0, 3, 6, 10];
         if (quality === "minor") return [0, 3, 7];
         if (quality === "major7") return [0, 4, 7, 11];
         if (quality === "minor7") return [0, 3, 7, 10];
@@ -268,35 +401,68 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function renderProgressions(progressions, chordMap, keyNotes, isMinor, useSevenths) {
-        return progressions.map(function(progression, index) {
-            const chords = progression.numerals.map(function(numeral) {
-                return chordMap[numeral] || numeral;
+        const categoryOrder = uniqueItems(progressions.map(function(progression) {
+            return progression.category;
+        }));
+
+        return categoryOrder.map(function(category, categoryIndex) {
+            const categoryProgressions = progressions.filter(function(progression) {
+                return progression.category === category;
             });
+            const categoryCount = categoryProgressions.length;
+            const groupDescription = categoryProgressions[0]?.category === "12 bar blues"
+                ? "Twelve chord slots represent the full form. Loop slowly first, then add fills."
+                : categoryProgressions[0]?.category === "Jazz essentials"
+                    ? "Use sevenths for the clearest jazz color, then follow the chord tones."
+                    : categoryProgressions[0]?.category === "Neo soul / jazz colors"
+                        ? "These progressions open up when you switch to seventh chords and softer voicings."
+                        : "Useful starting points for writing, practicing, and hearing the key center.";
 
             return `
-                <article class="progression-card" data-progression-index="${index}">
-                    <div class="progression-main">
-                        <span class="progression-numerals">${progression.numerals.join(" - ")}</span>
-                        <span class="progression-chords">
-                            ${chords.map(function(chord, chordIndex) {
-                                return `<span class="progression-chord-token" data-chord-index="${chordIndex}">${chord}</span>`;
-                            }).join('<span class="progression-separator">-</span>')}
+                <details class="progression-category" ${categoryIndex === 0 ? "open" : ""}>
+                    <summary class="progression-category-heading">
+                        <span class="progression-category-title">${category}</span>
+                        <span class="progression-category-meta">
+                            <span>${groupDescription}</span>
+                            <strong>${categoryCount} ${categoryCount === 1 ? "progression" : "progressions"}</strong>
                         </span>
-                        <span class="progression-style">${progression.style}</span>
-                        ${renderScaleAdvice(progression, chords, keyNotes, isMinor, useSevenths)}
+                    </summary>
+                    <div class="progression-grid">
+                        ${categoryProgressions.map(function(progression) {
+                            const index = progressions.indexOf(progression);
+                            const chords = progression.numerals.map(function(numeral) {
+                                return chordMap[numeral] || numeral;
+                            });
+
+                            return `
+                                <article class="progression-card" data-progression-index="${index}">
+                                    <div class="progression-main">
+                                        <span class="progression-numerals">${progression.numerals.join(" - ")}</span>
+                                        <span class="progression-chords">
+                                            ${chords.map(function(chord, chordIndex) {
+                                                return `<a class="progression-chord-token" href="${chordDictionaryUrl(chord)}" data-chord-index="${chordIndex}" aria-label="Open ${chord} in Chord Dictionary">${chord}</a>`;
+                                            }).join('<span class="progression-separator">-</span>')}
+                                        </span>
+                                        <span class="progression-style">${progression.style}</span>
+                                        <p class="progression-description">${progression.description}</p>
+                                        ${renderScaleAdvice(progression, chords, keyNotes, isMinor, useSevenths)}
+                                    </div>
+                                    <div class="progression-card-actions">
+                                        <button class="progression-play-button" type="button" data-chords="${encodeChords(chords)}">Loop</button>
+                                        <button class="progression-save-button" type="button"
+                                            data-chords="${encodeChords(chords)}"
+                                            data-numerals="${encodeChords(progression.numerals)}"
+                                            data-style="${encodeURIComponent(progression.style)}">Save</button>
+                                        <button class="progression-export-button" type="button"
+                                            data-chords="${encodeChords(chords)}"
+                                            data-numerals="${encodeChords(progression.numerals)}"
+                                            data-style="${encodeURIComponent(progression.style)}">Export</button>
+                                    </div>
+                                </article>
+                            `;
+                        }).join("")}
                     </div>
-                    <div class="progression-card-actions">
-                        <button class="progression-play-button" type="button" data-chords="${encodeChords(chords)}">Loop</button>
-                        <button class="progression-save-button" type="button"
-                            data-chords="${encodeChords(chords)}"
-                            data-numerals="${encodeChords(progression.numerals)}"
-                            data-style="${encodeURIComponent(progression.style)}">Save</button>
-                        <button class="progression-export-button" type="button"
-                            data-chords="${encodeChords(chords)}"
-                            data-numerals="${encodeChords(progression.numerals)}"
-                            data-style="${encodeURIComponent(progression.style)}">Export</button>
-                    </div>
-                </article>
+                </details>
             `;
         }).join("");
     }
@@ -381,7 +547,9 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function parseChordName(chordName) {
-        const quality = chordName.endsWith("dim")
+        const quality = chordName.endsWith("m7b5")
+            ? "halfDiminished7"
+            : chordName.endsWith("dim")
             ? "dim"
             : chordName.endsWith("maj7")
                 ? "major7"
@@ -392,7 +560,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         : chordName.endsWith("m")
                             ? "minor"
                             : "major";
-        const root = chordName.replace(/(maj7|m7|7|dim|m)$/, "");
+        const root = chordName.replace(/(m7b5|maj7|m7|7|dim|m)$/, "");
         const pitchClass = pitchClasses[root];
 
         if (pitchClass === undefined) {
@@ -439,6 +607,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         const intervalMap = {
             dim: [0, 3, 6],
+            halfDiminished7: [0, 3, 6, 10],
             minor: [0, 3, 7],
             major: [0, 4, 7],
             major7: [0, 4, 7, 11],
