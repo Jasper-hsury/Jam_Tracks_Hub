@@ -823,6 +823,63 @@ iframe {
     border-radius: inherit;
 }
 
+.result-explanation {
+    display: grid;
+    gap: 10px;
+    margin-top: 14px;
+    padding: 13px;
+    background: rgba(127, 183, 173, 0.07);
+    border: 1px solid rgba(127, 183, 173, 0.18);
+    border-radius: 8px;
+}
+
+.result-explanation-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.result-explanation-heading strong {
+    color: var(--gold-light);
+    font-size: 13px;
+    text-align: right;
+}
+
+.result-explanation-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.result-explanation-card {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    min-height: 126px;
+    padding: 11px 12px;
+    background: rgba(18, 18, 18, 0.36);
+    border: 1px solid rgba(196, 164, 132, 0.14);
+    border-radius: 8px;
+}
+
+.result-explanation-card h4 {
+    margin: 0;
+    color: var(--gold-light);
+    font-size: 13px;
+}
+
+.result-explanation-card p {
+    margin: 0;
+    color: var(--text-soft);
+    font-size: 13px;
+    line-height: 1.55;
+}
+
 .result-details {
     display: grid;
     gap: 8px;
@@ -1067,9 +1124,16 @@ iframe {
         gap: 3px;
     }
 
+    .result-explanation-grid,
     .result-evidence-grid,
     .result-ranking-grid {
         grid-template-columns: 1fr;
+    }
+
+    .result-explanation-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 4px;
     }
 
     .progression-card {

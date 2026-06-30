@@ -328,6 +328,89 @@ document.addEventListener("DOMContentLoaded", function() {
         `;
     }
 
+    function readableList(items, fallback) {
+        const values = (items || [])
+            .filter(Boolean)
+            .map(function(item) {
+                return String(item);
+            });
+
+        if (!values.length) {
+            return fallback || "not enough evidence";
+        }
+
+        if (values.length === 1) {
+            return values[0];
+        }
+
+        return `${values.slice(0, -1).join(", ")} and ${values[values.length - 1]}`;
+    }
+
+    function topCandidateNames(candidates, finalKey) {
+        return (candidates || [])
+            .map(function(candidate) {
+                return candidate?.key;
+            })
+            .filter(function(keyName) {
+                return keyName && keyName !== finalKey;
+            })
+            .slice(0, 3);
+    }
+
+    function renderResultExplanation(data, confidence) {
+        const finalKey = data.final_key || "the final key";
+        const ruleKey = data.rule_key || "not available";
+        const priorityKey = data.priority_key || "not available";
+        const keyFamily = data.key_family || "not available";
+        const mainNotes = readableList((data.main_notes || []).slice(0, 4), "not enough clear note evidence");
+        const alternateKeys = readableList(topCandidateNames(data.possible_keys, data.final_key), "no close alternate keys");
+        const confidenceText = confidence === null
+            ? "rule-based estimate"
+            : `${confidence.toFixed(1)}% confidence`;
+        const certainty = String(data.certainty || "medium").toLowerCase();
+
+        let meaning = `Treat ${finalKey} as the leading tonal center, with ${keyFamily} as the surrounding key family.`;
+        if (certainty === "low" || data.uncertain) {
+            meaning = `Treat ${finalKey} as a leading candidate, not a final answer. The evidence is mixed enough that a quick ear check is still useful.`;
+        } else if (certainty === "high") {
+            meaning = `${finalKey} is strongly supported by the combined analysis, so it is a solid starting point for scales, chords, and practice.`;
+        }
+
+        let reason = `The strongest note evidence points around ${mainNotes}. The scale-fit rule chose ${ruleKey}, while the keyboard/bass priority pass chose ${priorityKey}.`;
+        if (ruleKey === data.final_key && priorityKey === data.final_key) {
+            reason = `The rule-based pass and keyboard/bass priority pass both agree on ${finalKey}, and the strongest notes are ${mainNotes}.`;
+        } else if (ruleKey === priorityKey) {
+            reason = `The rule-based pass and keyboard/bass priority pass both point to ${ruleKey}; the final result weighs that against the ML model and the key family.`;
+        }
+
+        const nextCheck = certainty === "low" || data.uncertain
+            ? `Check whether the song resolves more naturally to ${finalKey} or one of these alternates: ${alternateKeys}.`
+            : `Use ${finalKey} first, then compare it with ${alternateKeys} if a section sounds like it shifts.`;
+
+        return `
+            <section class="result-explanation" aria-label="Key result explanation">
+                <div class="result-explanation-heading">
+                    <span>Result explanation</span>
+                    <strong>${escapeHtml(confidenceText)}</strong>
+                </div>
+                <div class="result-explanation-grid">
+                    <article class="result-explanation-card">
+                        <h4>What this means</h4>
+                        <p>${escapeHtml(meaning)}</p>
+                    </article>
+                    <article class="result-explanation-card">
+                        <h4>Why this result</h4>
+                        <p>${escapeHtml(reason)}</p>
+                    </article>
+                    <article class="result-explanation-card">
+                        <h4>Next check</h4>
+                        <p>${escapeHtml(nextCheck)}</p>
+                    </article>
+                </div>
+            </section>
+        `;
+    }
+
     function renderKeyFinderResult(data) {
         currentResultData = data;
         const confidence = data.confidence === null || data.confidence === undefined
@@ -363,6 +446,8 @@ document.addEventListener("DOMContentLoaded", function() {
             <p class="confidence-note ${data.uncertain ? "is-uncertain" : ""}">
                 ${escapeHtml(data.confidence_note || "")}
             </p>
+
+            ${renderResultExplanation(data, confidence)}
 
             <div class="result-details">
                 <p><span>Key family</span>${escapeHtml(data.key_family || "Not available")}</p>
