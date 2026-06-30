@@ -204,19 +204,30 @@ document.addEventListener("DOMContentLoaded", function() {
             return "";
         }
 
+        function formatRelativeKeyScore(value) {
+            if (value === null || value === undefined || Number.isNaN(Number(value))) {
+                return "Not available";
+            }
+
+            return `${(Number(value) / 100).toFixed(1)}x final score`;
+        }
+
         return `
             <div class="key-finder-candidates">
-                <p>Other possible keys <span>relative to final key</span></p>
+                <p>Other possible keys <span>rule score compared with final key</span></p>
                 <ul>
                     ${possibleKeys.slice(0, 4).map(function(candidate) {
                         return `
                             <li>
                                 <span>${escapeHtml(candidate.key)}</span>
-                                <strong>${formatPercent(candidate.relative_score)}</strong>
+                                <strong>${escapeHtml(formatRelativeKeyScore(candidate.relative_score))}</strong>
                             </li>
                         `;
                     }).join("")}
                 </ul>
+                <small class="key-finder-candidates-note">
+                    These are not probabilities. Values above 1.0x mean the rule-based score was stronger than the final ML-led key.
+                </small>
             </div>
         `;
     }

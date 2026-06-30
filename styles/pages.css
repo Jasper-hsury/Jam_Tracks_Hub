@@ -1003,6 +1003,14 @@ iframe {
     font-size: 14px;
 }
 
+.key-finder-candidates-note {
+    display: block;
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.45;
+}
+
 .error-report {
     display: grid;
     gap: 12px;
