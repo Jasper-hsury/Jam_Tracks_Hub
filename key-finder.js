@@ -529,7 +529,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         if (inputType === "youtube" && lowerMessage.includes("helper")) {
-            suggestedFix = "Start the local helper first. On Mac, open START_YOUTUBE_HELPER_MAC.command. On Windows, run the helper setup once, then click Start Helper.";
+            suggestedFix = "Run the helper setup once. On Mac, run INSTALL_MAC_HELPER_PROTOCOL.command. On Windows, run 2_CONNECT_HELPER_TO_WEBSITE.cmd. Then refresh Key Finder and allow the browser to open Jasper YouTube Helper.";
         }
 
         if (inputType === "youtube" && lowerMessage.includes("sign in to confirm")) {
