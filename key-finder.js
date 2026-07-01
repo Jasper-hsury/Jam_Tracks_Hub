@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const JOB_POLL_DELAY_MS = 1200;
     const HELPER_PROTOCOL_URL = "jasper-helper://start";
     const HELPER_START_POLL_LIMIT = 20;
+    const HELPER_AUTOSTART_DELAY_MS = 900;
 
     const audioKeyFile = document.getElementById("audioKeyFile");
     const analyzeFileButton = document.getElementById("analyzeFileButton");
@@ -35,6 +36,7 @@ document.addEventListener("DOMContentLoaded", function() {
     let apiRetryCount = 0;
     let currentResultData = null;
     let currentResultMode = localStorage.getItem(RESULT_MODE_KEY) || "quick";
+    let autoStartAttempted = false;
 
     if (!keyFinderResult || (!audioKeyFile && !youtubeKeyUrl)) {
         return;
@@ -720,24 +722,70 @@ document.addEventListener("DOMContentLoaded", function() {
         return false;
     }
 
-    async function startYoutubeHelperFromBrowser() {
-        setYoutubeHelperStatus("is-checking", "Opening YouTube Helper...");
+    function openHelperProtocol(isAutomatic) {
+        if (!isAutomatic) {
+            window.location.href = HELPER_PROTOCOL_URL;
+            return;
+        }
+
+        const launcherFrame = document.createElement("iframe");
+        launcherFrame.hidden = true;
+        launcherFrame.setAttribute("aria-hidden", "true");
+        launcherFrame.src = HELPER_PROTOCOL_URL;
+        document.body.appendChild(launcherFrame);
+
+        window.setTimeout(function() {
+            launcherFrame.remove();
+        }, 1500);
+    }
+
+    async function startYoutubeHelperFromBrowser(options = {}) {
+        const isAutomatic = options.automatic === true;
+        setYoutubeHelperStatus("is-checking", isAutomatic ? "Starting YouTube Helper..." : "Opening YouTube Helper...");
 
         try {
-            window.location.href = HELPER_PROTOCOL_URL;
+            openHelperProtocol(isAutomatic);
             const connected = await waitForYoutubeHelperAfterLaunch();
 
             if (!connected) {
                 setYoutubeHelperStatus("is-offline", "YouTube Helper offline");
-                renderErrorReport(
-                    "Could not confirm that YouTube Helper started. On Mac, open START_YOUTUBE_HELPER_MAC.command manually. On Windows, run install_youtube_helper_protocol.ps1 once, then click Start Helper again.",
-                    "youtube",
-                    youtubeHelperBaseUrl
-                );
+                if (!isAutomatic) {
+                    renderErrorReport(
+                        "Could not confirm that YouTube Helper started. On Mac, run INSTALL_MAC_HELPER_PROTOCOL.command once or open START_YOUTUBE_HELPER_MAC.command manually. On Windows, run install_youtube_helper_protocol.ps1 once, then click Start Helper again.",
+                        "youtube",
+                        youtubeHelperBaseUrl
+                    );
+                }
             }
         } catch (error) {
             setYoutubeHelperStatus("is-offline", "YouTube Helper offline");
-            renderErrorReport(error.message, "youtube", youtubeHelperBaseUrl);
+            if (!isAutomatic) {
+                renderErrorReport(error.message, "youtube", youtubeHelperBaseUrl);
+            }
+        }
+    }
+
+    async function autoStartYoutubeHelperIfNeeded() {
+        if (autoStartAttempted || !youtubeKeyUrl) {
+            return;
+        }
+
+        autoStartAttempted = true;
+        await wait(HELPER_AUTOSTART_DELAY_MS);
+
+        const controller = new AbortController();
+        const timeout = window.setTimeout(function() {
+            controller.abort();
+        }, 1500);
+
+        try {
+            await ensureYoutubeHelperIsReachable(controller.signal);
+        } catch (error) {
+            if (error.name !== "AbortError") {
+                await startYoutubeHelperFromBrowser({ automatic: true });
+            }
+        } finally {
+            window.clearTimeout(timeout);
         }
     }
 
@@ -837,6 +885,8 @@ document.addEventListener("DOMContentLoaded", function() {
     startYoutubeHelperButton?.addEventListener("click", function() {
         startYoutubeHelperFromBrowser();
     });
+
+    autoStartYoutubeHelperIfNeeded();
 
     analysisHistoryList?.addEventListener("click", function(event) {
         const button = event.target.closest(".history-item-button");

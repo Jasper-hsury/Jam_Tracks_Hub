@@ -17,6 +17,21 @@ find_python() {
   echo "python3"
 }
 
+helper_is_running() {
+  "$PYTHON_BIN" - "$HELPER_URL/api/health" <<'PY' >/dev/null 2>&1
+import json
+import sys
+import urllib.request
+
+try:
+    with urllib.request.urlopen(sys.argv[1], timeout=2) as response:
+        data = json.loads(response.read().decode("utf-8"))
+    raise SystemExit(0 if data.get("status") == "ok" else 1)
+except Exception:
+    raise SystemExit(1)
+PY
+}
+
 needs_venv="yes"
 
 if [ -x "$PYTHON_BIN" ]; then
@@ -32,6 +47,12 @@ if [ "$needs_venv" = "yes" ]; then
 fi
 
 "$PYTHON_BIN" -m pip install -r "$SITE_DIR/api-server/requirements_api.txt"
+
+if helper_is_running; then
+  echo "Jasper YouTube Helper is already running at $HELPER_URL"
+  echo "Return to the website and refresh the Key Finder page."
+  exit 0
+fi
 
 echo "Starting Jasper YouTube Helper"
 echo "URL: $HELPER_URL"

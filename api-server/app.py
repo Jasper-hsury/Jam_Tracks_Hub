@@ -16,7 +16,7 @@ from pathlib import Path
 
 from fastapi import FastAPI, File, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from starlette.exceptions import HTTPException as StarletteHTTPException
@@ -85,6 +85,26 @@ app.add_middleware(
 
 @app.middleware("http")
 async def add_private_network_access_header(request, call_next):
+    if (
+        request.method == "OPTIONS"
+        and request.headers.get("access-control-request-private-network", "").lower() == "true"
+    ):
+        origin = request.headers.get("origin") or "*"
+        requested_method = request.headers.get("access-control-request-method") or "GET, POST, OPTIONS"
+        requested_headers = request.headers.get("access-control-request-headers") or "*"
+
+        return Response(
+            status_code=204,
+            headers={
+                "Access-Control-Allow-Origin": origin,
+                "Access-Control-Allow-Methods": requested_method,
+                "Access-Control-Allow-Headers": requested_headers,
+                "Access-Control-Allow-Private-Network": "true",
+                "Access-Control-Max-Age": "600",
+                "Vary": "Origin",
+            },
+        )
+
     response = await call_next(request)
     response.headers["Access-Control-Allow-Private-Network"] = "true"
     return response
