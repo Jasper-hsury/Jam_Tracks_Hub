@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const HEAVY_CONTAINER_EXTENSIONS = new Set([".mp4", ".webm"]);
     const API_RETRY_DELAY_MS = 2000;
     const API_RETRY_LIMIT = 30;
+    const API_HEALTH_TIMEOUT_MS = 8000;
     const JOB_POLL_DELAY_MS = 1200;
     const HELPER_PROTOCOL_URL = "jasper-helper://start";
     const HELPER_START_POLL_LIMIT = 20;
@@ -655,9 +656,14 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     async function checkApiStatus() {
+        const controller = new AbortController();
+        const timeout = window.setTimeout(function() {
+            controller.abort();
+        }, API_HEALTH_TIMEOUT_MS);
+
         try {
             setApiStatus("is-checking", apiRetryCount ? "API starting..." : "Checking API...");
-            await ensureApiIsReachable();
+            await ensureApiIsReachable(controller.signal);
             apiRetryCount = 0;
             if (apiRetryTimer) {
                 window.clearTimeout(apiRetryTimer);
@@ -671,6 +677,8 @@ document.addEventListener("DOMContentLoaded", function() {
             } else {
                 setApiStatus("is-offline", "API offline");
             }
+        } finally {
+            window.clearTimeout(timeout);
         }
     }
 
