@@ -51,7 +51,7 @@
         <section class="key-finder-panel" aria-labelledby="keyFinderTitle">
             <div class="tool-section-heading compact-heading">
                 <h2 id="keyFinderTitle" class="section-title">Analyze a Song</h2>
-                <p>Upload an audio file for the most stable estimate. YouTube links work through the local helper.</p>
+                <p>Upload an audio file for the most stable estimate. YouTube links can use the site API or the local helper.</p>
             </div>
 
             <div class="key-finder-status-row">
@@ -61,7 +61,7 @@
                 </div>
                 <div class="api-status helper-status" id="youtubeHelperStatus" role="status" aria-live="polite">
                     <span class="status-dot"></span>
-                    <span class="status-text">Checking YouTube Helper...</span>
+                    <span class="status-text">Checking YouTube access...</span>
                 </div>
                 <button class="text-button helper-start-button" id="startYoutubeHelperButton" type="button" hidden>
                     Start Helper
@@ -96,16 +96,16 @@
             </p>
 
             <div class="key-finder-divider">
-                <span>Advanced: YouTube link via local helper</span>
+                <span>Advanced: optional local YouTube helper</span>
             </div>
             <div class="helper-install-card" aria-label="Local Helper setup instructions">
                 <div class="helper-install-copy">
-                    <strong>Need YouTube link analysis?</strong>
-                    <p>Download the helper once. After setup, this page will try to start it automatically when needed.</p>
+                    <strong>Want local YouTube link analysis?</strong>
+                    <p>The site API can analyze YouTube links. Install the helper only if you want a local fallback on this computer.</p>
                     <ol>
                         <li>On Mac, unzip the helper and run INSTALL_MAC_HELPER_PROTOCOL.command once.</li>
                         <li>On Windows, unzip the helper and run the setup files once.</li>
-                        <li>Return here. The helper can auto-start when you open Key Finder; allow the browser prompt if it appears.</li>
+                        <li>Return here and use Start Helper only when you want to run the local fallback.</li>
                     </ol>
                 </div>
                 <div class="helper-download-actions">
@@ -150,6 +150,6 @@
 
     <script src="site.js?v=20260625-mobile-menu-v3"></script>
     <script src="site-config.js?v=20260705-localhost-helper"></script>
-    <script src="key-finder.js?v=20260705-helper-dual-host"></script>
+    <script src="key-finder.js?v=20260705-youtube-api-first"></script>
 </body>
 </html>

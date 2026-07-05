@@ -46,6 +46,7 @@ document.addEventListener("DOMContentLoaded", function() {
     let currentResultMode = localStorage.getItem(RESULT_MODE_KEY) || "quick";
     let autoStartAttempted = false;
     let youtubeHelperBaseUrl = youtubeHelperBaseUrlCandidates[0];
+    let youtubeAnalysisBaseUrl = apiBaseUrl;
 
     if (!keyFinderResult || (!audioKeyFile && !youtubeKeyUrl)) {
         return;
@@ -609,9 +610,14 @@ document.addEventListener("DOMContentLoaded", function() {
         youtubeHelperStatus.querySelector(".status-text").textContent = message;
 
         if (startYoutubeHelperButton) {
-            startYoutubeHelperButton.hidden = state === "is-online";
+            startYoutubeHelperButton.hidden = state === "is-online" && message === "YouTube Helper connected";
             startYoutubeHelperButton.disabled = false;
         }
+    }
+
+    function useSiteApiForYoutube(message = "YouTube via site API") {
+        youtubeAnalysisBaseUrl = apiBaseUrl;
+        setYoutubeHelperStatus("is-online", message);
     }
 
     async function ensureApiIsReachable(signal) {
@@ -680,6 +686,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
 
                 youtubeHelperBaseUrl = helperBaseUrl;
+                youtubeAnalysisBaseUrl = helperBaseUrl;
                 setYoutubeHelperStatus("is-online", "YouTube Helper connected");
                 return;
             } catch (error) {
@@ -739,11 +746,7 @@ document.addEventListener("DOMContentLoaded", function() {
             setYoutubeHelperStatus("is-checking", "Checking YouTube Helper...");
             await ensureYoutubeHelperIsReachable(controller.signal);
         } catch (error) {
-            if (error.name !== "AbortError") {
-                setYoutubeHelperStatus("is-offline", "YouTube Helper offline");
-            } else {
-                setYoutubeHelperStatus("is-offline", "YouTube Helper offline");
-            }
+            useSiteApiForYoutube();
         } finally {
             window.clearTimeout(timeout);
         }
@@ -837,9 +840,7 @@ document.addEventListener("DOMContentLoaded", function() {
         try {
             await ensureYoutubeHelperIsReachable(controller.signal);
         } catch (error) {
-            if (error.name !== "AbortError") {
-                await startYoutubeHelperFromBrowser({ automatic: true });
-            }
+            useSiteApiForYoutube();
         } finally {
             window.clearTimeout(timeout);
         }
@@ -889,8 +890,8 @@ document.addEventListener("DOMContentLoaded", function() {
         return pollAnalysisJob(job.job_id, activeController.signal, "file", apiBaseUrl);
     }
 
-    async function analyzeYoutubeUrl(url) {
-        const response = await fetch(apiUrl("/api/analyze/jobs", youtubeHelperBaseUrl), {
+    async function analyzeYoutubeUrl(url, baseUrl = youtubeAnalysisBaseUrl) {
+        const response = await fetch(apiUrl("/api/analyze/jobs", baseUrl), {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ url }),
@@ -903,7 +904,31 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         renderJobProgress(job);
-        return pollAnalysisJob(job.job_id, activeController.signal, "youtube", youtubeHelperBaseUrl);
+        return pollAnalysisJob(job.job_id, activeController.signal, "youtube", baseUrl);
+    }
+
+    async function analyzeYoutubeUrlWithFallback(url) {
+        try {
+            youtubeAnalysisBaseUrl = apiBaseUrl;
+            useSiteApiForYoutube();
+            return await analyzeYoutubeUrl(url, apiBaseUrl);
+        } catch (siteApiError) {
+            if (siteApiError.name === "AbortError") {
+                throw siteApiError;
+            }
+
+            try {
+                setYoutubeHelperStatus("is-checking", "Trying local YouTube Helper...");
+                await ensureYoutubeHelperIsReachable(activeController.signal);
+                return await analyzeYoutubeUrl(url, youtubeHelperBaseUrl);
+            } catch (helperError) {
+                if (helperError.name === "AbortError") {
+                    throw helperError;
+                }
+
+                throw siteApiError;
+            }
+        }
     }
 
     function applyResultMode(mode) {
@@ -1024,8 +1049,8 @@ document.addEventListener("DOMContentLoaded", function() {
         renderJobProgress({ stage: "Downloading YouTube audio", progress: 12 });
 
         try {
-            await ensureYoutubeHelperIsReachable(activeController.signal);
-            const job = await analyzeYoutubeUrl(url);
+            await ensureApiIsReachable(activeController.signal);
+            const job = await analyzeYoutubeUrlWithFallback(url);
             const data = job.result;
             renderKeyFinderResult(data);
             addHistoryItem(url, data, "youtube");
@@ -1033,7 +1058,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if (error.name === "AbortError") {
                 setStatus("Stopped waiting for the analysis. The server may finish the job in the background.", "is-error");
             } else {
-                renderErrorReport(error.message, "youtube", youtubeHelperBaseUrl);
+                renderErrorReport(error.message, "youtube", youtubeAnalysisBaseUrl);
             }
         } finally {
             activeController = null;
