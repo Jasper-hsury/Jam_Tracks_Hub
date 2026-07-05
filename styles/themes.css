@@ -41,6 +41,10 @@
     --hover-shadow: 0 16px 34px rgba(0, 0, 0, 0.4);
     --focus-ring: rgba(229, 211, 179, 0.42);
     --divider-color: rgba(255, 255, 255, 0.08);
+    --result-explanation-background: rgba(127, 183, 173, 0.07);
+    --result-explanation-border: rgba(127, 183, 173, 0.18);
+    --result-explanation-card-background: rgba(18, 18, 18, 0.36);
+    --result-explanation-card-border: rgba(196, 164, 132, 0.14);
 }
 
 html[data-theme="light"] {
@@ -91,6 +95,10 @@ html[data-theme="light"] {
     --hover-shadow: 0 16px 34px rgba(91, 70, 52, 0.16);
     --focus-ring: rgba(45, 123, 118, 0.3);
     --divider-color: rgba(88, 72, 58, 0.14);
+    --result-explanation-background: rgba(246, 239, 229, 0.92);
+    --result-explanation-border: rgba(152, 113, 78, 0.22);
+    --result-explanation-card-background: #efe4d7;
+    --result-explanation-card-border: rgba(138, 96, 62, 0.18);
 }
 
 body {

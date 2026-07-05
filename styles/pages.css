@@ -828,8 +828,8 @@ iframe {
     gap: 10px;
     margin-top: 14px;
     padding: 13px;
-    background: rgba(127, 183, 173, 0.07);
-    border: 1px solid rgba(127, 183, 173, 0.18);
+    background: var(--result-explanation-background, rgba(127, 183, 173, 0.07));
+    border: 1px solid var(--result-explanation-border, rgba(127, 183, 173, 0.18));
     border-radius: 8px;
 }
 
@@ -862,8 +862,8 @@ iframe {
     gap: 6px;
     min-height: 126px;
     padding: 11px 12px;
-    background: rgba(18, 18, 18, 0.36);
-    border: 1px solid rgba(196, 164, 132, 0.14);
+    background: var(--result-explanation-card-background, rgba(18, 18, 18, 0.36));
+    border: 1px solid var(--result-explanation-card-border, rgba(196, 164, 132, 0.14));
     border-radius: 8px;
 }
 
