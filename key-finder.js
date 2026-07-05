@@ -2,13 +2,20 @@ document.addEventListener("DOMContentLoaded", function() {
     const HISTORY_KEY = "jasperMusicKeyFinderHistory";
     const RESULT_MODE_KEY = "jasperMusicKeyFinderResultMode";
     const apiBaseUrl = window.JASPER_MUSIC_CONFIG?.apiBaseUrl ?? "http://127.0.0.1:8000";
-    const youtubeHelperBaseUrl = window.JASPER_MUSIC_CONFIG?.youtubeHelperBaseUrl ?? "http://127.0.0.1:8765";
+    const configuredYoutubeHelperBaseUrl = window.JASPER_MUSIC_CONFIG?.youtubeHelperBaseUrl ?? "http://localhost:8765";
+    const youtubeHelperBaseUrlCandidates = Array.from(new Set([
+        configuredYoutubeHelperBaseUrl,
+        "http://localhost:8765",
+        "http://127.0.0.1:8765"
+    ]));
     const MAX_UPLOAD_BYTES = 60 * 1024 * 1024;
     const MAX_CONTAINER_UPLOAD_BYTES = 25 * 1024 * 1024;
     const HEAVY_CONTAINER_EXTENSIONS = new Set([".mp4", ".webm"]);
     const API_RETRY_DELAY_MS = 2000;
     const API_RETRY_LIMIT = 30;
     const API_HEALTH_TIMEOUT_MS = 8000;
+    const HELPER_HEALTH_TIMEOUT_MS = 3500;
+    const HELPER_HEALTH_TOTAL_TIMEOUT_MS = (HELPER_HEALTH_TIMEOUT_MS * youtubeHelperBaseUrlCandidates.length) + 800;
     const JOB_POLL_DELAY_MS = 1200;
     const HELPER_PROTOCOL_URL = "jasper-helper://start";
     const HELPER_START_POLL_LIMIT = 20;
@@ -38,6 +45,7 @@ document.addEventListener("DOMContentLoaded", function() {
     let currentResultData = null;
     let currentResultMode = localStorage.getItem(RESULT_MODE_KEY) || "quick";
     let autoStartAttempted = false;
+    let youtubeHelperBaseUrl = youtubeHelperBaseUrlCandidates[0];
 
     if (!keyFinderResult || (!audioKeyFile && !youtubeKeyUrl)) {
         return;
@@ -629,30 +637,65 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    async function ensureYoutubeHelperIsReachable(signal) {
+    async function fetchYoutubeHelperHealth(helperBaseUrl, signal) {
+        const controller = new AbortController();
+        const timeout = window.setTimeout(function() {
+            controller.abort();
+        }, HELPER_HEALTH_TIMEOUT_MS);
+        const abortHandler = function() {
+            controller.abort();
+        };
+
+        if (signal) {
+            signal.addEventListener("abort", abortHandler, { once: true });
+        }
+
         try {
-            const response = await fetch(apiUrl("/api/health", youtubeHelperBaseUrl), {
+            return await fetch(apiUrl("/api/health", helperBaseUrl), {
                 method: "GET",
                 cache: "no-store",
-                signal
+                signal: controller.signal
             });
-
-            if (!response.ok) {
-                throw new Error(`YouTube Helper health check returned ${response.status}.`);
+        } finally {
+            window.clearTimeout(timeout);
+            if (signal) {
+                signal.removeEventListener("abort", abortHandler);
             }
-
-            setYoutubeHelperStatus("is-online", "YouTube Helper connected");
-        } catch (error) {
-            if (error.name === "AbortError") {
-                throw error;
-            }
-
-            setYoutubeHelperStatus("is-offline", "YouTube Helper offline");
-            throw new Error(
-                `Cannot connect to Jasper YouTube Helper at ${youtubeHelperDisplayUrl()}. ` +
-                "Start it with START_YOUTUBE_HELPER_MAC.command on Mac, or START_YOUTUBE_HELPER.cmd on Windows."
-            );
         }
+    }
+
+    async function ensureYoutubeHelperIsReachable(signal) {
+        let lastError = null;
+
+        for (const helperBaseUrl of youtubeHelperBaseUrlCandidates) {
+            if (signal?.aborted) {
+                throw new DOMException("The operation was aborted.", "AbortError");
+            }
+
+            try {
+                const response = await fetchYoutubeHelperHealth(helperBaseUrl, signal);
+
+                if (!response.ok) {
+                    throw new Error(`YouTube Helper health check returned ${response.status}.`);
+                }
+
+                youtubeHelperBaseUrl = helperBaseUrl;
+                setYoutubeHelperStatus("is-online", "YouTube Helper connected");
+                return;
+            } catch (error) {
+                lastError = error;
+                if (error.name === "AbortError" && signal?.aborted) {
+                    throw error;
+                }
+            }
+        }
+
+        setYoutubeHelperStatus("is-offline", "YouTube Helper offline");
+        throw new Error(
+            `Cannot connect to Jasper YouTube Helper at ${youtubeHelperDisplayUrl()}. ` +
+            "Start it with START_YOUTUBE_HELPER_MAC.command on Mac, or START_YOUTUBE_HELPER.cmd on Windows.",
+            { cause: lastError }
+        );
     }
 
     async function checkApiStatus() {
@@ -690,7 +733,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const controller = new AbortController();
         const timeout = window.setTimeout(function() {
             controller.abort();
-        }, 1200);
+        }, HELPER_HEALTH_TOTAL_TIMEOUT_MS);
 
         try {
             setYoutubeHelperStatus("is-checking", "Checking YouTube Helper...");
@@ -713,7 +756,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const controller = new AbortController();
             const timeout = window.setTimeout(function() {
                 controller.abort();
-            }, 1500);
+            }, HELPER_HEALTH_TOTAL_TIMEOUT_MS);
 
             try {
                 await ensureYoutubeHelperIsReachable(controller.signal);
@@ -789,7 +832,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const controller = new AbortController();
         const timeout = window.setTimeout(function() {
             controller.abort();
-        }, 1500);
+        }, HELPER_HEALTH_TOTAL_TIMEOUT_MS);
 
         try {
             await ensureYoutubeHelperIsReachable(controller.signal);

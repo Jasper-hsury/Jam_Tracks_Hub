@@ -23,6 +23,6 @@
 
     window.JASPER_MUSIC_CONFIG = {
         apiBaseUrl,
-        youtubeHelperBaseUrl: "http://127.0.0.1:8765"
+        youtubeHelperBaseUrl: "http://localhost:8765"
     };
 })();
