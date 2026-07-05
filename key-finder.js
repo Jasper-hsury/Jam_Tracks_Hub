@@ -601,8 +601,8 @@ document.addEventListener("DOMContentLoaded", function() {
         youtubeHelperStatus.querySelector(".status-text").textContent = message;
 
         if (startYoutubeHelperButton) {
-            startYoutubeHelperButton.hidden = state !== "is-offline";
-            startYoutubeHelperButton.disabled = state === "is-checking";
+            startYoutubeHelperButton.hidden = state === "is-online";
+            startYoutubeHelperButton.disabled = false;
         }
     }
 
@@ -731,7 +731,9 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function openHelperProtocol(isAutomatic) {
-        if (!isAutomatic) {
+        const isSafari = /^((?!chrome|android|crios|fxios|edgios).)*safari/i.test(navigator.userAgent);
+
+        if (!isAutomatic || isSafari) {
             window.location.href = HELPER_PROTOCOL_URL;
             return;
         }
@@ -749,7 +751,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     async function startYoutubeHelperFromBrowser(options = {}) {
         const isAutomatic = options.automatic === true;
-        setYoutubeHelperStatus("is-checking", isAutomatic ? "Starting YouTube Helper..." : "Opening YouTube Helper...");
+        const launchMessage = isAutomatic
+            ? "Starting YouTube Helper..."
+            : "Opening YouTube Helper...";
+        setYoutubeHelperStatus("is-checking", launchMessage);
 
         try {
             openHelperProtocol(isAutomatic);

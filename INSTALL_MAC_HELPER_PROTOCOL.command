@@ -71,7 +71,15 @@ if [ ! -f "$HELPER_SCRIPT" ]; then
   exit 1
 fi
 
-open -a Terminal "$HELPER_SCRIPT"
+osascript - "$HELPER_SCRIPT" <<'APPLESCRIPT'
+on run argv
+  set helperScript to item 1 of argv
+  tell application "Terminal"
+    activate
+    do script quoted form of helperScript
+  end tell
+end run
+APPLESCRIPT
 LAUNCHER
 
 chmod +x "$LAUNCHER_FILE" "$HELPER_SCRIPT"
