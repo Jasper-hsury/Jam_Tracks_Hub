@@ -622,9 +622,25 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
+    function clearHelperStartError() {
+        if (!keyFinderResult.classList.contains("is-error")) {
+            return;
+        }
+
+        const text = keyFinderResult.textContent || "";
+        if (
+            text.includes("Could not confirm that YouTube Helper started") ||
+            text.includes("INSTALL_MAC_HELPER_PROTOCOL") ||
+            text.includes("START_YOUTUBE_HELPER_MAC")
+        ) {
+            setStatus("Ready when you are.", "key-finder-empty");
+        }
+    }
+
     function useSiteApiForYoutube(message = "YouTube via site API") {
         youtubeAnalysisBaseUrl = apiBaseUrl;
         setYoutubeHelperStatus("is-online", message);
+        clearHelperStartError();
     }
 
     async function ensureApiIsReachable(signal) {
