@@ -542,6 +542,13 @@ document.addEventListener("DOMContentLoaded", function() {
             suggestedFix = "Run the helper setup once. On Mac, run INSTALL_MAC_HELPER_PROTOCOL.command. On Windows, run 2_CONNECT_HELPER_TO_WEBSITE.cmd. Then refresh Key Finder and allow the browser to open Jasper YouTube Helper.";
         }
 
+        if (
+            inputType === "youtube" &&
+            (lowerMessage.includes("youtube blocked") || lowerMessage.includes("cookies may have expired"))
+        ) {
+            suggestedFix = "The site API reached YouTube, but YouTube blocked the server cookies. Try Start Helper for the local fallback, refresh the Render YouTube cookies, or upload an audio file.";
+        }
+
         if (inputType === "youtube" && lowerMessage.includes("sign in to confirm")) {
             suggestedFix = "The local helper reached YouTube, but YouTube still requested verification. Try another link or upload an audio file.";
         }
@@ -808,19 +815,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
             if (!connected) {
                 setYoutubeHelperStatus("is-offline", "YouTube Helper offline");
-                if (!isAutomatic) {
-                    renderErrorReport(
-                        "Could not confirm that YouTube Helper started. On Mac, run INSTALL_MAC_HELPER_PROTOCOL.command once or open START_YOUTUBE_HELPER_MAC.command manually. On Windows, run install_youtube_helper_protocol.ps1 once, then click Start Helper again.",
-                        "youtube",
-                        youtubeHelperBaseUrl
-                    );
-                }
             }
         } catch (error) {
             setYoutubeHelperStatus("is-offline", "YouTube Helper offline");
-            if (!isAutomatic) {
-                renderErrorReport(error.message, "youtube", youtubeHelperBaseUrl);
-            }
         }
     }
 
@@ -926,7 +923,9 @@ document.addEventListener("DOMContentLoaded", function() {
                     throw helperError;
                 }
 
-                throw siteApiError;
+                throw new Error(
+                    `${siteApiError.message} Local helper fallback also could not be reached from this browser.`
+                );
             }
         }
     }
