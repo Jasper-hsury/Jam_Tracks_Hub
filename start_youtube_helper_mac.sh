@@ -5,6 +5,10 @@ SITE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 VENV_DIR="$SITE_DIR/.venv"
 PYTHON_BIN="$VENV_DIR/bin/python"
 HELPER_URL="http://127.0.0.1:8765"
+DENO_DIR="$SITE_DIR/.deno"
+
+export DENO_INSTALL="$DENO_DIR"
+export PATH="$DENO_INSTALL/bin:$PATH"
 
 find_python() {
   for candidate in python3.13 python3.12 python3.11 python3.10 python3; do
@@ -32,6 +36,25 @@ except Exception:
 PY
 }
 
+ensure_js_runtime() {
+  if command -v deno >/dev/null 2>&1; then
+    return
+  fi
+
+  if [ -x "$DENO_INSTALL/bin/deno" ]; then
+    return
+  fi
+
+  if ! command -v curl >/dev/null 2>&1; then
+    echo "Deno is required for current YouTube downloads, but curl is not available to install it."
+    echo "Install Deno from https://deno.com/ or install Node.js, then run this helper again."
+    return
+  fi
+
+  echo "Installing Deno for Jasper YouTube Helper..."
+  curl -fsSL https://deno.land/install.sh | sh
+}
+
 needs_venv="yes"
 
 if [ -x "$PYTHON_BIN" ]; then
@@ -47,6 +70,7 @@ if [ "$needs_venv" = "yes" ]; then
 fi
 
 "$PYTHON_BIN" -m pip install -r "$SITE_DIR/api-server/requirements_api.txt"
+ensure_js_runtime
 
 if helper_is_running; then
   echo "Jasper YouTube Helper is already running at $HELPER_URL"
