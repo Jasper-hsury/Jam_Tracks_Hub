@@ -16,11 +16,11 @@
 
     <script src="theme-init.js?v=20260623-dark-light"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles/base.css?v=20260625-mobile-menu-v3">
+    <link rel="stylesheet" href="styles/base.css?v=20260717-nav-theme">
     <link rel="stylesheet" href="styles/components.css?v=20260623-layout-v2">
-    <link rel="stylesheet" href="styles/pages.css?v=20260627-mobile-chord-submenu-align">
-    <link rel="stylesheet" href="styles/themes.css?v=20260625-mobile-submenu-v4">
-    <link rel="stylesheet" href="styles/chord-dictionary.css?v=20260625-dictionary-v3">
+    <link rel="stylesheet" href="styles/pages.css?v=20260717-nav-theme">
+    <link rel="stylesheet" href="styles/themes.css?v=20260717-nav-theme">
+    <link rel="stylesheet" href="styles/chord-dictionary.css?v=20260717-triad-string-sets">
 </head>
 
 <body>
@@ -32,15 +32,8 @@
             <li><a href="key-finder.html">Key Finder</a></li>
             <li><a href="scale.html">Scale Explorer</a></li>
             <li><a href="fretboard-trainer.html">Fretboard Trainer</a></li>
-            <li class="nav-dropdown">
-                <details>
-                    <summary class="active">Chord</summary>
-                    <ul class="nav-submenu">
-                        <li><a href="chords.html">Chord Progressions</a></li>
-                        <li><a href="chord-dictionary.html" class="active" aria-current="page">Chord Dictionary</a></li>
-                    </ul>
-                </details>
-            </li>
+            <li><a href="chords.html">Chord Progressions</a></li>
+            <li><a href="chord-dictionary.html" class="active" aria-current="page">Chord Dictionary</a></li>
             <li><a href="index.html#about">About</a></li>
         </ul>
     </nav>
@@ -60,8 +53,8 @@
                         <h2 id="dictionaryBrowseTitle">Choose a root and chord type</h2>
                     </div>
                     <label class="dictionary-search" for="chordSearch">
-                        <span>Filter chord types</span>
-                        <input id="chordSearch" type="search" placeholder="Try major 7, suspended, altered..." autocomplete="off">
+                        <span>Chord symbol or type</span>
+                        <input id="chordSearch" type="search" placeholder="Try Cm7, CM7, C7, suspended..." autocomplete="off">
                     </label>
                 </div>
 
@@ -135,6 +128,25 @@
                     <button type="button" data-position="12" aria-pressed="false">Near 12</button>
                 </div>
 
+                <div class="dictionary-position-filter dictionary-root-string-filter" id="shapeRootStringFilter" aria-label="Filter chord shapes by root string">
+                    <span>Root string</span>
+                    <button type="button" class="is-selected" data-root-string="all" aria-pressed="true">All</button>
+                    <button type="button" data-root-string="6" aria-pressed="false">6th E</button>
+                    <button type="button" data-root-string="5" aria-pressed="false">5th A</button>
+                    <button type="button" data-root-string="4" aria-pressed="false">4th D</button>
+                    <button type="button" data-root-string="3" aria-pressed="false">3rd G</button>
+                    <button type="button" data-root-string="2" aria-pressed="false">2nd B</button>
+                    <button type="button" data-root-string="1" aria-pressed="false">1st e</button>
+                </div>
+
+                <div class="dictionary-position-filter dictionary-triad-filter" id="shapeTriadFilter" aria-label="Filter chord shapes by string set">
+                    <span>String set</span>
+                    <button type="button" class="is-selected" data-triad-set="all" aria-pressed="true">All shapes</button>
+                    <button type="button" data-triad-set="top-three" aria-pressed="false">1-3 triads</button>
+                    <button type="button" data-triad-set="top-four" aria-pressed="false">1-4 triads / 7ths</button>
+                    <button type="button" data-triad-set="top-five" aria-pressed="false">1-5 triads / 7ths</button>
+                </div>
+
                 <div class="dictionary-shape-grid" id="chordShapeGrid"></div>
                 <nav class="dictionary-pagination" id="shapePagination" aria-label="Chord shape pages" hidden>
                     <button id="previousShapesButton" type="button">Previous</button>
@@ -155,7 +167,7 @@
 
     <button id="backToTopBtn" type="button" aria-label="Back to top">&uarr;</button>
 
-    <script src="site.js?v=20260625-mobile-menu-v3"></script>
-    <script src="chord-dictionary.js?v=20260625-dictionary-v3"></script>
+    <script src="site.js?v=20260717-nav-theme"></script>
+    <script src="chord-dictionary.js?v=20260717-seventh-string-sets"></script>
 </body>
 </html>

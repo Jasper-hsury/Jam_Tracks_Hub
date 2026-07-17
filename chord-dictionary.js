@@ -102,6 +102,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const chordFormula = document.getElementById("selectedChordFormula");
     const chordNotes = document.getElementById("selectedChordNotes");
     const positionFilter = document.getElementById("shapePositionFilter");
+    const rootStringFilter = document.getElementById("shapeRootStringFilter");
+    const triadFilter = document.getElementById("shapeTriadFilter");
     const shapeGrid = document.getElementById("chordShapeGrid");
     const shapeCount = document.getElementById("shapeCount");
     const shapePagination = document.getElementById("shapePagination");
@@ -116,6 +118,8 @@ document.addEventListener("DOMContentLoaded", function() {
     let selectedVoicings = [];
     let filteredVoicings = [];
     let selectedPosition = "all";
+    let selectedRootString = "all";
+    let selectedTriadSet = "all";
     let shapePage = 0;
     let audioContext = null;
     let isPlaying = false;
@@ -167,6 +171,15 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function chordPitchClasses(chord) {
         return chord.intervals.map(interval => (rootPitch + interval) % 12);
+    }
+
+    function isTriad(chord) {
+        return chord.categoryId === "triads" && chord.intervals.length === 3;
+    }
+
+    function isSeventhChord(chord) {
+        return chord.intervals.length === 4
+            && chord.formula.some(interval => ["7", "b7", "bb7"].includes(interval));
     }
 
     function relatedScaleType(chord) {
@@ -225,6 +238,136 @@ document.addEventListener("DOMContentLoaded", function() {
         );
     }
 
+    function chordIdFromSuffix(suffix) {
+        const compact = String(suffix || "").replace(/[\s_-]/g, "");
+        const lower = compact.toLowerCase();
+
+        if (!compact) {
+            return "major";
+        }
+
+        if (compact === "M") {
+            return "major";
+        }
+
+        const aliases = {
+            "maj": "major",
+            "major": "major",
+            "m": "minor",
+            "min": "minor",
+            "-": "minor",
+            "dim": "diminished",
+            "o": "diminished",
+            "aug": "augmented",
+            "+": "augmented",
+            "7": "dominant7",
+            "dom7": "dominant7",
+            "maj7": "major7",
+            "major7": "major7",
+            "ma7": "major7",
+            "m7": "minor7",
+            "min7": "minor7",
+            "-7": "minor7",
+            "mmaj7": "minorMajor7",
+            "m(maj7)": "minorMajor7",
+            "mmajor7": "minorMajor7",
+            "minmaj7": "minorMajor7",
+            "dim7": "diminished7",
+            "o7": "diminished7",
+            "m7b5": "halfDiminished7",
+            "ø": "halfDiminished7",
+            "ø7": "halfDiminished7",
+            "halfdim7": "halfDiminished7",
+            "6": "sixth",
+            "m6": "minor6",
+            "min6": "minor6",
+            "add9": "add9",
+            "madd9": "minorAdd9",
+            "m(add9)": "minorAdd9",
+            "minadd9": "minorAdd9",
+            "6/9": "sixNine",
+            "69": "sixNine",
+            "9": "ninth",
+            "maj9": "major9",
+            "major9": "major9",
+            "m9": "minor9",
+            "min9": "minor9",
+            "11": "eleventh",
+            "m11": "minor11",
+            "min11": "minor11",
+            "13": "thirteenth",
+            "maj13": "major13",
+            "major13": "major13",
+            "m13": "minor13",
+            "min13": "minor13",
+            "sus2": "sus2",
+            "sus4": "sus4",
+            "7sus4": "sevenSus4",
+            "sus47": "sevenSus4",
+            "5": "power",
+            "7b5": "sevenFlat5",
+            "7#5": "sevenSharp5",
+            "7b9": "sevenFlat9",
+            "7#9": "sevenSharp9",
+            "9sus4": "nineSus4",
+            "13b9": "thirteenFlat9"
+        };
+
+        if (compact === "M7" || compact === "Maj7" || compact === "MAJ7" || compact === "Δ7" || compact === "△7") {
+            return "major7";
+        }
+
+        return aliases[lower] || null;
+    }
+
+    function parseChordSymbolInput(value) {
+        const raw = String(value || "").trim();
+        if (!raw || /\s/.test(raw)) {
+            return null;
+        }
+
+        const match = raw.match(/^([A-Ga-g])([#b]?)(.*)$/);
+        if (!match) {
+            return null;
+        }
+
+        const rootText = `${match[1].toUpperCase()}${match[2] || ""}`;
+        const pitch = pitchFromName(rootText);
+        if (pitch === null) {
+            return null;
+        }
+
+        const chordId = chordIdFromSuffix(match[3]);
+        if (!chordId) {
+            return null;
+        }
+
+        const chord = ALL_CHORDS.find(item => item.id === chordId);
+        return chord ? { pitch, chord } : null;
+    }
+
+    function intervalLabel(formula) {
+        return formula === "1" ? "R" : formula;
+    }
+
+    function chordToneForPitch(pitch, chord) {
+        const pitchClass = pitch % 12;
+        const index = chord.intervals.findIndex(interval =>
+            (rootPitch + interval) % 12 === pitchClass
+        );
+
+        if (index === -1) {
+            return null;
+        }
+
+        return {
+            formula: chord.formula[index],
+            label: intervalLabel(chord.formula[index]),
+            note: spellChordTone(pitchClass, chord.formula[index], index),
+            isRoot: index === 0
+        };
+    }
+
     function updatePressedState(container, selectedButton) {
         container.querySelectorAll("button").forEach(button => {
             const isSelected = button === selectedButton;
@@ -234,7 +377,8 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function renderCategories() {
-        const query = searchInput.value.trim().toLowerCase();
+        const parsedInput = parseChordSymbolInput(searchInput.value);
+        const query = parsedInput ? "" : searchInput.value.trim().toLowerCase();
         categoryList.innerHTML = "";
         let visibleChordCount = 0;
 
@@ -428,6 +572,80 @@ document.addEventListener("DOMContentLoaded", function() {
         , POSITION_TARGETS[0]);
     }
 
+    function rootStringLabel(rootString) {
+        const labels = {
+            "6": "6th string",
+            "5": "5th string",
+            "4": "4th string",
+            "3": "3rd string",
+            "2": "2nd string",
+            "1": "1st string"
+        };
+
+        return labels[String(rootString)] || "any root string";
+    }
+
+    function voicingHasRootOnString(frets, rootString) {
+        if (rootString === "all") {
+            return true;
+        }
+
+        const targetStringIndex = 6 - Number(rootString);
+        const fret = frets[targetStringIndex];
+
+        if (fret < 0) {
+            return false;
+        }
+
+        return Boolean(chordToneForPitch(TUNING_MIDI[targetStringIndex] + fret, selectedChord)?.isRoot);
+    }
+
+    function triadStringSetRange(triadSet) {
+        const ranges = {
+            "top-three": { mutedBefore: 3, activeFrom: 3, label: "1-3 triads", allowedRootStrings: ["1", "2", "3"], chordTypes: "triads" },
+            "top-four": { mutedBefore: 2, activeFrom: 2, label: "1-4 triads / 7ths", allowedRootStrings: ["1", "2", "3", "4"], chordTypes: "triads-sevenths" },
+            "top-five": { mutedBefore: 1, activeFrom: 1, label: "1-5 triads / 7ths", allowedRootStrings: ["1", "2", "3", "4", "5"], chordTypes: "triads-sevenths" }
+        };
+
+        return ranges[triadSet] || null;
+    }
+
+    function chordAllowedForStringSet(chord, triadSet) {
+        const range = triadStringSetRange(triadSet);
+        if (!range) {
+            return true;
+        }
+
+        if (range.chordTypes === "triads") {
+            return isTriad(chord);
+        }
+
+        if (range.chordTypes === "triads-sevenths") {
+            return isTriad(chord) || isSeventhChord(chord);
+        }
+
+        return true;
+    }
+
+    function isTopStringSetTriadVoicing(frets, triadSet) {
+        const range = triadStringSetRange(triadSet);
+        if (!range) {
+            return true;
+        }
+
+        return frets.slice(0, range.mutedBefore).every(fret => fret < 0)
+            && frets.slice(range.activeFrom).every(fret => fret >= 0);
+    }
+
+    function matchesTriadSet(voicing) {
+        if (selectedTriadSet === "all") {
+            return true;
+        }
+
+        return chordAllowedForStringSet(selectedChord, selectedTriadSet)
+            && isTopStringSetTriadVoicing(voicing.frets, selectedTriadSet);
+    }
+
     function diagramBaseFret(frets) {
         const positiveFrets = frets.filter(fret => fret > 0);
         if (!positiveFrets.length || Math.max(...positiveFrets) <= DIAGRAM_FRET_ROWS) {
@@ -438,14 +656,34 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function renderDiagram(voicing, index) {
         const baseFret = diagramBaseFret(voicing.frets);
-        const statusRow = voicing.frets.map(fret => {
+        const toneDescriptions = voicing.frets
+            .map((fret, stringIndex) => {
+                if (fret < 0) {
+                    return null;
+                }
+                const tone = chordToneForPitch(TUNING_MIDI[stringIndex] + fret, selectedChord);
+                if (!tone) {
+                    return null;
+                }
+                return `${STRING_NAMES[stringIndex]} string ${fret === 0 ? "open" : `fret ${fret}`}: ${tone.label} ${tone.note}`;
+            })
+            .filter(Boolean)
+            .join("; ");
+
+        const statusRow = voicing.frets.map((fret, stringIndex) => {
             if (fret < 0) {
-                return "<span>X</span>";
+                return `<span class="diagram-string-status is-muted">X</span>`;
             }
             if (fret === 0) {
-                return "<span>O</span>";
+                const tone = chordToneForPitch(TUNING_MIDI[stringIndex], selectedChord);
+                return `
+                    <span class="diagram-string-status is-open${tone?.isRoot ? " is-root" : ""}">
+                        <span>O</span>
+                        <strong>${tone ? tone.label : ""}</strong>
+                    </span>
+                `;
             }
-            return "<span></span>";
+            return `<span class="diagram-string-status"></span>`;
         }).join("");
 
         const stringLines = STRING_NAMES.map((name, stringIndex) =>
@@ -464,12 +702,15 @@ document.addEventListener("DOMContentLoaded", function() {
             if (row < 0 || row >= DIAGRAM_FRET_ROWS) {
                 return "";
             }
+            const tone = chordToneForPitch(TUNING_MIDI[stringIndex] + fret, selectedChord);
+            const label = tone ? tone.label : "";
             return `
                 <span
-                    class="diagram-finger"
+                    class="diagram-finger${tone?.isRoot ? " is-root" : ""}"
                     style="left:${stringIndex * 20}%;top:${(row + 0.5) * (100 / DIAGRAM_FRET_ROWS)}%"
+                    title="${tone ? `${tone.label} ${tone.note}` : ""}"
                     aria-hidden="true"
-                ></span>
+                >${label}</span>
             `;
         }).join("");
 
@@ -482,7 +723,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     </div>
                     <small>${baseFret === 1 ? "Open / low position" : `Starts at fret ${baseFret}`}</small>
                 </div>
-                <div class="chord-diagram" aria-label="${chordSymbolText(selectedChord)} guitar shape ${index + 1}: ${voicing.frets.join(", ")}">
+                <div class="chord-diagram" aria-label="${chordSymbolText(selectedChord)} guitar shape ${index + 1}: ${voicing.frets.join(", ")}. ${toneDescriptions}">
                     <div class="diagram-status-row">${statusRow}</div>
                     <div class="diagram-neck">
                         <span class="diagram-base-fret">${baseFret > 1 ? baseFret : ""}</span>
@@ -511,26 +752,38 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function applyShapeFilter() {
-        filteredVoicings = selectedPosition === "all"
-            ? selectedVoicings
-            : selectedVoicings.filter(voicing =>
-                nearestPositionTarget(voicing.frets) === Number(selectedPosition)
-            );
+        filteredVoicings = selectedVoicings.filter(voicing => {
+            const matchesPosition = selectedPosition === "all"
+                || nearestPositionTarget(voicing.frets) === Number(selectedPosition);
+            const matchesRootString = voicingHasRootOnString(voicing.frets, selectedRootString);
+            const matchesTriadStrings = matchesTriadSet(voicing);
+
+            return matchesPosition && matchesRootString && matchesTriadStrings;
+        });
         shapePage = 0;
 
         const positionLabel = selectedPosition === "all"
             ? "all positions"
             : `near fret ${selectedPosition}`;
-        shapeCount.textContent = selectedPosition === "all"
-            ? `${filteredVoicings.length} ${filteredVoicings.length === 1 ? "shape" : "shapes"} found`
-            : `${filteredVoicings.length} of ${selectedVoicings.length} near fret ${selectedPosition}`;
+        const rootStringLabelText = selectedRootString === "all"
+            ? "any root string"
+            : `root on ${rootStringLabel(selectedRootString)}`;
+        const hasActiveFilter = selectedPosition !== "all" || selectedRootString !== "all";
+        const triadSetLabel = triadStringSetRange(selectedTriadSet)?.label || "all string sets";
+        const hasActiveShapeFilter = hasActiveFilter || selectedTriadSet !== "all";
+        shapeCount.textContent = hasActiveShapeFilter
+            ? `${filteredVoicings.length} of ${selectedVoicings.length} shapes matching ${positionLabel}, ${rootStringLabelText}, ${triadSetLabel}`
+            : `${filteredVoicings.length} ${filteredVoicings.length === 1 ? "shape" : "shapes"} found`;
 
         if (!filteredVoicings.length) {
+            const emptyMessage = selectedTriadSet !== "all" && !chordAllowedForStringSet(selectedChord, selectedTriadSet)
+                ? "The 1-3 view is for triads; the 1-4 and 1-5 views support triads and four-note seventh chords."
+                : "Choose another fret area, root string, string set, or select All.";
             shapePagination.hidden = true;
             shapeGrid.innerHTML = `
                 <div class="dictionary-empty">
-                    <strong>No shapes found ${positionLabel}.</strong>
-                    <span>Choose another fret area or select All positions.</span>
+                    <strong>No shapes found for ${positionLabel} with ${rootStringLabelText}.</strong>
+                    <span>${emptyMessage}</span>
                 </div>
             `;
             return;
@@ -655,7 +908,22 @@ document.addEventListener("DOMContentLoaded", function() {
         document.querySelector(".dictionary-detail").scrollIntoView({ behavior: "smooth", block: "start" });
     });
 
-    searchInput.addEventListener("input", renderCategories);
+    searchInput.addEventListener("input", function() {
+        const parsedInput = parseChordSymbolInput(searchInput.value);
+
+        if (parsedInput) {
+            rootPitch = parsedInput.pitch;
+            selectedChord = parsedInput.chord;
+            const rootButton = rootGrid.querySelector(`button[data-root="${rootPitch}"]`);
+            if (rootButton) {
+                updatePressedState(rootGrid, rootButton);
+            }
+            render();
+            return;
+        }
+
+        renderCategories();
+    });
     positionFilter.addEventListener("click", function(event) {
         const button = event.target.closest("button[data-position]");
         if (!button) {
@@ -663,6 +931,34 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         selectedPosition = button.dataset.position;
         updatePressedState(positionFilter, button);
+        applyShapeFilter();
+    });
+    rootStringFilter.addEventListener("click", function(event) {
+        const button = event.target.closest("button[data-root-string]");
+        if (!button) {
+            return;
+        }
+        selectedRootString = button.dataset.rootString;
+        updatePressedState(rootStringFilter, button);
+        applyShapeFilter();
+    });
+    triadFilter.addEventListener("click", function(event) {
+        const button = event.target.closest("button[data-triad-set]");
+        if (!button) {
+            return;
+        }
+        selectedTriadSet = button.dataset.triadSet;
+        updatePressedState(triadFilter, button);
+
+        const selectedTriadRange = triadStringSetRange(selectedTriadSet);
+        if (selectedTriadRange && selectedRootString !== "all" && !selectedTriadRange.allowedRootStrings.includes(selectedRootString)) {
+            selectedRootString = "all";
+            const allRootStringButton = rootStringFilter.querySelector('button[data-root-string="all"]');
+            if (allRootStringButton) {
+                updatePressedState(rootStringFilter, allRootStringButton);
+            }
+        }
+
         applyShapeFilter();
     });
     playButton.addEventListener("click", playSelectedChord);

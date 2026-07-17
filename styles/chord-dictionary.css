@@ -1,6 +1,14 @@
 /* Chord Dictionary */
 .chord-dictionary-page {
     max-width: 1360px;
+    --diagram-tone-fill: var(--chord-control);
+    --diagram-tone-text: #fffaf2;
+    --diagram-root-fill: var(--gold-light);
+    --diagram-root-text: #2b211a;
+    --diagram-root-ring: color-mix(in srgb, var(--gold-light) 35%, transparent);
+    --diagram-open-tone-background: color-mix(in srgb, var(--chord-control) 16%, transparent);
+    --diagram-open-tone-border: color-mix(in srgb, var(--chord-control) 38%, transparent);
+    --diagram-grid-line: color-mix(in srgb, var(--text-subtle) 62%, transparent);
 }
 
 .dictionary-heading {
@@ -323,8 +331,27 @@
 }
 
 .dictionary-shape-heading {
-    align-items: center;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(240px, 340px);
+    align-items: end;
+    gap: 14px;
     margin-bottom: 12px;
+}
+
+.dictionary-shape-heading > span {
+    display: block;
+    min-width: 0;
+    height: auto;
+    padding: 8px 12px;
+    place-items: initial;
+    color: var(--teal);
+    background: var(--soft-background);
+    border: 1px solid var(--border-soft);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.25;
+    text-align: left;
 }
 
 .dictionary-position-filter {
@@ -337,6 +364,11 @@
     background: var(--soft-background);
     border: 1px solid var(--border-soft);
     border-radius: 7px;
+}
+
+.dictionary-root-string-filter,
+.dictionary-triad-filter {
+    margin-top: -7px;
 }
 
 .dictionary-position-filter > span {
@@ -426,10 +458,54 @@
 }
 
 .diagram-status-row {
-    min-height: 22px;
+    align-items: end;
+    min-height: 34px;
     color: var(--text-body);
     font-size: 12px;
     font-weight: 700;
+}
+
+.diagram-string-status {
+    display: grid;
+    justify-items: center;
+    min-width: 0;
+    min-height: 28px;
+    color: var(--text-subtle);
+}
+
+.diagram-string-status.is-muted {
+    align-content: end;
+    color: var(--text-body);
+}
+
+.diagram-string-status.is-open {
+    align-content: center;
+    gap: 1px;
+}
+
+.diagram-string-status.is-open span {
+    font-size: 10px;
+    line-height: 1;
+}
+
+.diagram-string-status strong {
+    display: grid;
+    place-items: center;
+    min-width: 20px;
+    height: 17px;
+    padding: 0 4px;
+    color: var(--text-body);
+    background: var(--diagram-open-tone-background);
+    border: 1px solid var(--diagram-open-tone-border);
+    border-radius: 999px;
+    font-size: 10px;
+    line-height: 1;
+}
+
+.diagram-string-status.is-root strong {
+    color: var(--diagram-root-text);
+    background: var(--diagram-root-fill);
+    border-color: color-mix(in srgb, var(--diagram-root-fill) 70%, var(--diagram-tone-fill));
 }
 
 .diagram-string-names {
@@ -450,7 +526,7 @@
 .diagram-fret-line {
     position: absolute;
     display: block;
-    background: color-mix(in srgb, var(--text-subtle) 62%, transparent);
+    background: var(--diagram-grid-line);
 }
 
 .diagram-string-line {
@@ -473,14 +549,29 @@
 .diagram-finger {
     position: absolute;
     z-index: 2;
-    display: block;
-    width: 17px;
-    height: 17px;
-    background: var(--chord-control);
+    display: grid;
+    place-items: center;
+    min-width: 25px;
+    height: 25px;
+    padding: 0 4px;
+    background: var(--diagram-tone-fill);
     border: 2px solid var(--panel-background);
-    border-radius: 50%;
+    border-radius: 999px;
     box-shadow: 0 2px 6px var(--shadow-color);
+    color: var(--diagram-tone-text);
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1;
     transform: translate(-50%, -50%);
+}
+
+.diagram-finger.is-root {
+    background: var(--diagram-root-fill);
+    border-color: var(--diagram-tone-fill);
+    color: var(--diagram-root-text);
+    box-shadow:
+        0 0 0 2px var(--diagram-root-ring),
+        0 3px 8px var(--shadow-color);
 }
 
 .diagram-base-fret {
@@ -570,6 +661,25 @@ html[data-theme="light"] .dictionary-facts div {
     border-color: rgba(88, 72, 58, 0.24);
 }
 
+html[data-theme="light"] .chord-dictionary-page {
+    --diagram-tone-fill: #9a6843;
+    --diagram-tone-text: #fffaf2;
+    --diagram-root-fill: #2d7b76;
+    --diagram-root-text: #fffdf8;
+    --diagram-root-ring: rgba(45, 123, 118, 0.22);
+    --diagram-open-tone-background: #f2e5d6;
+    --diagram-open-tone-border: rgba(154, 104, 67, 0.26);
+    --diagram-grid-line: rgba(93, 82, 72, 0.5);
+}
+
+html[data-theme="light"] .chord-shape-card {
+    background: #f7f0e7;
+}
+
+html[data-theme="light"] .diagram-string-status.is-root strong {
+    box-shadow: 0 2px 5px rgba(45, 123, 118, 0.16);
+}
+
 @media (max-width: 1120px) {
     .dictionary-workspace {
         grid-template-columns: 1fr;
@@ -593,6 +703,10 @@ html[data-theme="light"] .dictionary-facts div {
     .dictionary-browser-heading,
     .dictionary-detail-heading {
         flex-direction: column;
+    }
+
+    .dictionary-shape-heading {
+        grid-template-columns: 1fr;
     }
 
     .dictionary-search,

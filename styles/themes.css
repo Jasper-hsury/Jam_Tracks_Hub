@@ -166,6 +166,7 @@ h1,
 .progression-controls select,
 .progression-controls input,
 .modal-content input,
+.theme-toggle,
 .footer-theme-toggle {
     color: var(--text);
     background-color: var(--control-background);
@@ -245,7 +246,7 @@ h1,
     background: var(--border-soft);
 }
 
-.footer-theme-toggle {
+.theme-toggle {
     display: inline-flex;
     align-items: center;
     gap: 7px;
@@ -266,19 +267,30 @@ h1,
         transform 0.2s ease;
 }
 
+.nav-theme-item {
+    display: flex;
+    align-items: center;
+}
+
+.nav-theme-toggle {
+    min-width: 76px;
+    justify-content: center;
+    padding-inline: 9px;
+}
+
 .theme-toggle-icon {
     font-size: 15px;
     line-height: 1;
 }
 
-.footer-theme-toggle:hover {
+.theme-toggle:hover {
     color: var(--secondary-hover-text);
     background: var(--secondary-hover-background);
     border-color: var(--hover-border);
     transform: translateY(-2px) scale(1.02);
 }
 
-.footer-theme-toggle:focus-visible {
+.theme-toggle:focus-visible {
     outline: 3px solid var(--focus-ring);
     outline-offset: 3px;
 }
@@ -301,7 +313,7 @@ h1,
     border-color: var(--border-soft);
 }
 
-@media (min-width: 761px) {
+@media (min-width: 1181px) {
     .nav-submenu a:hover,
     .nav-submenu a.active {
         color: var(--secondary-hover-text);
