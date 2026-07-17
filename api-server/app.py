@@ -107,6 +107,16 @@ async def add_private_network_access_header(request, call_next):
 
     response = await call_next(request)
     response.headers["Access-Control-Allow-Private-Network"] = "true"
+    content_type = response.headers.get("content-type", "")
+    is_html_page = (
+        "text/html" in content_type
+        or request.url.path == "/"
+        or request.url.path.endswith(".html")
+    )
+    if is_html_page:
+        response.headers["Cache-Control"] = "no-cache, max-age=0, must-revalidate"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
     return response
 
 
