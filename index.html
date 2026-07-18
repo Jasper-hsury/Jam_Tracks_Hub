@@ -32,15 +32,15 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles/base.css?v=20260717-nav-theme" />
+    <link rel="stylesheet" href="styles/base.css?v=20260718-gsap-polish-theme-fallback" />
     <link rel="stylesheet" href="styles/components.css?v=20260623-layout-v2" />
     <link
       rel="stylesheet"
-      href="styles/pages.css?v=20260717-nav-theme"
+      href="styles/pages.css?v=20260718-home-track-updates"
     />
     <link
       rel="stylesheet"
-      href="styles/themes.css?v=20260717-nav-theme"
+      href="styles/themes.css?v=20260718-home-track-updates"
     />
   </head>
 
@@ -86,7 +86,7 @@
 
           <dl class="home-metrics" aria-label="Site overview">
             <div>
-              <dt>8</dt>
+              <dt>12</dt>
               <dd>Original tracks</dd>
             </div>
             <div>
@@ -162,25 +162,20 @@
         <div class="home-feature-inner">
           <div>
             <p class="home-eyebrow">Featured practice audio</p>
-            <h2 id="featuredAudioTitle">Piano Backing Track in A</h2>
+            <h2 id="featuredAudioTitle">W13 Slow Journey Backing Track in A</h2>
             <p>
-              A restrained piano foundation for improvisation, phrasing, and
-              melodic practice.
+              The newest release: a reflective A major guitar-band track for
+              slow phrasing, melodic space, and patient improvisation.
             </p>
           </div>
-          <div class="audio-player-card home-audio-player">
-            <audio
-              id="pianoAudio"
-              controls
-              preload="metadata"
-              controlslist="nodownload"
-            >
-              <source
-                src="Piano_backing_track_in_A_20260215_1.mp3"
-                type="audio/mpeg"
-              />
-              Your browser does not support the audio element.
-            </audio>
+          <div class="audio-player-card home-audio-player home-video-player">
+            <iframe
+              src="https://www.youtube.com/embed/4c_SvcNmiZE"
+              title="W13 Slow Journey Backing Track in A"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen>
+            </iframe>
           </div>
         </div>
       </section>
@@ -201,13 +196,13 @@
 
           <div class="home-release-grid">
             <article class="home-release-card">
-              <p class="release-number">W8</p>
-              <h3>Funky Backing Track in F#m</h3>
+              <p class="release-number">W13</p>
+              <h3>Slow Journey Backing Track in A</h3>
               <p class="track-meta">
-                <span>F# minor</span><span>Funk</span><span>Energetic</span>
+                <span>A major</span><span>Ballad</span><span>Reflective</span>
               </p>
               <a
-                href="https://youtu.be/gfz6a-_kJ7I?si=OjYYmk9HVkk7lmQq"
+                href="https://youtu.be/4c_SvcNmiZE?si=BrP_0x2yIGi1OJm-"
                 class="text-link"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -215,13 +210,13 @@
               >
             </article>
             <article class="home-release-card">
-              <p class="release-number">W7</p>
-              <h3>Whispering Rock Backing Track in G</h3>
+              <p class="release-number">W12</p>
+              <h3>Smooth Fusion Backing Track in E</h3>
               <p class="track-meta">
-                <span>G major</span><span>Rock</span><span>80 BPM</span>
+                <span>E major</span><span>Fusion</span><span>Smooth</span>
               </p>
               <a
-                href="https://youtu.be/kb4k-9mOs_U?si=_x_N-jvfs1LQbd0U"
+                href="https://youtu.be/voSJ3O06a0k?si=c7_oE6IIKkWnFpX2"
                 class="text-link"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -229,13 +224,13 @@
               >
             </article>
             <article class="home-release-card">
-              <p class="release-number">W6</p>
-              <h3>Lonesome Midnight Rock in G</h3>
+              <p class="release-number">W11</p>
+              <h3>Soul-Searching Backing Track in D</h3>
               <p class="track-meta">
-                <span>G major</span><span>Rock</span><span>90 BPM</span>
+                <span>D major</span><span>Soul</span><span>Searching</span>
               </p>
               <a
-                href="https://youtu.be/VgWI15MovKI?si=4IGrLz7Jt3TewKtq"
+                href="https://youtu.be/GSeIfV5Qbfc?si=K05xkQ-gXFiPcAtu"
                 class="text-link"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -318,6 +313,9 @@
       &uarr;
     </button>
 
-    <script src="site.js?v=20260717-nav-theme"></script>
+    <script src="site.js?v=20260718-theme-direct-wash"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+    <script src="site-animations.js?v=20260718-gsap-polish-direct-wash"></script>
   </body>
 </html>

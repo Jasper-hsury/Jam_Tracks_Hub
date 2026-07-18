@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const favoritesOnly = document.getElementById("favoriteTracksOnly");
     const resetButton = document.getElementById("resetTrackFilters");
     const resultCount = document.getElementById("trackResultCount");
+    const controls = document.querySelector(".track-controls");
 
     const modal = document.getElementById("addTrackModal");
     const modalContent = modal?.querySelector(".modal-content");
@@ -32,6 +33,14 @@ document.addEventListener("DOMContentLoaded", function() {
     if (!grid) {
         return;
     }
+
+    const filterPillGroups = [
+        { select: keyFilter, container: document.getElementById("trackKeyPills") },
+        { select: styleFilter, container: document.getElementById("trackStylePills") },
+        { select: moodFilter, container: document.getElementById("trackMoodPills") },
+        { select: instrumentFilter, container: document.getElementById("trackInstrumentPills") },
+        { select: sortSelect, container: document.getElementById("trackSortPills") }
+    ];
 
     function escapeHtml(value) {
         return String(value || "")
@@ -139,6 +148,31 @@ document.addEventListener("DOMContentLoaded", function() {
         }).join("");
 
         selectElement.value = values.includes(currentValue) ? currentValue : "all";
+    }
+
+    function renderFilterPills() {
+        filterPillGroups.forEach(function(group) {
+            const select = group.select;
+            const container = group.container;
+            const optionsContainer = container?.querySelector(".track-pill-options");
+            if (!select || !container || !optionsContainer) {
+                return;
+            }
+
+            optionsContainer.innerHTML = Array.from(select.options).map(function(option) {
+                const isSelected = option.value === select.value;
+                return `
+                    <button
+                        type="button"
+                        class="track-pill-button${isSelected ? " is-selected" : ""}"
+                        data-filter-select="${escapeHtml(select.id)}"
+                        data-filter-value="${escapeHtml(option.value)}"
+                        aria-pressed="${isSelected}">
+                        ${escapeHtml(option.textContent)}
+                    </button>
+                `;
+            }).join("");
+        });
     }
 
     function getSortedTracks(items) {
@@ -271,6 +305,7 @@ document.addEventListener("DOMContentLoaded", function() {
         populateSelect(styleFilter, uniqueSorted(tracks.map(track => track.style)), "All styles");
         populateSelect(moodFilter, uniqueSorted(tracks.map(track => track.mood)), "All moods");
         populateSelect(instrumentFilter, uniqueSorted(tracks.map(track => track.instrument)), "All instruments");
+        renderFilterPills();
     }
 
     async function loadTracks() {
@@ -293,6 +328,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 keyFilter.value = Array.from(keyFilter.options).some(option => option.value.toLowerCase() === requestedKey.toLowerCase())
                     ? Array.from(keyFilter.options).find(option => option.value.toLowerCase() === requestedKey.toLowerCase()).value
                     : "all";
+                renderFilterPills();
             }
             renderTracks();
         } catch (error) {
@@ -400,11 +436,31 @@ document.addEventListener("DOMContentLoaded", function() {
         closeModal();
     }
 
+    function syncFiltersAndRender() {
+        renderFilterPills();
+        renderTracks();
+    }
+
     [searchInput, keyFilter, styleFilter, moodFilter, instrumentFilter, sortSelect, favoritesOnly].forEach(function(control) {
         if (control) {
-            control.addEventListener("input", renderTracks);
-            control.addEventListener("change", renderTracks);
+            control.addEventListener("input", syncFiltersAndRender);
+            control.addEventListener("change", syncFiltersAndRender);
         }
+    });
+
+    controls?.addEventListener("click", function(event) {
+        const pillButton = event.target.closest(".track-pill-button");
+        if (!pillButton) {
+            return;
+        }
+
+        const select = document.getElementById(pillButton.dataset.filterSelect);
+        if (!select) {
+            return;
+        }
+
+        select.value = pillButton.dataset.filterValue;
+        syncFiltersAndRender();
     });
 
     resetButton?.addEventListener("click", function() {
@@ -415,7 +471,7 @@ document.addEventListener("DOMContentLoaded", function() {
         instrumentFilter.value = "all";
         sortSelect.value = "newest";
         favoritesOnly.checked = false;
-        renderTracks();
+        syncFiltersAndRender();
     });
 
     grid.addEventListener("click", function(event) {

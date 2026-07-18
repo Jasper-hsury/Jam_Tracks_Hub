@@ -287,6 +287,157 @@ h1 {
     outline-offset: 4px;
 }
 
+/* ====================
+   Premium motion layer
+   ==================== */
+:root {
+    --motion-lift-shadow: 0 18px 46px rgba(0, 0, 0, 0.34);
+    --motion-wash: rgba(229, 211, 179, 0.16);
+}
+
+html[data-theme="light"] {
+    --motion-lift-shadow: 0 20px 48px rgba(99, 75, 55, 0.16);
+    --motion-wash: rgba(154, 107, 68, 0.13);
+}
+
+.navbar,
+.footer,
+.track-card,
+.start-card,
+.home-release-card,
+.audio-player-card,
+.key-finder-panel,
+.key-finder-result,
+.dictionary-browser,
+.dictionary-detail,
+.chord-shape-card,
+.progression-card,
+.trainer-card,
+.theme-toggle,
+.primary-button,
+.secondary-button {
+    transition:
+        color 0.32s ease,
+        background-color 0.32s ease,
+        border-color 0.32s ease,
+        box-shadow 0.32s ease,
+        transform 0.22s ease;
+}
+
+.start-card,
+.home-release-card,
+.track-card,
+.chord-shape-card,
+.dictionary-browser,
+.dictionary-detail,
+.progression-card,
+.trainer-card,
+.key-finder-panel,
+.key-finder-result {
+    position: relative;
+    overflow: hidden;
+}
+
+.start-card::before,
+.home-release-card::before,
+.track-card::before,
+.chord-shape-card::before,
+.dictionary-browser::before,
+.dictionary-detail::before,
+.progression-card::before,
+.trainer-card::before,
+.key-finder-panel::before,
+.key-finder-result::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        linear-gradient(120deg, transparent 0%, var(--motion-wash) 42%, transparent 72%);
+    opacity: 0;
+    transform: translateX(-44%);
+    transition: opacity 0.36s ease, transform 0.56s ease;
+}
+
+.start-card:hover,
+.home-release-card:hover,
+.track-card:hover,
+.chord-shape-card:hover,
+.dictionary-browser:hover,
+.dictionary-detail:hover,
+.progression-card:hover,
+.trainer-card:hover {
+    box-shadow: var(--motion-lift-shadow);
+}
+
+.start-card:hover::before,
+.home-release-card:hover::before,
+.track-card:hover::before,
+.chord-shape-card:hover::before,
+.dictionary-browser:hover::before,
+.dictionary-detail:hover::before,
+.progression-card:hover::before,
+.trainer-card:hover::before,
+.key-finder-panel:hover::before,
+.key-finder-result:hover::before {
+    opacity: 1;
+    transform: translateX(44%);
+}
+
+.theme-transition-wash {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    background:
+        radial-gradient(circle at 50% 18%, rgba(229, 211, 179, 0.16), transparent 38%),
+        rgba(255, 250, 242, 0.08);
+}
+
+html[data-theme="light"] .theme-transition-wash {
+    background:
+        radial-gradient(circle at 50% 18%, rgba(127, 183, 173, 0.14), transparent 38%),
+        rgba(40, 33, 27, 0.045);
+}
+
+.theme-transition-wash.is-css-fallback {
+    animation: themeWashFallback 0.46s ease forwards;
+}
+
+@keyframes themeWashFallback {
+    0% {
+        opacity: 0;
+    }
+    38% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.motion-reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition:
+        opacity 0.62s cubic-bezier(0.2, 0.8, 0.2, 1) var(--motion-delay, 0ms),
+        transform 0.62s cubic-bezier(0.2, 0.8, 0.2, 1) var(--motion-delay, 0ms);
+}
+
+.motion-reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+html.motion-reduced *,
+html.motion-reduced *::before,
+html.motion-reduced *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+}
+
 
 /* ====================
    進場淡入動畫 (Animation)

@@ -117,6 +117,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         themeToggle.addEventListener("click", function() {
+            const previousTheme = document.documentElement.dataset.theme || "default";
             const nextTheme = document.documentElement.dataset.theme === "light"
                 ? "default"
                 : "light";
@@ -127,6 +128,23 @@ document.addEventListener("DOMContentLoaded", function() {
                 // Keep the selected theme for the current page when storage is unavailable.
             }
             updateThemeToggle();
+            let themeChangeEvent;
+            if (typeof CustomEvent === "function") {
+                themeChangeEvent = new CustomEvent("jasper:theme-change", {
+                    detail: {
+                        previousTheme,
+                        theme: nextTheme
+                    }
+                });
+            } else {
+                themeChangeEvent = new Event("jasper:theme-change");
+                themeChangeEvent.detail = {
+                    previousTheme,
+                    theme: nextTheme
+                };
+            }
+            window.dispatchEvent(themeChangeEvent);
+            window.JasperAnimations?.playThemeWash?.();
         });
 
         updateThemeToggle();

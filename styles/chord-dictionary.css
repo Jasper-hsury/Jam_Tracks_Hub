@@ -500,6 +500,11 @@
     border-radius: 999px;
     font-size: 10px;
     line-height: 1;
+    transition:
+        color 0.24s ease,
+        background-color 0.24s ease,
+        border-color 0.24s ease,
+        box-shadow 0.24s ease;
 }
 
 .diagram-string-status.is-root strong {
@@ -563,6 +568,12 @@
     font-weight: 800;
     line-height: 1;
     transform: translate(-50%, -50%);
+    will-change: transform;
+    transition:
+        background-color 0.24s ease,
+        border-color 0.24s ease,
+        box-shadow 0.24s ease,
+        color 0.24s ease;
 }
 
 .diagram-finger.is-root {

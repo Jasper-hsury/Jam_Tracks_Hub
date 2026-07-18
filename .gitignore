@@ -10,3 +10,4 @@ youtube_cookies.txt
 .env
 .DS_Store
 Thumbs.db
+incoming-tracks/

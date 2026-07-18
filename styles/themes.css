@@ -200,6 +200,43 @@ h1,
     border-bottom-color: var(--border-soft);
 }
 
+html[data-theme="light"] .tracks-library-page .track-controls {
+    background:
+        linear-gradient(90deg, rgba(45, 123, 118, 0.055), transparent 34%),
+        #f4eee5;
+    border-color: #d8ccbd;
+    border-left-color: var(--teal);
+    box-shadow: 0 18px 42px rgba(86, 68, 51, 0.1);
+}
+
+html[data-theme="light"] .tracks-library-page .track-controls input:not([type="checkbox"]),
+html[data-theme="light"] .tracks-library-page .track-controls select {
+    background-color: rgba(255, 253, 249, 0.92);
+    border-color: rgba(124, 101, 80, 0.18);
+}
+
+html[data-theme="light"] .tracks-library-page .favorites-filter {
+    background: #eee5da;
+    border-color: #d7c7b5;
+}
+
+html[data-theme="light"] .tracks-library-page .track-card {
+    background:
+        linear-gradient(90deg, rgba(45, 123, 118, 0.035), transparent 32%),
+        #fffcf7;
+    border-color: #ded3c4;
+    border-left-color: var(--gold);
+    box-shadow: 0 14px 32px rgba(79, 60, 42, 0.1);
+}
+
+html[data-theme="light"] .tracks-library-page .track-card:hover {
+    background:
+        linear-gradient(90deg, rgba(45, 123, 118, 0.05), transparent 32%),
+        #f7efe5;
+    border-color: rgba(138, 96, 62, 0.34);
+    border-left-color: var(--teal);
+}
+
 .track-loading {
     color: var(--text-subtle);
     background: var(--panel-background);
@@ -293,6 +330,14 @@ h1,
 .theme-toggle:focus-visible {
     outline: 3px solid var(--focus-ring);
     outline-offset: 3px;
+}
+
+@media (max-width: 1180px) {
+    .nav-theme-toggle {
+        min-height: 46px;
+        border-radius: 999px;
+        transform: none;
+    }
 }
 
 /* Theme-aware interaction states */

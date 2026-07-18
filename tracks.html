@@ -16,10 +16,10 @@
 
     <script src="theme-init.js?v=20260623-dark-light"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles/base.css?v=20260717-nav-theme">
+    <link rel="stylesheet" href="styles/base.css?v=20260718-gsap-polish-theme-fallback">
     <link rel="stylesheet" href="styles/components.css?v=20260625-track-layout-v4">
-    <link rel="stylesheet" href="styles/pages.css?v=20260717-nav-theme">
-    <link rel="stylesheet" href="styles/themes.css?v=20260717-nav-theme">
+    <link rel="stylesheet" href="styles/pages.css?v=20260717-tracks-home-heading">
+    <link rel="stylesheet" href="styles/themes.css?v=20260717-tracks-home-heading">
 </head>
 
 <body>
@@ -37,7 +37,7 @@
         </ul>
     </nav>
 
-    <main class="tracks-page">
+    <main class="tracks-page tracks-library-page">
         <div class="page-heading-row">
             <div>
                 <h1>All Backing Tracks</h1>
@@ -52,7 +52,7 @@
                 <input id="trackSearchInput" type="search" placeholder="Search title, key, style...">
             </label>
 
-            <label>
+            <label class="track-native-filter">
                 <span>Key</span>
                 <select id="trackKeyFilter">
                     <option value="all">All keys</option>
@@ -64,8 +64,12 @@
                     <option value="G major">G major</option>
                 </select>
             </label>
+            <div class="track-pill-filter" id="trackKeyPills" aria-label="Filter tracks by key">
+                <span>Key</span>
+                <div class="track-pill-options"></div>
+            </div>
 
-            <label>
+            <label class="track-native-filter">
                 <span>Style</span>
                 <select id="trackStyleFilter">
                     <option value="all">All styles</option>
@@ -76,22 +80,34 @@
                     <option value="Rock">Rock</option>
                 </select>
             </label>
+            <div class="track-pill-filter" id="trackStylePills" aria-label="Filter tracks by style">
+                <span>Style</span>
+                <div class="track-pill-options"></div>
+            </div>
 
-            <label>
+            <label class="track-native-filter">
                 <span>Mood</span>
                 <select id="trackMoodFilter">
                     <option value="all">All moods</option>
                 </select>
             </label>
+            <div class="track-pill-filter" id="trackMoodPills" aria-label="Filter tracks by mood">
+                <span>Mood</span>
+                <div class="track-pill-options"></div>
+            </div>
 
-            <label>
+            <label class="track-native-filter">
                 <span>Instrument</span>
                 <select id="trackInstrumentFilter">
                     <option value="all">All instruments</option>
                 </select>
             </label>
+            <div class="track-pill-filter" id="trackInstrumentPills" aria-label="Filter tracks by instrument">
+                <span>Instrument</span>
+                <div class="track-pill-options"></div>
+            </div>
 
-            <label>
+            <label class="track-native-filter">
                 <span>Sort</span>
                 <select id="trackSortSelect">
                     <option value="newest">Newest first</option>
@@ -101,6 +117,10 @@
                     <option value="bpm">BPM low to high</option>
                 </select>
             </label>
+            <div class="track-pill-filter track-sort-filter" id="trackSortPills" aria-label="Sort tracks">
+                <span>Sort</span>
+                <div class="track-pill-options"></div>
+            </div>
 
             <div class="track-filter-actions">
                 <label class="favorites-filter">
@@ -165,7 +185,10 @@
         </div>
     </div>
 
-    <script src="site.js?v=20260717-nav-theme"></script>
-    <script src="tracks.js?v=20260623-action-hierarchy"></script>
+    <script src="site.js?v=20260718-theme-direct-wash"></script>
+    <script src="tracks.js?v=20260717-track-filter-pills"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+    <script src="site-animations.js?v=20260718-gsap-polish-direct-wash"></script>
 </body>
 </html>

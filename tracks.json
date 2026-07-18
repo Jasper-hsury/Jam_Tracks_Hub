@@ -94,5 +94,53 @@
     "youtubeUrl": "https://youtu.be/gfz6a-_kJ7I?si=OjYYmk9HVkk7lmQq",
     "slidesUrl": "slides/w8.html",
     "downloadUrl": "slides/W8_Funky_Backing_Track_in_FSharp_Minor.pdf"
+  },
+  {
+    "id": "W10",
+    "title": "Ballad Acoustic Backing Track in G",
+    "key": "G major",
+    "style": "Ballad",
+    "mood": "Warm",
+    "instrument": "Acoustic guitar",
+    "bpm": "",
+    "youtubeUrl": "https://youtu.be/BQ-AeySkYcA?si=AMT9SKHGnRGcU4M0",
+    "slidesUrl": "slides/w10.html",
+    "downloadUrl": "downloads/tracks/W10.zip"
+  },
+  {
+    "id": "W11",
+    "title": "Soul-Searching Backing Track in D",
+    "key": "D major",
+    "style": "Soul",
+    "mood": "Searching",
+    "instrument": "Guitar band",
+    "bpm": "",
+    "youtubeUrl": "https://youtu.be/GSeIfV5Qbfc?si=K05xkQ-gXFiPcAtu",
+    "slidesUrl": "slides/w11.html",
+    "downloadUrl": "downloads/tracks/W11.zip"
+  },
+  {
+    "id": "W12",
+    "title": "Smooth Fusion Backing Track in E",
+    "key": "E major",
+    "style": "Fusion",
+    "mood": "Smooth",
+    "instrument": "Guitar band",
+    "bpm": "",
+    "youtubeUrl": "https://youtu.be/voSJ3O06a0k?si=c7_oE6IIKkWnFpX2",
+    "slidesUrl": "slides/w12.html",
+    "downloadUrl": "downloads/tracks/W12.zip"
+  },
+  {
+    "id": "W13",
+    "title": "Slow Journey Backing Track in A",
+    "key": "A major",
+    "style": "Ballad",
+    "mood": "Reflective",
+    "instrument": "Guitar band",
+    "bpm": "",
+    "youtubeUrl": "https://youtu.be/4c_SvcNmiZE?si=BrP_0x2yIGi1OJm-",
+    "slidesUrl": "slides/w13.html",
+    "downloadUrl": "downloads/tracks/W13.zip"
   }
 ]
