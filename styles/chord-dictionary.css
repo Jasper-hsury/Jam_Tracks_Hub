@@ -6,6 +6,18 @@
     --diagram-root-fill: var(--gold-light);
     --diagram-root-text: #2b211a;
     --diagram-root-ring: color-mix(in srgb, var(--gold-light) 35%, transparent);
+    --diagram-third-fill: #9f6b45;
+    --diagram-third-text: #fffaf2;
+    --diagram-third-ring: rgba(159, 107, 69, 0.24);
+    --diagram-fifth-fill: #7f8970;
+    --diagram-fifth-text: #fffaf2;
+    --diagram-fifth-ring: rgba(127, 137, 112, 0.24);
+    --diagram-seventh-fill: #9a6472;
+    --diagram-seventh-text: #fffaf2;
+    --diagram-seventh-ring: rgba(154, 100, 114, 0.24);
+    --diagram-extension-fill: #6f7964;
+    --diagram-extension-text: #fffaf2;
+    --diagram-extension-ring: rgba(111, 121, 100, 0.22);
     --diagram-open-tone-background: color-mix(in srgb, var(--chord-control) 16%, transparent);
     --diagram-open-tone-border: color-mix(in srgb, var(--chord-control) 38%, transparent);
     --diagram-grid-line: color-mix(in srgb, var(--text-subtle) 62%, transparent);
@@ -523,6 +535,61 @@
     border-color: color-mix(in srgb, var(--diagram-root-fill) 70%, var(--diagram-tone-fill));
 }
 
+.diagram-string-status strong[data-tone-family="root"],
+.diagram-finger[data-tone-family="root"] {
+    color: var(--diagram-root-text);
+    background: var(--diagram-root-fill);
+}
+
+.diagram-string-status strong[data-tone-family="third"],
+.diagram-finger[data-tone-family="third"] {
+    color: var(--diagram-third-text);
+    background: var(--diagram-third-fill);
+}
+
+.diagram-string-status strong[data-tone-family="fifth"],
+.diagram-finger[data-tone-family="fifth"] {
+    color: var(--diagram-fifth-text);
+    background: var(--diagram-fifth-fill);
+}
+
+.diagram-string-status strong[data-tone-family="seventh"],
+.diagram-finger[data-tone-family="seventh"] {
+    color: var(--diagram-seventh-text);
+    background: var(--diagram-seventh-fill);
+}
+
+.diagram-string-status strong[data-tone-family="extension"],
+.diagram-finger[data-tone-family="extension"] {
+    color: var(--diagram-extension-text);
+    background: var(--diagram-extension-fill);
+}
+
+.diagram-string-status strong[data-tone-family="root"] {
+    border-color: color-mix(in srgb, var(--diagram-root-fill) 70%, var(--diagram-tone-fill));
+    box-shadow: 0 2px 5px var(--diagram-root-ring);
+}
+
+.diagram-string-status strong[data-tone-family="third"] {
+    border-color: color-mix(in srgb, var(--diagram-third-fill) 72%, var(--diagram-open-tone-border));
+    box-shadow: 0 2px 5px var(--diagram-third-ring);
+}
+
+.diagram-string-status strong[data-tone-family="fifth"] {
+    border-color: color-mix(in srgb, var(--diagram-fifth-fill) 72%, var(--diagram-open-tone-border));
+    box-shadow: 0 2px 5px var(--diagram-fifth-ring);
+}
+
+.diagram-string-status strong[data-tone-family="seventh"] {
+    border-color: color-mix(in srgb, var(--diagram-seventh-fill) 72%, var(--diagram-open-tone-border));
+    box-shadow: 0 2px 5px var(--diagram-seventh-ring);
+}
+
+.diagram-string-status strong[data-tone-family="extension"] {
+    border-color: color-mix(in srgb, var(--diagram-extension-fill) 72%, var(--diagram-open-tone-border));
+    box-shadow: 0 2px 5px var(--diagram-extension-ring);
+}
+
 .diagram-string-names {
     margin-top: 7px;
     color: var(--text-subtle);
@@ -593,6 +660,41 @@
     color: var(--diagram-root-text);
     box-shadow:
         0 0 0 2px var(--diagram-root-ring),
+        0 3px 8px var(--shadow-color);
+}
+
+.diagram-finger[data-tone-family="root"] {
+    border-color: var(--diagram-tone-fill);
+    box-shadow:
+        0 0 0 2px var(--diagram-root-ring),
+        0 3px 8px var(--shadow-color);
+}
+
+.diagram-finger[data-tone-family="third"] {
+    border-color: color-mix(in srgb, var(--diagram-third-fill) 62%, var(--panel-background));
+    box-shadow:
+        0 0 0 2px var(--diagram-third-ring),
+        0 3px 8px var(--shadow-color);
+}
+
+.diagram-finger[data-tone-family="fifth"] {
+    border-color: color-mix(in srgb, var(--diagram-fifth-fill) 62%, var(--panel-background));
+    box-shadow:
+        0 0 0 2px var(--diagram-fifth-ring),
+        0 3px 8px var(--shadow-color);
+}
+
+.diagram-finger[data-tone-family="seventh"] {
+    border-color: color-mix(in srgb, var(--diagram-seventh-fill) 62%, var(--panel-background));
+    box-shadow:
+        0 0 0 2px var(--diagram-seventh-ring),
+        0 3px 8px var(--shadow-color);
+}
+
+.diagram-finger[data-tone-family="extension"] {
+    border-color: color-mix(in srgb, var(--diagram-extension-fill) 62%, var(--panel-background));
+    box-shadow:
+        0 0 0 2px var(--diagram-extension-ring),
         0 3px 8px var(--shadow-color);
 }
 
@@ -689,6 +791,18 @@ html[data-theme="light"] .chord-dictionary-page {
     --diagram-root-fill: #2d7b76;
     --diagram-root-text: #fffdf8;
     --diagram-root-ring: rgba(45, 123, 118, 0.22);
+    --diagram-third-fill: #9d6a3d;
+    --diagram-third-text: #fffaf2;
+    --diagram-third-ring: rgba(157, 106, 61, 0.2);
+    --diagram-fifth-fill: #b88b56;
+    --diagram-fifth-text: #fffaf2;
+    --diagram-fifth-ring: rgba(184, 139, 86, 0.22);
+    --diagram-seventh-fill: #b06b7a;
+    --diagram-seventh-text: #fffaf2;
+    --diagram-seventh-ring: rgba(176, 107, 122, 0.18);
+    --diagram-extension-fill: #7a8c74;
+    --diagram-extension-text: #fffaf2;
+    --diagram-extension-ring: rgba(122, 140, 116, 0.2);
     --diagram-open-tone-background: #f2e5d6;
     --diagram-open-tone-border: rgba(154, 104, 67, 0.26);
     --diagram-grid-line: rgba(93, 82, 72, 0.5);

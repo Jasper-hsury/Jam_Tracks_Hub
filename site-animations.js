@@ -465,6 +465,110 @@
         return `${position}+=${offset}`;
     }
 
+    function getHomeStepSvgEffect(card, options = {}) {
+        const motion = card?.dataset.motion || "groove";
+        const effects = {
+            groove: {
+                drawDuration: 0.54,
+                drawStagger: 0.035,
+                drawEase: "sine.out",
+                noteFrom: { y: 7, scale: 0.9, opacity: 0 },
+                noteTo: { y: 0, scale: 1, opacity: 1 },
+                noteDelay: 0.08,
+                noteDuration: 0.34,
+                noteStagger: 0.035,
+                noteEase: "back.out(1.45)",
+                motionDelay: 0.12,
+                dotStagger: 0.07,
+                motionDuration: 0.58,
+                motionEase: "sine.inOut"
+            },
+            flip: {
+                drawDuration: 0.66,
+                drawStagger: 0.065,
+                drawEase: "power3.out",
+                noteFrom: { rotationY: -76, scale: 0.88, opacity: 0 },
+                noteTo: { rotationY: 0, scale: 1, opacity: 1 },
+                noteDelay: 0.18,
+                noteDuration: 0.44,
+                noteStagger: { each: 0.05, from: "edges" },
+                noteEase: "power3.out",
+                motionDelay: 0.2,
+                dotStagger: 0.09,
+                motionDuration: 0.76,
+                motionEase: "power2.inOut"
+            },
+            map: {
+                drawDuration: 0.82,
+                drawStagger: 0.028,
+                drawEase: "power1.inOut",
+                noteFrom: { x: -8, y: 8, scale: 0.86, opacity: 0 },
+                noteTo: { x: 0, y: 0, scale: 1, opacity: 1 },
+                noteDelay: 0.12,
+                noteDuration: 0.38,
+                noteStagger: { each: 0.04, from: "center" },
+                noteEase: "back.out(1.25)",
+                motionDelay: 0.08,
+                dotStagger: 0.06,
+                motionDuration: 0.95,
+                motionEase: "power1.inOut"
+            },
+            scan: {
+                drawDuration: 0.4,
+                drawStagger: 0.02,
+                drawEase: "power2.out",
+                noteFrom: { y: 10, opacity: 0, filter: "blur(4px)" },
+                noteTo: { y: 0, opacity: 1, filter: "blur(0px)" },
+                noteDelay: 0.04,
+                noteDuration: 0.28,
+                noteStagger: 0.026,
+                noteEase: "power2.out",
+                motionDelay: 0.06,
+                dotStagger: 0.045,
+                motionDuration: 0.48,
+                motionEase: "power2.out"
+            },
+            cascade: {
+                drawDuration: 0.74,
+                drawStagger: 0.08,
+                drawEase: "expo.out",
+                noteFrom: { y: -10, scale: 0.84, opacity: 0 },
+                noteTo: { y: 0, scale: 1, opacity: 1 },
+                noteDelay: 0.16,
+                noteDuration: 0.42,
+                noteStagger: 0.08,
+                noteEase: "back.out(1.35)",
+                motionDelay: 0.18,
+                dotStagger: 0.1,
+                motionDuration: 1.08,
+                motionEase: "none"
+            },
+            pulse: {
+                drawDuration: 0.58,
+                drawStagger: 0.04,
+                drawEase: "power2.out",
+                noteFrom: { scale: 0.55, opacity: 0 },
+                noteTo: { scale: 1, opacity: 1 },
+                noteDelay: 0.1,
+                noteDuration: 0.58,
+                noteStagger: { each: 0.045, from: "center" },
+                noteEase: "elastic.out(1, 0.62)",
+                motionDelay: 0.14,
+                dotStagger: 0.07,
+                motionDuration: 0.84,
+                motionEase: "elastic.out(1, 0.74)"
+            }
+        };
+        const effect = effects[motion] || effects.groove;
+
+        return {
+            ...effect,
+            ...options,
+            drawDuration: options.drawDuration || options.duration || effect.drawDuration,
+            motionDuration: options.motionDuration || effect.motionDuration
+        };
+    }
+
     function animateHomeStepSvgMotif(card, timeline, position = 0, options = {}) {
         if (!hasGsap || !card || !timeline) {
             return;
@@ -479,14 +583,15 @@
         const drawTargets = elements(".home-draw", motif);
         const dots = elements(".home-motion-dot", motif);
         const notes = elements(".motif-note, .motif-note-symbol, .motif-roman", motif);
+        const effect = getHomeStepSvgEffect(card, options);
 
         if (drawTargets.length) {
             if (hasDrawSvg) {
                 timeline.fromTo(drawTargets, { drawSVG: "0%" }, {
                     drawSVG: "100%",
-                    duration: options.duration || 0.9,
-                    stagger: 0.045,
-                    ease: "power2.out"
+                    duration: effect.drawDuration,
+                    stagger: effect.drawStagger,
+                    ease: effect.drawEase
                 }, position);
             } else {
                 drawTargets.forEach(target => {
@@ -497,31 +602,27 @@
                 });
                 timeline.to(drawTargets, {
                     strokeDashoffset: 0,
-                    duration: options.duration || 0.9,
-                    stagger: 0.045,
-                    ease: "power2.out"
+                    duration: effect.drawDuration,
+                    stagger: effect.drawStagger,
+                    ease: effect.drawEase
                 }, position);
             }
         }
 
         if (notes.length) {
-            timeline.fromTo(notes, {
-                scale: 0.82,
-                opacity: 0
-            }, {
-                scale: 1,
-                opacity: 1,
-                duration: 0.45,
-                stagger: 0.045,
-                ease: "back.out(1.6)",
-                clearProps: "transform,opacity"
-            }, offsetTimelinePosition(position, 0.14));
+            timeline.fromTo(notes, effect.noteFrom, {
+                ...effect.noteTo,
+                duration: effect.noteDuration,
+                stagger: effect.noteStagger,
+                ease: effect.noteEase,
+                clearProps: "transform,opacity,filter"
+            }, offsetTimelinePosition(position, effect.noteDelay));
         }
 
         dots.forEach((dot, dotIndex) => {
-            animateSvgMotionDot(dot, timeline, offsetTimelinePosition(position, 0.2 + dotIndex * 0.08), {
-                duration: options.motionDuration || 1.05,
-                ease: "power1.inOut",
+            animateSvgMotionDot(dot, timeline, offsetTimelinePosition(position, effect.motionDelay + dotIndex * effect.dotStagger), {
+                duration: effect.motionDuration,
+                ease: effect.motionEase,
                 reverse: options.reverse
             });
         });
@@ -539,7 +640,8 @@
 
         const timeline = gsap.timeline({ defaults: { overwrite: true } });
         animateHomeStepSvgMotif(card, timeline, 0, {
-            duration: 0.42,
+            drawDuration: 0.42,
+            noteDuration: 0.32,
             motionDuration: 0.62,
             replay: true,
             reverse: false

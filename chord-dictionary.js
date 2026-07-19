@@ -351,6 +351,28 @@ document.addEventListener("DOMContentLoaded", function() {
         return formula === "1" ? "R" : formula;
     }
 
+    function toneFamily(formula) {
+        const compactFormula = (formula || "").replace(/\s+/g, "");
+
+        if (compactFormula === "1") {
+            return "root";
+        }
+
+        if (compactFormula === "3" || compactFormula === "b3" || compactFormula === "#9") {
+            return "third";
+        }
+
+        if (compactFormula === "5" || compactFormula === "b5" || compactFormula === "#5") {
+            return "fifth";
+        }
+
+        if (compactFormula === "7" || compactFormula === "b7" || compactFormula === "bb7") {
+            return "seventh";
+        }
+
+        return "extension";
+    }
+
     function chordToneForPitch(pitch, chord) {
         const pitchClass = pitch % 12;
         const index = chord.intervals.findIndex(interval =>
@@ -366,6 +388,7 @@ document.addEventListener("DOMContentLoaded", function() {
             label: intervalLabel(chord.formula[index]),
             note: spellChordTone(pitchClass, chord.formula[index], index),
             isRoot: index === 0,
+            family: toneFamily(chord.formula[index]),
             order: index
         };
     }
@@ -681,7 +704,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 return `
                     <span class="diagram-string-status is-open${tone?.isRoot ? " is-root" : ""}">
                         <span>O</span>
-                        <strong data-tone-order="${tone ? tone.order : 99}">${tone ? tone.label : ""}</strong>
+                        <strong
+                            data-tone-order="${tone ? tone.order : 99}"
+                            data-tone-family="${tone ? tone.family : "other"}"
+                        >${tone ? tone.label : ""}</strong>
                     </span>
                 `;
             }
@@ -710,6 +736,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 <span
                     class="diagram-finger${tone?.isRoot ? " is-root" : ""}"
                     data-tone-order="${tone ? tone.order : 99}"
+                    data-tone-family="${tone ? tone.family : "other"}"
                     style="left:${stringIndex * 20}%;top:${(row + 0.5) * (100 / DIAGRAM_FRET_ROWS)}%"
                     title="${tone ? `${tone.label} ${tone.note}` : ""}"
                     aria-hidden="true"

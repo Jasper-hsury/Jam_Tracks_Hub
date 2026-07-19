@@ -191,7 +191,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         aria-label="${favorite ? "Remove from favorites" : "Add to favorites"}"
                         aria-pressed="${favorite}">${favorite ? "♥" : "♡"}</button>
                     <div class="track-secondary-actions">
-                        <a href="${escapeHtml(track.slidesUrl)}" class="track-link track-secondary-action secondary-track-link" target="_blank" rel="noopener noreferrer">Slides</a>
+                        <a href="${escapeHtml(track.slidesUrl)}" class="track-link track-secondary-action secondary-track-link" data-card-action="slides" target="_blank" rel="noopener noreferrer">Slides</a>
                     </div>
                 </div>
             </article>
@@ -394,15 +394,21 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     grid.addEventListener("click", function(event) {
+        if (event.target.closest("[data-card-action]")) {
+            event.stopPropagation();
+            return;
+        }
+
         const favoriteButton = event.target.closest(".favorite-track-button");
 
         if (favoriteButton) {
+            event.stopPropagation();
             toggleFavorite(favoriteButton.dataset.trackId);
             renderTracks();
             return;
         }
 
-        if (event.target.closest("a, button")) {
+        if (event.target.closest("[data-card-action], a, button")) {
             return;
         }
 
