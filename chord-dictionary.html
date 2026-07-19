@@ -18,9 +18,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles/base.css?v=20260718-gsap-polish-theme-fallback">
     <link rel="stylesheet" href="styles/components.css?v=20260623-layout-v2">
-    <link rel="stylesheet" href="styles/pages.css?v=20260717-centered-mobile-nav">
-    <link rel="stylesheet" href="styles/themes.css?v=20260717-centered-mobile-nav">
-    <link rel="stylesheet" href="styles/chord-dictionary.css?v=20260718-gsap-polish">
+    <link rel="stylesheet" href="styles/pages.css?v=20260719-home-step-motifs">
+    <link rel="stylesheet" href="styles/themes.css?v=20260718-unified-signature-subtitles">
+    <link rel="stylesheet" href="styles/chord-dictionary.css?v=20260718-soft-dictionary-motion">
 </head>
 
 <body>
@@ -29,18 +29,18 @@
         <ul class="nav-links">
             <li><a href="index.html#home">Home</a></li>
             <li><a href="tracks.html">Tracks</a></li>
-            <li><a href="key-finder.html">Key Finder</a></li>
-            <li><a href="scale.html">Scale Explorer</a></li>
-            <li><a href="fretboard-trainer.html">Fretboard Trainer</a></li>
-            <li><a href="chords.html">Chord Progressions</a></li>
             <li><a href="chord-dictionary.html" class="active" aria-current="page">Chord Dictionary</a></li>
+            <li><a href="scale.html">Scale Explorer</a></li>
+            <li><a href="key-finder.html">Key Finder</a></li>
+            <li><a href="chords.html">Chord Progressions</a></li>
+            <li><a href="fretboard-trainer.html">Fretboard Trainer</a></li>
             <li><a href="index.html#about">About</a></li>
         </ul>
     </nav>
 
     <main class="tracks-page chord-dictionary-page">
         <header class="dictionary-heading">
-            <p class="home-eyebrow">Chord tones 蝜?formulas 蝜?guitar shapes</p>
+            <p class="home-eyebrow">Chord tones &middot; formulas &middot; guitar shapes</p>
             <h1>Chord Dictionary</h1>
             <p class="hero-tagline signature-slogan">Name the harmony. See the notes. Find a shape.</p>
         </header>
@@ -99,11 +99,11 @@
                     </div>
                     <div>
                         <dt>Formula</dt>
-                        <dd id="selectedChordFormula">1 蝜?3 蝜?5</dd>
+                        <dd id="selectedChordFormula">1 - 3 - 5</dd>
                     </div>
                     <div>
                         <dt>Notes</dt>
-                        <dd id="selectedChordNotes">C 蝜?E 蝜?G</dd>
+                        <dd id="selectedChordNotes">C - E - G</dd>
                     </div>
                 </dl>
 
@@ -167,10 +167,10 @@
 
     <button id="backToTopBtn" type="button" aria-label="Back to top">&uarr;</button>
 
-    <script src="site.js?v=20260718-theme-direct-wash"></script>
+    <script src="site.js?v=20260718-slow-back-to-top"></script>
     <script src="chord-dictionary.js?v=20260717-seventh-string-sets"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
-    <script src="site-animations.js?v=20260718-gsap-polish-direct-wash"></script>
+    <script src="vendor/gsap/gsap.min.js"></script>
+    <script src="vendor/gsap/ScrollTrigger.min.js"></script>
+    <script src="site-animations.js?v=20260718-trainer-dropdown-hover"></script>
 </body>
 </html>

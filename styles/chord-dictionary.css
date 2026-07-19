@@ -42,6 +42,12 @@
     padding: 24px;
 }
 
+.chord-dictionary-page .dictionary-browser::before,
+.chord-dictionary-page .dictionary-detail::before,
+.chord-dictionary-page .chord-shape-card::before {
+    display: none;
+}
+
 .dictionary-browser-heading,
 .dictionary-detail-heading,
 .dictionary-category-heading,

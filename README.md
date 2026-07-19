@@ -22,7 +22,7 @@ This starts one FastAPI server that serves both the website and the key finder A
 ## Pages
 
 - `index.html`: homepage, intro, featured audio, latest tracks.
-- `tracks.html`: backing tracks with search, filters, sorting, and add-track preview.
+- `tracks.html`: backing tracks with key filtering and newest/oldest sorting.
 - `chords.html`: YouTube Key Finder, chord progression explorer, chord playback, guitar rhythm, and metronome.
 
 ## Key Finder API

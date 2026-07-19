@@ -1,4 +1,4 @@
-/* Fretboard Note Trainer */
+/* Fretboard Trainer */
 .trainer-page {
     max-width: 1120px;
 }
@@ -36,6 +36,14 @@
     background: var(--panel-background);
     border: 1px solid var(--border-soft);
     border-radius: var(--radius);
+    box-shadow: 0 12px 28px var(--shadow-color);
+}
+
+.trainer-card::before {
+    display: none;
+}
+
+.trainer-card:hover {
     box-shadow: 0 12px 28px var(--shadow-color);
 }
 

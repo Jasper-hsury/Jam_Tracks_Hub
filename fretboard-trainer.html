@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fretboard Note Trainer | Jasper's Music Space</title>
+    <title>Fretboard Trainer | Jasper's Music Space</title>
 
     <link rel="icon" href="icon.png" type="image/png">
     <meta name="description" content="Practice guitar fretboard note names with random string and fret questions.">
     <link rel="canonical" href="https://jasper-music.onrender.com/fretboard-trainer.html">
-    <meta property="og:title" content="Fretboard Note Trainer | Jasper's Music Space">
+    <meta property="og:title" content="Fretboard Trainer | Jasper's Music Space">
     <meta property="og:description" content="Train guitar note recognition by answering random string and fret positions.">
     <meta property="og:image" content="https://jasper-music.onrender.com/cover.jpeg">
     <meta property="og:url" content="https://jasper-music.onrender.com/fretboard-trainer.html">
@@ -18,9 +18,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles/base.css?v=20260718-gsap-polish-theme-fallback">
     <link rel="stylesheet" href="styles/components.css?v=20260626-tool-links">
-    <link rel="stylesheet" href="styles/pages.css?v=20260717-centered-mobile-nav">
-    <link rel="stylesheet" href="styles/themes.css?v=20260717-centered-mobile-nav">
-    <link rel="stylesheet" href="styles/fretboard-trainer.css?v=20260626-note-trainer">
+    <link rel="stylesheet" href="styles/pages.css?v=20260718-dropdown-hover-release-tags">
+    <link rel="stylesheet" href="styles/themes.css?v=20260718-unified-signature-subtitles">
+    <link rel="stylesheet" href="styles/fretboard-trainer.css?v=20260718-fretboard-trainer-polish">
 </head>
 
 <body>
@@ -29,19 +29,19 @@
         <ul class="nav-links">
             <li><a href="index.html#home">Home</a></li>
             <li><a href="tracks.html">Tracks</a></li>
-            <li><a href="key-finder.html">Key Finder</a></li>
-            <li><a href="scale.html">Scale Explorer</a></li>
-            <li><a href="fretboard-trainer.html" class="active" aria-current="page">Fretboard Trainer</a></li>
-            <li><a href="chords.html">Chord Progressions</a></li>
             <li><a href="chord-dictionary.html">Chord Dictionary</a></li>
+            <li><a href="scale.html">Scale Explorer</a></li>
+            <li><a href="key-finder.html">Key Finder</a></li>
+            <li><a href="chords.html">Chord Progressions</a></li>
+            <li><a href="fretboard-trainer.html" class="active" aria-current="page">Fretboard Trainer</a></li>
             <li><a href="index.html#about">About</a></li>
         </ul>
     </nav>
 
     <main class="tracks-page trainer-page">
         <header class="trainer-heading">
-            <p class="home-eyebrow">Fretboard memory / note names / daily drill</p>
-            <h1>Fretboard Note Trainer</h1>
+            <p class="home-eyebrow">Fretboard memory &middot; note names &middot; daily drill</p>
+            <h1>Fretboard Trainer</h1>
             <p class="hero-tagline signature-slogan">Find the note. Build the map.</p>
             <p class="trainer-lead">
                 Answer random guitar string and fret questions in standard tuning. String 1 is the high E string;
@@ -124,10 +124,10 @@
 
     <button id="backToTopBtn" type="button" aria-label="Back to top">&uarr;</button>
 
-    <script src="site.js?v=20260718-theme-direct-wash"></script>
+    <script src="site.js?v=20260718-slow-back-to-top"></script>
     <script src="fretboard-trainer.js?v=20260626-note-trainer"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
-    <script src="site-animations.js?v=20260718-gsap-polish-direct-wash"></script>
+    <script src="vendor/gsap/gsap.min.js"></script>
+    <script src="vendor/gsap/ScrollTrigger.min.js"></script>
+    <script src="site-animations.js?v=20260718-trainer-dropdown-hover"></script>
 </body>
 </html>

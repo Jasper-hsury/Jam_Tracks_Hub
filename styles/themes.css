@@ -840,3 +840,18 @@ html[data-theme="light"] .scale-advice-chord-list strong {
 html[data-theme="light"] .scale-advice-detail {
     border-top-color: rgba(133, 102, 73, 0.18);
 }
+
+/* Keep page subtitles aligned with the homepage signature style. */
+.signature-slogan,
+.hero-tagline.signature-slogan,
+.tracks-library-page .hero-tagline.signature-slogan,
+.dictionary-heading .hero-tagline.signature-slogan,
+.scale-page-heading .hero-tagline.signature-slogan,
+.trainer-heading .hero-tagline.signature-slogan {
+    color: var(--gold);
+    font-family: "Noto Serif TC", serif;
+    font-style: italic;
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 1.2;
+}

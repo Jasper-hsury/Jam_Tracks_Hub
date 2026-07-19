@@ -1,34 +1,12 @@
 document.addEventListener("DOMContentLoaded", function() {
-    const STORAGE_KEY = "jasperMusicCustomTracks";
     const FAVORITES_KEY = "jasperMusicFavoriteTracks";
     const grid = document.getElementById("tracksGrid");
-    const searchInput = document.getElementById("trackSearchInput");
     const keyFilter = document.getElementById("trackKeyFilter");
-    const styleFilter = document.getElementById("trackStyleFilter");
-    const moodFilter = document.getElementById("trackMoodFilter");
-    const instrumentFilter = document.getElementById("trackInstrumentFilter");
     const sortSelect = document.getElementById("trackSortSelect");
-    const favoritesOnly = document.getElementById("favoriteTracksOnly");
-    const resetButton = document.getElementById("resetTrackFilters");
     const resultCount = document.getElementById("trackResultCount");
     const controls = document.querySelector(".track-controls");
 
-    const modal = document.getElementById("addTrackModal");
-    const modalContent = modal?.querySelector(".modal-content");
-    const openModalButton = document.getElementById("openAddTrackButton");
-    const cancelButton = document.getElementById("cancelAddTrackButton");
-    const previewButton = document.getElementById("previewTrackButton");
-    const reviseButton = document.getElementById("reviseTrackButton");
-    const doneButton = document.getElementById("doneTrackButton");
-
-    const inputFields = document.getElementById("inputFieldsContainer");
-    const primaryButtons = document.getElementById("primaryButtons");
-    const reviseButtons = document.getElementById("reviseButtons");
-    const instructionText = document.getElementById("instructionText");
-    const codeOutput = document.getElementById("codeOutput");
-
     let tracks = [];
-    let previewTrack = null;
 
     if (!grid) {
         return;
@@ -36,9 +14,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const filterPillGroups = [
         { select: keyFilter, container: document.getElementById("trackKeyPills") },
-        { select: styleFilter, container: document.getElementById("trackStylePills") },
-        { select: moodFilter, container: document.getElementById("trackMoodPills") },
-        { select: instrumentFilter, container: document.getElementById("trackInstrumentPills") },
         { select: sortSelect, container: document.getElementById("trackSortPills") }
     ];
 
@@ -63,8 +38,10 @@ document.addEventListener("DOMContentLoaded", function() {
             key: String(track.key || "Unknown key").trim(),
             style: String(track.style || "Unknown style").trim(),
             mood: String(track.mood || "Unspecified").trim(),
+            descriptor: String(track.descriptor || track.mood || track.style || "Practice").trim(),
             instrument: String(track.instrument || "Full band").trim(),
             bpm: String(track.bpm || "").trim(),
+            coverUrl: String(track.coverUrl || "").trim(),
             youtubeUrl: String(track.youtubeUrl || "#").trim(),
             slidesUrl: String(track.slidesUrl || "#").trim(),
             downloadUrl: String(track.downloadUrl || "#").trim()
@@ -113,24 +90,6 @@ document.addEventListener("DOMContentLoaded", function() {
         return "";
     }
 
-    function readCustomTracks() {
-        try {
-            return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]").map(normalizeTrack);
-        } catch (error) {
-            return [];
-        }
-    }
-
-    function saveCustomTrack(track) {
-        const customTracks = readCustomTracks();
-        const nextTracks = customTracks.filter(function(item) {
-            return item.id.toLowerCase() !== track.id.toLowerCase();
-        });
-
-        nextTracks.push(normalizeTrack(track));
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(nextTracks, null, 2));
-    }
-
     function uniqueSorted(values) {
         return Array.from(new Set(values.filter(Boolean))).sort(function(a, b) {
             return a.localeCompare(b);
@@ -159,6 +118,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 return;
             }
 
+            const currentLabel = container.querySelector("[data-filter-current]");
+            const selectedOption = Array.from(select.options).find(option => option.value === select.value);
+            if (currentLabel && selectedOption) {
+                currentLabel.textContent = selectedOption.textContent;
+            }
+
             optionsContainer.innerHTML = Array.from(select.options).map(function(option) {
                 const isSelected = option.value === select.value;
                 return `
@@ -184,36 +149,23 @@ document.addEventListener("DOMContentLoaded", function() {
                 return getTrackNumber(a) - getTrackNumber(b);
             }
 
-            if (sortMode === "key") {
-                return a.key.localeCompare(b.key) || getTrackNumber(b) - getTrackNumber(a);
-            }
-
-            if (sortMode === "style") {
-                return a.style.localeCompare(b.style) || getTrackNumber(b) - getTrackNumber(a);
-            }
-
-            if (sortMode === "bpm") {
-                const bpmA = Number(a.bpm) || Number.MAX_SAFE_INTEGER;
-                const bpmB = Number(b.bpm) || Number.MAX_SAFE_INTEGER;
-                return bpmA - bpmB || getTrackNumber(b) - getTrackNumber(a);
-            }
-
             return getTrackNumber(b) - getTrackNumber(a);
         });
 
         return sorted;
     }
 
-    function buildTrackCard(track, options) {
-        const isPreview = options?.isPreview;
-        const bpmTag = track.bpm ? `<span>${escapeHtml(track.bpm)} BPM</span>` : "";
-        const previewBadge = isPreview ? `<span>Preview</span>` : "";
+    function buildTrackCard(track) {
         const favorite = isFavorite(track.id);
         const videoId = getYouTubeVideoId(track.youtubeUrl);
+        const coverUrl = track.coverUrl || (videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : "");
+        const coverStyle = coverUrl
+            ? ` style="--track-cover-url: url('${escapeHtml(coverUrl)}');"`
+            : "";
 
         return `
-            <article class="track-card${isPreview ? " preview-track-card" : ""}"
-                ${isPreview ? 'id="tempPreviewCard"' : ""}
+            <article class="track-card"${coverStyle}
+                data-flip-id="track-${escapeHtml(track.id)}"
                 data-title="${escapeHtml(`${track.id} ${track.title}`)}"
                 data-key="${escapeHtml(track.key)}"
                 data-style="${escapeHtml(track.style)}"
@@ -223,21 +175,17 @@ document.addEventListener("DOMContentLoaded", function() {
                 <div class="track-card-main">
                     <div class="track-card-title-row">
                         <h2>${escapeHtml(track.id)} ${escapeHtml(track.title)}</h2>
-                        <button class="favorite-track-button${favorite ? " is-favorite" : ""}" type="button"
-                            data-track-id="${escapeHtml(track.id)}"
-                            aria-label="${favorite ? "Remove from favorites" : "Add to favorites"}"
-                            aria-pressed="${favorite}">${favorite ? "♥" : "♡"}</button>
                     </div>
                     <p class="track-meta">
                         <span>${escapeHtml(track.key)}</span>
-                        <span>${escapeHtml(track.style)}</span>
-                        <span>${escapeHtml(track.mood)}</span>
-                        <span>${escapeHtml(track.instrument)}</span>
-                        ${bpmTag}
-                        ${previewBadge}
+                        <span>${escapeHtml(track.descriptor)}</span>
                     </p>
                 </div>
                 <div class="track-actions">
+                    <button class="favorite-track-button${favorite ? " is-favorite" : ""}" type="button"
+                        data-track-id="${escapeHtml(track.id)}"
+                        aria-label="${favorite ? "Remove from favorites" : "Add to favorites"}"
+                        aria-pressed="${favorite}">${favorite ? "♥" : "♡"}</button>
                     ${videoId ? `<button class="track-link track-primary-action inline-play-button" type="button" data-video-id="${escapeHtml(videoId)}">Play Here</button>` : ""}
                     <div class="track-secondary-actions">
                         ${videoId ? `<a href="${escapeHtml(track.youtubeUrl)}" class="track-link track-secondary-action track-youtube-link" target="_blank" rel="noopener noreferrer" aria-label="Open ${escapeHtml(track.title)} on YouTube">YouTube</a>` : ""}
@@ -250,61 +198,99 @@ document.addEventListener("DOMContentLoaded", function() {
         `;
     }
 
+    function shouldUseTrackFlip() {
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        return Boolean(
+            !reduceMotion &&
+            window.gsap &&
+            window.Flip &&
+            grid.querySelector(".track-card:not(.track-skeleton)")
+        );
+    }
+
+    function animateTrackFlip(state) {
+        const nextCards = Array.from(grid.querySelectorAll(".track-card:not(.track-skeleton)"));
+        if (!state || !window.gsap || !window.Flip || !nextCards.length) {
+            grid.classList.remove("is-flipping-tracks");
+            return;
+        }
+
+        window.gsap.registerPlugin(window.Flip);
+        window.Flip.from(state, {
+            targets: nextCards,
+            duration: 0.58,
+            ease: "power2.inOut",
+            absolute: true,
+            prune: true,
+            fade: true,
+            stagger: 0.018,
+            onEnter: elements => window.gsap.fromTo(elements, {
+                opacity: 0,
+                y: 22,
+                scale: 0.985
+            }, {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                duration: 0.36,
+                stagger: 0.035,
+                ease: "power2.out",
+                clearProps: "transform,opacity"
+            }),
+            onLeave: elements => window.gsap.to(elements, {
+                opacity: 0,
+                y: -16,
+                scale: 0.985,
+                duration: 0.24,
+                stagger: 0.02,
+                ease: "power2.in"
+            }),
+            onComplete: () => {
+                grid.classList.remove("is-flipping-tracks");
+                window.ScrollTrigger?.refresh?.();
+            }
+        });
+    }
+
     function getVisibleTracks() {
-        const query = (searchInput?.value || "").trim().toLowerCase();
         const selectedKey = keyFilter?.value || "all";
-        const selectedStyle = styleFilter?.value || "all";
-        const selectedMood = moodFilter?.value || "all";
-        const selectedInstrument = instrumentFilter?.value || "all";
-        const favorites = readFavorites();
 
         return tracks.filter(function(track) {
-            const searchable = [
-                track.id,
-                track.title,
-                track.key,
-                track.style,
-                track.mood,
-                track.instrument,
-                track.bpm
-            ].join(" ").toLowerCase();
-
-            const matchesSearch = !query || searchable.includes(query);
             const matchesKey = selectedKey === "all" || track.key === selectedKey;
-            const matchesStyle = selectedStyle === "all" || track.style === selectedStyle;
-            const matchesMood = selectedMood === "all" || track.mood === selectedMood;
-            const matchesInstrument = selectedInstrument === "all" || track.instrument === selectedInstrument;
-            const matchesFavorite = !favoritesOnly?.checked || favorites.has(track.id);
 
-            return matchesSearch
-                && matchesKey
-                && matchesStyle
-                && matchesMood
-                && matchesInstrument
-                && matchesFavorite;
+            return matchesKey;
         });
     }
 
     function renderTracks() {
+        const flipState = shouldUseTrackFlip()
+            ? window.Flip.getState(".tracks-library-page .track-card:not(.track-skeleton)", {
+                props: "opacity"
+            })
+            : null;
         const visibleTracks = getSortedTracks(getVisibleTracks());
-        const previewHtml = previewTrack ? buildTrackCard(previewTrack, { isPreview: true }) : "";
         const cardsHtml = visibleTracks.map(function(track) {
             return buildTrackCard(track);
         }).join("");
 
-        grid.innerHTML = previewHtml + cardsHtml || `<p class="track-loading">No tracks match these filters.</p>`;
+        if (flipState) {
+            grid.classList.add("is-flipping-tracks");
+        }
+
+        grid.innerHTML = cardsHtml || `<p class="track-loading">No tracks match these filters.</p>`;
         grid.setAttribute("aria-busy", "false");
 
         if (resultCount) {
             resultCount.textContent = `${visibleTracks.length} track${visibleTracks.length === 1 ? "" : "s"} shown`;
         }
+
+        if (flipState) {
+            animateTrackFlip(flipState);
+        }
     }
 
     function refreshFilterOptions() {
         populateSelect(keyFilter, uniqueSorted(tracks.map(track => track.key)), "All keys");
-        populateSelect(styleFilter, uniqueSorted(tracks.map(track => track.style)), "All styles");
-        populateSelect(moodFilter, uniqueSorted(tracks.map(track => track.mood)), "All moods");
-        populateSelect(instrumentFilter, uniqueSorted(tracks.map(track => track.instrument)), "All instruments");
         renderFilterPills();
     }
 
@@ -321,7 +307,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             const baseTracks = await response.json();
-            tracks = [...baseTracks.map(normalizeTrack), ...readCustomTracks()];
+            tracks = baseTracks.map(normalizeTrack);
             refreshFilterOptions();
             const requestedKey = new URLSearchParams(window.location.search).get("key");
             if (requestedKey && keyFilter) {
@@ -340,108 +326,12 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    function resetModalState() {
-        previewTrack = null;
-        inputFields.style.display = "block";
-        primaryButtons.style.display = "flex";
-        reviseButtons.hidden = true;
-        instructionText.hidden = true;
-        codeOutput.hidden = true;
-        renderTracks();
-    }
-
-    let modalReturnFocus = null;
-
-    function getModalFocusTargets() {
-        return Array.from(modal.querySelectorAll(
-            'button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), a[href]'
-        )).filter(function(element) {
-            return !element.hidden && element.offsetParent !== null;
-        });
-    }
-
-    function openModal() {
-        modalReturnFocus = document.activeElement;
-        modal.style.display = "flex";
-        modal.setAttribute("aria-hidden", "false");
-        document.body.classList.add("modal-open");
-        resetModalState();
-        window.setTimeout(function() {
-            document.getElementById("newId")?.focus();
-        }, 0);
-    }
-
-    function closeModal() {
-        modal.style.display = "none";
-        modal.setAttribute("aria-hidden", "true");
-        document.body.classList.remove("modal-open");
-        resetModalState();
-        modalReturnFocus?.focus();
-    }
-
-    function buildTrackFromForm() {
-        const id = document.getElementById("newId").value.trim();
-        const title = document.getElementById("newTitle").value.trim();
-        const subtitle = document.getElementById("newSub").value.trim();
-        const youtubeUrl = document.getElementById("newYt").value.trim() || "#";
-        const safeFileName = title.replace(/\s+/g, "_").replace(/#/g, "Sharp");
-        const key = subtitle.split("/")[0]?.trim() || "Unknown key";
-        const style = subtitle.split("/")[1]?.trim() || "Unknown style";
-
-        return normalizeTrack({
-            id,
-            title,
-            key,
-            style,
-            bpm: "",
-            youtubeUrl,
-            slidesUrl: `slides/${id.toLowerCase()}.html`,
-            downloadUrl: `slides/${id}_${safeFileName}.pdf`
-        });
-    }
-
-    function processNewTrack() {
-        const track = buildTrackFromForm();
-
-        if (!track.id || !track.title) {
-            alert("Please enter at least Number and Title.");
-            return;
-        }
-
-        previewTrack = track;
-        renderTracks();
-
-        inputFields.style.display = "none";
-        primaryButtons.style.display = "none";
-        reviseButtons.hidden = false;
-        instructionText.hidden = false;
-        codeOutput.hidden = false;
-
-        instructionText.innerHTML = `
-            <strong>Preview saved locally</strong>
-            <p>Click Done to keep this track in your browser. To make it permanent for everyone, paste the JSON below into <code>tracks.json</code>.</p>
-        `;
-        codeOutput.value = JSON.stringify(track, null, 2);
-    }
-
-    function confirmPreviewTrack() {
-        if (previewTrack) {
-            saveCustomTrack(previewTrack);
-            tracks = [...tracks.filter(function(track) {
-                return track.id.toLowerCase() !== previewTrack.id.toLowerCase();
-            }), previewTrack];
-            refreshFilterOptions();
-        }
-
-        closeModal();
-    }
-
     function syncFiltersAndRender() {
         renderFilterPills();
         renderTracks();
     }
 
-    [searchInput, keyFilter, styleFilter, moodFilter, instrumentFilter, sortSelect, favoritesOnly].forEach(function(control) {
+    [keyFilter, sortSelect].forEach(function(control) {
         if (control) {
             control.addEventListener("input", syncFiltersAndRender);
             control.addEventListener("change", syncFiltersAndRender);
@@ -449,6 +339,21 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     controls?.addEventListener("click", function(event) {
+        const dropdownToggle = event.target.closest(".track-dropdown-toggle");
+        if (dropdownToggle) {
+            const dropdown = dropdownToggle.closest(".track-dropdown-filter");
+            const wasOpen = dropdown?.classList.contains("is-open");
+            controls.querySelectorAll(".track-dropdown-filter.is-open").forEach(function(openDropdown) {
+                openDropdown.classList.remove("is-open");
+                openDropdown.querySelector(".track-dropdown-toggle")?.setAttribute("aria-expanded", "false");
+            });
+            if (dropdown && !wasOpen) {
+                dropdown.classList.add("is-open");
+                dropdownToggle.setAttribute("aria-expanded", "true");
+            }
+            return;
+        }
+
         const pillButton = event.target.closest(".track-pill-button");
         if (!pillButton) {
             return;
@@ -460,18 +365,20 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         select.value = pillButton.dataset.filterValue;
+        pillButton.closest(".track-dropdown-filter")?.classList.remove("is-open");
+        pillButton.closest(".track-dropdown-filter")?.querySelector(".track-dropdown-toggle")?.setAttribute("aria-expanded", "false");
         syncFiltersAndRender();
     });
 
-    resetButton?.addEventListener("click", function() {
-        searchInput.value = "";
-        keyFilter.value = "all";
-        styleFilter.value = "all";
-        moodFilter.value = "all";
-        instrumentFilter.value = "all";
-        sortSelect.value = "newest";
-        favoritesOnly.checked = false;
-        syncFiltersAndRender();
+    document.addEventListener("click", function(event) {
+        if (!controls || controls.contains(event.target)) {
+            return;
+        }
+
+        controls.querySelectorAll(".track-dropdown-filter.is-open").forEach(function(openDropdown) {
+            openDropdown.classList.remove("is-open");
+            openDropdown.querySelector(".track-dropdown-toggle")?.setAttribute("aria-expanded", "false");
+        });
     });
 
     grid.addEventListener("click", function(event) {
@@ -509,47 +416,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 player.hidden = false;
                 playButton.textContent = "Close Player";
             }
-        }
-    });
-
-    openModalButton?.addEventListener("click", openModal);
-    cancelButton?.addEventListener("click", closeModal);
-    doneButton?.addEventListener("click", confirmPreviewTrack);
-    reviseButton?.addEventListener("click", resetModalState);
-    previewButton?.addEventListener("click", processNewTrack);
-
-    modal?.addEventListener("click", function(event) {
-        if (event.target === modal) {
-            closeModal();
-        }
-    });
-
-    modal?.addEventListener("keydown", function(event) {
-        if (event.key === "Escape") {
-            closeModal();
-            return;
-        }
-
-        if (event.key !== "Tab") {
-            return;
-        }
-
-        const focusTargets = getModalFocusTargets();
-        if (!focusTargets.length) {
-            event.preventDefault();
-            modalContent?.focus();
-            return;
-        }
-
-        const firstTarget = focusTargets[0];
-        const lastTarget = focusTargets[focusTargets.length - 1];
-
-        if (event.shiftKey && document.activeElement === firstTarget) {
-            event.preventDefault();
-            lastTarget.focus();
-        } else if (!event.shiftKey && document.activeElement === lastTarget) {
-            event.preventDefault();
-            firstTarget.focus();
         }
     });
 

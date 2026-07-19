@@ -161,13 +161,56 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     if (backToTopButton) {
+        let backToTopFrame = 0;
+
         function updateBackToTopButton() {
             const isVisible = window.scrollY > 300;
             backToTopButton.style.display = isVisible ? "grid" : "none";
         }
 
+        function easeInOutCubic(progress) {
+            return progress < 0.5
+                ? 4 * progress * progress * progress
+                : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+        }
+
+        function scrollBackToTop() {
+            window.cancelAnimationFrame(backToTopFrame);
+
+            const startY = window.scrollY;
+            if (startY <= 0) {
+                return;
+            }
+
+            const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            if (reduceMotion) {
+                window.scrollTo(0, 0);
+                return;
+            }
+
+            const duration = 1150;
+            const startTime = window.performance.now();
+            const root = document.documentElement;
+            const previousScrollBehavior = root.style.scrollBehavior;
+            root.style.scrollBehavior = "auto";
+
+            function step(now) {
+                const progress = Math.min((now - startTime) / duration, 1);
+                const easedProgress = easeInOutCubic(progress);
+                window.scrollTo(0, Math.round(startY * (1 - easedProgress)));
+
+                if (progress < 1) {
+                    backToTopFrame = window.requestAnimationFrame(step);
+                } else {
+                    root.style.scrollBehavior = previousScrollBehavior;
+                }
+            }
+
+            backToTopFrame = window.requestAnimationFrame(step);
+        }
+
         backToTopButton.addEventListener("click", function() {
-            window.scrollTo({ top: 0, behavior: "smooth" });
+            scrollBackToTop();
         });
 
         window.addEventListener("scroll", updateBackToTopButton, { passive: true });

@@ -36,11 +36,11 @@
     <link rel="stylesheet" href="styles/components.css?v=20260623-layout-v2" />
     <link
       rel="stylesheet"
-      href="styles/pages.css?v=20260718-home-track-updates"
+      href="styles/pages.css?v=20260719-home-step-motifs"
     />
     <link
       rel="stylesheet"
-      href="styles/themes.css?v=20260718-home-track-updates"
+      href="styles/themes.css?v=20260718-unified-signature-subtitles"
     />
   </head>
 
@@ -52,11 +52,11 @@
           <a href="index.html#home" class="active" aria-current="page">Home</a>
         </li>
         <li><a href="tracks.html">Tracks</a></li>
-        <li><a href="key-finder.html">Key Finder</a></li>
-        <li><a href="scale.html">Scale Explorer</a></li>
-        <li><a href="fretboard-trainer.html">Fretboard Trainer</a></li>
-        <li><a href="chords.html">Chord Progressions</a></li>
         <li><a href="chord-dictionary.html">Chord Dictionary</a></li>
+        <li><a href="scale.html">Scale Explorer</a></li>
+        <li><a href="key-finder.html">Key Finder</a></li>
+        <li><a href="chords.html">Chord Progressions</a></li>
+        <li><a href="fretboard-trainer.html">Fretboard Trainer</a></li>
         <li><a href="index.html#about">About</a></li>
       </ul>
     </nav>
@@ -108,48 +108,57 @@
             <h2 id="homeToolsTitle">Choose your next step</h2>
           </div>
 
-          <div class="start-grid home-start-grid">
-            <a href="tracks.html" class="start-card">
-              <span class="start-kicker">Practice</span>
-              <strong>Backing Tracks</strong>
-              <span>Browse by key, style, mood, and instrument.</span>
-            </a>
-            <a href="key-finder.html" class="start-card">
-              <span class="start-kicker">Analyze</span>
-              <strong>Key Finder</strong>
-              <span>Upload audio and inspect the likely tonal center.</span>
-            </a>
-            <a href="scale.html" class="start-card">
-              <span class="start-kicker">Visualize</span>
-              <strong>Scale Explorer</strong>
-              <span
-                >Map scales across 15- or 22-fret necks and download a labeled
-                PNG.</span
-              >
-            </a>
-            <a href="fretboard-trainer.html" class="start-card">
-              <span class="start-kicker">Train</span>
-              <strong>Fretboard Trainer</strong>
-              <span
-                >Answer random string-and-fret questions to build note-name
-                fluency.</span
-              >
-            </a>
-            <a href="chords.html" class="start-card">
-              <span class="start-kicker">Create</span>
-              <strong>Chord Progressions</strong>
-              <span
-                >Explore voicings, inversions, and common progressions.</span
-              >
-            </a>
-            <a href="chord-dictionary.html" class="start-card">
-              <span class="start-kicker">Reference</span>
-              <strong>Chord Dictionary</strong>
-              <span
-                >Compare formulas, notes, fret positions, and compact guitar
-                shapes.</span
-              >
-            </a>
+          <div class="home-step-rail" aria-label="Choose a music tool">
+            <div class="start-grid home-start-grid home-step-track">
+              <a href="tracks.html" class="start-card home-step-card" data-motion="groove">
+                <span class="step-motif step-motif-tracks" aria-hidden="true">
+                  <span></span><span></span><span></span>
+                </span>
+                <span class="start-kicker">Practice</span>
+                <strong>Backing Tracks</strong>
+                <span>Browse tracks by key, then sort newest or oldest first.</span>
+              </a>
+              <a href="chord-dictionary.html" class="start-card home-step-card" data-motion="flip">
+                <span class="step-motif step-motif-dictionary" aria-hidden="true">
+                  <span></span><span></span><span></span><span></span>
+                </span>
+                <span class="start-kicker">Reference</span>
+                <strong>Chord Dictionary</strong>
+                <span>Compare formulas, notes, root strings, and compact guitar shapes.</span>
+              </a>
+              <a href="scale.html" class="start-card home-step-card" data-motion="map">
+                <span class="step-motif step-motif-scale" aria-hidden="true">
+                  <span></span><span></span><span></span><span></span>
+                </span>
+                <span class="start-kicker">Visualize</span>
+                <strong>Scale Explorer</strong>
+                <span>Map scales across 15- or 22-fret necks and download a labeled PNG.</span>
+              </a>
+              <a href="key-finder.html" class="start-card home-step-card" data-motion="scan">
+                <span class="step-motif step-motif-keyfinder" aria-hidden="true">
+                  <span></span><span></span><span></span>
+                </span>
+                <span class="start-kicker">Analyze</span>
+                <strong>Key Finder</strong>
+                <span>Upload audio or paste a YouTube link to inspect the likely tonal center.</span>
+              </a>
+              <a href="chords.html" class="start-card home-step-card" data-motion="cascade">
+                <span class="step-motif step-motif-progressions" aria-hidden="true">
+                  <span></span><span></span><span></span><span></span>
+                </span>
+                <span class="start-kicker">Create</span>
+                <strong>Chord Progressions</strong>
+                <span>Choose a key and explore common progressions for writing.</span>
+              </a>
+              <a href="fretboard-trainer.html" class="start-card home-step-card" data-motion="pulse">
+                <span class="step-motif step-motif-trainer" aria-hidden="true">
+                  <span></span><span></span><span></span>
+                </span>
+                <span class="start-kicker">Train</span>
+                <strong>Fretboard Trainer</strong>
+                <span>Answer random string-and-fret questions to build note-name fluency.</span>
+              </a>
+            </div>
           </div>
         </div>
       </section>
@@ -195,11 +204,14 @@
           </div>
 
           <div class="home-release-grid">
-            <article class="home-release-card">
+            <article
+              class="home-release-card"
+              style="--release-cover-url: url('/slides/W13/W13.001.jpeg')"
+            >
               <p class="release-number">W13</p>
               <h3>Slow Journey Backing Track in A</h3>
               <p class="track-meta">
-                <span>A major</span><span>Ballad</span><span>Reflective</span>
+                <span>A major</span><span>Reflective</span>
               </p>
               <a
                 href="https://youtu.be/4c_SvcNmiZE?si=BrP_0x2yIGi1OJm-"
@@ -209,11 +221,14 @@
                 >Listen on YouTube</a
               >
             </article>
-            <article class="home-release-card">
+            <article
+              class="home-release-card"
+              style="--release-cover-url: url('/slides/W12/W12.001.jpeg')"
+            >
               <p class="release-number">W12</p>
               <h3>Smooth Fusion Backing Track in E</h3>
               <p class="track-meta">
-                <span>E major</span><span>Fusion</span><span>Smooth</span>
+                <span>E major</span><span>Fusion</span>
               </p>
               <a
                 href="https://youtu.be/voSJ3O06a0k?si=c7_oE6IIKkWnFpX2"
@@ -223,11 +238,14 @@
                 >Listen on YouTube</a
               >
             </article>
-            <article class="home-release-card">
+            <article
+              class="home-release-card"
+              style="--release-cover-url: url('/slides/W11/W11.001.jpeg')"
+            >
               <p class="release-number">W11</p>
               <h3>Soul-Searching Backing Track in D</h3>
               <p class="track-meta">
-                <span>D major</span><span>Soul</span><span>Searching</span>
+                <span>D major</span><span>Soulful</span>
               </p>
               <a
                 href="https://youtu.be/GSeIfV5Qbfc?si=K05xkQ-gXFiPcAtu"
@@ -250,7 +268,7 @@
               width="600"
               height="900"
             />
-            <figcaption>Jasper 蝜?guitarist and music creator</figcaption>
+            <figcaption>Jasper, guitarist and music creator</figcaption>
           </figure>
 
           <div class="about-copy">
@@ -313,9 +331,10 @@
       &uarr;
     </button>
 
-    <script src="site.js?v=20260718-theme-direct-wash"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
-    <script src="site-animations.js?v=20260718-gsap-polish-direct-wash"></script>
+    <script src="site.js?v=20260718-slow-back-to-top"></script>
+    <script src="vendor/gsap/gsap.min.js"></script>
+    <script src="vendor/gsap/ScrollTrigger.min.js"></script>
+    <script src="vendor/gsap/SplitText.min.js"></script>
+    <script src="site-animations.js?v=20260719-home-step-motifs"></script>
   </body>
 </html>
