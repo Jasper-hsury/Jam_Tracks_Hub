@@ -123,6 +123,7 @@ document.addEventListener("DOMContentLoaded", function() {
     let shapePage = 0;
     let audioContext = null;
     let isPlaying = false;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     function noteNames() {
         return FLAT_ROOTS.has(rootPitch) ? NOTE_NAMES_FLAT : NOTE_NAMES_SHARP;
@@ -364,7 +365,8 @@ document.addEventListener("DOMContentLoaded", function() {
             formula: chord.formula[index],
             label: intervalLabel(chord.formula[index]),
             note: spellChordTone(pitchClass, chord.formula[index], index),
-            isRoot: index === 0
+            isRoot: index === 0,
+            order: index
         };
     }
 
@@ -679,7 +681,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 return `
                     <span class="diagram-string-status is-open${tone?.isRoot ? " is-root" : ""}">
                         <span>O</span>
-                        <strong>${tone ? tone.label : ""}</strong>
+                        <strong data-tone-order="${tone ? tone.order : 99}">${tone ? tone.label : ""}</strong>
                     </span>
                 `;
             }
@@ -707,6 +709,7 @@ document.addEventListener("DOMContentLoaded", function() {
             return `
                 <span
                     class="diagram-finger${tone?.isRoot ? " is-root" : ""}"
+                    data-tone-order="${tone ? tone.order : 99}"
                     style="left:${stringIndex * 20}%;top:${(row + 0.5) * (100 / DIAGRAM_FRET_ROWS)}%"
                     title="${tone ? `${tone.label} ${tone.note}` : ""}"
                     aria-hidden="true"
@@ -715,7 +718,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }).join("");
 
         return `
-            <article class="chord-shape-card">
+            <article class="chord-shape-card" data-flip-id="shape-card-${index}">
                 <div class="chord-shape-card-heading">
                     <div>
                         <span>Shape ${index + 1}</span>
@@ -737,10 +740,87 @@ document.addEventListener("DOMContentLoaded", function() {
         `;
     }
 
+    function dispatchShapeRendered() {
+        window.dispatchEvent(new CustomEvent("dictionary:shapes-rendered", {
+            detail: { root: shapeGrid }
+        }));
+    }
+
+    function shouldUseShapeFlip() {
+        return Boolean(
+            !reduceMotion &&
+            window.gsap &&
+            window.Flip &&
+            shapeGrid.querySelector(".chord-shape-card")
+        );
+    }
+
+    function animateShapeFlip(state) {
+        const nextCards = Array.from(shapeGrid.querySelectorAll(".chord-shape-card"));
+
+        if (!state || !window.gsap || !window.Flip || !nextCards.length) {
+            shapeGrid.classList.remove("is-flipping-shapes");
+            dispatchShapeRendered();
+            return;
+        }
+
+        window.gsap.registerPlugin(window.Flip);
+        window.Flip.from(state, {
+            targets: nextCards,
+            duration: 0.58,
+            ease: "power3.inOut",
+            absolute: true,
+            absoluteOnLeave: true,
+            nested: true,
+            prune: true,
+            fade: true,
+            scale: true,
+            stagger: {
+                each: 0.018,
+                from: "start"
+            },
+            onEnter: elements => window.gsap.fromTo(elements, {
+                opacity: 0,
+                y: 18,
+                scale: 0.98
+            }, {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                duration: 0.36,
+                stagger: 0.026,
+                ease: "power3.out",
+                clearProps: "transform,opacity"
+            }),
+            onLeave: elements => window.gsap.to(elements, {
+                opacity: 0,
+                y: -12,
+                scale: 0.985,
+                duration: 0.24,
+                stagger: 0.012,
+                ease: "power2.in"
+            }),
+            onComplete: () => {
+                shapeGrid.classList.remove("is-flipping-shapes");
+                dispatchShapeRendered();
+            }
+        });
+    }
+
     function renderShapeResults() {
         const pageCount = Math.ceil(filteredVoicings.length / SHAPES_PER_PAGE);
         const startIndex = shapePage * SHAPES_PER_PAGE;
         const visibleVoicings = filteredVoicings.slice(startIndex, startIndex + SHAPES_PER_PAGE);
+        const flipState = shouldUseShapeFlip()
+            ? window.Flip.getState(".chord-dictionary-page .chord-shape-card", {
+                props: "opacity"
+            })
+            : null;
+
+        if (flipState) {
+            shapeGrid.classList.add("is-flipping-shapes");
+        }
+
         shapeGrid.innerHTML = visibleVoicings
             .map((voicing, index) => renderDiagram(voicing, startIndex + index))
             .join("");
@@ -749,6 +829,12 @@ document.addEventListener("DOMContentLoaded", function() {
         previousShapesButton.disabled = shapePage === 0;
         nextShapesButton.disabled = shapePage >= pageCount - 1;
         shapePageStatus.textContent = `Page ${shapePage + 1} of ${pageCount}`;
+
+        if (flipState) {
+            animateShapeFlip(flipState);
+        } else {
+            dispatchShapeRendered();
+        }
     }
 
     function applyShapeFilter() {
@@ -786,6 +872,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     <span>${emptyMessage}</span>
                 </div>
             `;
+            dispatchShapeRendered();
             return;
         }
 
@@ -823,6 +910,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     <span>Complex extended chords often omit notes. Try a related voicing or another root.</span>
                 </div>
             `;
+            dispatchShapeRendered();
         } else {
             applyShapeFilter();
         }

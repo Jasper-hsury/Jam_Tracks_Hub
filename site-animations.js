@@ -4,6 +4,8 @@
     const hasGsap = Boolean(window.gsap);
     const hasScrollTrigger = Boolean(window.ScrollTrigger);
     const hasSplitText = Boolean(window.SplitText);
+    const hasDrawSvg = Boolean(window.DrawSVGPlugin);
+    const hasMotionPath = Boolean(window.MotionPathPlugin);
 
     if (reduceMotion) {
         document.documentElement.classList.add("motion-reduced");
@@ -59,6 +61,7 @@
             ".home-hero h1",
             ".home-hero .signature-slogan",
             ".home-hero .home-lead",
+            ".home-hero .hero-actions > *",
             ".page-heading-row",
             ".dictionary-heading",
             ".trainer-heading",
@@ -173,12 +176,15 @@
                 }, "-=0.18");
         }
 
-        timeline.from([
+        const secondaryEntrancePieces = elements([
                 ".hero-actions > *",
                 ".home-metrics > div",
                 ".key-button",
                 ".track-pill-button"
-            ].join(", "), {
+            ].join(", "))
+            .filter(target => !target.closest(".home-hero"));
+
+        timeline.from(secondaryEntrancePieces, {
                 y: 12,
                 opacity: 0,
                 duration: 0.42,
@@ -343,6 +349,203 @@
         return card._homeStepText;
     }
 
+    function registerOptionalHomePlugins() {
+        if (!hasGsap) {
+            return;
+        }
+
+        if (hasDrawSvg) {
+            gsap.registerPlugin(window.DrawSVGPlugin);
+        }
+
+        if (hasMotionPath) {
+            gsap.registerPlugin(window.MotionPathPlugin);
+        }
+    }
+
+    function prepareSvgDrawTarget(target) {
+        if (!target || target._drawReady) {
+            return target?._drawLength || 0;
+        }
+
+        try {
+            const length = typeof target.getTotalLength === "function" ? target.getTotalLength() : 0;
+            target._drawLength = length;
+            target._drawReady = true;
+            if (length > 0 && !hasDrawSvg) {
+                target.style.strokeDasharray = length;
+                target.style.strokeDashoffset = length;
+            }
+            return length;
+        } catch (error) {
+            target._drawLength = 0;
+            target._drawReady = true;
+            return 0;
+        }
+    }
+
+    function getMotionPathElement(dot) {
+        if (!dot || dot._homeMotionPath) {
+            return dot?._homeMotionPath || null;
+        }
+
+        const pathData = dot.dataset.motionPath;
+        const svg = dot.ownerSVGElement;
+        if (!pathData || !svg) {
+            return null;
+        }
+
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", pathData);
+        path.setAttribute("fill", "none");
+        path.setAttribute("stroke", "none");
+        path.setAttribute("aria-hidden", "true");
+        path.style.pointerEvents = "none";
+        svg.appendChild(path);
+        dot._homeMotionPath = path;
+        return path;
+    }
+
+    function placeDotOnPath(dot, progress) {
+        const path = getMotionPathElement(dot);
+        if (!dot || !path || typeof path.getTotalLength !== "function") {
+            return;
+        }
+
+        try {
+            const length = path.getTotalLength();
+            const point = path.getPointAtLength(Math.max(0, Math.min(1, progress)) * length);
+            dot.setAttribute("cx", point.x);
+            dot.setAttribute("cy", point.y);
+        } catch (error) {
+            // SVG path support can vary in older embedded browsers; skipping is safer than breaking the page.
+        }
+    }
+
+    function animateSvgMotionDot(dot, timeline, position, options = {}) {
+        if (!dot || !timeline) {
+            return;
+        }
+
+        const path = getMotionPathElement(dot);
+        const pathData = dot.dataset.motionPath;
+        if (!path || !pathData) {
+            return;
+        }
+
+        placeDotOnPath(dot, options.reverse ? 1 : 0);
+
+        if (hasMotionPath) {
+            timeline.to(dot, {
+                motionPath: {
+                    path: pathData,
+                    alignOrigin: [0.5, 0.5],
+                    autoRotate: false
+                },
+                duration: options.duration || 1,
+                ease: options.ease || "power1.inOut"
+            }, position);
+            return;
+        }
+
+        const proxy = { progress: options.reverse ? 1 : 0 };
+        timeline.to(proxy, {
+            progress: options.reverse ? 0 : 1,
+            duration: options.duration || 1,
+            ease: options.ease || "power1.inOut",
+            onUpdate: () => placeDotOnPath(dot, proxy.progress)
+        }, position);
+    }
+
+    function offsetTimelinePosition(position, offset) {
+        if (typeof position === "number") {
+            return position + offset;
+        }
+
+        return `${position}+=${offset}`;
+    }
+
+    function animateHomeStepSvgMotif(card, timeline, position = 0, options = {}) {
+        if (!hasGsap || !card || !timeline) {
+            return;
+        }
+
+        registerOptionalHomePlugins();
+
+        const motif = card.querySelector(".step-motif");
+        if (!motif) {
+            return;
+        }
+        const drawTargets = elements(".home-draw", motif);
+        const dots = elements(".home-motion-dot", motif);
+        const notes = elements(".motif-note, .motif-note-symbol, .motif-roman", motif);
+
+        if (drawTargets.length) {
+            if (hasDrawSvg) {
+                timeline.fromTo(drawTargets, { drawSVG: "0%" }, {
+                    drawSVG: "100%",
+                    duration: options.duration || 0.9,
+                    stagger: 0.045,
+                    ease: "power2.out"
+                }, position);
+            } else {
+                drawTargets.forEach(target => {
+                    const length = prepareSvgDrawTarget(target);
+                    if (options.replay && length > 0) {
+                        target.style.strokeDashoffset = length;
+                    }
+                });
+                timeline.to(drawTargets, {
+                    strokeDashoffset: 0,
+                    duration: options.duration || 0.9,
+                    stagger: 0.045,
+                    ease: "power2.out"
+                }, position);
+            }
+        }
+
+        if (notes.length) {
+            timeline.fromTo(notes, {
+                scale: 0.82,
+                opacity: 0
+            }, {
+                scale: 1,
+                opacity: 1,
+                duration: 0.45,
+                stagger: 0.045,
+                ease: "back.out(1.6)",
+                clearProps: "transform,opacity"
+            }, offsetTimelinePosition(position, 0.14));
+        }
+
+        dots.forEach((dot, dotIndex) => {
+            animateSvgMotionDot(dot, timeline, offsetTimelinePosition(position, 0.2 + dotIndex * 0.08), {
+                duration: options.motionDuration || 1.05,
+                ease: "power1.inOut",
+                reverse: options.reverse
+            });
+        });
+    }
+
+    function replayHomeStepSvgMotif(card) {
+        if (!hasGsap || !card?.classList.contains("home-step-card")) {
+            return;
+        }
+
+        const motif = card.querySelector(".step-motif");
+        if (!motif) {
+            return;
+        }
+
+        const timeline = gsap.timeline({ defaults: { overwrite: true } });
+        animateHomeStepSvgMotif(card, timeline, 0, {
+            duration: 0.42,
+            motionDuration: 0.62,
+            replay: true,
+            reverse: false
+        });
+    }
+
     function getHomeStepTextEffect(card) {
         const motion = card.dataset.motion || "groove";
         const effects = {
@@ -388,6 +591,7 @@
 
             const effect = getHomeStepTextEffect(card);
             const motif = card.querySelector(".step-motif");
+            const cardStart = Math.max(0.12, 0.22 + index * 0.055);
             gsap.set(text.chars, {
                 opacity: 0,
                 transformOrigin: "50% 70%",
@@ -399,7 +603,7 @@
                     ...effect.to,
                     duration: 0.62,
                     clearProps: "transform,opacity,filter"
-                }, Math.max(0.12, 0.22 + index * 0.055))
+                }, cardStart)
                 .fromTo(motif, {
                     y: 14,
                     scale: 0.88,
@@ -414,6 +618,10 @@
                     ease: "power2.out",
                     clearProps: "transform,opacity"
                 }, "<+=0.05");
+            animateHomeStepSvgMotif(card, timeline, cardStart + 0.14, {
+                duration: 0.78,
+                motionDuration: 0.95
+            });
         });
     }
 
@@ -422,33 +630,8 @@
             return;
         }
 
-        const text = prepareHomeStepCardText(card);
-        const chars = text?.chars || [];
         const motif = card.querySelector(".step-motif");
         const motion = card.dataset.motion || "groove";
-
-        if (chars.length) {
-            const hoverEffects = {
-                groove: { y: -3, rotationZ: 2 },
-                flip: { rotationX: 13, y: -2 },
-                map: { x: 2, y: -2 },
-                scan: { y: -2, filter: "blur(0px)" },
-                cascade: { y: -3, skewY: -2 },
-                pulse: { y: -2, scale: 1.04 }
-            };
-            const effect = hoverEffects[motion] || hoverEffects.groove;
-
-            gsap.to(chars, {
-                ...effect,
-                duration: 0.28,
-                stagger: { each: 0.012, from: "random" },
-                ease: "power2.out",
-                yoyo: true,
-                repeat: 1,
-                overwrite: true,
-                clearProps: "transform,filter"
-            });
-        }
 
         if (motif) {
             gsap.fromTo(motif, {
@@ -466,6 +649,7 @@
                 overwrite: true,
                 clearProps: "transform"
             });
+            replayHomeStepSvgMotif(card);
         }
     }
 
@@ -664,6 +848,39 @@
         });
     }
 
+    let trackCoverParallaxTriggers = [];
+
+    function setupTrackCoverParallax() {
+        const cards = elements(".tracks-library-page .track-card:not(.track-skeleton)");
+        trackCoverParallaxTriggers.forEach(trigger => trigger?.kill?.());
+        trackCoverParallaxTriggers = [];
+
+        if (!cards.length || !hasGsap || !hasScrollTrigger) {
+            return;
+        }
+
+        gsap.registerPlugin(ScrollTrigger);
+
+        cards.forEach(card => {
+            gsap.set(card, { "--track-cover-y": "-9px" });
+            const tween = gsap.to(card, {
+                "--track-cover-y": "11px",
+                ease: "none",
+                scrollTrigger: {
+                    trigger: card,
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: 0.65,
+                    invalidateOnRefresh: true
+                }
+            });
+
+            if (tween.scrollTrigger) {
+                trackCoverParallaxTriggers.push(tween.scrollTrigger);
+            }
+        });
+    }
+
     let nativeTrackWindmillCleanup = null;
     let trackWindmillRotation = 0;
 
@@ -782,13 +999,24 @@
                 if (!grid.classList.contains("is-flipping-tracks")) {
                     animateTrackCards(grid);
                 }
+                setupTrackCoverParallax();
                 setupTrackScrollWindmill();
             });
         });
 
         observer.observe(grid, { childList: true });
         animateTrackCards(grid);
+        setupTrackCoverParallax();
         setupTrackScrollWindmill();
+
+        window.addEventListener("tracks:rendered", () => {
+            window.cancelAnimationFrame(pending);
+            pending = window.requestAnimationFrame(() => {
+                setupTrackCoverParallax();
+                setupTrackScrollWindmill();
+                window.ScrollTrigger?.refresh?.();
+            });
+        });
     }
 
     function animateKeyFinderResult(root = document) {
@@ -857,6 +1085,10 @@
             return;
         }
 
+        if (root?.classList?.contains("is-flipping-shapes")) {
+            return;
+        }
+
         const cards = elements(".chord-shape-card", root);
         if (!cards.length) {
             return;
@@ -875,19 +1107,51 @@
         });
 
         cards.forEach(card => {
-            const markers = elements(".diagram-finger, .diagram-string-status.is-open strong", card);
+            const stringLines = elements(".diagram-string-line", card);
+            const fretLines = elements(".diagram-fret-line", card);
+            const markers = elements(".diagram-finger, .diagram-string-status.is-open strong", card)
+                .sort((a, b) => Number(a.dataset.toneOrder || 99) - Number(b.dataset.toneOrder || 99));
+
+            gsap.fromTo(stringLines, {
+                scaleY: 0,
+                opacity: 0.35,
+                transformOrigin: "center top"
+            }, {
+                scaleY: 1,
+                opacity: 1,
+                duration: 0.38,
+                stagger: 0.018,
+                ease: "power2.out",
+                clearProps: "transform,opacity"
+            });
+
+            gsap.fromTo(fretLines, {
+                scaleX: 0,
+                opacity: 0.35,
+                transformOrigin: "left center"
+            }, {
+                scaleX: 1,
+                opacity: 1,
+                duration: 0.38,
+                stagger: 0.018,
+                ease: "power2.out",
+                clearProps: "transform,opacity"
+            });
+
             gsap.fromTo(markers, {
                 y: 4,
-                scale: 0.92,
-                opacity: 0.12
+                scale: 0.82,
+                opacity: 0.08,
+                boxShadow: "0 0 0 0 rgba(45, 123, 118, 0)"
             }, {
                 y: 0,
                 scale: 1,
                 opacity: 1,
-                duration: 0.28,
-                stagger: 0.018,
-                ease: "power2.out",
-                clearProps: "transform,opacity"
+                boxShadow: "0 0 0 6px rgba(45, 123, 118, 0)",
+                duration: 0.34,
+                stagger: 0.055,
+                ease: "back.out(1.65)",
+                clearProps: "transform,opacity,boxShadow"
             });
         });
     }
@@ -899,12 +1163,21 @@
         }
 
         let pending = 0;
+        let suppressNextMutationAnimation = false;
         const observer = new MutationObserver(() => {
+            if (suppressNextMutationAnimation) {
+                suppressNextMutationAnimation = false;
+                return;
+            }
             window.cancelAnimationFrame(pending);
             pending = window.requestAnimationFrame(() => animateChordShapes(grid));
         });
 
         observer.observe(grid, { childList: true });
+        window.addEventListener("dictionary:shapes-rendered", event => {
+            suppressNextMutationAnimation = true;
+            animateChordShapes(event.detail?.root || grid);
+        });
         animateChordShapes(grid);
     }
 

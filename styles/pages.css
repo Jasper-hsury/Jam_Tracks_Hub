@@ -1002,6 +1002,7 @@ iframe {
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
     gap: 20px;
+    --track-cover-y: 0px;
     min-height: 150px;
     padding: 22px 24px 22px clamp(368px, 25vw, 450px);
     border-left-width: 0;
@@ -1018,7 +1019,7 @@ iframe {
         linear-gradient(90deg, rgba(42, 30, 21, 0.04), rgba(42, 30, 21, 0.01)),
         var(--track-cover-url, linear-gradient(135deg, rgba(154, 107, 68, 0.92), rgba(127, 183, 173, 0.52))),
         linear-gradient(135deg, rgba(154, 107, 68, 0.92), rgba(127, 183, 173, 0.52));
-    background-position: center;
+    background-position: center calc(50% + var(--track-cover-y, 0px));
     background-repeat: no-repeat;
     background-size: cover;
     border-right: 1px solid color-mix(in srgb, var(--border-soft) 72%, transparent);
@@ -2398,6 +2399,127 @@ html[data-theme="light"] .track-scroll-five-blade-rotor use {
 .step-motif-trainer span:nth-child(1) { left: 18px; top: 22px; }
 .step-motif-trainer span:nth-child(2) { left: 64px; top: 45px; }
 .step-motif-trainer span:nth-child(3) { left: 103px; top: 70px; }
+
+.home-step-card .step-motif {
+    border: 0;
+    background: none;
+    box-shadow: none;
+    transform: none;
+}
+
+.home-step-card .step-motif::before,
+.home-step-card .step-motif::after {
+    content: none;
+}
+
+.step-motif svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.step-motif .home-draw,
+.step-motif .motif-panel {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+}
+
+.step-motif .home-draw-soft {
+    stroke: color-mix(in srgb, var(--muted) 46%, transparent);
+    stroke-width: 2;
+}
+
+.step-motif .home-draw-accent {
+    stroke: color-mix(in srgb, var(--teal) 72%, var(--gold));
+    stroke-width: 3.25;
+}
+
+.step-motif .motif-panel {
+    stroke: color-mix(in srgb, var(--gold) 30%, transparent);
+    stroke-width: 1.6;
+}
+
+.step-motif .motif-note,
+.step-motif .home-motion-dot {
+    fill: color-mix(in srgb, var(--panel-background) 82%, var(--gold));
+    stroke: color-mix(in srgb, var(--teal) 76%, var(--gold));
+    stroke-width: 3;
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+.step-motif .motif-root,
+.step-motif .home-motion-dot-gold {
+    fill: color-mix(in srgb, var(--gold) 74%, var(--panel-background));
+    stroke: color-mix(in srgb, var(--gold) 84%, var(--teal));
+}
+
+.step-motif .motif-note-symbol {
+    fill: color-mix(in srgb, var(--gold) 70%, var(--teal));
+    opacity: 0.7;
+}
+
+.step-motif .motif-note-symbol-alt {
+    fill: color-mix(in srgb, var(--teal) 72%, var(--gold));
+}
+
+.step-motif .motif-note-symbol-small {
+    opacity: 0.52;
+}
+
+.step-motif .motif-roman rect {
+    fill: color-mix(in srgb, var(--panel-background) 86%, transparent);
+    stroke: color-mix(in srgb, var(--gold) 34%, transparent);
+    stroke-width: 1.4;
+}
+
+.step-motif .motif-roman text {
+    fill: color-mix(in srgb, var(--text) 72%, var(--teal));
+    font: 800 13px/1 var(--font-sans);
+    text-anchor: middle;
+    dominant-baseline: middle;
+}
+
+.home-step-card[data-motion="groove"] .step-motif {
+    width: 158px;
+    height: 118px;
+    color: color-mix(in srgb, var(--gold) 72%, var(--teal));
+}
+
+.home-step-card[data-motion="flip"] .step-motif {
+    width: 142px;
+    height: 112px;
+    color: color-mix(in srgb, var(--teal) 64%, var(--gold));
+}
+
+.home-step-card[data-motion="map"] .step-motif {
+    width: 146px;
+    height: 110px;
+    color: color-mix(in srgb, var(--teal) 74%, var(--gold));
+}
+
+.home-step-card[data-motion="scan"] .step-motif {
+    width: 154px;
+    height: 116px;
+    color: color-mix(in srgb, var(--gold) 66%, var(--teal));
+}
+
+.home-step-card[data-motion="cascade"] .step-motif {
+    width: 150px;
+    height: 116px;
+    color: color-mix(in srgb, var(--gold) 60%, var(--teal));
+}
+
+.home-step-card[data-motion="pulse"] .step-motif {
+    width: 144px;
+    height: 112px;
+    color: color-mix(in srgb, var(--teal) 70%, var(--gold));
+}
 
 html[data-theme="light"] .step-motif {
     opacity: 0.42;

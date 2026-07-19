@@ -420,6 +420,10 @@
     gap: 12px;
 }
 
+.dictionary-shape-grid.is-flipping-shapes .chord-shape-card {
+    will-change: transform, opacity;
+}
+
 .chord-shape-card {
     min-width: 0;
     padding: 12px 10px 11px;
@@ -538,6 +542,7 @@
     position: absolute;
     display: block;
     background: var(--diagram-grid-line);
+    will-change: transform, opacity;
 }
 
 .diagram-string-line {
@@ -574,7 +579,7 @@
     font-weight: 800;
     line-height: 1;
     transform: translate(-50%, -50%);
-    will-change: transform;
+    will-change: transform, opacity, box-shadow;
     transition:
         background-color 0.24s ease,
         border-color 0.24s ease,

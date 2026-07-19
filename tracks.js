@@ -212,42 +212,52 @@ document.addEventListener("DOMContentLoaded", function() {
         const nextCards = Array.from(grid.querySelectorAll(".track-card:not(.track-skeleton)"));
         if (!state || !window.gsap || !window.Flip || !nextCards.length) {
             grid.classList.remove("is-flipping-tracks");
+            window.dispatchEvent(new CustomEvent("tracks:rendered"));
             return;
         }
 
         window.gsap.registerPlugin(window.Flip);
         window.Flip.from(state, {
             targets: nextCards,
-            duration: 0.58,
-            ease: "power2.inOut",
+            duration: 0.74,
+            ease: "power3.inOut",
             absolute: true,
+            absoluteOnLeave: true,
+            nested: true,
             prune: true,
             fade: true,
-            stagger: 0.018,
+            scale: true,
+            stagger: {
+                each: 0.022,
+                from: "start"
+            },
             onEnter: elements => window.gsap.fromTo(elements, {
                 opacity: 0,
-                y: 22,
-                scale: 0.985
+                x: 34,
+                y: 10,
+                scale: 0.98
             }, {
                 opacity: 1,
+                x: 0,
                 y: 0,
                 scale: 1,
-                duration: 0.36,
+                duration: 0.42,
                 stagger: 0.035,
-                ease: "power2.out",
+                ease: "power3.out",
                 clearProps: "transform,opacity"
             }),
             onLeave: elements => window.gsap.to(elements, {
                 opacity: 0,
-                y: -16,
-                scale: 0.985,
-                duration: 0.24,
-                stagger: 0.02,
+                x: -28,
+                scale: 0.98,
+                duration: 0.28,
+                stagger: 0.018,
                 ease: "power2.in"
             }),
             onComplete: () => {
                 grid.classList.remove("is-flipping-tracks");
                 window.ScrollTrigger?.refresh?.();
+                window.dispatchEvent(new CustomEvent("tracks:rendered"));
             }
         });
     }
@@ -286,6 +296,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
         if (flipState) {
             animateTrackFlip(flipState);
+        } else {
+            window.dispatchEvent(new CustomEvent("tracks:rendered"));
         }
     }
 
