@@ -679,9 +679,9 @@
 
     function positionTrackWindmill(windmill, anchorCard) {
         const cardRect = anchorCard.getBoundingClientRect();
-        const downloadLink = elements(".track-secondary-actions a", anchorCard)
-            .find(link => link.textContent.trim().toLowerCase() === "download");
-        const downloadRect = downloadLink?.getBoundingClientRect();
+        const slidesLink = elements(".track-secondary-actions a", anchorCard)
+            .find(link => link.textContent.trim().toLowerCase() === "slides");
+        const slidesRect = slidesLink?.getBoundingClientRect();
         const windmillRect = windmill.getBoundingClientRect();
         const windmillSize = windmillRect.width || 88;
         const viewportPadding = 4;
@@ -689,8 +689,8 @@
         const maxLeft = window.innerWidth - windmillSize / 2 - viewportPadding;
         const minLeft = Math.min(cardRect.right - windmillSize / 2 - 8, maxLeft);
 
-        let left = downloadRect
-            ? downloadRect.right + windmillSize * 1.38
+        let left = slidesRect
+            ? slidesRect.right + windmillSize * 1.38
             : cardRect.right + windmillSize * 1.16;
         left = Math.min(maxLeft, left);
         left = Math.max(minLeft, left);

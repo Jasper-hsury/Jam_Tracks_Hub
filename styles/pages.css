@@ -1042,6 +1042,15 @@ iframe {
     transform: translateY(-3px);
 }
 
+.tracks-library-page .track-card-clickable {
+    cursor: pointer;
+}
+
+.tracks-library-page .track-card-clickable:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--teal) 74%, white);
+    outline-offset: 4px;
+}
+
 .tracks-library-page .track-card-title-row {
     align-items: flex-start;
 }
@@ -1070,6 +1079,11 @@ iframe {
     gap: 12px;
     padding-left: 16px;
     border-left: 1px solid var(--divider-color);
+}
+
+.tracks-library-page .track-secondary-actions .track-secondary-action {
+    min-width: 86px;
+    text-align: center;
 }
 
 .tracks-library-page .inline-track-player {
@@ -1627,11 +1641,6 @@ html[data-theme="light"] .track-scroll-five-blade-rotor use {
         gap: 12px;
     }
 
-    .tracks-library-page .track-primary-action {
-        justify-content: center;
-        text-align: center;
-    }
-
     .tracks-library-page .track-secondary-actions {
         justify-content: center;
         flex-wrap: wrap;
@@ -1707,7 +1716,7 @@ html[data-theme="light"] .track-scroll-five-blade-rotor use {
 
     .track-secondary-actions {
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: minmax(0, 1fr);
         width: 100%;
         padding: 8px 0 0;
         border-top: 1px solid var(--border-soft);

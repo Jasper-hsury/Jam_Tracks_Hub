@@ -158,13 +158,17 @@ document.addEventListener("DOMContentLoaded", function() {
     function buildTrackCard(track) {
         const favorite = isFavorite(track.id);
         const videoId = getYouTubeVideoId(track.youtubeUrl);
+        const hasYouTubeLink = Boolean(videoId && track.youtubeUrl && track.youtubeUrl !== "#");
         const coverUrl = track.coverUrl || (videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : "");
         const coverStyle = coverUrl
             ? ` style="--track-cover-url: url('${escapeHtml(coverUrl)}');"`
             : "";
+        const clickAttributes = hasYouTubeLink
+            ? ` role="link" tabindex="0" data-youtube-url="${escapeHtml(track.youtubeUrl)}" aria-label="Open ${escapeHtml(track.title)} on YouTube"`
+            : "";
 
         return `
-            <article class="track-card"${coverStyle}
+            <article class="track-card${hasYouTubeLink ? " track-card-clickable" : ""}"${coverStyle}${clickAttributes}
                 data-flip-id="track-${escapeHtml(track.id)}"
                 data-title="${escapeHtml(`${track.id} ${track.title}`)}"
                 data-key="${escapeHtml(track.key)}"
@@ -186,14 +190,10 @@ document.addEventListener("DOMContentLoaded", function() {
                         data-track-id="${escapeHtml(track.id)}"
                         aria-label="${favorite ? "Remove from favorites" : "Add to favorites"}"
                         aria-pressed="${favorite}">${favorite ? "♥" : "♡"}</button>
-                    ${videoId ? `<button class="track-link track-primary-action inline-play-button" type="button" data-video-id="${escapeHtml(videoId)}">Play Here</button>` : ""}
                     <div class="track-secondary-actions">
-                        ${videoId ? `<a href="${escapeHtml(track.youtubeUrl)}" class="track-link track-secondary-action track-youtube-link" target="_blank" rel="noopener noreferrer" aria-label="Open ${escapeHtml(track.title)} on YouTube">YouTube</a>` : ""}
                         <a href="${escapeHtml(track.slidesUrl)}" class="track-link track-secondary-action secondary-track-link" target="_blank" rel="noopener noreferrer">Slides</a>
-                        <a href="${escapeHtml(track.downloadUrl)}" class="track-link track-secondary-action download-track-link" download>Download</a>
                     </div>
                 </div>
-                <div class="inline-track-player" hidden></div>
             </article>
         `;
     }
@@ -383,7 +383,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     grid.addEventListener("click", function(event) {
         const favoriteButton = event.target.closest(".favorite-track-button");
-        const playButton = event.target.closest(".inline-play-button");
 
         if (favoriteButton) {
             toggleFavorite(favoriteButton.dataset.trackId);
@@ -391,30 +390,36 @@ document.addEventListener("DOMContentLoaded", function() {
             return;
         }
 
-        if (playButton) {
-            const card = playButton.closest(".track-card");
-            const player = card.querySelector(".inline-track-player");
-            const isOpen = !player.hidden;
+        if (event.target.closest("a, button")) {
+            return;
+        }
 
-            document.querySelectorAll(".inline-track-player").forEach(function(otherPlayer) {
-                otherPlayer.hidden = true;
-                otherPlayer.innerHTML = "";
-            });
-            document.querySelectorAll(".inline-play-button").forEach(function(otherButton) {
-                otherButton.textContent = "Play Here";
-            });
+        const card = event.target.closest(".track-card-clickable");
+        const youtubeUrl = card?.dataset.youtubeUrl;
+        if (youtubeUrl) {
+            const opened = window.open(youtubeUrl, "_blank", "noopener,noreferrer");
+            if (opened) {
+                opened.opener = null;
+            }
+        }
+    });
 
-            if (!isOpen) {
-                player.innerHTML = `
-                    <iframe
-                        src="https://www.youtube.com/embed/${encodeURIComponent(playButton.dataset.videoId)}?autoplay=1"
-                        title="Inline backing track player"
-                        loading="lazy"
-                        allow="autoplay; encrypted-media; picture-in-picture"
-                        allowfullscreen></iframe>
-                `;
-                player.hidden = false;
-                playButton.textContent = "Close Player";
+    grid.addEventListener("keydown", function(event) {
+        if (event.key !== "Enter" && event.key !== " ") {
+            return;
+        }
+
+        if (event.target.closest("a, button")) {
+            return;
+        }
+
+        const card = event.target.closest(".track-card-clickable");
+        const youtubeUrl = card?.dataset.youtubeUrl;
+        if (youtubeUrl) {
+            event.preventDefault();
+            const opened = window.open(youtubeUrl, "_blank", "noopener,noreferrer");
+            if (opened) {
+                opened.opener = null;
             }
         }
     });
