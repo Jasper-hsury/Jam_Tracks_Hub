@@ -1,8 +1,8 @@
-Jasper's Music - YouTube Helper for Windows
+Track and Tone - YouTube Helper for Windows
 
 Why this helper is needed
 YouTube often blocks cloud servers from downloading audio. The helper lets
-Jasper's Music analyze a YouTube link from your own computer instead.
+Track and Tone analyze a YouTube link from your own computer instead.
 
 First-time setup
 1. Right-click the downloaded zip file and choose Extract All.
@@ -20,7 +20,7 @@ First-time setup
    the browser asks.
 
 Daily use after setup
-1. Open the Jasper's Music Key Finder page.
+1. Open the Track and Tone Key Finder page.
 2. The page will try to start the helper automatically.
 3. If the browser asks whether to open Jasper YouTube Helper, choose Open/Allow.
 4. Keep the black helper window open while analyzing YouTube links.

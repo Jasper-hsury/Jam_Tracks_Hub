@@ -1,6 +1,6 @@
 # Vendored GSAP
 
-This folder stores local copies of GSAP files used by Jasper's Music.
+This folder stores local copies of GSAP files used by Track and Tone.
 
 - `gsap.min.js`: GSAP 3.13.0
 - `ScrollTrigger.min.js`: ScrollTrigger 3.13.0

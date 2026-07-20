@@ -1,7 +1,7 @@
 @echo off
 setlocal
 cd /d "%~dp0"
-echo Jasper's Music - Helper setup step 1
+echo Track and Tone - Helper setup step 1
 echo.
 echo This installs the Python packages needed by the YouTube Helper.
 echo If Windows asks for permission, choose Yes.

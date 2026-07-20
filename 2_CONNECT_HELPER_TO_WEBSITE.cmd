@@ -1,7 +1,7 @@
 @echo off
 setlocal
 cd /d "%~dp0"
-echo Jasper's Music - Helper setup step 2
+echo Track and Tone - Helper setup step 2
 echo.
 echo This lets the website open the local YouTube Helper from your browser.
 echo If Windows asks for permission, choose Yes.

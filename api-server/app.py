@@ -29,7 +29,7 @@ except ImportError:
     imageio_ffmpeg = None
 
 
-app = FastAPI(title="Jasper's Music Key Finder")
+app = FastAPI(title="Track and Tone Key Finder")
 MODEL_VERSION = "2026-06-12-render-fast-audio"
 SITE_DIR = Path(__file__).resolve().parent.parent
 ANALYSIS_HISTORY_PATH = Path(__file__).with_name("analysis_history.csv")

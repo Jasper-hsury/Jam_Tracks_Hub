@@ -16,7 +16,7 @@ if (-not (Test-Path $apiPath)) {
     throw "API folder not found: $apiPath"
 }
 
-Write-Host "Starting Jasper's Music website..." -ForegroundColor Cyan
+Write-Host "Starting Track and Tone website..." -ForegroundColor Cyan
 Start-Process -FilePath $pythonExe `
     -ArgumentList "-m", "http.server", "8088", "--bind", "127.0.0.1" `
     -WorkingDirectory $sitePath `

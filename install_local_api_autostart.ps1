@@ -3,7 +3,7 @@ $ErrorActionPreference = "Stop"
 $sitePath = Split-Path -Parent $MyInvocation.MyCommand.Path
 $launcherPath = Join-Path $sitePath "start_local_api_background.ps1"
 $startupFolder = [Environment]::GetFolderPath("Startup")
-$shortcutPath = Join-Path $startupFolder "Jasper's Music API.lnk"
+$shortcutPath = Join-Path $startupFolder "Track and Tone API.lnk"
 $powershellPath = Join-Path $PSHOME "powershell.exe"
 
 if (-not (Test-Path $launcherPath)) {
@@ -16,7 +16,7 @@ $shortcut.TargetPath = $powershellPath
 $shortcut.Arguments = "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$launcherPath`""
 $shortcut.WorkingDirectory = $sitePath
 $shortcut.WindowStyle = 7
-$shortcut.Description = "Start Jasper's Music Key Finder API after Windows login"
+$shortcut.Description = "Start Track and Tone Key Finder API after Windows login"
 $shortcut.Save()
 
 Write-Host "Autostart installed:" -ForegroundColor Green
