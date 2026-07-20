@@ -2590,78 +2590,107 @@ html[data-theme="light"] .home-step-card:hover .step-motif {
 .home-release-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 14px;
+    gap: 18px;
 }
 
 .home-release-card {
     position: relative;
     display: grid;
-    align-content: start;
-    min-height: 190px;
-    padding: 20px;
+    grid-template-rows: auto 1fr;
+    min-height: 360px;
+    padding: 0;
     overflow: hidden;
     background: color-mix(in srgb, var(--panel-background) 92%, transparent);
     border: 1px solid var(--border-soft);
     border-radius: var(--radius);
+    box-shadow: 0 14px 34px var(--shadow-color);
 }
 
 .home-release-card::before {
+    display: none;
+}
+
+.release-cover-link {
+    position: relative;
+    display: block;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: #0f0d0b;
+    border-bottom: 1px solid var(--border-soft);
+}
+
+.release-cover-link::after {
     content: "";
     position: absolute;
     inset: 0;
-    z-index: 0;
     background:
-        linear-gradient(
-            90deg,
-            color-mix(in srgb, var(--panel-background) 95%, transparent) 0%,
-            color-mix(in srgb, var(--panel-background) 84%, transparent) 58%,
-            color-mix(in srgb, var(--panel-background) 93%, transparent) 100%
-        ),
-        var(--release-cover-url, linear-gradient(135deg, rgba(154, 107, 68, 0.28), rgba(127, 183, 173, 0.2)));
-    background-position: center;
-    background-size: cover;
-    opacity: 0.64;
-    filter: saturate(0.95) contrast(0.96);
-    transform: scale(1);
-    transition: opacity 0.28s ease, filter 0.28s ease, transform 0.36s ease;
-}
-
-.home-release-card:hover::before {
+        linear-gradient(180deg, transparent 45%, rgba(0, 0, 0, 0.36)),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.08), transparent 62%);
     opacity: 0.78;
-    filter: saturate(1.04) contrast(1);
-    transform: scale(1.04);
+    pointer-events: none;
+    transition: opacity 0.28s ease;
 }
 
-.home-release-card > * {
-    position: relative;
-    z-index: 1;
+.release-cover-link img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.01);
+    transition: transform 0.42s ease, filter 0.28s ease;
 }
 
-html[data-theme="light"] .home-release-card::before {
-    opacity: 0.5;
+.home-release-card:hover .release-cover-link img {
+    filter: saturate(1.08) contrast(1.02);
+    transform: scale(1.055);
 }
 
-html[data-theme="light"] .home-release-card:hover::before {
-    opacity: 0.62;
+.home-release-card:hover .release-cover-link::after {
+    opacity: 0.46;
+}
+
+.release-copy {
+    display: grid;
+    align-content: start;
+    padding: 18px 20px 20px;
+}
+
+.release-note {
+    margin: 9px 0 14px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
 }
 
 .home-release-card h3 {
     margin: 0;
     color: var(--text);
-    font-size: 17px;
-    line-height: 1.45;
+    font-size: 18px;
+    line-height: 1.35;
+}
+
+.home-release-card .track-meta {
+    margin-top: 0;
+}
+
+.release-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 18px;
 }
 
 .home-release-card .text-link {
-    align-self: end;
-    margin-top: 22px;
+    margin-top: 0;
 }
 
 .release-number {
-    margin: 0 0 12px;
+    margin: 0 0 10px;
     color: var(--teal);
     font-size: 12px;
-    font-weight: bold;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
 }
 
 .text-link {
