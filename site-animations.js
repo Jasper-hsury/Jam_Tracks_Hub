@@ -996,30 +996,7 @@
         }
     }
 
-    function positionTrackWindmill(windmill, anchorCard) {
-        const cardRect = anchorCard.getBoundingClientRect();
-        const slidesLink = elements(".track-secondary-actions a", anchorCard)
-            .find(link => link.textContent.trim().toLowerCase() === "slides");
-        const slidesRect = slidesLink?.getBoundingClientRect();
-        const windmillRect = windmill.getBoundingClientRect();
-        const windmillSize = windmillRect.width || 88;
-        const viewportPadding = 4;
-
-        const maxLeft = window.innerWidth - windmillSize / 2 - viewportPadding;
-        const minLeft = Math.min(cardRect.right - windmillSize / 2 - 8, maxLeft);
-
-        let left = slidesRect
-            ? slidesRect.right + windmillSize * 1.38
-            : cardRect.right + windmillSize * 1.16;
-        left = Math.min(maxLeft, left);
-        left = Math.max(minLeft, left);
-
-        let top = cardRect.top + cardRect.height * 0.5;
-        top = Math.min(window.innerHeight - windmillSize / 2 - viewportPadding, top);
-        top = Math.max(92 + windmillSize / 2, top);
-
-        windmill.style.left = `${Math.round(left)}px`;
-        windmill.style.top = `${Math.round(top)}px`;
+    function positionTrackWindmill(windmill) {
         windmill.classList.add("is-positioned");
     }
 
@@ -1028,7 +1005,7 @@
         const windmill = document.querySelector(".track-scroll-windmill");
         const rotor = windmill?.querySelector(".track-scroll-windmill-svg");
         const cards = elements(".tracks-library-page .track-card:not(.track-skeleton)");
-        if (!page || !windmill || !rotor || cards.length < 2) {
+        if (!page || !windmill || !rotor || !cards.length) {
             return;
         }
 
@@ -1037,7 +1014,6 @@
             nativeTrackWindmillCleanup = null;
         }
 
-        const anchorCard = cards[1];
         if (windmill.parentElement !== document.body) {
             document.body.appendChild(windmill);
         }
@@ -1046,7 +1022,7 @@
         let pendingFrame = 0;
 
         function updatePosition() {
-            positionTrackWindmill(windmill, anchorCard);
+            positionTrackWindmill(windmill);
         }
 
         function updateRotation() {

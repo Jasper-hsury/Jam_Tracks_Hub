@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function() {
-    const FAVORITES_KEY = "jasperMusicFavoriteTracks";
     const grid = document.getElementById("tracksGrid");
     const keyFilter = document.getElementById("trackKeyFilter");
     const sortSelect = document.getElementById("trackSortSelect");
@@ -46,32 +45,6 @@ document.addEventListener("DOMContentLoaded", function() {
             slidesUrl: String(track.slidesUrl || "#").trim(),
             downloadUrl: String(track.downloadUrl || "#").trim()
         };
-    }
-
-    function readFavorites() {
-        try {
-            return new Set(JSON.parse(localStorage.getItem(FAVORITES_KEY) || "[]"));
-        } catch (error) {
-            return new Set();
-        }
-    }
-
-    function writeFavorites(favorites) {
-        localStorage.setItem(FAVORITES_KEY, JSON.stringify(Array.from(favorites)));
-    }
-
-    function isFavorite(trackId) {
-        return readFavorites().has(trackId);
-    }
-
-    function toggleFavorite(trackId) {
-        const favorites = readFavorites();
-        if (favorites.has(trackId)) {
-            favorites.delete(trackId);
-        } else {
-            favorites.add(trackId);
-        }
-        writeFavorites(favorites);
     }
 
     function getYouTubeVideoId(url) {
@@ -156,7 +129,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function buildTrackCard(track) {
-        const favorite = isFavorite(track.id);
         const videoId = getYouTubeVideoId(track.youtubeUrl);
         const hasYouTubeLink = Boolean(videoId && track.youtubeUrl && track.youtubeUrl !== "#");
         const coverUrl = track.coverUrl || (videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : "");
@@ -186,10 +158,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     </p>
                 </div>
                 <div class="track-actions">
-                    <button class="favorite-track-button${favorite ? " is-favorite" : ""}" type="button"
-                        data-track-id="${escapeHtml(track.id)}"
-                        aria-label="${favorite ? "Remove from favorites" : "Add to favorites"}"
-                        aria-pressed="${favorite}">${favorite ? "♥" : "♡"}</button>
                     <div class="track-secondary-actions">
                         <a href="${escapeHtml(track.slidesUrl)}" class="track-link track-secondary-action secondary-track-link" data-card-action="slides" target="_blank" rel="noopener noreferrer">Slides</a>
                     </div>
@@ -396,15 +364,6 @@ document.addEventListener("DOMContentLoaded", function() {
     grid.addEventListener("click", function(event) {
         if (event.target.closest("[data-card-action]")) {
             event.stopPropagation();
-            return;
-        }
-
-        const favoriteButton = event.target.closest(".favorite-track-button");
-
-        if (favoriteButton) {
-            event.stopPropagation();
-            toggleFavorite(favoriteButton.dataset.trackId);
-            renderTracks();
             return;
         }
 

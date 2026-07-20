@@ -1093,15 +1093,15 @@ iframe {
 
 .track-scroll-windmill {
     position: fixed;
-    top: 0;
-    left: 0;
+    top: 56vh;
+    right: clamp(24px, 4.8vw, 92px);
     z-index: 5;
     display: none;
     width: clamp(76px, 5.6vw, 104px);
     aspect-ratio: 1;
     pointer-events: none;
     opacity: 1;
-    transform: translate(-50%, -50%);
+    transform: translateY(-50%);
     filter: drop-shadow(0 18px 28px var(--shadow-color));
 }
 
@@ -1173,7 +1173,19 @@ html[data-theme="light"] .track-scroll-five-blade-rotor use {
 
 @media (max-width: 960px) {
     .track-scroll-windmill {
-        display: none;
+        top: auto;
+        right: 18px;
+        bottom: 82px;
+        width: 56px;
+        transform: none;
+    }
+}
+
+@media (max-width: 520px) {
+    .track-scroll-windmill {
+        right: 14px;
+        bottom: 76px;
+        width: 50px;
     }
 }
 
