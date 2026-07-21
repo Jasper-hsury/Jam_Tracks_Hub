@@ -11,3 +11,4 @@ youtube_cookies.txt
 .DS_Store
 Thumbs.db
 incoming-tracks/
+dist/

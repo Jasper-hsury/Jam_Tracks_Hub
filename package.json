@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "build:cloudflare": "node scripts/build-cloudflare.js"
+  }
+}
