@@ -1818,8 +1818,7 @@ html[data-theme="light"] .track-scroll-five-blade-rotor use {
 }
 
 .home-hero {
-    --jam-mark-fill: color-mix(in srgb, var(--brand-brown) 1.8%, transparent);
-    --jam-mark-line: color-mix(in srgb, var(--brand-brown) 18%, transparent);
+    --jam-mark-fill: rgba(150, 104, 66, 0.2);
     padding: 82px 0 54px;
 }
 
@@ -1853,27 +1852,7 @@ html[data-theme="light"] .track-scroll-five-blade-rotor use {
     font-weight: 400;
     letter-spacing: 0;
     opacity: 0;
-    animation: homeJamSettle 1.35s ease 1.75s forwards;
-}
-
-.home-jam-mark-line {
-    fill: none;
-    stroke: var(--jam-mark-line);
-    stroke-width: 14;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-dasharray: 1480;
-    stroke-dashoffset: 1480;
-    opacity: 0.64;
-    animation:
-        homeJamWrite 2.05s cubic-bezier(0.19, 1, 0.22, 1) 0.22s forwards,
-        homeJamLineFade 0.82s ease 1.72s forwards;
-}
-
-@keyframes homeJamWrite {
-    to {
-        stroke-dashoffset: 0;
-    }
+    animation: homeJamSettle 2.4s ease 0.35s forwards;
 }
 
 @keyframes homeJamSettle {
@@ -1882,15 +1861,8 @@ html[data-theme="light"] .track-scroll-five-blade-rotor use {
     }
 }
 
-@keyframes homeJamLineFade {
-    to {
-        opacity: 0;
-    }
-}
-
 html[data-theme="dark"] .home-hero {
-    --jam-mark-fill: color-mix(in srgb, var(--gold-light) 2.2%, transparent);
-    --jam-mark-line: color-mix(in srgb, var(--gold-light) 16%, transparent);
+    --jam-mark-fill: rgba(211, 174, 136, 0.3);
 }
 
 .home-hero .home-section-inner > :not(.home-jam-mark) {
@@ -1904,10 +1876,6 @@ html[data-theme="dark"] .home-hero {
         animation: none;
     }
 
-    .home-jam-mark-line {
-        opacity: 0;
-        animation: none;
-    }
 }
 
 .home-hero h1 {
@@ -3073,39 +3041,77 @@ html[data-theme="light"] .home-step-card:hover .step-motif {
 
     .home-hero .home-section-inner {
         margin: 0 auto;
+        text-align: center;
+    }
+
+    .home-eyebrow {
+        max-width: 100%;
+        text-align: center;
+        line-height: 1.6;
     }
 
     .home-hero h1 {
-        font-size: 44px;
+        max-width: 100%;
+        margin-right: auto;
+        margin-left: auto;
+        font-size: clamp(42px, 12vw, 58px);
+        line-height: 0.98;
+    }
+
+    .home-hero .signature-slogan {
+        max-width: 34rem;
+        margin-right: auto;
+        margin-left: auto;
     }
 
     .home-jam-mark {
-        top: 16px;
-        left: -4px;
-        width: min(410px, calc(100vw - 44px));
+        top: 58px;
+        left: 50%;
+        width: min(520px, 92vw);
+        transform: translateX(-50%);
     }
 
     .home-jam-mark-text {
-        font-size: 172px;
-    }
-
-    .home-jam-mark-line {
-        stroke-width: 12;
+        font-size: 176px;
     }
 
     .home-lead {
+        max-width: 34rem;
+        margin-right: auto;
+        margin-left: auto;
         font-size: 16px;
     }
 
+    .hero-actions {
+        justify-content: center;
+    }
+
     .home-metrics {
-        grid-template-columns: 1fr;
-        gap: 14px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0;
+        max-width: 560px;
+        margin-right: auto;
+        margin-left: auto;
+        text-align: center;
     }
 
     .home-metrics div,
     .home-metrics div:first-child {
-        padding: 0;
+        padding: 0 10px;
+        border-right: 1px solid var(--border-soft);
+    }
+
+    .home-metrics div:last-child {
         border-right: 0;
+    }
+
+    .home-metrics dt {
+        font-size: 30px;
+    }
+
+    .home-metrics dd {
+        font-size: 12px;
+        line-height: 1.35;
     }
 
     .home-tools,
@@ -3147,5 +3153,73 @@ html[data-theme="light"] .home-step-card:hover .step-motif {
 
     .about-portrait {
         max-width: 320px;
+    }
+}
+
+@media (max-width: 430px) {
+    .home-section-inner,
+    .home-feature-inner {
+        width: min(100% - 30px, 1120px);
+    }
+
+    .home-hero {
+        padding: 42px 0 34px;
+    }
+
+    .home-hero h1 {
+        font-size: clamp(38px, 13vw, 50px);
+    }
+
+    .home-hero .signature-slogan {
+        font-size: clamp(24px, 7vw, 32px);
+        line-height: 1.15;
+    }
+
+    .home-jam-mark {
+        top: 62px;
+        width: min(430px, 96vw);
+    }
+
+    .home-jam-mark-text {
+        font-size: 154px;
+    }
+
+    .hero-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+        width: min(100%, 300px);
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .hero-actions a {
+        box-sizing: border-box;
+        width: 100%;
+    }
+
+    .home-metrics div,
+    .home-metrics div:first-child {
+        padding: 0 6px;
+    }
+
+    .home-metrics dt {
+        font-size: 26px;
+    }
+
+    .home-metrics dd {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 340px) {
+    .home-metrics {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .home-metrics div,
+    .home-metrics div:first-child {
+        padding: 0;
+        border-right: 0;
     }
 }

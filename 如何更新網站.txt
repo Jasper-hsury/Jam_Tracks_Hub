@@ -14,7 +14,7 @@
 
 用 VS Code 打開這個資料夾：
 
-C:\Users\Jaspe\OneDrive\桌面\Jasper's_Music_v1_with_find_key
+C:\Users\Jaspe\OneDrive\桌面\Jam_Tracks_Hub
 
 
 二、修改網站內容
@@ -48,7 +48,7 @@ api-server\detect_key.py
 
 修改完後，先在 VS Code Terminal 跑：
 
-cd "C:\Users\Jaspe\OneDrive\桌面\Jasper's_Music_v1_with_find_key"
+cd "C:\Users\Jaspe\OneDrive\桌面\Jam_Tracks_Hub"
 powershell -ExecutionPolicy Bypass -File ".\start_render_local.ps1"
 
 然後打開：
@@ -69,7 +69,7 @@ http://127.0.0.1:8000/api/health
 
 確認本機測試沒問題後，在 VS Code Terminal 依序輸入：
 
-cd "C:\Users\Jaspe\OneDrive\桌面\Jasper's_Music_v1_with_find_key"
+cd "C:\Users\Jaspe\OneDrive\桌面\Jam_Tracks_Hub"
 git status
 git add .
 git commit -m "Update website"
@@ -134,4 +134,3 @@ git add .
 git commit -m "Update website"
 git push
 等待 Render 自動部署
-

@@ -34,7 +34,7 @@ youtube_cookies.txt
 
 到 Render Dashboard：
 
-Jasper-music
+jamtrackshub
 → Environment
 → Secret Files
 → Add Secret File
@@ -87,4 +87,3 @@ https://你的-render網址/chords.html
    本專案已經在 .gitignore 裡排除它。
 
 3. 如果你改 GitHub repo 成 Public，更要確認 cookies 沒有被加進去。
-

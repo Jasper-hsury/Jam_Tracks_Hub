@@ -17,7 +17,7 @@
 
 3. 建議使用英文字母與數字 (Use Alphanumeric)
    - 雖然現代伺服器大多支援中文檔名，但為了跨平台相容性與 SEO 考量，強烈建議使用英文與數字。
-   - 正確範例：Jasper_Music_Cover_01.jpg
+   - 正確範例：Jam_Tracks_Hub_Cover_01.jpg
 
 4. 注意大小寫一致性 (Case Sensitivity)
    - 網頁伺服器（特別是 Linux 伺服器）是區分大小寫的。

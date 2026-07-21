@@ -3,7 +3,7 @@
 This folder is now set up as one Render web service:
 
 ```text
-Jasper's_Music_v1_with_find_key/
+Jam_Tracks_Hub/
   index.html
   chords.html
   tracks.html

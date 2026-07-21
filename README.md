@@ -7,7 +7,7 @@ Personal music site for backing tracks, chord exploration, chord playback, and Y
 For the Render-style version, run this from PowerShell:
 
 ```powershell
-cd "C:\Users\Jaspe\OneDrive\桌面\Jasper's_Music_v1_with_find_key"
+cd "C:\Users\Jaspe\OneDrive\桌面\Jam_Tracks_Hub"
 powershell -ExecutionPolicy Bypass -File ".\start_render_local.ps1"
 ```
 
