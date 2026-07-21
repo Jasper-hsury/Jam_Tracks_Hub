@@ -1229,7 +1229,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const style = decodeURIComponent(button.dataset.style || "");
         const keyName = selectedKeyButton?.dataset.key || "Selected key";
         const content = [
-            "Track and Tone - Chord Progression",
+            "Jam Tracks Hub - Chord Progression",
             "",
             `Key: ${keyName}`,
             `Roman numerals: ${numerals.join(" - ")}`,

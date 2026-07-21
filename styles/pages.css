@@ -1093,15 +1093,15 @@ iframe {
 
 .track-scroll-windmill {
     position: fixed;
-    top: 56vh;
-    right: clamp(24px, 4.8vw, 92px);
+    right: clamp(22px, 3.4vw, 72px);
+    bottom: clamp(82px, 8vh, 118px);
     z-index: 5;
     display: none;
     width: clamp(76px, 5.6vw, 104px);
     aspect-ratio: 1;
     pointer-events: none;
     opacity: 1;
-    transform: translateY(-50%);
+    transform: none;
     filter: drop-shadow(0 18px 28px var(--shadow-color));
 }
 
@@ -1173,11 +1173,9 @@ html[data-theme="light"] .track-scroll-five-blade-rotor use {
 
 @media (max-width: 960px) {
     .track-scroll-windmill {
-        top: auto;
         right: 18px;
         bottom: 82px;
         width: 56px;
-        transform: none;
     }
 }
 
@@ -1820,12 +1818,96 @@ html[data-theme="light"] .track-scroll-five-blade-rotor use {
 }
 
 .home-hero {
+    --jam-mark-fill: color-mix(in srgb, var(--brand-brown) 1.8%, transparent);
+    --jam-mark-line: color-mix(in srgb, var(--brand-brown) 18%, transparent);
     padding: 82px 0 54px;
 }
 
 .home-hero .home-section-inner {
+    position: relative;
+    isolation: isolate;
     max-width: 920px;
     margin-left: max(24px, calc((100% - 1120px) / 2));
+}
+
+.home-jam-mark {
+    position: absolute;
+    top: 0;
+    left: -22px;
+    z-index: 0;
+    width: min(740px, calc(100vw - 72px));
+    max-width: 100%;
+    height: auto;
+    overflow: visible;
+    pointer-events: none;
+    user-select: none;
+}
+
+.home-jam-mark-text {
+    fill: var(--jam-mark-fill);
+    stroke: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    font-family: "Times New Roman", "Noto Serif TC", serif;
+    font-size: 216px;
+    font-weight: 400;
+    letter-spacing: 0;
+    opacity: 0;
+    animation: homeJamSettle 1.35s ease 1.75s forwards;
+}
+
+.home-jam-mark-line {
+    fill: none;
+    stroke: var(--jam-mark-line);
+    stroke-width: 14;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1480;
+    stroke-dashoffset: 1480;
+    opacity: 0.64;
+    animation:
+        homeJamWrite 2.05s cubic-bezier(0.19, 1, 0.22, 1) 0.22s forwards,
+        homeJamLineFade 0.82s ease 1.72s forwards;
+}
+
+@keyframes homeJamWrite {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes homeJamSettle {
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes homeJamLineFade {
+    to {
+        opacity: 0;
+    }
+}
+
+html[data-theme="dark"] .home-hero {
+    --jam-mark-fill: color-mix(in srgb, var(--gold-light) 2.2%, transparent);
+    --jam-mark-line: color-mix(in srgb, var(--gold-light) 16%, transparent);
+}
+
+.home-hero .home-section-inner > :not(.home-jam-mark) {
+    position: relative;
+    z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .home-jam-mark-text {
+        opacity: 1;
+        animation: none;
+    }
+
+    .home-jam-mark-line {
+        opacity: 0;
+        animation: none;
+    }
 }
 
 .home-hero h1 {
@@ -2995,6 +3077,20 @@ html[data-theme="light"] .home-step-card:hover .step-motif {
 
     .home-hero h1 {
         font-size: 44px;
+    }
+
+    .home-jam-mark {
+        top: 16px;
+        left: -4px;
+        width: min(410px, calc(100vw - 44px));
+    }
+
+    .home-jam-mark-text {
+        font-size: 172px;
+    }
+
+    .home-jam-mark-line {
+        stroke-width: 12;
     }
 
     .home-lead {

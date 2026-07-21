@@ -1,8 +1,8 @@
-Track and Tone - YouTube Helper for Mac
+Jam Tracks Hub - YouTube Helper for Mac
 
 Why this helper is needed
 YouTube often blocks cloud servers from downloading audio. The helper lets
-Track and Tone analyze a YouTube link from your own computer instead.
+Jam Tracks Hub analyze a YouTube link from your own computer instead.
 
 First-time setup
 1. Download jasper-youtube-helper-mac.zip.
@@ -17,12 +17,12 @@ First-time setup
 
    Then double-click INSTALL_MAC_HELPER_PROTOCOL.command again.
 6. Return to the Key Finder page.
-7. If the browser asks whether to open Jasper YouTube Helper, choose Open/Allow.
+7. If the browser asks whether to open the local YouTube Helper, choose Open/Allow.
 
 Daily use after setup
-1. Open the Track and Tone Key Finder page.
+1. Open the Jam Tracks Hub Key Finder page.
 2. The page will try to start the helper automatically.
-3. If the browser asks whether to open Jasper YouTube Helper, choose Open/Allow.
+3. If the browser asks whether to open the local YouTube Helper, choose Open/Allow.
 4. Keep the Terminal window open while analyzing YouTube links.
 
 Manual fallback

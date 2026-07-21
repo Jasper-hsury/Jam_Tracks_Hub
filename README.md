@@ -1,4 +1,4 @@
-# Track and Tone
+# Jam Tracks Hub
 
 Personal music site for backing tracks, chord exploration, chord playback, and YouTube key detection.
 

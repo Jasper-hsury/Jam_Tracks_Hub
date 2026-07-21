@@ -58,7 +58,7 @@ if (-not (Test-Path $venvPython)) {
     & $pythonExe -m venv $venvPath
 }
 
-Write-Host "Installing Jasper YouTube Helper dependencies..." -ForegroundColor Cyan
+Write-Host "Installing the local YouTube Helper dependencies..." -ForegroundColor Cyan
 & $venvPython -m pip install --upgrade pip
 & $venvPython -m pip install -r $requirementsPath
 

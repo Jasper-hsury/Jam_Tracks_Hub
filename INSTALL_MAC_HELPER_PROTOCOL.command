@@ -3,7 +3,7 @@ set -euo pipefail
 
 SITE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 HELPER_SCRIPT="$SITE_DIR/start_youtube_helper_mac.sh"
-APP_DIR="$HOME/Applications/Jasper YouTube Helper.app"
+APP_DIR="$HOME/Applications/Jam Tracks Hub YouTube Helper.app"
 CONTENTS_DIR="$APP_DIR/Contents"
 MACOS_DIR="$CONTENTS_DIR/MacOS"
 PLIST_FILE="$CONTENTS_DIR/Info.plist"
@@ -29,7 +29,7 @@ cat > "$PLIST_FILE" <<'PLIST'
     <key>CFBundleIdentifier</key>
     <string>com.jaspermusic.youtube-helper</string>
     <key>CFBundleName</key>
-    <string>Jasper YouTube Helper</string>
+    <string>Jam Tracks Hub YouTube Helper</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
@@ -42,7 +42,7 @@ cat > "$PLIST_FILE" <<'PLIST'
     <array>
         <dict>
             <key>CFBundleURLName</key>
-            <string>Jasper YouTube Helper</string>
+            <string>Jam Tracks Hub YouTube Helper</string>
             <key>CFBundleURLSchemes</key>
             <array>
                 <string>jasper-helper</string>
@@ -60,14 +60,14 @@ set -euo pipefail
 CONFIG_FILE="$HOME/.jasper-music-helper/helper-path"
 
 if [ ! -f "$CONFIG_FILE" ]; then
-  osascript -e 'display dialog "Jasper YouTube Helper is not configured. Run INSTALL_MAC_HELPER_PROTOCOL.command again." buttons {"OK"} default button "OK"'
+  osascript -e 'display dialog "Jam Tracks Hub YouTube Helper is not configured. Run INSTALL_MAC_HELPER_PROTOCOL.command again." buttons {"OK"} default button "OK"'
   exit 1
 fi
 
 HELPER_SCRIPT="$(cat "$CONFIG_FILE")"
 
 if [ ! -f "$HELPER_SCRIPT" ]; then
-  osascript -e 'display dialog "The Jasper YouTube Helper folder was moved. Run INSTALL_MAC_HELPER_PROTOCOL.command from the helper folder again." buttons {"OK"} default button "OK"'
+  osascript -e 'display dialog "The Jam Tracks Hub YouTube Helper folder was moved. Run INSTALL_MAC_HELPER_PROTOCOL.command from the helper folder again." buttons {"OK"} default button "OK"'
   exit 1
 fi
 
@@ -87,7 +87,7 @@ chmod +x "$LAUNCHER_FILE" "$HELPER_SCRIPT"
 /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister \
   -f "$APP_DIR" >/dev/null 2>&1 || true
 
-echo "Jasper YouTube Helper protocol installed."
+echo "Jam Tracks Hub YouTube Helper protocol installed."
 echo "Protocol: jasper-helper://start"
 echo "App: $APP_DIR"
 echo ""

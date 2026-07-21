@@ -51,7 +51,7 @@ ensure_js_runtime() {
     return
   fi
 
-  echo "Installing Deno for Jasper YouTube Helper..."
+  echo "Installing Deno for the local YouTube Helper..."
   curl -fsSL https://deno.land/install.sh | sh
 }
 
@@ -73,12 +73,12 @@ fi
 ensure_js_runtime
 
 if helper_is_running; then
-  echo "Jasper YouTube Helper is already running at $HELPER_URL"
+  echo "the local YouTube Helper is already running at $HELPER_URL"
   echo "Return to the website and refresh the Key Finder page."
   exit 0
 fi
 
-echo "Starting Jasper YouTube Helper"
+echo "Starting the local YouTube Helper"
 echo "URL: $HELPER_URL"
 echo "Keep this terminal open while using YouTube link analysis."
 

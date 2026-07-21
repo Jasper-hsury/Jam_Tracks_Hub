@@ -32,7 +32,7 @@ fi
 
 "$PYTHON_BIN" -m pip install -r "$SITE_DIR/api-server/requirements_api.txt"
 
-echo "Starting Track and Tone website and Key Finder API"
+echo "Starting Jam Tracks Hub website and Key Finder API"
 echo "URL: http://127.0.0.1:8000"
 
 exec "$PYTHON_BIN" -m uvicorn app:app \

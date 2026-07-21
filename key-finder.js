@@ -532,14 +532,14 @@ document.addEventListener("DOMContentLoaded", function() {
         const lowerMessage = String(message || "").toLowerCase();
         let suggestedFix = inputType === "file"
             ? "MP3 or WAV is the most stable. Try an audio-only file under 25 MB."
-            : "Start Jasper YouTube Helper on this computer, then try Analyze link again.";
+            : "Start the local YouTube Helper on this computer, then try Analyze link again.";
 
         if (lowerMessage.includes("timed out") || lowerMessage.includes("render returned")) {
             suggestedFix = "The analyzer exceeded the hosting limit. Try a shorter MP3/WAV file, or run the local API.";
         }
 
         if (inputType === "youtube" && lowerMessage.includes("helper")) {
-            suggestedFix = "Run the helper setup once. On Mac, run INSTALL_MAC_HELPER_PROTOCOL.command. On Windows, run 2_CONNECT_HELPER_TO_WEBSITE.cmd. Then refresh Key Finder and allow the browser to open Jasper YouTube Helper.";
+            suggestedFix = "Run the helper setup once. On Mac, run INSTALL_MAC_HELPER_PROTOCOL.command. On Windows, run 2_CONNECT_HELPER_TO_WEBSITE.cmd. Then refresh Key Finder and allow the browser to open the local YouTube Helper.";
         }
 
         if (
@@ -722,7 +722,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         setYoutubeHelperStatus("is-offline", "YouTube Helper offline");
         throw new Error(
-            `Cannot connect to Jasper YouTube Helper at ${youtubeHelperDisplayUrl()}. ` +
+            `Cannot connect to the local YouTube Helper at ${youtubeHelperDisplayUrl()}. ` +
             "Start it with START_YOUTUBE_HELPER_MAC.command on Mac, or START_YOUTUBE_HELPER.cmd on Windows.",
             { cause: lastError }
         );

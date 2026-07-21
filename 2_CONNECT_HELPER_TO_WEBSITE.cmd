@@ -1,7 +1,7 @@
 @echo off
 setlocal
 cd /d "%~dp0"
-echo Track and Tone - Helper setup step 2
+echo Jam Tracks Hub - Helper setup step 2
 echo.
 echo This lets the website open the local YouTube Helper from your browser.
 echo If Windows asks for permission, choose Yes.

@@ -33,16 +33,16 @@ if (-not (Test-Path $apiPath)) {
 }
 
 if ((-not (Test-Path $venvPython)) -or (-not (Test-PythonVersion $venvPython))) {
-    Write-Host "Preparing Jasper YouTube Helper dependencies..." -ForegroundColor Cyan
+    Write-Host "Preparing the local YouTube Helper dependencies..." -ForegroundColor Cyan
     & powershell -NoProfile -ExecutionPolicy Bypass -File $setupScript
 }
 
 if (Test-YoutubeHelper) {
-    Write-Host "Jasper YouTube Helper is already running at $helperUrl" -ForegroundColor Green
+    Write-Host "the local YouTube Helper is already running at $helperUrl" -ForegroundColor Green
     exit 0
 }
 
-Write-Host "Starting Jasper YouTube Helper..." -ForegroundColor Cyan
+Write-Host "Starting the local YouTube Helper..." -ForegroundColor Cyan
 Write-Host "Keep this window open while using YouTube link analysis." -ForegroundColor Yellow
 Write-Host "Helper URL: $helperUrl" -ForegroundColor Green
 Write-Host ""

@@ -508,7 +508,7 @@ document.addEventListener("DOMContentLoaded", function() {
         context.fillStyle = "#86786c";
         context.font = "12px Arial, sans-serif";
         context.fillText(
-            "@ 2026 Track and Tone. All rights reserved.",
+            "@ 2026 Jam Tracks Hub. All rights reserved.",
             canvasWidth - outerPadding,
             canvasHeight - 34
         );

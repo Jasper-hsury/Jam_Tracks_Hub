@@ -1003,7 +1003,7 @@
     function setupTrackScrollWindmill() {
         const page = document.querySelector(".tracks-library-page");
         const windmill = document.querySelector(".track-scroll-windmill");
-        const rotor = windmill?.querySelector(".track-scroll-windmill-svg");
+        const rotor = windmill?.querySelector(".track-scroll-five-blade-rotor") || windmill?.querySelector(".track-scroll-windmill-svg");
         const cards = elements(".tracks-library-page .track-card:not(.track-skeleton)");
         if (!page || !windmill || !rotor || !cards.length) {
             return;

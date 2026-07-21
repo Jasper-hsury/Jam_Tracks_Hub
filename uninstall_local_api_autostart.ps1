@@ -1,7 +1,7 @@
 $ErrorActionPreference = "Stop"
 
 $startupFolder = [Environment]::GetFolderPath("Startup")
-$shortcutPath = Join-Path $startupFolder "Track and Tone API.lnk"
+$shortcutPath = Join-Path $startupFolder "Jam Tracks Hub API.lnk"
 
 if (Test-Path $shortcutPath) {
     Remove-Item -LiteralPath $shortcutPath -Force
