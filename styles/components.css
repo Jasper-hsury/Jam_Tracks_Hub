@@ -1646,6 +1646,463 @@ audio {
 }
 
 /* ====================
+   Chord progression voicing library
+   ==================== */
+.progression-library-section {
+    display: grid;
+    gap: 22px;
+    margin-top: 22px;
+}
+
+.progression-selected-heading {
+    align-items: center;
+    gap: 18px;
+}
+
+.secondary-link-button {
+    border: 1px solid rgba(151, 103, 62, 0.55);
+    background: transparent;
+    color: var(--accent, #9b673e);
+    border-radius: 999px;
+    padding: 10px 18px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.secondary-link-button:hover {
+    background: rgba(151, 103, 62, 0.1);
+    transform: translateY(-1px);
+}
+
+.progression-toolbar-simple {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 300px);
+    align-items: end;
+    gap: 20px;
+    padding: 22px;
+    border: 1px solid rgba(115, 91, 69, 0.22);
+    border-radius: 8px;
+    background: linear-gradient(120deg, rgba(250, 246, 238, 0.94), rgba(244, 236, 225, 0.82));
+    box-shadow: 0 18px 46px rgba(70, 52, 34, 0.08);
+}
+
+.progression-toolbar-heading {
+    display: grid;
+    gap: 6px;
+}
+
+.progression-toolbar-heading h4 {
+    margin: 0;
+    color: var(--brown, #6e432a);
+    font-size: 1.35rem;
+}
+
+.progression-toolbar-heading p {
+    margin: 0;
+    max-width: 54rem;
+}
+
+.progression-chord-mode-control {
+    display: grid;
+    gap: 8px;
+    font-weight: 800;
+    color: var(--text-strong, #2b2621);
+}
+
+.progression-chord-mode-control span {
+    color: var(--teal, #2f837f);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.progression-chord-mode-control select {
+    width: 100%;
+    border: 1px solid rgba(115, 91, 69, 0.26);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.86);
+    color: inherit;
+    padding: 12px 14px;
+    font: inherit;
+    font-weight: 700;
+}
+
+.progression-category-list {
+    display: grid;
+    gap: 16px;
+}
+
+.progression-voicing-category {
+    overflow: hidden;
+    border: 1px solid rgba(115, 91, 69, 0.22);
+    border-radius: 8px;
+    background: rgba(255, 253, 248, 0.8);
+}
+
+.progression-voicing-category[open] {
+    background: linear-gradient(145deg, rgba(255, 253, 248, 0.94), rgba(245, 238, 228, 0.88));
+}
+
+.progression-voicing-heading {
+    cursor: pointer;
+}
+
+.progression-voicing-grid {
+    display: grid;
+    gap: 16px;
+    padding: 0 18px 18px;
+}
+
+.progression-voicing-card {
+    display: grid;
+    grid-template-columns: minmax(180px, 0.58fr) minmax(0, 1.42fr);
+    gap: 18px;
+    padding: 18px;
+    border: 1px solid rgba(115, 91, 69, 0.18);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.74);
+}
+
+.progression-voicing-card.has-four-voicings {
+    grid-template-columns: minmax(300px, 0.7fr) minmax(0, 1.3fr);
+    align-items: start;
+}
+
+.progression-voicing-summary {
+    display: grid;
+    align-content: start;
+    gap: 10px;
+    min-width: 0;
+}
+
+.progression-numerals {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    color: var(--teal, #2f837f);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.progression-numeral-token {
+    display: inline-flex;
+    align-items: center;
+    min-height: 26px;
+}
+
+.progression-compact-chords {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 7px;
+    font-size: 1.3rem;
+    font-weight: 900;
+    line-height: 1.2;
+}
+
+.progression-chord-token {
+    color: var(--brown, #6e432a);
+    text-decoration: none;
+    border-bottom: 2px solid rgba(47, 131, 127, 0.38);
+}
+
+.progression-chord-token:hover {
+    color: var(--teal, #2f837f);
+}
+
+.progression-separator {
+    color: rgba(77, 68, 57, 0.55);
+}
+
+.progression-style {
+    margin: 0;
+    color: rgba(58, 50, 43, 0.76);
+}
+
+.progression-group-label {
+    display: block;
+    margin-top: 4px;
+    color: rgba(58, 50, 43, 0.58);
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+
+.progression-chord-voicings {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+    gap: 12px;
+}
+
+.progression-voicing-card.has-four-voicings .progression-chord-voicings {
+    grid-template-columns: repeat(4, minmax(112px, 1fr));
+}
+
+.progression-voicing-card.has-four-voicings .progression-numerals,
+.progression-voicing-card.has-four-voicings .progression-compact-chords {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: center;
+    column-gap: 8px;
+    row-gap: 8px;
+}
+
+.progression-voicing-card.has-four-voicings .progression-numeral-token,
+.progression-voicing-card.has-four-voicings .progression-chord-token {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 34px;
+    min-width: 0;
+    text-align: center;
+}
+
+.progression-voicing-card.has-four-voicings .progression-separator {
+    display: none;
+}
+
+.progression-shape-card {
+    display: grid;
+    gap: 8px;
+    min-height: 210px;
+    padding: 12px;
+    border: 1px solid rgba(115, 91, 69, 0.2);
+    border-radius: 8px;
+    background: linear-gradient(150deg, rgba(252, 248, 241, 0.98), rgba(244, 235, 223, 0.82));
+    color: inherit;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.progression-shape-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(47, 131, 127, 0.5);
+    box-shadow: 0 16px 28px rgba(68, 48, 32, 0.12);
+}
+
+.progression-shape-card-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.progression-shape-card-head strong {
+    color: var(--brown, #6e432a);
+    font-size: 1.05rem;
+}
+
+.progression-shape-card-head span {
+    color: rgba(58, 50, 43, 0.62);
+    font-size: 0.74rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.progression-shape-frets {
+    color: var(--text-strong, #2b2621);
+    font-size: 0.92rem;
+    font-weight: 900;
+}
+
+.progression-mini-diagram {
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    gap: 4px 7px;
+}
+
+.progression-open-row {
+    grid-column: 2;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    align-items: center;
+    justify-items: center;
+    min-height: 20px;
+    color: rgba(58, 50, 43, 0.64);
+    font-size: 0.72rem;
+    font-weight: 900;
+}
+
+.progression-base-fret {
+    align-self: start;
+    justify-self: center;
+    padding-top: 10px;
+    color: rgba(58, 50, 43, 0.72);
+    font-weight: 900;
+}
+
+.progression-mini-neck {
+    --neck-line: rgba(82, 69, 55, 0.36);
+    position: relative;
+    height: 116px;
+    overflow: visible;
+    border-top: 1px solid var(--neck-line);
+    border-left: 1px solid var(--neck-line);
+    background-image:
+        linear-gradient(to right, var(--neck-line) 0 1px, transparent 1px),
+        linear-gradient(to bottom, var(--neck-line) 0 1px, transparent 1px);
+    background-position: left top;
+    background-size: 20% 100%, 100% 25%;
+}
+
+.progression-mini-neck::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-right: 1px solid var(--neck-line);
+    border-bottom: 1px solid var(--neck-line);
+    pointer-events: none;
+}
+
+.progression-fret-marker,
+.progression-open-tone {
+    --tone-bg: #a06a43;
+    --tone-fg: #fffaf2;
+}
+
+.progression-fret-marker[data-tone-family="root"],
+.progression-open-tone[data-tone-family="root"] {
+    --tone-bg: #2f837f;
+}
+
+.progression-fret-marker[data-tone-family="third"],
+.progression-open-tone[data-tone-family="third"] {
+    --tone-bg: #b77748;
+}
+
+.progression-fret-marker[data-tone-family="fifth"],
+.progression-open-tone[data-tone-family="fifth"] {
+    --tone-bg: #806247;
+}
+
+.progression-fret-marker[data-tone-family="seventh"],
+.progression-open-tone[data-tone-family="seventh"] {
+    --tone-bg: #b4697a;
+}
+
+.progression-fret-marker {
+    position: absolute;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border: 2px solid rgba(255, 250, 242, 0.9);
+    border-radius: 999px;
+    background: var(--tone-bg);
+    box-shadow: 0 5px 12px rgba(62, 43, 29, 0.22);
+    color: var(--tone-fg);
+    font-size: 0.72rem;
+    font-weight: 900;
+    transform: translate(-50%, -50%);
+}
+
+.progression-open-tone {
+    display: inline-grid;
+    place-items: center;
+    width: 24px;
+    height: 18px;
+    border-radius: 999px;
+    background: var(--tone-bg);
+    color: var(--tone-fg);
+    font-size: 0.64rem;
+}
+
+.progression-string-row {
+    grid-column: 2;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    justify-items: center;
+    color: rgba(58, 50, 43, 0.64);
+    font-size: 0.72rem;
+    font-weight: 900;
+}
+
+.progression-shape-card-fallback {
+    min-height: 0;
+    align-content: center;
+}
+
+html[data-theme="dark"] .progression-toolbar-simple,
+html[data-theme="dark"] .progression-voicing-category,
+html[data-theme="dark"] .progression-voicing-card,
+html[data-theme="dark"] .progression-shape-card {
+    border-color: rgba(229, 211, 179, 0.18);
+    background: linear-gradient(145deg, rgba(28, 26, 23, 0.94), rgba(40, 34, 29, 0.88));
+}
+
+html[data-theme="dark"] .progression-chord-mode-control select {
+    border-color: rgba(229, 211, 179, 0.24);
+    background: rgba(14, 14, 13, 0.9);
+}
+
+html[data-theme="dark"] .progression-style,
+html[data-theme="dark"] .progression-shape-card-head span,
+html[data-theme="dark"] .progression-open-row,
+html[data-theme="dark"] .progression-base-fret,
+html[data-theme="dark"] .progression-string-row {
+    color: rgba(235, 226, 210, 0.72);
+}
+
+html[data-theme="dark"] .progression-mini-neck {
+    --neck-line: rgba(235, 226, 210, 0.34);
+}
+
+html[data-theme="dark"] .progression-group-label {
+    color: rgba(235, 226, 210, 0.58);
+}
+
+@media (max-width: 820px) {
+    .progression-toolbar-simple,
+    .progression-voicing-card {
+        grid-template-columns: 1fr;
+    }
+
+    .progression-chord-voicings,
+    .progression-voicing-card.has-four-voicings .progression-chord-voicings {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .progression-voicing-card.has-four-voicings .progression-numerals,
+    .progression-voicing-card.has-four-voicings .progression-compact-chords {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 520px) {
+    .progression-toolbar-simple {
+        padding: 16px;
+    }
+
+    .progression-voicing-grid {
+        padding: 0 12px 12px;
+    }
+
+    .progression-voicing-card {
+        padding: 14px;
+    }
+
+    .progression-compact-chords {
+        font-size: 1.12rem;
+    }
+
+    .progression-chord-voicings,
+    .progression-voicing-card.has-four-voicings .progression-chord-voicings {
+        grid-template-columns: 1fr;
+    }
+
+    .progression-voicing-card.has-four-voicings .progression-numerals,
+    .progression-voicing-card.has-four-voicings .progression-compact-chords {
+        grid-template-columns: 1fr;
+    }
+
+    .progression-shape-card {
+        min-height: 0;
+    }
+}
+
+/* ====================
    頁尾 (Footer)
    ==================== */
 .footer {

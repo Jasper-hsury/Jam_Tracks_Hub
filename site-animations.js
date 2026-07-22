@@ -1184,13 +1184,21 @@
             clearProps: "transform,opacity"
         });
 
-        cards.forEach(card => {
+        cards.forEach((card, cardIndex) => {
             const stringLines = elements(".diagram-string-line", card);
             const fretLines = elements(".diagram-fret-line", card);
+            const diagramLabels = elements(".diagram-base-fret, .diagram-string-status.is-muted, .diagram-string-status > span", card);
             const markers = elements(".diagram-finger, .diagram-string-status.is-open strong", card)
                 .sort((a, b) => Number(a.dataset.toneOrder || 99) - Number(b.dataset.toneOrder || 99));
+            const shapeDelay = Math.min(cardIndex * 0.035, 0.18);
+            const diagramTl = gsap.timeline({
+                delay: shapeDelay,
+                defaults: {
+                    ease: "power2.out"
+                }
+            });
 
-            gsap.fromTo(stringLines, {
+            diagramTl.fromTo(stringLines, {
                 scaleY: 0,
                 opacity: 0.35,
                 transformOrigin: "center top"
@@ -1199,11 +1207,10 @@
                 opacity: 1,
                 duration: 0.38,
                 stagger: 0.018,
-                ease: "power2.out",
                 clearProps: "transform,opacity"
-            });
+            }, 0);
 
-            gsap.fromTo(fretLines, {
+            diagramTl.fromTo(fretLines, {
                 scaleX: 0,
                 opacity: 0.35,
                 transformOrigin: "left center"
@@ -1212,11 +1219,19 @@
                 opacity: 1,
                 duration: 0.38,
                 stagger: 0.018,
-                ease: "power2.out",
                 clearProps: "transform,opacity"
-            });
+            }, 0.04);
 
-            gsap.fromTo(markers, {
+            diagramTl.fromTo(diagramLabels, {
+                opacity: 0
+            }, {
+                opacity: 1,
+                duration: 0.18,
+                stagger: 0.012,
+                clearProps: "opacity"
+            }, 0.14);
+
+            diagramTl.fromTo(markers, {
                 y: 4,
                 scale: 0.82,
                 opacity: 0.08,
@@ -1230,7 +1245,7 @@
                 stagger: 0.055,
                 ease: "back.out(1.65)",
                 clearProps: "transform,opacity,boxShadow"
-            });
+            }, 0.2);
         });
     }
 

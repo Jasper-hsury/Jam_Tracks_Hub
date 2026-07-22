@@ -786,7 +786,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const nextCards = Array.from(shapeGrid.querySelectorAll(".chord-shape-card"));
 
         if (!state || !window.gsap || !window.Flip || !nextCards.length) {
-            shapeGrid.classList.remove("is-flipping-shapes");
+            shapeGrid.classList.remove("is-flipping-shapes", "is-preparing-shapes");
             dispatchShapeRendered();
             return;
         }
@@ -834,6 +834,41 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    function prepareShapeAnimationStart() {
+        if (reduceMotion || !window.gsap) {
+            shapeGrid.classList.remove("is-preparing-shapes");
+            return;
+        }
+
+        const gsap = window.gsap;
+        gsap.set(shapeGrid.querySelectorAll(".diagram-string-line"), {
+            opacity: 0,
+            scaleY: 0,
+            transformOrigin: "center top"
+        });
+        gsap.set(shapeGrid.querySelectorAll(".diagram-fret-line"), {
+            opacity: 0,
+            scaleX: 0,
+            transformOrigin: "left center"
+        });
+        gsap.set(shapeGrid.querySelectorAll(".diagram-base-fret, .diagram-string-status.is-muted, .diagram-string-status > span"), {
+            opacity: 0
+        });
+        gsap.set(shapeGrid.querySelectorAll(".diagram-finger"), {
+            opacity: 0,
+            xPercent: -50,
+            yPercent: -50,
+            scale: 0.82,
+            transformOrigin: "50% 50%"
+        });
+        gsap.set(shapeGrid.querySelectorAll(".diagram-string-status strong"), {
+            opacity: 0,
+            scale: 0.82,
+            transformOrigin: "50% 50%"
+        });
+        shapeGrid.classList.remove("is-preparing-shapes");
+    }
+
     function renderShapeResults() {
         const pageCount = Math.ceil(filteredVoicings.length / SHAPES_PER_PAGE);
         const startIndex = shapePage * SHAPES_PER_PAGE;
@@ -848,9 +883,18 @@ document.addEventListener("DOMContentLoaded", function() {
             shapeGrid.classList.add("is-flipping-shapes");
         }
 
+        const shouldPrepareShapeAnimation = !reduceMotion && Boolean(window.gsap);
+        if (shouldPrepareShapeAnimation) {
+            shapeGrid.classList.add("is-preparing-shapes");
+        }
+
         shapeGrid.innerHTML = visibleVoicings
             .map((voicing, index) => renderDiagram(voicing, startIndex + index))
             .join("");
+
+        if (shouldPrepareShapeAnimation) {
+            prepareShapeAnimationStart();
+        }
 
         shapePagination.hidden = pageCount <= 1;
         previousShapesButton.disabled = shapePage === 0;
@@ -893,6 +937,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 ? "The 1-3 view is for triads; the 1-4 and 1-5 views support triads and four-note seventh chords."
                 : "Choose another fret area, root string, string set, or select All.";
             shapePagination.hidden = true;
+            shapeGrid.classList.remove("is-preparing-shapes", "is-flipping-shapes");
             shapeGrid.innerHTML = `
                 <div class="dictionary-empty">
                     <strong>No shapes found for ${positionLabel} with ${rootStringLabelText}.</strong>

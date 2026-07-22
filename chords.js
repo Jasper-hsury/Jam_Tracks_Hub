@@ -272,6 +272,276 @@ document.addEventListener("DOMContentLoaded", function() {
         return `chord-dictionary.html?root=${encodeURIComponent(parsed.root)}&chord=${encodeURIComponent(parsed.chord)}`;
     }
 
+    const progressionGuitarTuning = [40, 45, 50, 55, 59, 64];
+    const progressionStringNames = ["E", "A", "D", "G", "B", "e"];
+    const progressionVoicingCache = new Map();
+
+    function escapeProgressionHtml(value) {
+        return String(value ?? "").replace(/[&<>"']/g, function(char) {
+            return {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                "\"": "&quot;",
+                "'": "&#039;"
+            }[char];
+        });
+    }
+
+    function positiveModulo(value, modulo) {
+        return ((value % modulo) + modulo) % modulo;
+    }
+
+    function parseChordForVoicing(chordName) {
+        const match = String(chordName || "").match(/^([A-G](?:#|b)?)(m7b5|maj7|m7|dim|m|7)?$/);
+
+        if (!match || pitchClasses[match[1]] === undefined) {
+            return null;
+        }
+
+        const qualityMap = {
+            "": { label: "major", intervals: [0, 4, 7] },
+            m: { label: "minor", intervals: [0, 3, 7] },
+            dim: { label: "diminished", intervals: [0, 3, 6] },
+            7: { label: "dominant 7", intervals: [0, 4, 7, 10] },
+            maj7: { label: "major 7", intervals: [0, 4, 7, 11] },
+            m7: { label: "minor 7", intervals: [0, 3, 7, 10] },
+            m7b5: { label: "half-diminished 7", intervals: [0, 3, 6, 10] }
+        };
+        const quality = qualityMap[match[2] || ""] || qualityMap[""];
+
+        return {
+            root: match[1],
+            rootPc: pitchClasses[match[1]],
+            quality: quality.label,
+            intervals: quality.intervals
+        };
+    }
+
+    function chordToneForPitch(pitchClass, parsed) {
+        const interval = positiveModulo(pitchClass - parsed.rootPc, 12);
+
+        if (!parsed.intervals.includes(interval)) {
+            return null;
+        }
+
+        const labels = { 0: "R", 3: "b3", 4: "3", 6: "b5", 7: "5", 8: "#5", 10: "b7", 11: "7" };
+        const family = interval === 0
+            ? "root"
+            : (interval === 3 || interval === 4)
+                ? "third"
+                : (interval === 6 || interval === 7 || interval === 8)
+                    ? "fifth"
+                    : (interval === 10 || interval === 11)
+                        ? "seventh"
+                        : "extension";
+
+        return {
+            label: labels[interval] || String(interval),
+            family,
+            interval
+        };
+    }
+
+    function buildStringOptions(parsed, stringIndex) {
+        const options = [];
+
+        for (let fret = 0; fret <= 12; fret += 1) {
+            const pitch = positiveModulo(progressionGuitarTuning[stringIndex] + fret, 12);
+            const tone = chordToneForPitch(pitch, parsed);
+
+            if (tone) {
+                options.push({ fret, tone, pitch });
+            }
+        }
+
+        return options;
+    }
+
+    function getVoicingSpan(values) {
+        const fretted = values
+            .filter(function(value) { return value && typeof value.fret === "number" && value.fret > 0; })
+            .map(function(value) { return value.fret; });
+
+        if (!fretted.length) {
+            return 0;
+        }
+
+        return Math.max(...fretted) - Math.min(...fretted);
+    }
+
+    function buildRootPositionVoicing(chordName) {
+        const cacheKey = String(chordName || "");
+
+        if (progressionVoicingCache.has(cacheKey)) {
+            return progressionVoicingCache.get(cacheKey);
+        }
+
+        const parsed = parseChordForVoicing(chordName);
+
+        if (!parsed) {
+            progressionVoicingCache.set(cacheKey, null);
+            return null;
+        }
+
+        let best = null;
+        progressionGuitarTuning.forEach(function(_openPitch, rootString) {
+            const rootChoices = buildStringOptions(parsed, rootString).filter(function(option) {
+                return option.tone && option.tone.label === "R";
+            });
+
+            rootChoices.forEach(function(rootChoice) {
+                const voicing = Array.from({ length: 6 }, function() {
+                    return { fret: "x", tone: null, pitch: null };
+                });
+                voicing[rootString] = rootChoice;
+
+                for (let stringIndex = rootString + 1; stringIndex < 6; stringIndex += 1) {
+                    const currentIntervals = new Set(voicing
+                        .filter(function(value) { return value && value.tone; })
+                        .map(function(value) { return value.tone.interval; }));
+                    const choices = buildStringOptions(parsed, stringIndex);
+                    let bestOption = { fret: "x", tone: null, pitch: null };
+                    let bestOptionScore = -Infinity;
+
+                    choices.forEach(function(option) {
+                        const candidate = voicing.slice();
+                        candidate[stringIndex] = option;
+                        const span = getVoicingSpan(candidate);
+
+                        if (span > 4) {
+                            return;
+                        }
+
+                        if (!option.tone) {
+                            const score = -10 + stringIndex * 0.2;
+
+                            if (score > bestOptionScore) {
+                                bestOptionScore = score;
+                                bestOption = option;
+                            }
+
+                            return;
+                        }
+
+                        const distance = option.fret === 0 ? 0 : Math.abs(option.fret - rootChoice.fret);
+                        const coverageBonus = currentIntervals.has(option.tone.interval) ? 0 : 28;
+                        const openBonus = option.fret === 0 ? 6 : 0;
+                        const rootBonus = option.tone.label === "R" ? 3 : 0;
+                        const highStringBonus = stringIndex * 0.4;
+                        const score = coverageBonus + openBonus + rootBonus + highStringBonus - distance;
+
+                        if (score > bestOptionScore) {
+                            bestOptionScore = score;
+                            bestOption = option;
+                        }
+                    });
+
+                    voicing[stringIndex] = bestOption;
+                }
+
+                const sounding = voicing.filter(function(value) { return value && value.tone; });
+                const intervals = new Set(sounding.map(function(value) { return value.tone.interval; }));
+                const coversRequired = parsed.intervals.every(function(interval) { return intervals.has(interval); });
+                const lowest = sounding[0];
+
+                if (!coversRequired || !lowest || lowest.tone.label !== "R" || sounding.length < Math.min(parsed.intervals.length, 4)) {
+                    return;
+                }
+
+                const span = getVoicingSpan(voicing);
+                const mutedCount = voicing.filter(function(value) { return !value || value.fret === "x"; }).length;
+                const fretted = voicing
+                    .filter(function(value) { return value && typeof value.fret === "number" && value.fret > 0; })
+                    .map(function(value) { return value.fret; });
+                const baseFret = fretted.length ? Math.min(...fretted) : 1;
+                const score = sounding.length * 12 - span * 6 - baseFret * 1.4 - mutedCount * 4 - rootString * 1.2 + (rootChoice.fret === 0 ? 8 : 0);
+
+                if (!best || score > best.score) {
+                    best = { chordName: cacheKey, parsed, frets: voicing, baseFret, score };
+                }
+            });
+        });
+
+        progressionVoicingCache.set(cacheKey, best);
+        return best;
+    }
+
+    function renderProgressionChordShape(chordName) {
+        const voicing = buildRootPositionVoicing(chordName);
+        const safeChordName = escapeProgressionHtml(chordName);
+        const dictionaryUrl = chordDictionaryUrl(chordName);
+
+        if (!voicing) {
+            return `
+                <a class="progression-shape-card progression-shape-card-fallback" href="${dictionaryUrl}">
+                    <strong>${safeChordName}</strong>
+                    <span>Open Chord Dictionary</span>
+                </a>
+            `;
+        }
+
+        const fretted = voicing.frets
+            .filter(function(value) { return value && typeof value.fret === "number" && value.fret > 0; })
+            .map(function(value) { return value.fret; });
+        const baseFret = Math.max(1, fretted.length ? Math.min(...fretted) : 1);
+        const displayFrets = voicing.frets.map(function(value) {
+            return value && typeof value.fret === "number" ? value.fret : "x";
+        }).join(" ");
+        const statusRow = voicing.frets.map(function(value) {
+            if (!value || value.fret === "x") {
+                return `<span aria-label="muted">x</span>`;
+            }
+
+            if (value.fret === 0) {
+                return `<span class="progression-open-tone" data-tone-family="${value.tone.family}">${escapeProgressionHtml(value.tone.label)}</span>`;
+            }
+
+            return `<span></span>`;
+        }).join("");
+        const markers = voicing.frets.map(function(value, stringIndex) {
+            if (!value || typeof value.fret !== "number" || value.fret === 0) {
+                return "";
+            }
+
+            const row = value.fret - baseFret;
+
+            if (row < 0 || row > 3) {
+                return "";
+            }
+
+            const left = `${(stringIndex / 5) * 100}%`;
+            const top = `${((row + 0.5) / 4) * 100}%`;
+
+            return `
+                <span class="progression-fret-marker" data-tone-family="${value.tone.family}" style="left: ${left}; top: ${top};">
+                    ${escapeProgressionHtml(value.tone.label)}
+                </span>
+            `;
+        }).join("");
+        const strings = progressionStringNames.map(function(name) {
+            return `<span>${name}</span>`;
+        }).join("");
+
+        return `
+            <a class="progression-shape-card" href="${dictionaryUrl}" aria-label="Open ${safeChordName} in Chord Dictionary">
+                <div class="progression-shape-card-head">
+                    <strong>${safeChordName}</strong>
+                    <span>Root pos.</span>
+                </div>
+                <div class="progression-shape-frets">${escapeProgressionHtml(displayFrets)}</div>
+                <div class="progression-mini-diagram" aria-hidden="true">
+                    <div class="progression-open-row">${statusRow}</div>
+                    <span class="progression-base-fret">${baseFret}</span>
+                    <div class="progression-mini-neck">
+                        ${markers}
+                    </div>
+                    <div class="progression-string-row">${strings}</div>
+                </div>
+            </a>
+        `;
+    }
+
     function prefersFlatNames(notes) {
         return notes.some(function(note) { return note.includes("b"); }) && !notes.some(function(note) { return note.includes("#"); });
     }
@@ -400,7 +670,17 @@ document.addEventListener("DOMContentLoaded", function() {
         `;
     }
 
-    function renderProgressions(progressions, chordMap, keyNotes, isMinor, useSevenths) {
+    function chunkProgressionItems(items, size) {
+        const chunks = [];
+
+        for (let index = 0; index < items.length; index += size) {
+            chunks.push(items.slice(index, index + size));
+        }
+
+        return chunks;
+    }
+
+    function renderProgressions(progressions, chordMap) {
         const categoryOrder = uniqueItems(progressions.map(function(progression) {
             return progression.category;
         }));
@@ -410,56 +690,51 @@ document.addEventListener("DOMContentLoaded", function() {
                 return progression.category === category;
             });
             const categoryCount = categoryProgressions.length;
-            const groupDescription = categoryProgressions[0]?.category === "12 bar blues"
-                ? "Twelve chord slots represent the full form. Loop slowly first, then add fills."
-                : categoryProgressions[0]?.category === "Jazz essentials"
-                    ? "Use sevenths for the clearest jazz color, then follow the chord tones."
-                    : categoryProgressions[0]?.category === "Neo soul / jazz colors"
-                        ? "These progressions open up when you switch to seventh chords and softer voicings."
-                        : "Useful starting points for writing, practicing, and hearing the key center.";
 
             return `
-                <details class="progression-category" ${categoryIndex === 0 ? "open" : ""}>
-                    <summary class="progression-category-heading">
-                        <span class="progression-category-title">${category}</span>
+                <details class="progression-voicing-category" ${categoryIndex === 0 ? "open" : ""}>
+                    <summary class="progression-category-heading progression-voicing-heading">
+                        <span class="progression-category-title">${escapeProgressionHtml(category)}</span>
                         <span class="progression-category-meta">
-                            <span>${groupDescription}</span>
                             <strong>${categoryCount} ${categoryCount === 1 ? "progression" : "progressions"}</strong>
                         </span>
                     </summary>
-                    <div class="progression-grid">
+                    <div class="progression-voicing-grid">
                         ${categoryProgressions.map(function(progression) {
-                            const index = progressions.indexOf(progression);
                             const chords = progression.numerals.map(function(numeral) {
                                 return chordMap[numeral] || numeral;
                             });
+                            const chordGroups = chords.length > 4 ? chunkProgressionItems(chords, 4) : [chords];
+                            const numeralGroups = chords.length > 4 ? chunkProgressionItems(progression.numerals, 4) : [progression.numerals];
 
-                            return `
-                                <article class="progression-card" data-progression-index="${index}">
-                                    <div class="progression-main">
-                                        <span class="progression-numerals">${progression.numerals.join(" - ")}</span>
-                                        <span class="progression-chords">
-                                            ${chords.map(function(chord, chordIndex) {
-                                                return `<a class="progression-chord-token" href="${chordDictionaryUrl(chord)}" data-chord-index="${chordIndex}" aria-label="Open ${chord} in Chord Dictionary">${chord}</a>`;
-                                            }).join('<span class="progression-separator">-</span>')}
-                                        </span>
-                                        <span class="progression-style">${progression.style}</span>
-                                        <p class="progression-description">${progression.description}</p>
-                                        ${renderScaleAdvice(progression, chords, keyNotes, isMinor, useSevenths)}
+                            return chordGroups.map(function(chordGroup, groupIndex) {
+                                const numeralGroup = numeralGroups[groupIndex] || [];
+                                const groupStart = groupIndex * 4 + 1;
+                                const groupEnd = groupStart + chordGroup.length - 1;
+                                const voicingCountClass = chordGroup.length === 4 ? " has-four-voicings" : "";
+                                const renderedNumerals = numeralGroup.map(function(numeral) {
+                                    return `<span class="progression-numeral-token">${escapeProgressionHtml(numeral)}</span>`;
+                                }).join("");
+                                const renderedChords = chordGroup.map(function(chord) {
+                                    return `<a class="progression-chord-token" href="${chordDictionaryUrl(chord)}" aria-label="Open ${escapeProgressionHtml(chord)} in Chord Dictionary">${escapeProgressionHtml(chord)}</a>`;
+                                }).join("");
+                                const renderedStyle = chordGroups.length > 1
+                                    ? `${escapeProgressionHtml(progression.style)} <span class="progression-group-label">Bars ${groupStart}-${groupEnd}</span>`
+                                    : escapeProgressionHtml(progression.style);
+
+                                return `
+                                <article class="progression-voicing-card${voicingCountClass}">
+                                    <div class="progression-voicing-summary">
+                                        <span class="progression-numerals">${renderedNumerals}</span>
+                                        <span class="progression-compact-chords">${renderedChords}</span>
+                                        <p class="progression-style">${renderedStyle}</p>
                                     </div>
-                                    <div class="progression-card-actions">
-                                        <button class="progression-play-button" type="button" data-chords="${encodeChords(chords)}">Loop</button>
-                                        <button class="progression-save-button" type="button"
-                                            data-chords="${encodeChords(chords)}"
-                                            data-numerals="${encodeChords(progression.numerals)}"
-                                            data-style="${encodeURIComponent(progression.style)}">Save</button>
-                                        <button class="progression-export-button" type="button"
-                                            data-chords="${encodeChords(chords)}"
-                                            data-numerals="${encodeChords(progression.numerals)}"
-                                            data-style="${encodeURIComponent(progression.style)}">Export</button>
+                                    <div class="progression-chord-voicings">
+                                        ${chordGroup.map(renderProgressionChordShape).join("")}
                                     </div>
                                 </article>
                             `;
+                            }).join("");
                         }).join("")}
                     </div>
                 </details>
@@ -1319,14 +1594,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function readCurrentControls() {
         return {
-            bpm: document.getElementById("progressionBpm")?.value || 72,
-            metronome: document.getElementById("progressionMetronome")?.checked || false,
-            guitarVolume: document.getElementById("guitarVolume")?.value || 130,
-            metronomeVolume: document.getElementById("metronomeVolume")?.value || 80,
-            backing: document.getElementById("backingTrackMode")?.checked ?? true,
-            backingVolume: document.getElementById("backingVolume")?.value || 70,
-            extension: document.getElementById("chordExtension")?.value || "triads",
-            inversion: document.getElementById("chordInversion")?.value || 0
+            extension: document.getElementById("chordExtension")?.value || "triads"
         };
     }
 
@@ -1343,114 +1611,48 @@ document.addEventListener("DOMContentLoaded", function() {
         const keyName = button.dataset.key;
         const keyNotes = button.dataset.notes.split(", ");
         const isMinor = keyName.includes("minor");
-        const intervals = isMinor ? minorIntervals : majorIntervals;
         const progressions = isMinor ? minorProgressions : majorProgressions;
         const useSevenths = settings.extension === "sevenths";
         const chordMap = isMinor
             ? buildMinorDiatonicChords(keyNotes, useSevenths)
             : buildMajorDiatonicChords(keyNotes, useSevenths);
-        const noteCards = keyNotes.map(function(note, index) {
-            return `
-                <article class="note-card">
-                    <span class="note-name">${note}</span>
-                    <span class="interval-name">${intervals[index]}</span>
-                </article>
-            `;
-        }).join("");
 
         keyResult.innerHTML = `
-            <div class="selected-key-heading">
+            <div class="selected-key-heading progression-selected-heading">
                 <div>
                     <span class="result-kicker">Selected key</span>
-                    <h3>${keyName}</h3>
+                    <h3>${escapeProgressionHtml(keyName)}</h3>
                 </div>
-                <div class="transpose-controls" aria-label="Transpose selected key">
-                    <button id="transposeDownButton" type="button" aria-label="Transpose down one semitone">&minus;1</button>
-                    <button id="transposeUpButton" type="button" aria-label="Transpose up one semitone">+1</button>
-                </div>
+                <button class="secondary-link-button" id="changeKeyButton" type="button">Change Key</button>
             </div>
-            <div class="note-grid">${noteCards}</div>
-            <section class="progression-section">
-                <div class="progression-toolbar">
+            <section class="progression-section progression-library-section">
+                <div class="progression-toolbar progression-toolbar-simple">
                     <div class="progression-toolbar-heading">
+                        <span class="result-kicker">Chord library</span>
                         <h4>Common Progressions</h4>
-                        <p>Shape the chords, then balance the accompaniment.</p>
+                        <p>Switch between triads and seventh chords. Each chord includes a compact root-position guitar shape.</p>
                     </div>
-                    <div class="progression-control-groups">
-                        <details class="progression-control-group" open>
-                            <summary>
-                                <span>Chord Settings</span>
-                                <small>Harmony and voicing</small>
-                            </summary>
-                            <div class="progression-controls chord-setting-controls">
-                                <label>
-                                    Chords
-                                    <select id="chordExtension">
-                                        <option value="triads" ${settings.extension === "triads" ? "selected" : ""}>Triads</option>
-                                        <option value="sevenths" ${settings.extension === "sevenths" ? "selected" : ""}>Seventh chords</option>
-                                    </select>
-                                </label>
-                                <label>
-                                    Voicing
-                                    <select id="chordInversion">
-                                        <option value="0" ${String(settings.inversion) === "0" ? "selected" : ""}>Root position</option>
-                                        <option value="1" ${String(settings.inversion) === "1" ? "selected" : ""}>First inversion</option>
-                                        <option value="2" ${String(settings.inversion) === "2" ? "selected" : ""}>Second inversion</option>
-                                    </select>
-                                </label>
-                            </div>
-                        </details>
-
-                        <details class="progression-control-group playback-control-group" open>
-                            <summary>
-                                <span>Playback</span>
-                                <small>Tempo and mix</small>
-                            </summary>
-                            <div class="progression-controls playback-controls">
-                                <div class="playback-level-row">
-                                    <label class="tempo-control">
-                                        BPM
-                                        <input id="progressionBpm" type="number" min="50" max="180" value="${settings.bpm}">
-                                    </label>
-                                    <label class="volume-control guitar-volume-control">
-                                        Guitar
-                                        <input id="guitarVolume" type="range" min="0" max="200" value="${settings.guitarVolume}">
-                                    </label>
-                                    <label class="volume-control click-volume-control">
-                                        Click
-                                        <input id="metronomeVolume" type="range" min="0" max="200" value="${settings.metronomeVolume}">
-                                    </label>
-                                </div>
-                                <div class="playback-option-row">
-                                    <label class="metronome-toggle">
-                                        <input id="progressionMetronome" type="checkbox" ${settings.metronome ? "checked" : ""}>
-                                        Metronome
-                                    </label>
-                                    <label class="backing-toggle">
-                                        <input id="backingTrackMode" type="checkbox" ${settings.backing ? "checked" : ""}>
-                                        Band
-                                    </label>
-                                    <label class="volume-control band-volume-control">
-                                        Band level
-                                        <input id="backingVolume" type="range" min="0" max="200" value="${settings.backingVolume}">
-                                    </label>
-                                    <button id="stopProgressionButton" class="secondary-button" type="button">Stop</button>
-                                </div>
-                            </div>
-                        </details>
-                    </div>
+                    <label class="progression-chord-mode-control">
+                        <span>Chords</span>
+                        <select id="chordExtension">
+                            <option value="triads" ${settings.extension === "triads" ? "selected" : ""}>Triads</option>
+                            <option value="sevenths" ${settings.extension === "sevenths" ? "selected" : ""}>Seventh chords</option>
+                        </select>
+                    </label>
                 </div>
-                <div class="progression-grid">${renderProgressions(progressions, chordMap, keyNotes, isMinor, useSevenths)}</div>
-            </section>
-            <section class="saved-progression-section">
-                <h4>Saved Progressions</h4>
-                <div id="savedProgressions"></div>
+                <div class="progression-category-list">${renderProgressions(progressions, chordMap)}</div>
             </section>
         `;
 
         keyOptions.hidden = true;
         selectKeyButton.hidden = false;
-        renderSavedProgressions();
+
+        const changeKeyButton = keyResult.querySelector("#changeKeyButton");
+        if (changeKeyButton) {
+            changeKeyButton.addEventListener("click", function() {
+                selectKeyButton.click();
+            });
+        }
 
         if (shouldScroll) {
             keyResult.scrollIntoView({ behavior: "smooth", block: "start" });

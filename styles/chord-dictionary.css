@@ -624,6 +624,34 @@
     height: 1px;
 }
 
+.dictionary-shape-grid.is-preparing-shapes .diagram-string-line {
+    opacity: 0;
+    transform: scaleY(0);
+    transform-origin: center top;
+}
+
+.dictionary-shape-grid.is-preparing-shapes .diagram-fret-line {
+    opacity: 0;
+    transform: scaleX(0);
+    transform-origin: left center;
+}
+
+.dictionary-shape-grid.is-preparing-shapes .diagram-base-fret,
+.dictionary-shape-grid.is-preparing-shapes .diagram-string-status.is-muted,
+.dictionary-shape-grid.is-preparing-shapes .diagram-string-status > span,
+.dictionary-shape-grid.is-preparing-shapes .diagram-string-status strong,
+.dictionary-shape-grid.is-preparing-shapes .diagram-finger {
+    opacity: 0;
+}
+
+.dictionary-shape-grid.is-preparing-shapes .diagram-finger {
+    transform: translate(-50%, -50%) scale(0.82);
+}
+
+.dictionary-shape-grid.is-preparing-shapes .diagram-string-status strong {
+    transform: scale(0.82);
+}
+
 .diagram-fret-line.is-nut {
     height: 3px;
     background: var(--gold-light);
