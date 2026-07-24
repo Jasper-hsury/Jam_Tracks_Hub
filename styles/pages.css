@@ -4169,10 +4169,503 @@ html[data-theme="light"] .home-step-track .home-step-card:focus-visible {
 }
 
 .about-links {
+    display: grid;
+    align-items: center;
+    justify-items: start;
+    gap: 18px;
+    margin-top: 42px;
+}
+
+/* Adapted from Uiverse.io by vikramsinghnegi: Buttons/vikramsinghnegi_massive-panda-81.html */
+.home-youtube-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.8em 1.2em;
+    color: white;
+    background: linear-gradient(to bottom, #d9433d 0%, #b93631 100%);
+    border: 0;
+    border-radius: 25px;
+    box-shadow: 0 5px 10px color-mix(in srgb, var(--shadow-color) 70%, transparent);
+    font: inherit;
+    font-size: 18px;
+    font-weight: 800;
+    text-decoration: none;
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        background-color 0.3s ease;
+}
+
+.home-youtube-button:hover,
+.home-youtube-button:focus-visible {
+    color: white;
+    box-shadow: 0 8px 15px color-mix(in srgb, var(--shadow-color) 84%, transparent);
+    transform: translateY(-3px);
+}
+
+.home-youtube-button:active {
+    box-shadow: 0 2px 5px color-mix(in srgb, var(--shadow-color) 62%, transparent);
+    transform: scale(0.95);
+}
+
+.home-youtube-button > span:last-child {
+    display: block;
+    margin-left: 0.4em;
+    transition: transform 0.3s ease;
+}
+
+.home-youtube-icon-shell {
     display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 24px;
+    align-items: center;
+    justify-content: center;
+}
+
+.home-youtube-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    margin-right: 0.5em;
+    color: white;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.home-youtube-icon svg {
+    display: block;
+    width: 18px;
+    height: 18px;
+    fill: white;
+    transition: transform 0.3s ease;
+}
+
+.home-youtube-button:hover .home-youtube-icon,
+.home-youtube-button:focus-visible .home-youtube-icon {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.home-youtube-button:hover svg,
+.home-youtube-button:focus-visible svg {
+    transform: rotate(45deg);
+}
+
+/* Adapted from Uiverse.io by marcelodolza: Buttons/marcelodolza_fat-zebra-11.html */
+.home-contact-button {
+    --contact-primary: var(--teal);
+    --contact-neutral-1: color-mix(in srgb, var(--surface-raised) 88%, white 12%);
+    --contact-neutral-2: color-mix(in srgb, var(--panel-background) 82%, var(--gold-light) 18%);
+    --contact-radius: 999px;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 176px;
+    height: 48px;
+    padding: 11px 18px;
+    color: var(--text);
+    background: transparent;
+    border: 0;
+    border-radius: var(--contact-radius);
+    box-shadow:
+        0 0.5px 0.5px 1px color-mix(in srgb, white 18%, transparent),
+        0 10px 20px color-mix(in srgb, var(--shadow-color) 84%, transparent),
+        0 4px 5px color-mix(in srgb, var(--shadow-color) 18%, transparent);
+    font-size: 14px;
+    font-weight: 800;
+    text-decoration: none;
+    text-shadow: 0 1px 1px color-mix(in srgb, var(--shadow-color) 60%, transparent);
+    isolation: isolate;
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.28s ease,
+        color 0.28s ease;
+}
+
+.home-contact-button::before,
+.home-contact-button::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+}
+
+.home-contact-button::before {
+    inset: 5px;
+    z-index: 2;
+    background: linear-gradient(to top, var(--contact-neutral-1), var(--contact-neutral-2));
+    border-radius: 999px;
+    filter: blur(0.5px);
+}
+
+.home-contact-button::after {
+    inset: 0;
+    z-index: 0;
+    border: 2.5px solid transparent;
+    border-radius: var(--contact-radius);
+    background:
+        linear-gradient(var(--contact-neutral-1), var(--contact-neutral-2)) padding-box,
+        linear-gradient(
+            to bottom,
+            color-mix(in srgb, white 22%, transparent),
+            color-mix(in srgb, var(--gold) 56%, black 24%)
+        ) border-box;
+    transition:
+        transform 0.36s ease,
+        box-shadow 0.36s ease;
+}
+
+.home-contact-outline {
+    position: absolute;
+    inset: -2px -3.5px;
+    z-index: 1;
+    overflow: hidden;
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.36s ease;
+}
+
+.home-contact-outline::before {
+    content: "";
+    position: absolute;
+    inset: -100%;
+    background: conic-gradient(
+        from 180deg,
+        transparent 60%,
+        color-mix(in srgb, var(--gold-light) 80%, white 20%) 80%,
+        transparent 100%
+    );
+    animation: homeContactSpin 2.2s linear infinite;
+    animation-play-state: paused;
+}
+
+.home-contact-state {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 25px;
+}
+
+.home-contact-icon {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    color: var(--contact-primary);
+    transform: scale(1.12);
+    transition:
+        opacity 0.3s ease,
+        transform 0.3s ease,
+        filter 0.3s ease;
+}
+
+.home-contact-icon::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: -5px;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(to right, transparent, color-mix(in srgb, var(--text) 42%, transparent));
+}
+
+.home-contact-icon svg {
+    display: block;
+    width: 1em;
+    height: 1em;
+    overflow: visible;
+    animation: homeContactLand 0.6s ease forwards;
+}
+
+.home-contact-text {
+    display: inline-flex;
+    align-items: center;
+}
+
+.home-contact-text span {
+    display: block;
+    opacity: 0;
+    animation: homeContactSlideDown 0.8s ease forwards calc(var(--i) * 0.03s);
+}
+
+.home-contact-state--default .home-contact-text span:nth-child(4) {
+    margin-right: 5px;
+}
+
+.home-contact-state--sent {
+    display: none;
+}
+
+.home-contact-state--sent .home-contact-icon {
+    color: var(--contact-primary);
+}
+
+.home-contact-state--sent svg {
+    margin-right: 6px;
+    transform: scale(1.12);
+}
+
+.home-contact-button:hover,
+.home-contact-button:focus-visible {
+    color: var(--text);
+    box-shadow:
+        0 0 1px 2px color-mix(in srgb, white 24%, transparent),
+        0 15px 30px color-mix(in srgb, var(--shadow-color) 92%, transparent),
+        0 10px 3px -3px color-mix(in srgb, var(--shadow-color) 22%, transparent);
+    transform: scale(1.02);
+}
+
+.home-contact-button:hover::after,
+.home-contact-button:focus-visible::after {
+    box-shadow: inset 0 -1px 3px color-mix(in srgb, white 72%, transparent);
+    transform: scale(1.05, 1.1);
+}
+
+.home-contact-button:hover .home-contact-outline,
+.home-contact-button:focus-visible .home-contact-outline {
+    opacity: 1;
+}
+
+.home-contact-button:hover .home-contact-outline::before,
+.home-contact-button:focus-visible .home-contact-outline::before {
+    animation-play-state: running;
+}
+
+.home-contact-button:hover .home-contact-icon,
+.home-contact-button:focus-visible .home-contact-icon {
+    transform: rotate(45deg) scale(1.12);
+}
+
+.home-contact-button:hover .home-contact-text span,
+.home-contact-button:focus-visible .home-contact-text span {
+    opacity: 1;
+    animation: homeContactWave 0.5s ease forwards calc(var(--i) * 0.02s);
+}
+
+.home-contact-button:active {
+    transform: scale(1);
+    box-shadow:
+        0 0 1px 2px color-mix(in srgb, white 24%, transparent),
+        0 10px 3px -3px color-mix(in srgb, var(--shadow-color) 76%, transparent);
+}
+
+.home-contact-button:focus .home-contact-state--default {
+    position: absolute;
+}
+
+.home-contact-button:focus .home-contact-state--default .home-contact-text span {
+    animation: homeContactDisappear 0.6s ease forwards calc(var(--i) * 0.03s);
+    opacity: 1;
+}
+
+.home-contact-button:focus .home-contact-state--default .home-contact-icon {
+    transform: rotate(0) scale(1.12);
+}
+
+.home-contact-button:focus .home-contact-state--default .home-contact-icon svg {
+    animation: homeContactTakeOff 0.8s linear forwards;
+}
+
+.home-contact-button:focus .home-contact-state--default .home-contact-icon::before {
+    animation: homeContactContrail 0.8s linear forwards;
+}
+
+.home-contact-button:focus .home-contact-state--sent {
+    display: flex;
+}
+
+.home-contact-button:focus .home-contact-state--sent .home-contact-text span {
+    animation: homeContactSlideDown 0.8s ease forwards calc(var(--i) * 0.2s);
+    opacity: 0;
+}
+
+.home-contact-button:focus .home-contact-state--sent .home-contact-icon svg {
+    animation: homeContactAppear 1.2s ease forwards 0.8s;
+    opacity: 0;
+}
+
+@keyframes homeContactSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes homeContactWave {
+    30% {
+        opacity: 1;
+        transform: translateY(4px);
+    }
+
+    50% {
+        color: var(--contact-primary);
+        opacity: 1;
+        transform: translateY(-3px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes homeContactSlideDown {
+    0% {
+        color: var(--contact-primary);
+        filter: blur(5px);
+        opacity: 0;
+        transform: translateY(-20px) translateX(5px) rotate(-90deg);
+    }
+
+    30% {
+        filter: blur(0);
+        opacity: 1;
+        transform: translateY(4px);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translateY(-3px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes homeContactTakeOff {
+    0% {
+        opacity: 1;
+    }
+
+    60% {
+        opacity: 1;
+        transform: translateX(70px) rotate(45deg) scale(2);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateX(160px) rotate(45deg) scale(0);
+    }
+}
+
+@keyframes homeContactLand {
+    0% {
+        filter: blur(3px);
+        opacity: 0;
+        transform: translateX(-60px) translateY(30px) rotate(-50deg) scale(2);
+    }
+
+    100% {
+        filter: blur(0);
+        opacity: 1;
+        transform: translateX(0) translateY(0) rotate(0);
+    }
+}
+
+@keyframes homeContactContrail {
+    0% {
+        opacity: 1;
+        width: 0;
+    }
+
+    8% {
+        width: 15px;
+    }
+
+    60% {
+        opacity: 0.7;
+        width: 80px;
+    }
+
+    100% {
+        opacity: 0;
+        width: 160px;
+    }
+}
+
+@keyframes homeContactDisappear {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        color: var(--contact-primary);
+        filter: blur(5px);
+        opacity: 0;
+        transform: translateX(5px) translateY(20px);
+    }
+}
+
+@keyframes homeContactAppear {
+    0% {
+        color: var(--contact-primary);
+        filter: blur(4px);
+        opacity: 0;
+        transform: scale(4) rotate(-40deg);
+    }
+
+    30% {
+        filter: blur(1px);
+        opacity: 1;
+        transform: scale(0.6);
+    }
+
+    50% {
+        filter: blur(0);
+        opacity: 1;
+        transform: scale(1.2);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .home-youtube-button,
+    .home-youtube-button *,
+    .home-contact-button,
+    .home-contact-button::before,
+    .home-contact-button::after,
+    .home-contact-outline,
+    .home-contact-outline::before,
+    .home-contact-icon,
+    .home-contact-icon::before,
+    .home-contact-icon svg,
+    .home-contact-text span {
+        animation: none;
+        transition: none;
+    }
+
+    .home-youtube-button:hover,
+    .home-youtube-button:focus-visible,
+    .home-youtube-button:hover svg,
+    .home-youtube-button:focus-visible svg,
+    .home-contact-button:hover,
+    .home-contact-button:focus-visible,
+    .home-contact-button:hover::after,
+    .home-contact-button:focus-visible::after,
+    .home-contact-button:hover .home-contact-icon,
+    .home-contact-button:focus-visible .home-contact-icon {
+        transform: none;
+    }
+
+    .home-contact-text span {
+        opacity: 1;
+    }
+
+    .home-contact-state--sent {
+        display: none;
+    }
 }
 
 @media (max-width: 1180px) {
