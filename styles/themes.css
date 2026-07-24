@@ -23,6 +23,11 @@
     --chord-accent-text: #17130f;
     --chord-control: #7fb7ad;
     --chord-accent-soft: rgba(127, 183, 173, 0.16);
+    --body-pattern:
+        linear-gradient(115deg, rgba(127, 183, 173, 0.055) 0 1px, transparent 1px 92px),
+        linear-gradient(0deg, rgba(229, 211, 179, 0.034) 0 1px, transparent 1px 74px),
+        radial-gradient(circle at 18% 16%, rgba(196, 164, 132, 0.11), transparent 26%),
+        radial-gradient(circle at 82% 42%, rgba(127, 183, 173, 0.08), transparent 30%);
     --body-background: linear-gradient(135deg, #101010 0%, #15120f 52%, #101817 100%);
     --nav-background: rgba(20, 20, 20, 0.9);
     --footer-background: #0a0a0a;
@@ -41,6 +46,14 @@
     --hover-shadow: 0 16px 34px rgba(0, 0, 0, 0.4);
     --focus-ring: rgba(229, 211, 179, 0.42);
     --divider-color: rgba(255, 255, 255, 0.08);
+    --button-glow: rgba(229, 211, 179, 0.34);
+    --button-depth-shadow: 0 8px 0 rgba(80, 57, 38, 0.34), 0 18px 32px rgba(0, 0, 0, 0.24);
+    --button-depth-shadow-hover: 0 6px 0 rgba(80, 57, 38, 0.32), 0 22px 38px rgba(0, 0, 0, 0.32);
+    --glass-card-background:
+        linear-gradient(135deg, rgba(38, 35, 31, 0.82), rgba(20, 20, 19, 0.78)),
+        linear-gradient(90deg, rgba(127, 183, 173, 0.08), transparent 38%);
+    --glass-card-border: rgba(229, 211, 179, 0.2);
+    --glass-card-shadow: 0 18px 48px rgba(0, 0, 0, 0.34);
     --result-explanation-background: rgba(127, 183, 173, 0.07);
     --result-explanation-border: rgba(127, 183, 173, 0.18);
     --result-explanation-card-background: rgba(18, 18, 18, 0.36);
@@ -77,6 +90,11 @@ html[data-theme="light"] {
     --chord-accent-text: #342419;
     --chord-control: #9a6b44;
     --chord-accent-soft: rgba(154, 107, 68, 0.11);
+    --body-pattern:
+        linear-gradient(115deg, rgba(45, 123, 118, 0.05) 0 1px, transparent 1px 96px),
+        linear-gradient(0deg, rgba(138, 96, 62, 0.04) 0 1px, transparent 1px 78px),
+        radial-gradient(circle at 18% 14%, rgba(223, 197, 167, 0.2), transparent 28%),
+        radial-gradient(circle at 84% 42%, rgba(45, 123, 118, 0.08), transparent 32%);
     --body-background: linear-gradient(135deg, #f7f4ef 0%, #eee8df 54%, #eef5f3 100%);
     --nav-background: rgba(250, 248, 244, 0.92);
     --footer-background: #e8e1d8;
@@ -95,6 +113,14 @@ html[data-theme="light"] {
     --hover-shadow: 0 16px 34px rgba(91, 70, 52, 0.16);
     --focus-ring: rgba(45, 123, 118, 0.3);
     --divider-color: rgba(88, 72, 58, 0.14);
+    --button-glow: rgba(45, 123, 118, 0.22);
+    --button-depth-shadow: 0 7px 0 rgba(82, 54, 34, 0.2), 0 16px 28px rgba(91, 70, 52, 0.12);
+    --button-depth-shadow-hover: 0 5px 0 rgba(82, 54, 34, 0.18), 0 20px 34px rgba(91, 70, 52, 0.18);
+    --glass-card-background:
+        linear-gradient(135deg, rgba(255, 253, 249, 0.74), rgba(246, 239, 229, 0.66)),
+        linear-gradient(90deg, rgba(45, 123, 118, 0.045), transparent 38%);
+    --glass-card-border: rgba(88, 72, 58, 0.22);
+    --glass-card-shadow: 0 18px 42px rgba(86, 68, 51, 0.13);
     --result-explanation-background: rgba(246, 239, 229, 0.92);
     --result-explanation-border: rgba(152, 113, 78, 0.22);
     --result-explanation-card-background: #efe4d7;
@@ -102,7 +128,8 @@ html[data-theme="light"] {
 }
 
 body {
-    background: var(--body-background);
+    background: var(--body-pattern), var(--body-background);
+    background-attachment: fixed;
     color: var(--text);
     transition: background 0.28s ease, color 0.2s ease;
 }
@@ -215,6 +242,24 @@ html[data-theme="light"] .tracks-library-page .track-controls select {
     border-color: rgba(124, 101, 80, 0.18);
 }
 
+html[data-theme="light"] .track-key-checkbox:checked + .track-key-checkbox-wrapper .track-key-checkbox-visual {
+    color: #5f3e28;
+    background-color: #dfc5a7;
+    box-shadow:
+        rgba(95, 62, 40, 0.16) 0 -3px 1px 0 inset,
+        rgba(255, 255, 255, 0.72) 0 -1px 1px 0,
+        rgba(91, 70, 52, 0.12) 0 2px 5px 1px;
+}
+
+html[data-theme="light"] .track-key-checkbox:checked + .track-key-checkbox-wrapper .track-key-checkbox-visual:hover {
+    color: #4d3323;
+    background-color: #d7b995;
+    box-shadow:
+        rgba(95, 62, 40, 0.18) 0 -3px 1px 0 inset,
+        rgba(255, 255, 255, 0.72) 0 -1px 1px 0,
+        rgba(91, 70, 52, 0.14) 0 3px 6px 2px;
+}
+
 html[data-theme="light"] .tracks-library-page .favorites-filter {
     background: #eee5da;
     border-color: #d7c7b5;
@@ -223,16 +268,16 @@ html[data-theme="light"] .tracks-library-page .favorites-filter {
 html[data-theme="light"] .tracks-library-page .track-card {
     background:
         linear-gradient(90deg, rgba(45, 123, 118, 0.035), transparent 32%),
-        #fffcf7;
+        linear-gradient(135deg, rgba(255, 253, 249, 0.78), rgba(246, 239, 229, 0.7));
     border-color: #ded3c4;
     border-left-color: var(--gold);
-    box-shadow: 0 14px 32px rgba(79, 60, 42, 0.1);
+    box-shadow: var(--glass-card-shadow);
 }
 
 html[data-theme="light"] .tracks-library-page .track-card:hover {
     background:
         linear-gradient(90deg, rgba(45, 123, 118, 0.05), transparent 32%),
-        #f7efe5;
+        linear-gradient(135deg, rgba(255, 253, 249, 0.86), rgba(242, 233, 220, 0.78));
     border-color: rgba(138, 96, 62, 0.34);
     border-left-color: var(--teal);
 }
@@ -284,23 +329,27 @@ html[data-theme="light"] .tracks-library-page .track-card:hover {
 }
 
 .theme-toggle {
+    position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 7px;
+    gap: 8px;
     min-height: 32px;
-    padding: 5px 10px;
+    padding: 4px 10px 4px 5px;
     color: var(--teal);
-    background: transparent;
+    background:
+        linear-gradient(135deg, color-mix(in srgb, var(--control-background) 90%, transparent), color-mix(in srgb, var(--soft-background) 72%, transparent));
     border: 1px solid var(--border-soft);
     border-radius: 999px;
     font: inherit;
     font-size: 13px;
     font-weight: bold;
     cursor: pointer;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--teal) 10%, transparent);
     transition:
         color 0.2s ease,
         background-color 0.2s ease,
         border-color 0.2s ease,
+        box-shadow 0.2s ease,
         transform 0.2s ease;
 }
 
@@ -316,14 +365,43 @@ html[data-theme="light"] .tracks-library-page .track-card:hover {
 }
 
 .theme-toggle-icon {
-    font-size: 15px;
+    display: inline-grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    color: var(--chord-accent-text);
+    background: var(--chord-accent);
+    border-radius: 999px;
+    box-shadow:
+        0 3px 9px var(--shadow-color),
+        0 0 14px color-mix(in srgb, var(--chord-control) 34%, transparent);
+    font-size: 13px;
     line-height: 1;
+    transform: translateX(0) rotate(-12deg);
+    transition:
+        color 0.2s ease,
+        background-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.theme-toggle-text {
+    min-width: 31px;
+    text-align: left;
+}
+
+html[data-theme="light"] .theme-toggle-icon {
+    transform: translateX(3px) rotate(12deg);
 }
 
 .theme-toggle:hover {
     color: var(--secondary-hover-text);
-    background: var(--secondary-hover-background);
+    background:
+        linear-gradient(135deg, color-mix(in srgb, var(--secondary-hover-background) 88%, transparent), color-mix(in srgb, var(--chord-accent-soft) 64%, transparent));
     border-color: var(--hover-border);
+    box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, var(--chord-control) 20%, transparent),
+        0 8px 22px color-mix(in srgb, var(--chord-control) 18%, transparent);
     transform: translateY(-2px) scale(1.02);
 }
 
@@ -375,6 +453,53 @@ html[data-theme="light"] .tracks-library-page .track-card:hover {
     border-color: var(--primary-button-background);
 }
 
+.primary-button,
+.secondary-button,
+.track-link,
+.select-key-button,
+.key-button,
+.progression-play-button,
+.progression-save-button,
+.progression-export-button {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    box-shadow: var(--button-depth-shadow);
+}
+
+.primary-button::before,
+.secondary-button::before,
+.track-link::before,
+.select-key-button::before,
+.key-button::before,
+.progression-play-button::before,
+.progression-save-button::before,
+.progression-export-button::before {
+    content: "";
+    position: absolute;
+    inset: -40% -22%;
+    z-index: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(circle at 30% 25%, color-mix(in srgb, var(--button-glow) 82%, transparent), transparent 34%),
+        linear-gradient(110deg, transparent 12%, color-mix(in srgb, var(--button-glow) 58%, transparent) 46%, transparent 72%);
+    opacity: 0;
+    transform: translateX(-34%) rotate(8deg);
+    transition: opacity 0.22s ease, transform 0.42s ease;
+}
+
+.primary-button > *,
+.secondary-button > *,
+.track-link > *,
+.select-key-button > *,
+.key-button > *,
+.progression-play-button > *,
+.progression-save-button > *,
+.progression-export-button > * {
+    position: relative;
+    z-index: 1;
+}
+
 .primary-button:hover,
 .track-link:hover,
 .select-key-button:hover,
@@ -383,8 +508,32 @@ html[data-theme="light"] .tracks-library-page .track-card:hover {
     color: var(--primary-button-hover-text);
     background-color: var(--primary-button-hover-background);
     border-color: var(--primary-button-hover-background);
-    box-shadow: 0 10px 22px var(--shadow-color);
-    transform: translateY(-2px) scale(1.025);
+    box-shadow: var(--button-depth-shadow-hover);
+    transform: translateY(-3px) scale(1.025);
+}
+
+.primary-button:hover::before,
+.secondary-button:hover::before,
+.track-link:hover::before,
+.select-key-button:hover::before,
+.key-button:hover::before,
+.progression-play-button:hover::before,
+.progression-save-button:hover::before,
+.progression-export-button:hover::before {
+    opacity: 1;
+    transform: translateX(18%) rotate(8deg);
+}
+
+.primary-button:active,
+.secondary-button:active,
+.track-link:active,
+.select-key-button:active,
+.key-button:active,
+.progression-play-button:active,
+.progression-save-button:active,
+.progression-export-button:active {
+    box-shadow: 0 2px 0 rgba(80, 57, 38, 0.3), 0 8px 16px var(--shadow-color);
+    transform: translateY(3px) scale(0.985);
 }
 
 .secondary-button,
@@ -399,8 +548,8 @@ html[data-theme="light"] .tracks-library-page .track-card:hover {
     color: var(--secondary-hover-text);
     background: var(--secondary-hover-background);
     border-color: var(--hover-border);
-    box-shadow: 0 10px 22px var(--shadow-color);
-    transform: translateY(-2px) scale(1.025);
+    box-shadow: var(--button-depth-shadow-hover);
+    transform: translateY(-3px) scale(1.025);
 }
 
 .download-track-link {
@@ -442,6 +591,52 @@ html[data-theme="light"] .tracks-library-page .track-card:hover {
     border-color: var(--border-soft);
     box-shadow: none;
     transform: translateY(-1px);
+}
+
+.track-actions .track-slides-download-link,
+.track-actions .track-slides-download-link:hover,
+.track-actions .track-slides-download-link:focus-visible {
+    position: relative;
+    width: 54px;
+    min-width: 54px;
+    height: 54px;
+    min-height: 54px;
+    padding: 0;
+    color: var(--gold-light);
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+}
+
+.track-actions .track-slides-download-link:hover,
+.track-actions .track-slides-download-link:focus-visible {
+    color: var(--secondary-hover-text);
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    transform: translateY(-2px);
+}
+
+.track-actions .track-slides-download-link::before {
+    inset: 0;
+    z-index: 0;
+    width: 8px;
+    height: 8px;
+    margin: auto;
+    background: color-mix(in srgb, var(--gold-light) 84%, white);
+    border-radius: 50%;
+    opacity: 0;
+    transform: rotate(-90deg) translate(28px);
+}
+
+.track-actions .track-slides-download-link.is-activating::before {
+    opacity: 1;
+    transform: rotate(-90deg) translate(28px);
+}
+
+.track-actions .track-slides-download-circle {
+    position: relative;
+    z-index: 1;
 }
 
 .track-actions .download-track-link {
@@ -783,6 +978,46 @@ html[data-theme="light"] .start-card {
     border-color: rgba(88, 72, 58, 0.24);
 }
 
+html[data-theme="light"] .progression-writer-page,
+html[data-theme="light"] .progression-writer-shape-picker-modal {
+    --diagram-tone-fill: #9a6843;
+    --diagram-tone-text: #fffaf2;
+    --diagram-root-fill: #2d7b76;
+    --diagram-root-text: #fffdf8;
+    --diagram-root-ring: rgba(45, 123, 118, 0.22);
+    --diagram-third-fill: #9d6a3d;
+    --diagram-third-text: #fffaf2;
+    --diagram-third-ring: rgba(157, 106, 61, 0.2);
+    --diagram-fifth-fill: #b88b56;
+    --diagram-fifth-text: #fffaf2;
+    --diagram-fifth-ring: rgba(184, 139, 86, 0.22);
+    --diagram-seventh-fill: #b06b7a;
+    --diagram-seventh-text: #fffaf2;
+    --diagram-seventh-ring: rgba(176, 107, 122, 0.18);
+    --diagram-extension-fill: #7a8c74;
+    --diagram-extension-text: #fffaf2;
+    --diagram-extension-ring: rgba(122, 140, 116, 0.2);
+    --diagram-open-tone-background: #f2e5d6;
+    --diagram-open-tone-border: rgba(154, 104, 67, 0.26);
+    --diagram-grid-line: rgba(93, 82, 72, 0.5);
+}
+
+html[data-theme="light"] .key-selector .select-key-button:hover,
+html[data-theme="light"] .key-selector .key-button:hover:not(.is-selected) {
+    color: var(--secondary-hover-text);
+    background:
+        linear-gradient(135deg, rgba(250, 245, 238, 0.98), rgba(239, 226, 210, 0.96));
+    border-color: rgba(152, 113, 78, 0.38);
+    box-shadow: 0 5px 0 rgba(82, 54, 34, 0.12), 0 18px 30px rgba(91, 70, 52, 0.12);
+}
+
+html[data-theme="light"] .key-selector .key-button.is-selected:hover {
+    color: var(--chord-accent-text);
+    background: var(--chord-accent-hover);
+    border-color: color-mix(in srgb, var(--chord-control) 42%, transparent);
+    box-shadow: 0 5px 0 rgba(82, 54, 34, 0.12), 0 18px 30px rgba(91, 70, 52, 0.12);
+}
+
 html[data-theme="light"] .progression-card-actions button {
     color: var(--gold-light);
     border-color: rgba(95, 62, 40, 0.32);
@@ -854,4 +1089,63 @@ html[data-theme="light"] .scale-advice-detail {
     font-weight: 700;
     letter-spacing: 0;
     line-height: 1.2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .theme-toggle,
+    .theme-toggle-icon,
+    .primary-button,
+    .secondary-button,
+    .track-link,
+    .select-key-button,
+    .key-button,
+    .progression-play-button,
+    .progression-save-button,
+    .progression-export-button,
+    .result-mode-button,
+    .progression-extension-option,
+    .key-mode-switch,
+    .key-mode-label,
+    .key-mode-toggle-handle,
+    .key-mode-toggle-knob,
+    .key-mode-toggle-bar,
+    .key-mode-toggle-base-inside::after,
+    .track-key-filter-toggle,
+    .track-key-filter-toggle::after,
+    .track-key-options,
+    .track-key-checkbox-visual,
+    .track-key-checkbox-inner,
+    .track-sort-mode,
+    .track-sort-switch,
+    .track-sort-switch::after,
+    .progression-writer-mode-label,
+    .progression-writer-switch,
+    .progression-writer-switch::after,
+    .progression-download-layout-switch,
+    .progression-download-layout-switch::after,
+    .track-slides-download-link,
+    .track-slides-download-circle,
+    .track-slides-download-circle::before,
+    .track-slides-download-icon,
+    .track-slides-download-square {
+        transition-duration: 0.001ms !important;
+    }
+
+    .jh-loader,
+    .jh-loader-dot::after,
+    .track-slides-download-link::before {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+    }
+
+    .primary-button::before,
+    .secondary-button::before,
+    .track-link::before,
+    .select-key-button::before,
+    .key-button::before,
+    .progression-play-button::before,
+    .progression-save-button::before,
+    .progression-export-button::before {
+        display: none;
+    }
 }

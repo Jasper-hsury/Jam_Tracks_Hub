@@ -817,7 +817,7 @@
             scrollTrigger: {
                 trigger: section,
                 start: "top 12%",
-                end: () => `+=${travelDistance() + window.innerHeight * 0.36}`,
+                end: () => `+=${travelDistance() + window.innerHeight * 0.62}`,
                 scrub: 0.7,
                 pin: true,
                 anticipatePin: 1,

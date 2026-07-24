@@ -279,6 +279,7 @@ h1 {
 .progression-play-button:focus-visible,
 .progression-save-button:focus-visible,
 .progression-export-button:focus-visible,
+.progression-extension-option:focus-visible,
 .transpose-controls button:focus-visible,
 .track-link:focus-visible,
 .footer .social-links a:focus-visible,

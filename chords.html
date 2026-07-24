@@ -22,10 +22,10 @@
 
     <script src="theme-init.js?v=20260623-dark-light"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles/base.css?v=20260718-gsap-polish-theme-fallback">
-    <link rel="stylesheet" href="styles/components.css?v=20260724-theme-default">
-    <link rel="stylesheet" href="styles/pages.css?v=20260718-dropdown-hover-release-tags">
-    <link rel="stylesheet" href="styles/themes.css?v=20260718-unified-signature-subtitles">
+    <link rel="stylesheet" href="styles/base.css?v=20260724-light-hover-soft">
+    <link rel="stylesheet" href="styles/components.css?v=20260724-light-hover-soft">
+    <link rel="stylesheet" href="styles/pages.css?v=20260724-light-hover-soft">
+    <link rel="stylesheet" href="styles/themes.css?v=20260724-light-hover-soft">
 </head>
 
 <body>
@@ -53,39 +53,48 @@
                 <p>Choose a key, switch between triads and seventh chords, then compare guitar-friendly root-position voicings.</p>
             </div>
 
+            <a class="select-key-button progression-write-link" href="progression-writer.html">Write Your Own Progression</a>
+
             <button class="select-key-button" id="selectKeyButton" type="button" hidden>Select Another Key</button>
 
             <div class="key-options" id="keyOptions">
-                <h2 class="section-title">Major Keys</h2>
-                <div class="key-button-grid">
-                    <button class="key-button" type="button" data-key="C major" data-notes="C, D, E, F, G, A, B">C</button>
-                    <button class="key-button" type="button" data-key="Db major" data-notes="Db, Eb, F, Gb, Ab, Bb, C">Db</button>
-                    <button class="key-button" type="button" data-key="D major" data-notes="D, E, F#, G, A, B, C#">D</button>
-                    <button class="key-button" type="button" data-key="Eb major" data-notes="Eb, F, G, Ab, Bb, C, D">Eb</button>
-                    <button class="key-button" type="button" data-key="E major" data-notes="E, F#, G#, A, B, C#, D#">E</button>
-                    <button class="key-button" type="button" data-key="F major" data-notes="F, G, A, Bb, C, D, E">F</button>
-                    <button class="key-button" type="button" data-key="Gb major" data-notes="Gb, Ab, Bb, Cb, Db, Eb, F">Gb</button>
-                    <button class="key-button" type="button" data-key="G major" data-notes="G, A, B, C, D, E, F#">G</button>
-                    <button class="key-button" type="button" data-key="Ab major" data-notes="Ab, Bb, C, Db, Eb, F, G">Ab</button>
-                    <button class="key-button" type="button" data-key="A major" data-notes="A, B, C#, D, E, F#, G#">A</button>
-                    <button class="key-button" type="button" data-key="Bb major" data-notes="Bb, C, D, Eb, F, G, A">Bb</button>
-                    <button class="key-button" type="button" data-key="B major" data-notes="B, C#, D#, E, F#, G#, A#">B</button>
+                <div class="key-mode-heading">
+                    <div>
+                        <span class="result-kicker">Key mode</span>
+                        <h2 class="section-title">Choose a Tonic</h2>
+                    </div>
+                    <label class="key-mode-switch" for="keyModeToggle">
+                        <span class="key-mode-label key-mode-label-major">Major</span>
+                        <span class="key-mode-toggle-shell">
+                            <input class="key-mode-toggle-input" id="keyModeToggle" type="checkbox" aria-label="Switch between major and minor keys">
+                            <span class="key-mode-toggle-handle-wrapper">
+                                <span class="key-mode-toggle-handle">
+                                    <span class="key-mode-toggle-knob"></span>
+                                    <span class="key-mode-toggle-bar-wrapper">
+                                        <span class="key-mode-toggle-bar"></span>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="key-mode-toggle-base">
+                                <span class="key-mode-toggle-base-inside"></span>
+                            </span>
+                        </span>
+                        <span class="key-mode-label key-mode-label-minor">Minor</span>
+                    </label>
                 </div>
-
-                <h2 class="section-title section-title-spaced">Minor Keys</h2>
                 <div class="key-button-grid">
-                    <button class="key-button" type="button" data-key="A minor" data-notes="A, B, C, D, E, F, G">Am</button>
-                    <button class="key-button" type="button" data-key="Bb minor" data-notes="Bb, C, Db, Eb, F, Gb, Ab">Bbm</button>
-                    <button class="key-button" type="button" data-key="B minor" data-notes="B, C#, D, E, F#, G, A">Bm</button>
-                    <button class="key-button" type="button" data-key="C minor" data-notes="C, D, Eb, F, G, Ab, Bb">Cm</button>
-                    <button class="key-button" type="button" data-key="C# minor" data-notes="C#, D#, E, F#, G#, A, B">C#m</button>
-                    <button class="key-button" type="button" data-key="D minor" data-notes="D, E, F, G, A, Bb, C">Dm</button>
-                    <button class="key-button" type="button" data-key="Eb minor" data-notes="Eb, F, Gb, Ab, Bb, Cb, Db">Ebm</button>
-                    <button class="key-button" type="button" data-key="E minor" data-notes="E, F#, G, A, B, C, D">Em</button>
-                    <button class="key-button" type="button" data-key="F minor" data-notes="F, G, Ab, Bb, C, Db, Eb">Fm</button>
-                    <button class="key-button" type="button" data-key="F# minor" data-notes="F#, G#, A, B, C#, D, E">F#m</button>
-                    <button class="key-button" type="button" data-key="G minor" data-notes="G, A, Bb, C, D, Eb, F">Gm</button>
-                    <button class="key-button" type="button" data-key="Ab minor" data-notes="Ab, Bb, Cb, Db, Eb, Fb, Gb">Abm</button>
+                    <button class="key-button" type="button" data-major-label="C" data-major-key="C major" data-major-notes="C, D, E, F, G, A, B" data-minor-label="Cm" data-minor-key="C minor" data-minor-notes="C, D, Eb, F, G, Ab, Bb">C</button>
+                    <button class="key-button" type="button" data-major-label="Db" data-major-key="Db major" data-major-notes="Db, Eb, F, Gb, Ab, Bb, C" data-minor-label="C#m" data-minor-key="C# minor" data-minor-notes="C#, D#, E, F#, G#, A, B">Db</button>
+                    <button class="key-button" type="button" data-major-label="D" data-major-key="D major" data-major-notes="D, E, F#, G, A, B, C#" data-minor-label="Dm" data-minor-key="D minor" data-minor-notes="D, E, F, G, A, Bb, C">D</button>
+                    <button class="key-button" type="button" data-major-label="Eb" data-major-key="Eb major" data-major-notes="Eb, F, G, Ab, Bb, C, D" data-minor-label="Ebm" data-minor-key="Eb minor" data-minor-notes="Eb, F, Gb, Ab, Bb, Cb, Db">Eb</button>
+                    <button class="key-button" type="button" data-major-label="E" data-major-key="E major" data-major-notes="E, F#, G#, A, B, C#, D#" data-minor-label="Em" data-minor-key="E minor" data-minor-notes="E, F#, G, A, B, C, D">E</button>
+                    <button class="key-button" type="button" data-major-label="F" data-major-key="F major" data-major-notes="F, G, A, Bb, C, D, E" data-minor-label="Fm" data-minor-key="F minor" data-minor-notes="F, G, Ab, Bb, C, Db, Eb">F</button>
+                    <button class="key-button" type="button" data-major-label="Gb" data-major-key="Gb major" data-major-notes="Gb, Ab, Bb, Cb, Db, Eb, F" data-minor-label="F#m" data-minor-key="F# minor" data-minor-notes="F#, G#, A, B, C#, D, E">Gb</button>
+                    <button class="key-button" type="button" data-major-label="G" data-major-key="G major" data-major-notes="G, A, B, C, D, E, F#" data-minor-label="Gm" data-minor-key="G minor" data-minor-notes="G, A, Bb, C, D, Eb, F">G</button>
+                    <button class="key-button" type="button" data-major-label="Ab" data-major-key="Ab major" data-major-notes="Ab, Bb, C, Db, Eb, F, G" data-minor-label="Abm" data-minor-key="Ab minor" data-minor-notes="Ab, Bb, Cb, Db, Eb, Fb, Gb">Ab</button>
+                    <button class="key-button" type="button" data-major-label="A" data-major-key="A major" data-major-notes="A, B, C#, D, E, F#, G#" data-minor-label="Am" data-minor-key="A minor" data-minor-notes="A, B, C, D, E, F, G">A</button>
+                    <button class="key-button" type="button" data-major-label="Bb" data-major-key="Bb major" data-major-notes="Bb, C, D, Eb, F, G, A" data-minor-label="Bbm" data-minor-key="Bb minor" data-minor-notes="Bb, C, Db, Eb, F, Gb, Ab">Bb</button>
+                    <button class="key-button" type="button" data-major-label="B" data-major-key="B major" data-major-notes="B, C#, D#, E, F#, G#, A#" data-minor-label="Bm" data-minor-key="B minor" data-minor-notes="B, C#, D, E, F#, G, A">B</button>
                 </div>
             </div>
 
@@ -107,7 +116,7 @@
     <button id="backToTopBtn" type="button" aria-label="Back to top">&uarr;</button>
 
     <script src="site.js?v=20260718-slow-back-to-top"></script>
-    <script src="chords.js?v=20260722-progression-voicings"></script>
+    <script src="chords.js?v=20260724-uiverse-download-clean"></script>
     <script src="vendor/gsap/gsap.min.js"></script>
     <script src="vendor/gsap/ScrollTrigger.min.js"></script>
     <script src="site-animations.js?v=20260718-trainer-dropdown-hover"></script>

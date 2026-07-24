@@ -512,7 +512,11 @@ document.addEventListener("DOMContentLoaded", function() {
         keyFinderResult.innerHTML = `
             <div class="analysis-progress" role="status">
                 <div class="analysis-progress-heading">
-                    <span class="analysis-spinner" aria-hidden="true"></span>
+                    <span class="jh-loader analysis-spinner" aria-hidden="true">
+                        <span class="jh-loader-dot"></span>
+                        <span class="jh-loader-dot"></span>
+                        <span class="jh-loader-dot"></span>
+                    </span>
                     <div>
                         <strong>${escapeHtml(job.stage || "Analyzing audio")}</strong>
                         <span>${progress}%</span>
@@ -520,9 +524,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 </div>
                 <div class="analysis-progress-bar" aria-hidden="true">
                     <span style="width: ${progress}%"></span>
-                </div>
-                <div class="analysis-skeleton" aria-hidden="true">
-                    <span></span><span></span><span></span>
                 </div>
             </div>
         `;

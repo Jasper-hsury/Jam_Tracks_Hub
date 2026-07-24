@@ -4,17 +4,32 @@ document.addEventListener("DOMContentLoaded", function() {
     const sortSelect = document.getElementById("trackSortSelect");
     const resultCount = document.getElementById("trackResultCount");
     const controls = document.querySelector(".track-controls");
+    const keyFilterPanel = document.getElementById("trackKeyPills");
+    const sortSwitchPanel = document.getElementById("trackSortPills");
+    const sortToggle = document.getElementById("trackSortToggle");
 
     let tracks = [];
+    let selectedKeys = new Set();
+    let selectedKeyGroups = new Set();
+    const slidesActionTimers = new WeakMap();
+    const relativeKeyGroups = [
+        { id: "c-am", label: "C/Am", keys: ["C major", "A minor"] },
+        { id: "csharp-bbm", label: "C#/Bbm", keys: ["C# major", "Db major", "Bb minor", "A# minor"] },
+        { id: "d-bm", label: "D/Bm", keys: ["D major", "B minor"] },
+        { id: "eb-cm", label: "Eb/Cm", keys: ["Eb major", "D# major", "C minor"] },
+        { id: "e-csharpm", label: "E/C#m", keys: ["E major", "C# minor", "Db minor"] },
+        { id: "f-dm", label: "F/Dm", keys: ["F major", "D minor"] },
+        { id: "fsharp-ebm", label: "F#/Ebm", keys: ["F# major", "Gb major", "Eb minor", "D# minor"] },
+        { id: "g-em", label: "G/Em", keys: ["G major", "E minor"] },
+        { id: "ab-fm", label: "Ab/Fm", keys: ["Ab major", "G# major", "F minor"] },
+        { id: "a-fsharpm", label: "A/F#m", keys: ["A major", "F# minor", "Gb minor"] },
+        { id: "bb-gm", label: "Bb/Gm", keys: ["Bb major", "A# major", "G minor"] },
+        { id: "b-gsharpm", label: "B/G#m", keys: ["B major", "G# minor", "Ab minor"] }
+    ];
 
     if (!grid) {
         return;
     }
-
-    const filterPillGroups = [
-        { select: keyFilter, container: document.getElementById("trackKeyPills") },
-        { select: sortSelect, container: document.getElementById("trackSortPills") }
-    ];
 
     function escapeHtml(value) {
         return String(value || "")
@@ -23,6 +38,27 @@ document.addEventListener("DOMContentLoaded", function() {
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
+    }
+
+    function renderLoaderMarkup(extraClass) {
+        const className = extraClass ? `jh-loader ${extraClass}` : "jh-loader";
+        return `
+            <span class="${className}" aria-hidden="true">
+                <span class="jh-loader-dot"></span>
+                <span class="jh-loader-dot"></span>
+                <span class="jh-loader-dot"></span>
+            </span>
+        `;
+    }
+
+    function triggerSlidesAction(link) {
+        window.clearTimeout(slidesActionTimers.get(link));
+        link.classList.add("is-activating");
+        link.setAttribute("aria-busy", "true");
+        slidesActionTimers.set(link, window.setTimeout(function() {
+            link.classList.remove("is-activating");
+            link.removeAttribute("aria-busy");
+        }, 1800));
     }
 
     function getTrackNumber(track) {
@@ -74,43 +110,136 @@ document.addEventListener("DOMContentLoaded", function() {
             return;
         }
 
-        const currentValue = selectElement.value || "all";
         selectElement.innerHTML = `<option value="all">${firstLabel}</option>` + values.map(function(value) {
             return `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`;
         }).join("");
-
-        selectElement.value = values.includes(currentValue) ? currentValue : "all";
     }
 
-    function renderFilterPills() {
-        filterPillGroups.forEach(function(group) {
-            const select = group.select;
-            const container = group.container;
-            const optionsContainer = container?.querySelector(".track-pill-options");
-            if (!select || !container || !optionsContainer) {
-                return;
-            }
+    function getAvailableKeyValues() {
+        if (!keyFilter) {
+            return [];
+        }
 
-            const currentLabel = container.querySelector("[data-filter-current]");
-            const selectedOption = Array.from(select.options).find(option => option.value === select.value);
-            if (currentLabel && selectedOption) {
-                currentLabel.textContent = selectedOption.textContent;
-            }
+        return Array.from(keyFilter.options)
+            .map(option => option.value)
+            .filter(value => value && value !== "all");
+    }
 
-            optionsContainer.innerHTML = Array.from(select.options).map(function(option) {
-                const isSelected = option.value === select.value;
-                return `
-                    <button
-                        type="button"
-                        class="track-pill-button${isSelected ? " is-selected" : ""}"
-                        data-filter-select="${escapeHtml(select.id)}"
-                        data-filter-value="${escapeHtml(option.value)}"
-                        aria-pressed="${isSelected}">
-                        ${escapeHtml(option.textContent)}
-                    </button>
-                `;
-            }).join("");
+    function sanitizeSelectedKeys(keys) {
+        const availableKeys = new Set(getAvailableKeyValues());
+        return new Set(Array.from(keys).filter(key => availableKeys.has(key)));
+    }
+
+    function sanitizeSelectedKeyGroups(groups) {
+        const availableGroupIds = new Set(relativeKeyGroups.map(group => group.id));
+        return new Set(Array.from(groups).filter(groupId => availableGroupIds.has(groupId)));
+    }
+
+    function getKeysFromSelectedGroups() {
+        if (selectedKeyGroups.size === 0) {
+            return new Set();
+        }
+
+        return new Set(relativeKeyGroups
+            .filter(group => selectedKeyGroups.has(group.id))
+            .flatMap(group => group.keys));
+    }
+
+    function updateKeySelectFromState() {
+        if (!keyFilter) {
+            return;
+        }
+
+        keyFilter.querySelectorAll("option").forEach(function(option) {
+            option.selected = selectedKeys.size === 0
+                ? option.value === "all"
+                : selectedKeys.has(option.value);
         });
+    }
+
+    function getKeyFilterSummary() {
+        if (selectedKeys.size === 0) {
+            return "All keys";
+        }
+
+        const orderedGroups = relativeKeyGroups.filter(group => selectedKeyGroups.has(group.id));
+        if (orderedGroups.length === 1) {
+            return orderedGroups[0].label;
+        }
+
+        return `${orderedGroups[0].label} +${orderedGroups.length - 1}`;
+    }
+
+    function renderKeyFilterOptions() {
+        if (!keyFilterPanel) {
+            return;
+        }
+
+        const currentLabel = keyFilterPanel.querySelector("[data-filter-current]");
+        const optionsContainer = keyFilterPanel.querySelector(".track-key-options");
+        const optionRows = [
+            { value: "all", label: "All keys" },
+            ...relativeKeyGroups.map(function(group) {
+                return { value: group.id, label: group.label };
+            })
+        ];
+
+        if (currentLabel) {
+            currentLabel.textContent = getKeyFilterSummary();
+        }
+
+        if (!optionsContainer) {
+            return;
+        }
+
+        optionsContainer.innerHTML = optionRows.map(function(option, index) {
+            const isChecked = option.value === "all"
+                ? selectedKeyGroups.size === 0
+                : selectedKeyGroups.has(option.value);
+            const inputId = `track-key-choice-${option.value.toLowerCase().replace(/[^a-z0-9]+/g, "-") || "all"}`;
+
+            return `
+                <input
+                    class="track-key-checkbox"
+                    id="${escapeHtml(inputId)}"
+                    type="checkbox"
+                    data-filter-value="${escapeHtml(option.value)}"
+                    ${isChecked ? "checked" : ""}>
+                <label class="track-key-checkbox-wrapper${index === 0 ? " track-key-checkbox-wrapper-all" : ""}" for="${escapeHtml(inputId)}">
+                    <span class="track-key-checkbox-visual">
+                        <span class="track-key-checkbox-inner">${escapeHtml(option.label)}</span>
+                    </span>
+                </label>
+            `;
+        }).join("");
+    }
+
+    function syncKeyFilterAndRender() {
+        selectedKeyGroups = sanitizeSelectedKeyGroups(selectedKeyGroups);
+        selectedKeys = getKeysFromSelectedGroups();
+        updateKeySelectFromState();
+        renderKeyFilterOptions();
+        renderTracks();
+    }
+
+    function renderSortControl() {
+        if (!sortSelect || !sortToggle || !sortSwitchPanel) {
+            return;
+        }
+
+        const isOldest = sortSelect.value === "oldest";
+        sortToggle.checked = isOldest;
+        sortSwitchPanel.querySelector("[data-sort-latest]")?.classList.toggle("is-active", !isOldest);
+        sortSwitchPanel.querySelector("[data-sort-oldest]")?.classList.toggle("is-active", isOldest);
+    }
+
+    function closeKeyFilterPanel() {
+        if (!keyFilterPanel) {
+            return;
+        }
+
+        keyFilterPanel.classList.remove("is-open");
+        keyFilterPanel.querySelector(".track-key-filter-toggle")?.setAttribute("aria-expanded", "false");
     }
 
     function getSortedTracks(items) {
@@ -159,7 +288,15 @@ document.addEventListener("DOMContentLoaded", function() {
                 </div>
                 <div class="track-actions">
                     <div class="track-secondary-actions">
-                        <a href="${escapeHtml(track.slidesUrl)}" class="track-link track-secondary-action secondary-track-link" data-card-action="slides" target="_blank" rel="noopener noreferrer">Slides</a>
+                        <a href="${escapeHtml(track.downloadUrl)}" class="track-link track-secondary-action secondary-track-link track-slides-download-link" data-card-action="slides" download aria-label="Download slides for ${escapeHtml(track.title)}">
+                            <span class="track-slides-download-circle" aria-hidden="true">
+                                <svg class="track-slides-download-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                    <path d="M12 5v11m0 0-4-4m4 4 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path d="M6 19h12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path>
+                                </svg>
+                                <span class="track-slides-download-square"></span>
+                            </span>
+                        </a>
                     </div>
                 </div>
             </article>
@@ -231,10 +368,8 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function getVisibleTracks() {
-        const selectedKey = keyFilter?.value || "all";
-
         return tracks.filter(function(track) {
-            const matchesKey = selectedKey === "all" || track.key === selectedKey;
+            const matchesKey = selectedKeys.size === 0 || selectedKeys.has(track.key);
 
             return matchesKey;
         });
@@ -271,14 +406,21 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function refreshFilterOptions() {
         populateSelect(keyFilter, uniqueSorted(tracks.map(track => track.key)), "All keys");
-        renderFilterPills();
+        selectedKeyGroups = sanitizeSelectedKeyGroups(selectedKeyGroups);
+        selectedKeys = getKeysFromSelectedGroups();
+        updateKeySelectFromState();
+        renderKeyFilterOptions();
+        renderSortControl();
     }
 
     async function loadTracks() {
         grid.setAttribute("aria-busy", "true");
-        grid.innerHTML = Array.from({ length: 3 }, function() {
-            return `<article class="track-card track-skeleton" aria-hidden="true"></article>`;
-        }).join("");
+        grid.innerHTML = `
+            <p class="track-loading track-loading-status" role="status">
+                ${renderLoaderMarkup("track-loading-spinner")}
+                <span>Loading tracks...</span>
+            </p>
+        `;
 
         try {
             const response = await fetch("tracks.json", { cache: "no-store" });
@@ -289,12 +431,25 @@ document.addEventListener("DOMContentLoaded", function() {
             const baseTracks = await response.json();
             tracks = baseTracks.map(normalizeTrack);
             refreshFilterOptions();
-            const requestedKey = new URLSearchParams(window.location.search).get("key");
-            if (requestedKey && keyFilter) {
-                keyFilter.value = Array.from(keyFilter.options).some(option => option.value.toLowerCase() === requestedKey.toLowerCase())
-                    ? Array.from(keyFilter.options).find(option => option.value.toLowerCase() === requestedKey.toLowerCase()).value
-                    : "all";
-                renderFilterPills();
+            const params = new URLSearchParams(window.location.search);
+            const requestedKeys = params.getAll("key").flatMap(function(value) {
+                return value.split(",");
+            }).map(function(value) {
+                return value.trim();
+            }).filter(Boolean);
+            if (requestedKeys.length && keyFilter) {
+                selectedKeyGroups = new Set(requestedKeys.map(function(requestedKey) {
+                    const normalizedKey = requestedKey.toLowerCase();
+                    const requestedGroup = relativeKeyGroups.find(function(group) {
+                        return group.id.toLowerCase() === normalizedKey ||
+                            group.label.toLowerCase() === normalizedKey ||
+                            group.keys.some(key => key.toLowerCase() === normalizedKey);
+                    });
+                    return requestedGroup?.id;
+                }).filter(Boolean));
+                selectedKeys = getKeysFromSelectedGroups();
+                updateKeySelectFromState();
+                renderKeyFilterOptions();
             }
             renderTracks();
         } catch (error) {
@@ -307,7 +462,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function syncFiltersAndRender() {
-        renderFilterPills();
+        renderSortControl();
         renderTracks();
     }
 
@@ -319,50 +474,66 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     controls?.addEventListener("click", function(event) {
-        const dropdownToggle = event.target.closest(".track-dropdown-toggle");
-        if (dropdownToggle) {
-            const dropdown = dropdownToggle.closest(".track-dropdown-filter");
-            const wasOpen = dropdown?.classList.contains("is-open");
-            controls.querySelectorAll(".track-dropdown-filter.is-open").forEach(function(openDropdown) {
-                openDropdown.classList.remove("is-open");
-                openDropdown.querySelector(".track-dropdown-toggle")?.setAttribute("aria-expanded", "false");
-            });
-            if (dropdown && !wasOpen) {
-                dropdown.classList.add("is-open");
-                dropdownToggle.setAttribute("aria-expanded", "true");
+        const keyToggle = event.target.closest(".track-key-filter-toggle");
+        if (keyToggle) {
+            const wasOpen = keyFilterPanel?.classList.contains("is-open");
+            closeKeyFilterPanel();
+            if (keyFilterPanel && !wasOpen) {
+                keyFilterPanel.classList.add("is-open");
+                keyToggle.setAttribute("aria-expanded", "true");
             }
             return;
         }
+    });
 
-        const pillButton = event.target.closest(".track-pill-button");
-        if (!pillButton) {
+    controls?.addEventListener("change", function(event) {
+        const keyCheckbox = event.target.closest(".track-key-checkbox");
+        if (keyCheckbox) {
+            const keyValue = keyCheckbox.dataset.filterValue;
+            if (keyValue === "all") {
+                selectedKeyGroups.clear();
+            } else if (keyCheckbox.checked) {
+                selectedKeyGroups.add(keyValue);
+            } else {
+                selectedKeyGroups.delete(keyValue);
+            }
+            syncKeyFilterAndRender();
             return;
         }
 
-        const select = document.getElementById(pillButton.dataset.filterSelect);
-        if (!select) {
+        if (event.target === sortToggle && sortSelect) {
+            sortSelect.value = sortToggle.checked ? "oldest" : "newest";
+            syncFiltersAndRender();
+        }
+    });
+
+    controls?.addEventListener("keydown", function(event) {
+        if (event.key !== "Enter" || !keyFilterPanel?.classList.contains("is-open")) {
             return;
         }
 
-        select.value = pillButton.dataset.filterValue;
-        pillButton.closest(".track-dropdown-filter")?.classList.remove("is-open");
-        pillButton.closest(".track-dropdown-filter")?.querySelector(".track-dropdown-toggle")?.setAttribute("aria-expanded", "false");
-        syncFiltersAndRender();
+        if (event.target.closest(".track-key-multiselect")) {
+            event.preventDefault();
+            closeKeyFilterPanel();
+            keyFilterPanel.querySelector(".track-key-filter-toggle")?.focus();
+        }
     });
 
     document.addEventListener("click", function(event) {
-        if (!controls || controls.contains(event.target)) {
+        const clickPath = event.composedPath?.() || [];
+        if (!controls || controls.contains(event.target) || clickPath.includes(controls)) {
             return;
         }
 
-        controls.querySelectorAll(".track-dropdown-filter.is-open").forEach(function(openDropdown) {
-            openDropdown.classList.remove("is-open");
-            openDropdown.querySelector(".track-dropdown-toggle")?.setAttribute("aria-expanded", "false");
-        });
+        closeKeyFilterPanel();
     });
 
     grid.addEventListener("click", function(event) {
         if (event.target.closest("[data-card-action]")) {
+            const slidesLink = event.target.closest(".track-slides-download-link");
+            if (slidesLink) {
+                triggerSlidesAction(slidesLink);
+            }
             event.stopPropagation();
             return;
         }

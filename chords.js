@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const keyResult = document.getElementById("keyResult");
     const keyOptions = document.getElementById("keyOptions");
     const selectKeyButton = document.getElementById("selectKeyButton");
+    const keyModeToggle = document.getElementById("keyModeToggle");
 
     let audioContext = null;
     let audioOutput = null;
@@ -17,6 +18,8 @@ document.addEventListener("DOMContentLoaded", function() {
     let guitarStrokeCount = 0;
     let noiseBuffer = null;
     let selectedKeyButton = null;
+    let currentChordExtension = "triads";
+    let currentKeyMode = "major";
 
     if (!keyButtons.length || !keyResult || !keyOptions || !selectKeyButton) {
         return;
@@ -716,7 +719,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                     return `<span class="progression-numeral-token">${escapeProgressionHtml(numeral)}</span>`;
                                 }).join("");
                                 const renderedChords = chordGroup.map(function(chord) {
-                                    return `<a class="progression-chord-token" href="${chordDictionaryUrl(chord)}" aria-label="Open ${escapeProgressionHtml(chord)} in Chord Dictionary">${escapeProgressionHtml(chord)}</a>`;
+                                    return `<span class="progression-chord-token">${escapeProgressionHtml(chord)}</span>`;
                                 }).join("");
                                 const renderedStyle = chordGroups.length > 1
                                     ? `${escapeProgressionHtml(progression.style)} <span class="progression-group-label">Bars ${groupStart}-${groupEnd}</span>`
@@ -1594,8 +1597,24 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function readCurrentControls() {
         return {
-            extension: document.getElementById("chordExtension")?.value || "triads"
+            extension: currentChordExtension
         };
+    }
+
+    function applyKeyModeToButton(button) {
+        const mode = currentKeyMode === "minor" ? "minor" : "major";
+        button.dataset.key = button.dataset[`${mode}Key`];
+        button.dataset.notes = button.dataset[`${mode}Notes`];
+        button.textContent = button.dataset[`${mode}Label`];
+        button.setAttribute("aria-label", `${button.dataset.key} progressions`);
+    }
+
+    function refreshKeyModeButtons() {
+        keyButtons.forEach(applyKeyModeToButton);
+        keyOptions.setAttribute("data-key-mode", currentKeyMode);
+        if (keyModeToggle) {
+            keyModeToggle.checked = currentKeyMode === "minor";
+        }
     }
 
     function renderSelectedKey(button, shouldScroll) {
@@ -1631,13 +1650,25 @@ document.addEventListener("DOMContentLoaded", function() {
                         <h4>Common Progressions</h4>
                         <p>Switch between triads and seventh chords. Each chord includes a compact root-position guitar shape.</p>
                     </div>
-                    <label class="progression-chord-mode-control">
+                    <div class="progression-chord-mode-control">
                         <span>Chords</span>
-                        <select id="chordExtension">
-                            <option value="triads" ${settings.extension === "triads" ? "selected" : ""}>Triads</option>
-                            <option value="sevenths" ${settings.extension === "sevenths" ? "selected" : ""}>Seventh chords</option>
-                        </select>
-                    </label>
+                        <div class="progression-extension-toggle" role="group" aria-label="Chord type">
+                            <button
+                                class="progression-extension-option${settings.extension === "triads" ? " is-selected" : ""}"
+                                type="button"
+                                data-chord-extension="triads"
+                                aria-pressed="${settings.extension === "triads"}">
+                                Triads
+                            </button>
+                            <button
+                                class="progression-extension-option${settings.extension === "sevenths" ? " is-selected" : ""}"
+                                type="button"
+                                data-chord-extension="sevenths"
+                                aria-pressed="${settings.extension === "sevenths"}">
+                                Seventh chords
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 <div class="progression-category-list">${renderProgressions(progressions, chordMap)}</div>
             </section>
@@ -1658,8 +1689,32 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    keyResult.addEventListener("change", function(event) {
-        if (event.target.id === "chordExtension" && selectedKeyButton) {
+    refreshKeyModeButtons();
+
+    keyModeToggle?.addEventListener("change", function() {
+        currentKeyMode = keyModeToggle.checked ? "minor" : "major";
+        const selectedIndex = selectedKeyButton
+            ? Array.from(keyButtons).indexOf(selectedKeyButton)
+            : -1;
+        refreshKeyModeButtons();
+
+        if (selectedIndex >= 0) {
+            renderSelectedKey(keyButtons[selectedIndex], false);
+            return;
+        }
+
+        keyResult.innerHTML = `
+            <h3>Select a ${currentKeyMode} key</h3>
+            <p>Click a tonic above to see its notes.</p>
+        `;
+    });
+
+    keyResult.addEventListener("click", function(event) {
+        const extensionButton = event.target.closest("[data-chord-extension]");
+        if (extensionButton && selectedKeyButton) {
+            currentChordExtension = extensionButton.dataset.chordExtension === "sevenths"
+                ? "sevenths"
+                : "triads";
             renderSelectedKey(selectedKeyButton, false);
         }
     });
@@ -1681,8 +1736,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const requestedKey = new URLSearchParams(window.location.search).get("key");
     if (requestedKey) {
+        currentKeyMode = requestedKey.toLowerCase().includes("minor") ? "minor" : "major";
+        refreshKeyModeButtons();
         const requestedButton = Array.from(keyButtons).find(function(button) {
-            return button.dataset.key.toLowerCase() === requestedKey.toLowerCase();
+            return button.dataset.key.toLowerCase() === requestedKey.toLowerCase()
+                || button.dataset.majorKey.toLowerCase() === requestedKey.toLowerCase()
+                || button.dataset.minorKey.toLowerCase() === requestedKey.toLowerCase();
         });
         if (requestedButton) {
             renderSelectedKey(requestedButton, false);

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Write Your Own Progression | Jam Tracks Hub</title>
+
+    <link rel="icon" href="icon.png" type="image/png">
+    <meta name="description" content="Write a custom chord progression with or without verse and chorus sections on Jam Tracks Hub.">
+    <link rel="canonical" href="https://jamtrackshub.com/progression-writer.html">
+    <meta property="og:title" content="Write Your Own Progression | Jam Tracks Hub">
+    <meta property="og:description" content="Choose a custom chord progression format with or without verse and chorus sections.">
+    <meta property="og:image" content="https://jamtrackshub.com/cover.jpeg">
+    <meta property="og:url" content="https://jamtrackshub.com/progression-writer.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Jam Tracks Hub">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Write Your Own Progression | Jam Tracks Hub">
+    <meta name="twitter:description" content="Choose a custom chord progression format with or without verse and chorus sections.">
+    <meta name="twitter:image" content="https://jamtrackshub.com/cover.jpeg">
+
+    <script src="theme-init.js?v=20260623-dark-light"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/base.css?v=20260724-key-selector">
+    <link rel="stylesheet" href="styles/components.css?v=20260724-key-selector">
+    <link rel="stylesheet" href="styles/chord-dictionary.css?v=20260724-key-selector">
+    <link rel="stylesheet" href="styles/pages.css?v=20260724-key-selector">
+    <link rel="stylesheet" href="styles/themes.css?v=20260724-key-selector">
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="index.html#home" class="logo">Jam Tracks Hub</a>
+        <ul class="nav-links">
+            <li><a href="index.html#home">Home</a></li>
+            <li><a href="tracks.html">Tracks</a></li>
+            <li><a href="chord-dictionary.html">Chord Dictionary</a></li>
+            <li><a href="scale.html">Scale Explorer</a></li>
+            <li><a href="key-finder.html">Key Finder</a></li>
+            <li><a href="chords.html" class="active" aria-current="page">Chord Progressions</a></li>
+            <li><a href="fretboard-trainer.html">Fretboard Trainer</a></li>
+            <li><a href="index.html#about">About</a></li>
+        </ul>
+    </nav>
+
+    <main class="tracks-page progression-writer-page">
+        <div class="page-heading-row progression-writer-heading">
+            <div>
+                <h1>Write Your Own Progression</h1>
+                <p class="hero-tagline signature-slogan">Capture the Feeling. Compose the Meaning.</p>
+            </div>
+        </div>
+
+        <section class="progression-writer-panel" aria-labelledby="progressionWriterModeTitle">
+            <div class="tool-section-heading progression-writer-copy">
+                <span class="result-kicker">Progression format</span>
+                <h2 id="progressionWriterModeTitle" class="section-title">Chord Progression</h2>
+            </div>
+
+            <div class="progression-writer-mode-control">
+                <input class="progression-writer-switch-input" id="progressionStructureToggle" type="checkbox" aria-label="Switch between chord progression with or without verse and chorus">
+                <span class="progression-writer-mode-label progression-writer-mode-without">Without Verse &amp; Chorus</span>
+                <label class="progression-writer-switch" for="progressionStructureToggle"></label>
+                <span class="progression-writer-mode-label progression-writer-mode-with">With Verse &amp; Chorus</span>
+            </div>
+        </section>
+
+        <form class="progression-writer-form" id="progressionWriterForm">
+            <section class="progression-writer-meta" aria-label="Song information">
+                <div class="progression-writer-meta-field">
+                    <input id="progressionSongName" class="progression-writer-meta-input" type="text" name="songName" placeholder="Song Name" autocomplete="off">
+                    <label class="progression-writer-meta-label" for="progressionSongName">Song Name</label>
+                </div>
+                <div class="progression-writer-key-control">
+                    <div class="progression-writer-meta-field progression-writer-key-field">
+                        <select id="progressionKeyRoot" class="progression-writer-meta-input progression-writer-meta-select" name="keyRoot">
+                            <option value="A">A</option>
+                            <option value="Bb">Bb</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="Db">Db</option>
+                            <option value="D">D</option>
+                            <option value="Eb">Eb</option>
+                            <option value="E">E</option>
+                            <option value="F">F</option>
+                            <option value="Gb">Gb</option>
+                            <option value="G">G</option>
+                            <option value="Ab">Ab</option>
+                        </select>
+                        <label class="progression-writer-meta-label" for="progressionKeyRoot">Key</label>
+                    </div>
+                    <div class="progression-key-mode-control">
+                        <input class="progression-writer-switch-input progression-key-mode-input" id="progressionKeyQualityToggle" type="checkbox" aria-label="Switch key between major and minor">
+                        <span class="progression-key-mode-label progression-key-mode-major">Major</span>
+                        <label class="progression-writer-switch progression-key-mode-switch" for="progressionKeyQualityToggle"></label>
+                        <span class="progression-key-mode-label progression-key-mode-minor">Minor</span>
+                    </div>
+                </div>
+                <div class="progression-writer-meta-field progression-writer-meta-field-bpm">
+                    <input id="progressionBpm" class="progression-writer-meta-input" type="number" name="bpm" placeholder="BPM" min="20" max="320" inputmode="numeric">
+                    <label class="progression-writer-meta-label" for="progressionBpm">BPM</label>
+                </div>
+            </section>
+
+            <section class="progression-writer-entry" data-progression-mode="single" aria-labelledby="singleProgressionTitle">
+                <div class="progression-writer-entry-heading">
+                    <div>
+                        <span class="result-kicker">Custom chords</span>
+                        <h2 id="singleProgressionTitle" class="section-title">Progression</h2>
+                    </div>
+                    <div class="progression-writer-chord-actions">
+                        <button class="secondary-button progression-writer-add-button" type="button" data-add-chord="single">Add Chord</button>
+                        <button class="secondary-button progression-writer-delete-button" type="button" data-delete-chord="single">Delete Chord</button>
+                    </div>
+                </div>
+
+                <div class="progression-writer-chord-grid" data-chord-list="single">
+                    <div class="progression-writer-chord-field">
+                        <label><span>Chord 1</span><input type="text" name="singleChord" autocomplete="off" placeholder="Cmaj7"></label>
+                        <div class="progression-writer-shape-preview" data-shape-preview></div>
+                    </div>
+                    <div class="progression-writer-chord-field">
+                        <label><span>Chord 2</span><input type="text" name="singleChord" autocomplete="off" placeholder="G7"></label>
+                        <div class="progression-writer-shape-preview" data-shape-preview></div>
+                    </div>
+                    <div class="progression-writer-chord-field">
+                        <label><span>Chord 3</span><input type="text" name="singleChord" autocomplete="off" placeholder="Am7"></label>
+                        <div class="progression-writer-shape-preview" data-shape-preview></div>
+                    </div>
+                    <div class="progression-writer-chord-field">
+                        <label><span>Chord 4</span><input type="text" name="singleChord" autocomplete="off" placeholder="Fmaj7"></label>
+                        <div class="progression-writer-shape-preview" data-shape-preview></div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="progression-writer-section-grid" data-progression-mode="sections" hidden>
+                <section class="progression-writer-entry" aria-labelledby="verseProgressionTitle">
+                    <div class="progression-writer-entry-heading">
+                        <div>
+                            <span class="result-kicker">Section one</span>
+                            <h2 id="verseProgressionTitle" class="section-title">Verse</h2>
+                        </div>
+                        <div class="progression-writer-chord-actions">
+                            <button class="secondary-button progression-writer-add-button" type="button" data-add-chord="verse">Add Chord</button>
+                            <button class="secondary-button progression-writer-delete-button" type="button" data-delete-chord="verse">Delete Chord</button>
+                        </div>
+                    </div>
+
+                    <div class="progression-writer-chord-grid" data-chord-list="verse">
+                        <div class="progression-writer-chord-field">
+                            <label><span>Chord 1</span><input type="text" name="verseChord" autocomplete="off" placeholder="C"></label>
+                            <div class="progression-writer-shape-preview" data-shape-preview></div>
+                        </div>
+                        <div class="progression-writer-chord-field">
+                            <label><span>Chord 2</span><input type="text" name="verseChord" autocomplete="off" placeholder="G"></label>
+                            <div class="progression-writer-shape-preview" data-shape-preview></div>
+                        </div>
+                        <div class="progression-writer-chord-field">
+                            <label><span>Chord 3</span><input type="text" name="verseChord" autocomplete="off" placeholder="Am"></label>
+                            <div class="progression-writer-shape-preview" data-shape-preview></div>
+                        </div>
+                        <div class="progression-writer-chord-field">
+                            <label><span>Chord 4</span><input type="text" name="verseChord" autocomplete="off" placeholder="F"></label>
+                            <div class="progression-writer-shape-preview" data-shape-preview></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="progression-writer-entry" aria-labelledby="chorusProgressionTitle">
+                    <div class="progression-writer-entry-heading">
+                        <div>
+                            <span class="result-kicker">Section two</span>
+                            <h2 id="chorusProgressionTitle" class="section-title">Chorus</h2>
+                        </div>
+                        <div class="progression-writer-chord-actions">
+                            <button class="secondary-button progression-writer-add-button" type="button" data-add-chord="chorus">Add Chord</button>
+                            <button class="secondary-button progression-writer-delete-button" type="button" data-delete-chord="chorus">Delete Chord</button>
+                        </div>
+                    </div>
+
+                    <div class="progression-writer-chord-grid" data-chord-list="chorus">
+                        <div class="progression-writer-chord-field">
+                            <label><span>Chord 1</span><input type="text" name="chorusChord" autocomplete="off" placeholder="F"></label>
+                            <div class="progression-writer-shape-preview" data-shape-preview></div>
+                        </div>
+                        <div class="progression-writer-chord-field">
+                            <label><span>Chord 2</span><input type="text" name="chorusChord" autocomplete="off" placeholder="G"></label>
+                            <div class="progression-writer-shape-preview" data-shape-preview></div>
+                        </div>
+                        <div class="progression-writer-chord-field">
+                            <label><span>Chord 3</span><input type="text" name="chorusChord" autocomplete="off" placeholder="Em"></label>
+                            <div class="progression-writer-shape-preview" data-shape-preview></div>
+                        </div>
+                        <div class="progression-writer-chord-field">
+                            <label><span>Chord 4</span><input type="text" name="chorusChord" autocomplete="off" placeholder="Am"></label>
+                            <div class="progression-writer-shape-preview" data-shape-preview></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="progression-writer-actions">
+                <button class="primary-button progression-writer-save-button" type="submit">Save Progression</button>
+                <div class="progression-download-layout-control">
+                    <input id="separateProgressionDownload" class="progression-download-layout-input" type="checkbox" aria-label="Show chord progression and shapes separately in downloaded image">
+                    <span class="progression-download-layout-label progression-download-layout-full">Full Shape Cards</span>
+                    <label class="progression-download-layout-switch" for="separateProgressionDownload"></label>
+                    <span class="progression-download-layout-label progression-download-layout-separated">Progression &amp; Shapes Separately</span>
+                </div>
+                <button class="progression-download-button track-slides-download-link" id="downloadProgressionButton" type="button" aria-label="Download progression image">
+                    <span class="track-slides-download-circle" aria-hidden="true">
+                        <svg class="track-slides-download-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M12 5v11m0 0-4-4m4 4 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path d="M6 19h12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path>
+                        </svg>
+                        <span class="track-slides-download-square"></span>
+                    </span>
+                </button>
+                <p class="progression-writer-status" id="progressionWriterStatus" role="status" aria-live="polite"></p>
+            </div>
+        </form>
+
+        <div class="progression-writer-shape-picker-modal" id="progressionShapePicker" hidden>
+            <div class="progression-writer-shape-picker-backdrop" data-close-shape-picker></div>
+            <section class="progression-writer-shape-picker-dialog" role="dialog" aria-modal="true" aria-labelledby="progressionShapePickerTitle">
+                <div class="progression-writer-shape-picker-header">
+                    <div>
+                        <span class="result-kicker">Guitar voicings</span>
+                        <h2 id="progressionShapePickerTitle" class="section-title">Available guitar shapes</h2>
+                        <p>Standard tuning E A D G B E. X means mute; O means open.</p>
+                    </div>
+                    <button class="secondary-button progression-writer-shape-picker-close" type="button" data-close-shape-picker>Close</button>
+                </div>
+
+                <div class="progression-writer-shape-picker-summary">
+                    <strong id="progressionShapePickerChord">Chord</strong>
+                    <span id="progressionShapePickerCount">Finding shapes</span>
+                </div>
+
+                <div class="dictionary-position-filter progression-writer-shape-filter" id="progressionShapePositionFilter" aria-label="Filter chord shapes by fret area">
+                    <span>Position</span>
+                    <button type="button" class="is-selected" data-picker-position="all" aria-pressed="true">All</button>
+                    <button type="button" data-picker-position="0" aria-pressed="false">Near 0</button>
+                    <button type="button" data-picker-position="3" aria-pressed="false">Near 3</button>
+                    <button type="button" data-picker-position="5" aria-pressed="false">Near 5</button>
+                    <button type="button" data-picker-position="7" aria-pressed="false">Near 7</button>
+                    <button type="button" data-picker-position="9" aria-pressed="false">Near 9</button>
+                    <button type="button" data-picker-position="12" aria-pressed="false">Near 12</button>
+                </div>
+
+                <div class="dictionary-position-filter progression-writer-shape-filter" id="progressionShapeRootFilter" aria-label="Filter chord shapes by root string">
+                    <span>Root string</span>
+                    <button type="button" class="is-selected" data-picker-root-string="all" aria-pressed="true">All</button>
+                    <button type="button" data-picker-root-string="6" aria-pressed="false">6th E</button>
+                    <button type="button" data-picker-root-string="5" aria-pressed="false">5th A</button>
+                    <button type="button" data-picker-root-string="4" aria-pressed="false">4th D</button>
+                    <button type="button" data-picker-root-string="3" aria-pressed="false">3rd G</button>
+                    <button type="button" data-picker-root-string="2" aria-pressed="false">2nd B</button>
+                    <button type="button" data-picker-root-string="1" aria-pressed="false">1st e</button>
+                </div>
+
+                <div class="progression-writer-shape-picker-grid" id="progressionShapePickerGrid"></div>
+            </section>
+        </div>
+
+        <section class="progression-writer-saved" aria-labelledby="savedWriterProgressionsTitle">
+            <h2 id="savedWriterProgressionsTitle" class="section-title">Saved Progressions</h2>
+            <div class="progression-writer-saved-list" id="writerSavedProgressions">
+                <p class="saved-progression-empty">No saved progressions yet.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 Jam Tracks Hub. All rights reserved.</p>
+        <div class="social-links">
+            <a href="https://youtube.com/@weekly_backing_track?si=-Rp6XDvP0A8fclp3" target="_blank" rel="noopener noreferrer" aria-label="Visit Jam Tracks Hub YouTube channel">YouTube</a>
+            <a href="https://www.instagram.com/reyu_jasper?igsh=dmVsazFvb2pwMmsw&utm_source=qr" target="_blank" rel="noopener noreferrer" aria-label="Visit Jam Tracks Hub Instagram profile">Instagram</a>
+        </div>
+    </footer>
+
+    <button id="backToTopBtn" type="button" aria-label="Back to top">&uarr;</button>
+
+    <script src="site.js?v=20260718-slow-back-to-top"></script>
+    <script src="progression-writer.js?v=20260724-key-selector"></script>
+    <script src="vendor/gsap/gsap.min.js"></script>
+    <script src="vendor/gsap/ScrollTrigger.min.js"></script>
+    <script src="site-animations.js?v=20260718-trainer-dropdown-hover"></script>
+</body>
+</html>
