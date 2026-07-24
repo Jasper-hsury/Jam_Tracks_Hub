@@ -257,6 +257,28 @@ document.addEventListener("DOMContentLoaded", function() {
         return sorted;
     }
 
+    function buildSlidesDownloadLink(track, extraClass = "") {
+        const className = [
+            "track-link",
+            "track-secondary-action",
+            "secondary-track-link",
+            "track-slides-download-link",
+            extraClass
+        ].filter(Boolean).join(" ");
+
+        return `
+            <a href="${escapeHtml(track.downloadUrl)}" class="${className}" data-card-action="slides" download aria-label="Download slides for ${escapeHtml(track.title)}">
+                <span class="track-slides-download-circle" aria-hidden="true">
+                    <svg class="track-slides-download-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M12 5v11m0 0-4-4m4 4 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M6 19h12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path>
+                    </svg>
+                    <span class="track-slides-download-square"></span>
+                </span>
+            </a>
+        `;
+    }
+
     function buildTrackCard(track) {
         const videoId = getYouTubeVideoId(track.youtubeUrl);
         const hasYouTubeLink = Boolean(videoId && track.youtubeUrl && track.youtubeUrl !== "#");
@@ -288,15 +310,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 </div>
                 <div class="track-actions">
                     <div class="track-secondary-actions">
-                        <a href="${escapeHtml(track.downloadUrl)}" class="track-link track-secondary-action secondary-track-link track-slides-download-link" data-card-action="slides" download aria-label="Download slides for ${escapeHtml(track.title)}">
-                            <span class="track-slides-download-circle" aria-hidden="true">
-                                <svg class="track-slides-download-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                                    <path d="M12 5v11m0 0-4-4m4 4 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path>
-                                    <path d="M6 19h12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path>
-                                </svg>
-                                <span class="track-slides-download-square"></span>
-                            </span>
-                        </a>
+                        ${buildSlidesDownloadLink(track)}
                     </div>
                 </div>
             </article>

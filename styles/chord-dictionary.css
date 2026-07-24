@@ -896,9 +896,9 @@ html[data-theme="light"] .diagram-string-status.is-root strong {
 
     .chord-shape-card {
         display: grid;
-        grid-template-columns: minmax(120px, 0.72fr) minmax(150px, 1fr);
-        align-items: center;
-        gap: 12px;
+        grid-template-columns: 1fr;
+        align-items: start;
+        gap: 14px;
     }
 
     .chord-shape-card-heading {
@@ -906,14 +906,24 @@ html[data-theme="light"] .diagram-string-status.is-root strong {
         flex-direction: column;
         margin: 0;
     }
+
+    .chord-diagram {
+        width: min(100%, 220px);
+        max-width: 220px;
+        justify-self: center;
+    }
 }
 
 @media (max-width: 420px) {
     .chord-shape-card {
-        display: block;
+        display: grid;
     }
 
     .chord-shape-card-heading {
         margin-bottom: 10px;
+    }
+
+    .chord-diagram {
+        width: min(100%, 200px);
     }
 }

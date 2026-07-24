@@ -339,13 +339,13 @@ h1 {
     border: 1px solid rgba(196, 164, 132, 0.22);
 }
 
-.track-meta span:nth-child(2n) {
+.track-meta span:nth-of-type(2n) {
     color: var(--teal);
     background-color: rgba(127, 183, 173, 0.1);
     border-color: rgba(127, 183, 173, 0.24);
 }
 
-.track-meta span:nth-child(3n) {
+.track-meta span:nth-of-type(3n) {
     color: #e0b7ba;
     background-color: rgba(167, 111, 115, 0.12);
     border-color: rgba(167, 111, 115, 0.28);
@@ -2148,6 +2148,10 @@ body.is-shape-picker-open {
     min-width: 54px;
 }
 
+.tracks-library-page .track-slides-download-link-mobile {
+    display: none;
+}
+
 .tracks-library-page .inline-track-player {
     grid-column: 1 / -1;
 }
@@ -2821,7 +2825,11 @@ html[data-theme="light"] .track-scroll-five-blade-rotor use {
     }
 
     .tracks-library-page .track-card {
-        padding: 148px 18px 18px;
+        padding: 148px 18px 22px;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        column-gap: 16px;
+        row-gap: 12px;
     }
 
     .tracks-library-page .track-card::after {
@@ -2841,20 +2849,37 @@ html[data-theme="light"] .track-scroll-five-blade-rotor use {
         gap: 10px;
     }
 
-    .tracks-library-page .track-actions,
-    .tracks-library-page .track-secondary-actions {
-        width: 100%;
+    .tracks-library-page .track-card-main {
+        display: grid;
+        row-gap: 12px;
+        min-width: 0;
+    }
+
+    .tracks-library-page .track-card-title-row {
+        min-width: 0;
+    }
+
+    .tracks-library-page .track-meta {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 10px;
+        margin-top: 0;
     }
 
     .tracks-library-page .track-actions {
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 12px;
+        display: flex;
+        align-self: center;
+        justify-self: end;
+        width: auto;
+        margin: 0;
     }
 
     .tracks-library-page .track-secondary-actions {
+        display: flex;
+        width: auto;
         justify-content: center;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
         padding-left: 0;
         border-left: 0;
         border-top: 0;
@@ -2938,6 +2963,36 @@ html[data-theme="light"] .track-scroll-five-blade-rotor use {
         width: 100%;
         box-sizing: border-box;
         text-align: center;
+    }
+
+    .tracks-library-page .track-secondary-action {
+        width: auto;
+    }
+}
+
+@media (max-width: 430px) {
+    .tracks-library-page .track-card {
+        padding-inline: 16px;
+    }
+
+    .tracks-library-page .track-card-main {
+        column-gap: 10px;
+    }
+
+    .tracks-library-page .track-meta {
+        gap: 8px;
+    }
+
+    .tracks-library-page .track-meta span {
+        white-space: nowrap;
+    }
+
+    .tracks-library-page .track-actions .track-slides-download-link {
+        --slides-action-size: 48px;
+        width: var(--slides-action-size);
+        min-width: var(--slides-action-size);
+        height: var(--slides-action-size);
+        min-height: var(--slides-action-size);
     }
 }
 

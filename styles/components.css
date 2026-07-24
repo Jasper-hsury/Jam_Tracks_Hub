@@ -2556,8 +2556,17 @@ html:not([data-theme="light"]) .progression-group-label {
 
 @media (max-width: 820px) {
     .progression-toolbar-simple,
-    .progression-voicing-card {
+    .progression-voicing-card,
+    .progression-voicing-card.has-four-voicings {
         grid-template-columns: 1fr;
+    }
+
+    .progression-voicing-summary {
+        order: 1;
+    }
+
+    .progression-chord-voicings {
+        order: 2;
     }
 
     .progression-chord-voicings,
