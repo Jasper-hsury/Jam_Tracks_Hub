@@ -1861,7 +1861,7 @@ html[data-theme="light"] .track-scroll-five-blade-rotor use {
     }
 }
 
-html[data-theme="dark"] .home-hero {
+html:not([data-theme="light"]) .home-hero {
     --jam-mark-fill: rgba(211, 174, 136, 0.3);
 }
 

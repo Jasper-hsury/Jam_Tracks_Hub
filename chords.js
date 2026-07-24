@@ -1623,7 +1623,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     <span class="result-kicker">Selected key</span>
                     <h3>${escapeProgressionHtml(keyName)}</h3>
                 </div>
-                <button class="secondary-link-button" id="changeKeyButton" type="button">Change Key</button>
             </div>
             <section class="progression-section progression-library-section">
                 <div class="progression-toolbar progression-toolbar-simple">
@@ -1646,13 +1645,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
         keyOptions.hidden = true;
         selectKeyButton.hidden = false;
-
-        const changeKeyButton = keyResult.querySelector("#changeKeyButton");
-        if (changeKeyButton) {
-            changeKeyButton.addEventListener("click", function() {
-                selectKeyButton.click();
-            });
-        }
 
         if (shouldScroll) {
             keyResult.scrollIntoView({ behavior: "smooth", block: "start" });

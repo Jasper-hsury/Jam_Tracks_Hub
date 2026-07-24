@@ -2024,32 +2024,44 @@ audio {
     align-content: center;
 }
 
-html[data-theme="dark"] .progression-toolbar-simple,
-html[data-theme="dark"] .progression-voicing-category,
-html[data-theme="dark"] .progression-voicing-card,
-html[data-theme="dark"] .progression-shape-card {
+html:not([data-theme="light"]) .progression-toolbar-simple,
+html:not([data-theme="light"]) .progression-voicing-category,
+html:not([data-theme="light"]) .progression-voicing-card,
+html:not([data-theme="light"]) .progression-shape-card {
     border-color: rgba(229, 211, 179, 0.18);
     background: linear-gradient(145deg, rgba(28, 26, 23, 0.94), rgba(40, 34, 29, 0.88));
 }
 
-html[data-theme="dark"] .progression-chord-mode-control select {
+html:not([data-theme="light"]) .progression-toolbar-heading h4,
+html:not([data-theme="light"]) .progression-chord-mode-control,
+html:not([data-theme="light"]) .progression-shape-card-head strong,
+html:not([data-theme="light"]) .progression-shape-frets,
+html:not([data-theme="light"]) .progression-chord-token {
+    color: var(--gold-light);
+}
+
+html:not([data-theme="light"]) .progression-chord-token:hover {
+    color: var(--chord-control);
+}
+
+html:not([data-theme="light"]) .progression-chord-mode-control select {
     border-color: rgba(229, 211, 179, 0.24);
     background: rgba(14, 14, 13, 0.9);
 }
 
-html[data-theme="dark"] .progression-style,
-html[data-theme="dark"] .progression-shape-card-head span,
-html[data-theme="dark"] .progression-open-row,
-html[data-theme="dark"] .progression-base-fret,
-html[data-theme="dark"] .progression-string-row {
+html:not([data-theme="light"]) .progression-style,
+html:not([data-theme="light"]) .progression-shape-card-head span,
+html:not([data-theme="light"]) .progression-open-row,
+html:not([data-theme="light"]) .progression-base-fret,
+html:not([data-theme="light"]) .progression-string-row {
     color: rgba(235, 226, 210, 0.72);
 }
 
-html[data-theme="dark"] .progression-mini-neck {
+html:not([data-theme="light"]) .progression-mini-neck {
     --neck-line: rgba(235, 226, 210, 0.34);
 }
 
-html[data-theme="dark"] .progression-group-label {
+html:not([data-theme="light"]) .progression-group-label {
     color: rgba(235, 226, 210, 0.58);
 }
 
