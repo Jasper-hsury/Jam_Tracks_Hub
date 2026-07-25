@@ -1,6 +1,7 @@
 $ErrorActionPreference = "Stop"
 
-$sitePath = Split-Path -Parent $MyInvocation.MyCommand.Path
+$toolPath = Split-Path -Parent $MyInvocation.MyCommand.Path
+$sitePath = (Resolve-Path (Join-Path $toolPath "..\..")).Path
 $apiPath = Join-Path $sitePath "api-server"
 $defaultPython = Join-Path $env:LOCALAPPDATA "Programs\Python\Python312\python.exe"
 $pythonExe = if (Test-Path $defaultPython) { $defaultPython } else { "python" }

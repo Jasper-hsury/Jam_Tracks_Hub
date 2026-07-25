@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SITE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-HELPER_SCRIPT="$SITE_DIR/start_youtube_helper_mac.sh"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+HELPER_SCRIPT="$SCRIPT_DIR/start_youtube_helper_mac.sh"
 APP_DIR="$HOME/Applications/Jam Tracks Hub YouTube Helper.app"
 CONTENTS_DIR="$APP_DIR/Contents"
 MACOS_DIR="$CONTENTS_DIR/MacOS"

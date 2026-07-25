@@ -1,8 +1,9 @@
 $ErrorActionPreference = "Stop"
 
-$sitePath = Split-Path -Parent $MyInvocation.MyCommand.Path
+$toolPath = Split-Path -Parent $MyInvocation.MyCommand.Path
+$sitePath = (Resolve-Path (Join-Path $toolPath "..\..")).Path
 $apiPath = Join-Path $sitePath "api-server"
-$setupScript = Join-Path $sitePath "install_youtube_helper_dependencies.ps1"
+$setupScript = Join-Path $toolPath "install_youtube_helper_dependencies.ps1"
 $venvPython = Join-Path $sitePath ".venv\Scripts\python.exe"
 $helperUrl = "http://127.0.0.1:8765"
 

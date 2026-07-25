@@ -1,7 +1,8 @@
 $ErrorActionPreference = "Stop"
 
-$sitePath = Split-Path -Parent $MyInvocation.MyCommand.Path
-$launcherPath = Join-Path $sitePath "start_local_api_background.ps1"
+$toolPath = Split-Path -Parent $MyInvocation.MyCommand.Path
+$sitePath = (Resolve-Path (Join-Path $toolPath "..\..")).Path
+$launcherPath = Join-Path $toolPath "start_local_api_background.ps1"
 $startupFolder = [Environment]::GetFolderPath("Startup")
 $shortcutPath = Join-Path $startupFolder "Jam Tracks Hub API.lnk"
 $powershellPath = Join-Path $PSHOME "powershell.exe"

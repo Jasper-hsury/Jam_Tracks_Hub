@@ -1,6 +1,7 @@
 $ErrorActionPreference = "Stop"
 
-$sitePath = Split-Path -Parent $MyInvocation.MyCommand.Path
+$toolPath = Split-Path -Parent $MyInvocation.MyCommand.Path
+$sitePath = (Resolve-Path (Join-Path $toolPath "..\..")).Path
 $requirementsPath = Join-Path $sitePath "api-server\requirements_api.txt"
 $venvPath = Join-Path $sitePath ".venv"
 $venvPython = Join-Path $venvPath "Scripts\python.exe"

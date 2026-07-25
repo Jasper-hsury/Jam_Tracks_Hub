@@ -1,18 +1,18 @@
 # Render Deployment
 
-This folder is now set up as one Render web service:
+This repo is organized as a website plus one FastAPI backend:
 
 ```text
 Jam_Tracks_Hub/
   index.html
   chord-progressions.html
   tracks.html
-  styles/style.css
-  key-finder.js
-  site-config.js
-  Dockerfile
-  render.yaml
+  styles/
+  scripts/
+  data/
   api-server/
+    Dockerfile
+    render.yaml
     app.py
     detect_key.py
     models/
@@ -30,10 +30,16 @@ Render will run the Python/FastAPI server, and that same server will also serve 
 
 ## Local Test
 
-From this folder:
+From the project root:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File ".\start_render_local.ps1"
+powershell -ExecutionPolicy Bypass -File ".\tools\windows\start_render_local.ps1"
+```
+
+On macOS:
+
+```bash
+tools/mac/start_render_local_mac.sh
 ```
 
 Then open:
@@ -50,19 +56,18 @@ http://127.0.0.1:8000/api/health
 
 ## Render Setup
 
-Push this whole folder to GitHub, then create a Render Web Service from that repo.
+Push the repo to GitHub, then create a Render Web Service from that repo.
 
-Use Docker. Render can build from the root `Dockerfile`.
+Use Docker. The backend deployment files live in `api-server/`.
 
 The included `render.yaml` also describes the service:
 
 ```yaml
 services:
   - type: web
-    name: jasper-music
-    runtime: docker
+    name: jasper-key-finder-api
+    env: docker
     plan: free
-    dockerfilePath: ./Dockerfile
     healthCheckPath: /api/health
 ```
 

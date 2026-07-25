@@ -1,14 +1,64 @@
 # Jam Tracks Hub
 
-Personal music site for backing tracks, chord exploration, chord playback, and YouTube key detection.
+Jam Tracks Hub is a musician-focused website for backing tracks, fretboard study, chord exploration, and songwriting support. It combines original practice tracks with practical tools for understanding harmony, mapping guitar shapes, finding keys, and exporting custom chord progression diagrams.
 
-## Recommended Local Start
+## What The Site Includes
 
-For the Render-style version, run this from PowerShell:
+- `index.html`: homepage with the site introduction, quick navigation panels, and contact section.
+- `tracks.html`: backing track library with multi-key filtering, newest/oldest sorting, and direct slide downloads.
+- `chord-dictionary.html`: searchable guitar chord dictionary with multiple voicings and shape filters.
+- `scale.html`: scale explorer for guitar fretboard diagrams and downloadable scale images.
+- `key-finder.html`: YouTube/audio key finder powered by the local or deployed API.
+- `chord-progressions.html`: chord progression explorer with major/minor key selection and common progression groups.
+- `progression-writer.html`: custom progression writer with chord inputs, voicing selection, save/download image output, and separated progression/shape export.
+- `fretboard-trainer.html`: guitar fretboard practice tool.
+- `privacy-policy.html`: privacy policy.
+
+## Project Structure
+
+```text
+Jasper-music-main/
+  *.html
+  styles/
+  scripts/
+  data/
+  assets/
+  slides/
+  downloads/
+  api-server/
+  docs/
+  tools/
+  .github/workflows/
+```
+
+Key files:
+
+- `styles/base.css`: layout foundations, navigation, global utilities.
+- `styles/components.css`: reusable UI components.
+- `styles/pages.css`: page-specific sections and tool layouts.
+- `styles/themes.css`: light/dark theme variables and theme overrides.
+- `styles/chord-dictionary.css`: chord diagram and chord dictionary-specific styling.
+- `scripts/site.js`: shared navigation, theme switch, and site-level behavior.
+- `scripts/theme-init.js`: early theme loading before page paint.
+- `scripts/tracks.js`: track filtering, sorting, and download behavior.
+- `scripts/chords.js`: chord progression explorer logic.
+- `scripts/progression-writer.js`: custom progression writer and export logic.
+- `data/tracks.json`: backing track data source.
+
+## Local Start
+
+Static pages can be opened directly, but Key Finder needs the FastAPI backend.
+
+On macOS:
+
+```bash
+tools/mac/start_render_local_mac.sh
+```
+
+On Windows PowerShell:
 
 ```powershell
-cd "C:\Users\Jaspe\OneDrive\桌面\Jam_Tracks_Hub"
-powershell -ExecutionPolicy Bypass -File ".\start_render_local.ps1"
+powershell -ExecutionPolicy Bypass -File ".\tools\windows\start_render_local.ps1"
 ```
 
 Then open:
@@ -17,13 +67,22 @@ Then open:
 http://127.0.0.1:8000/index.html
 ```
 
-This starts one FastAPI server that serves both the website and the key finder API.
+API health check:
 
-## Pages
+```text
+http://127.0.0.1:8000/api/health
+```
 
-- `index.html`: homepage, intro, featured audio, latest tracks.
-- `tracks.html`: backing tracks with key filtering and newest/oldest sorting.
-- `chord-progressions.html`: YouTube Key Finder, chord progression explorer, chord playback, guitar rhythm, and metronome.
+## Checks
+
+Run the JavaScript and build checks before committing:
+
+```bash
+npm run check
+npm run build:cloudflare
+```
+
+`npm run build:cloudflare` prepares a static `dist/` folder and skips oversized slide PDFs that are too large for Cloudflare Workers.
 
 ## Key Finder API
 
@@ -34,36 +93,12 @@ The frontend calls:
 /api/analyze
 ```
 
-When running locally from `start_render_local.ps1`, those routes are available at:
+The API implementation lives in:
 
 ```text
-http://127.0.0.1:8000/api/health
-http://127.0.0.1:8000/api/analyze
-```
-
-## API Status
-
-On `chord-progressions.html`, the API status pill shows:
-
-- `API connected`: backend is reachable.
-- `API offline`: backend is not reachable.
-
-## Deploying To Render
-
-This folder includes:
-
-```text
-Dockerfile
-render.yaml
+api-server/app.py
+api-server/detect_key.py
 api-server/requirements_api.txt
-```
-
-Deploy the whole folder/repo to Render as a Docker web service. Render will run the Python API and serve the website from the same public URL.
-
-More details are in:
-
-```text
-API_DEPLOYMENT.md
 ```
 
 ## Tracks Data
@@ -74,17 +109,27 @@ Track cards are generated from:
 data/tracks.json
 ```
 
-To permanently add a track, add an object:
+Example track object:
 
 ```json
 {
-  "id": "W9",
+  "id": "W16",
   "title": "New Backing Track in A",
   "key": "A major",
   "style": "Ballad",
   "bpm": "85",
   "youtubeUrl": "https://youtu.be/...",
-  "slidesUrl": "slides/w9.html",
-  "downloadUrl": "slides/W9_New_Backing_Track_in_A.pdf"
+  "slidesUrl": "slides/w16.html",
+  "downloadUrl": "slides/W16_New_Backing_Track_in_A.pdf"
 }
+```
+
+## GitHub Workflow
+
+Use branches for changes, commit one meaningful update at a time, push the branch, open a pull request, let CI pass, then merge into `main`.
+
+More details:
+
+```text
+docs/GITHUB_WORKFLOW.md
 ```

@@ -27,16 +27,28 @@ index.html
 
 和弦 / Key Finder 頁面：
 chord-progressions.html
-chords.js
-key-finder.js
+scripts\chords.js
+key-finder.html
+scripts\key-finder.js
+
+Chord Dictionary：
+chord-dictionary.html
+scripts\chord-dictionary.js
+
+Progression Writer：
+progression-writer.html
+scripts\progression-writer.js
 
 Tracks 頁面：
 tracks.html
-tracks.js
+scripts\tracks.js
 data/tracks.json
 
 網站樣式：
-styles/style.css
+styles\base.css
+styles\components.css
+styles\pages.css
+styles\themes.css
 
 Python API：
 api-server\app.py
@@ -49,7 +61,7 @@ api-server\detect_key.py
 修改完後，先在 VS Code Terminal 跑：
 
 cd "C:\Users\Jaspe\OneDrive\桌面\Jam_Tracks_Hub"
-powershell -ExecutionPolicy Bypass -File ".\start_render_local.ps1"
+powershell -ExecutionPolicy Bypass -File ".\tools\windows\start_render_local.ps1"
 
 然後打開：
 

@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SITE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SITE_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 VENV_DIR="$SITE_DIR/.venv"
 PYTHON_BIN="$VENV_DIR/bin/python"
 

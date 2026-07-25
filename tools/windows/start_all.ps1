@@ -1,9 +1,7 @@
 $ErrorActionPreference = "Stop"
 
-$oneDrivePath = Join-Path $env:USERPROFILE "OneDrive"
-$desktopFolder = [string]([char]0x684C) + [string]([char]0x9762)
-$documentsFolder = [string]([char]0x6587) + [string]([char]0x4EF6)
-$sitePath = Join-Path (Join-Path $oneDrivePath $desktopFolder) "Jam_Tracks_Hub"
+$toolPath = Split-Path -Parent $MyInvocation.MyCommand.Path
+$sitePath = (Resolve-Path (Join-Path $toolPath "..\..")).Path
 $apiPath = Join-Path $sitePath "api-server"
 $defaultPython = Join-Path $env:LOCALAPPDATA "Programs\Python\Python312\python.exe"
 $pythonExe = if (Test-Path $defaultPython) { $defaultPython } else { "python" }

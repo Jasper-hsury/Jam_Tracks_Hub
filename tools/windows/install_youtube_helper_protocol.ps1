@@ -1,7 +1,7 @@
 $ErrorActionPreference = "Stop"
 
-$sitePath = Split-Path -Parent $MyInvocation.MyCommand.Path
-$helperScript = Join-Path $sitePath "start_youtube_helper.ps1"
+$toolPath = Split-Path -Parent $MyInvocation.MyCommand.Path
+$helperScript = Join-Path $toolPath "start_youtube_helper.ps1"
 $protocolRoot = "HKCU:\Software\Classes\jasper-helper"
 $commandKey = Join-Path $protocolRoot "shell\open\command"
 $powershellExe = Join-Path $PSHOME "powershell.exe"
