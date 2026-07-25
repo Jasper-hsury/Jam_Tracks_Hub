@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const root = path.resolve(__dirname, "..");
+const root = path.resolve(__dirname, "../..");
 const dist = path.join(root, "dist");
 const renderAssetBaseUrl = "https://jasper-music.onrender.com";
 const maxWorkerAssetBytes = 24 * 1024 * 1024;
@@ -10,33 +10,18 @@ const skippedLargeAssets = [];
 const rootFiles = [
   "404.html",
   "chord-dictionary.html",
-  "chord-dictionary.js",
-  "chords.html",
-  "chords.js",
-  "cover.jpeg",
+  "chord-progressions.html",
   "fretboard-trainer.html",
-  "fretboard-trainer.js",
   "googlec8a4768d207b3044.html",
-  "home.js",
-  "icon.png",
   "index.html",
   "key-finder.html",
-  "key-finder.js",
   "privacy-policy.html",
   "scale.html",
-  "scale.js",
   "service-waking.html",
-  "site-animations.js",
-  "site-config.js",
-  "site.js",
-  "style.css",
-  "theme-init.js",
-  "tracks.html",
-  "tracks.js",
-  "tracks.json"
+  "tracks.html"
 ];
 
-const directories = ["downloads", "samples", "slides", "styles", "vendor"];
+const directories = ["assets", "data", "downloads", "scripts", "slides", "styles"];
 
 function copyFile(relativePath) {
   const source = path.join(root, relativePath);

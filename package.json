@@ -1,5 +1,6 @@
 {
   "scripts": {
-    "build:cloudflare": "node scripts/build-cloudflare.js"
+    "build:cloudflare": "node tools/scripts/build-cloudflare.js",
+    "check": "node --check scripts/site.js && node --check scripts/theme-init.js && node --check scripts/tracks.js && node --check scripts/chords.js && node --check scripts/chord-dictionary.js && node --check scripts/scale.js && node --check scripts/key-finder.js && node --check scripts/progression-writer.js && node --check scripts/fretboard-trainer.js && node --check scripts/site-animations.js && node --check scripts/site-config.js"
   }
 }

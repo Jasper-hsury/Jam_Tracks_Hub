@@ -23,7 +23,7 @@ This starts one FastAPI server that serves both the website and the key finder A
 
 - `index.html`: homepage, intro, featured audio, latest tracks.
 - `tracks.html`: backing tracks with key filtering and newest/oldest sorting.
-- `chords.html`: YouTube Key Finder, chord progression explorer, chord playback, guitar rhythm, and metronome.
+- `chord-progressions.html`: YouTube Key Finder, chord progression explorer, chord playback, guitar rhythm, and metronome.
 
 ## Key Finder API
 
@@ -43,7 +43,7 @@ http://127.0.0.1:8000/api/analyze
 
 ## API Status
 
-On `chords.html`, the API status pill shows:
+On `chord-progressions.html`, the API status pill shows:
 
 - `API connected`: backend is reachable.
 - `API offline`: backend is not reachable.
@@ -71,7 +71,7 @@ API_DEPLOYMENT.md
 Track cards are generated from:
 
 ```text
-tracks.json
+data/tracks.json
 ```
 
 To permanently add a track, add an object:

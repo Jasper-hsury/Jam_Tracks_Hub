@@ -180,7 +180,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             toolLinks.innerHTML = `
                 <a href="chord-dictionary.html?root=${root}&chord=${chord}">Open ${getRootName()} ${chord} chord shapes</a>
-                <a href="chords.html?key=${key}">Build progressions in this key</a>
+                <a href="chord-progressions.html?key=${key}">Build progressions in this key</a>
                 <a href="fretboard-trainer.html">Practice note names</a>
             `;
         }

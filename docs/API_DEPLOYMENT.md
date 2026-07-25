@@ -5,9 +5,9 @@ This folder is now set up as one Render web service:
 ```text
 Jam_Tracks_Hub/
   index.html
-  chords.html
+  chord-progressions.html
   tracks.html
-  style.css
+  styles/style.css
   key-finder.js
   site-config.js
   Dockerfile
@@ -80,7 +80,7 @@ Then it serves the website from the project root:
 ```text
 /
 /index.html
-/chords.html
+/chord-progressions.html
 /tracks.html
 ```
 

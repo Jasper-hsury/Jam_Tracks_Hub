@@ -1070,8 +1070,8 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function generateProgressionSvg(data) {
-        const isLight = document.documentElement.dataset.theme === "light";
-        const palette = isLight
+        const currentTheme = document.documentElement.dataset.theme || "default";
+        const palette = currentTheme === "light"
             ? {
                 bg: "#f7f4ef",
                 panel: "#fffdf9",

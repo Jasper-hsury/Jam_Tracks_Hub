@@ -924,8 +924,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
         if (!guitarSamplePromise) {
             const sampleFiles = [
-                "samples/acoustic-guitar-sample.ogg",
-                "samples/pdx-gc-guitar.wav"
+                "assets/samples/acoustic-guitar-sample.ogg",
+                "assets/samples/pdx-gc-guitar.wav"
             ];
 
             guitarSamplePromise = Promise.all(sampleFiles.map(function(sampleFile) {

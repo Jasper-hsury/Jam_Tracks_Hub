@@ -33,7 +33,7 @@ Start-Sleep -Seconds 2
 Write-Host ""
 Write-Host "Website:        http://127.0.0.1:8088/index.html" -ForegroundColor Green
 Write-Host "Tracks:         http://127.0.0.1:8088/tracks.html" -ForegroundColor Green
-Write-Host "Chord tools:    http://127.0.0.1:8088/chords.html" -ForegroundColor Green
+Write-Host "Chord tools:    http://127.0.0.1:8088/chord-progressions.html" -ForegroundColor Green
 Write-Host "API health:     http://127.0.0.1:8000/api/health" -ForegroundColor Green
 Write-Host ""
 Write-Host "If a port is already in use, close the old python process or restart VS Code." -ForegroundColor Yellow

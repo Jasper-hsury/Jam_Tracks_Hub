@@ -438,9 +438,9 @@ document.addEventListener("DOMContentLoaded", function() {
         `;
 
         try {
-            const response = await fetch("tracks.json", { cache: "no-store" });
+            const response = await fetch("data/tracks.json", { cache: "no-store" });
             if (!response.ok) {
-                throw new Error("Could not load tracks.json");
+                throw new Error("Could not load data/tracks.json");
             }
 
             const baseTracks = await response.json();
@@ -470,7 +470,7 @@ document.addEventListener("DOMContentLoaded", function() {
         } catch (error) {
             grid.innerHTML = `
                 <p class="track-loading">
-                    Could not load tracks.json. Please preview this page through the local server instead of opening the file directly.
+                    Could not load data/tracks.json. Please preview this page through the local server instead of opening the file directly.
                 </p>
             `;
         }

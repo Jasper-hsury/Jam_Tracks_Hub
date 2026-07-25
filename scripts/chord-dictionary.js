@@ -965,7 +965,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             relatedActions.innerHTML = `
                 <a href="scale.html?root=${root}&type=${scaleType}">View matching scale</a>
-                <a href="chords.html?key=${key}">Build progressions from this root</a>
+                <a href="chord-progressions.html?key=${key}">Build progressions from this root</a>
                 <a href="fretboard-trainer.html">Practice fretboard notes</a>
             `;
         }

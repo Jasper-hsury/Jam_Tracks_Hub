@@ -328,90 +328,160 @@ html[data-theme="light"] .tracks-library-page .track-card:hover {
     background: var(--border-soft);
 }
 
-.theme-toggle {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    min-height: 32px;
-    padding: 4px 10px 4px 5px;
-    color: var(--teal);
-    background:
-        linear-gradient(135deg, color-mix(in srgb, var(--control-background) 90%, transparent), color-mix(in srgb, var(--soft-background) 72%, transparent));
-    border: 1px solid var(--border-soft);
-    border-radius: 999px;
-    font: inherit;
-    font-size: 13px;
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--teal) 10%, transparent);
-    transition:
-        color 0.2s ease,
-        background-color 0.2s ease,
-        border-color 0.2s ease,
-        box-shadow 0.2s ease,
-        transform 0.2s ease;
-}
-
 .nav-theme-item {
     display: flex;
     align-items: center;
 }
 
-.nav-theme-toggle {
-    min-width: 76px;
+/* Adapted from Uiverse.io by pandey_saurav_: Toggle-switches/pandey_saurav__friendly-insect-59.html */
+.theme-toggle {
+    --theme-switch-size: 38px;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
-    padding-inline: 9px;
+    width: fit-content;
+    min-width: var(--theme-switch-size);
+    min-height: var(--theme-switch-size);
+    padding: 7px;
+    color: var(--text-subtle);
+    background: color-mix(in srgb, #2e2e2e 92%, var(--control-background));
+    border: 0;
+    border-radius: 999px;
+    font: inherit;
+    cursor: pointer;
+    box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, var(--border-soft) 80%, transparent),
+        0 6px 16px color-mix(in srgb, var(--shadow-color) 72%, transparent);
+    transition:
+        color 0.2s ease,
+        background-color 0.7s ease,
+        box-shadow 0.7s ease,
+        transform 0.22s ease;
+}
+
+.theme-toggle-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.theme-toggle-switch {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
 }
 
 .theme-toggle-icon {
-    display: inline-grid;
-    place-items: center;
-    width: 22px;
-    height: 22px;
-    color: var(--chord-accent-text);
-    background: var(--chord-accent);
-    border-radius: 999px;
-    box-shadow:
-        0 3px 9px var(--shadow-color),
-        0 0 14px color-mix(in srgb, var(--chord-control) 34%, transparent);
-    font-size: 13px;
-    line-height: 1;
-    transform: translateX(0) rotate(-12deg);
-    transition:
-        color 0.2s ease,
-        background-color 0.2s ease,
-        box-shadow 0.2s ease,
-        transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+    display: block;
+    width: 24px;
+    height: 24px;
+    filter: drop-shadow(0 2px 4px color-mix(in srgb, var(--shadow-color) 70%, transparent));
+    transition: filter 0.7s ease, transform 0.22s ease;
 }
 
-.theme-toggle-text {
-    min-width: 31px;
-    text-align: left;
+.theme-toggle-icon-base {
+    fill: color-mix(in srgb, #51514c 82%, var(--text-subtle));
 }
 
-html[data-theme="light"] .theme-toggle-icon {
-    transform: translateX(3px) rotate(12deg);
+.theme-toggle-icon-rays {
+    fill: color-mix(in srgb, #a7a79b 82%, var(--text-subtle));
+    transition: fill 0.7s ease;
+}
+
+.theme-toggle-icon-bulb {
+    fill: #ffffff;
+    transition: fill 0.7s ease;
+}
+
+.theme-toggle-input:checked ~ .theme-toggle-switch .theme-toggle-icon-base {
+    fill: color-mix(in srgb, var(--gold) 74%, #51514c);
+}
+
+.theme-toggle-input:checked ~ .theme-toggle-switch .theme-toggle-icon-rays {
+    fill: color-mix(in srgb, var(--gold-light) 72%, #fff2c2);
+}
+
+.theme-toggle-input:checked ~ .theme-toggle-switch .theme-toggle-icon-bulb {
+    fill: #fff7df;
+}
+
+.theme-toggle-input:checked ~ .theme-toggle-switch .theme-toggle-icon {
+    filter:
+        drop-shadow(0 0 8px color-mix(in srgb, var(--gold-light) 74%, #ffc400))
+        drop-shadow(0 0 18px color-mix(in srgb, var(--gold) 48%, transparent));
+}
+
+.theme-toggle-input:checked ~ .theme-toggle-switch {
+    animation: themeToggleBulbPulse 1.7s ease-in-out infinite;
+}
+
+.theme-toggle-input:checked ~ .theme-toggle-switch,
+.theme-toggle:hover .theme-toggle-switch {
+    transform: translateY(-1px);
 }
 
 .theme-toggle:hover {
     color: var(--secondary-hover-text);
-    background:
-        linear-gradient(135deg, color-mix(in srgb, var(--secondary-hover-background) 88%, transparent), color-mix(in srgb, var(--chord-accent-soft) 64%, transparent));
-    border-color: var(--hover-border);
+    background: color-mix(in srgb, var(--control-hover-background) 80%, #2e2e2e);
     box-shadow:
-        inset 0 0 0 1px color-mix(in srgb, var(--chord-control) 20%, transparent),
-        0 8px 22px color-mix(in srgb, var(--chord-control) 18%, transparent);
-    transform: translateY(-2px) scale(1.02);
+        inset 0 0 0 1px color-mix(in srgb, var(--hover-border) 68%, transparent),
+        0 8px 22px color-mix(in srgb, var(--shadow-color) 66%, transparent);
+    transform: translateY(-1px);
 }
 
-.theme-toggle:focus-visible {
+.theme-toggle-input:checked ~ .theme-toggle-switch,
+.theme-toggle-switch {
+    transition: transform 0.22s ease;
+}
+
+.theme-toggle.is-light-theme {
+    background-color: color-mix(in srgb, var(--gold) 70%, #a15b00);
+    box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, var(--gold-light) 42%, transparent),
+        0 0 42px color-mix(in srgb, var(--gold-light) 36%, transparent),
+        0 8px 24px color-mix(in srgb, var(--shadow-color) 65%, transparent);
+}
+
+html[data-theme="light"] .theme-toggle {
+    background: color-mix(in srgb, var(--surface-raised) 78%, #2e2e2e);
+}
+
+html[data-theme="light"] .theme-toggle.is-light-theme {
+    background-color: color-mix(in srgb, var(--gold) 82%, #f0d2a7);
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 250, 242, 0.64),
+        0 0 34px rgba(223, 197, 167, 0.42),
+        0 8px 20px rgba(91, 70, 52, 0.16);
+}
+
+.theme-toggle:focus-within {
     outline: 3px solid var(--focus-ring);
-    outline-offset: 3px;
+    outline-offset: 2px;
+}
+
+.footer-theme-toggle {
+    --theme-switch-size: 46px;
+}
+
+@keyframes themeToggleBulbPulse {
+    0%,
+    100% {
+        transform: translateY(-1px) scale(1);
+    }
+
+    50% {
+        transform: translateY(-1px) scale(1.05);
+    }
 }
 
 @media (max-width: 1180px) {
     .nav-theme-toggle {
+        --theme-switch-size: 46px;
         min-height: 46px;
         border-radius: 999px;
         transform: none;
@@ -1101,7 +1171,11 @@ html[data-theme="light"] .scale-advice-detail {
 
 @media (prefers-reduced-motion: reduce) {
     .theme-toggle,
+    .theme-toggle-switch,
     .theme-toggle-icon,
+    .theme-toggle-icon-base,
+    .theme-toggle-icon-rays,
+    .theme-toggle-icon-bulb,
     .primary-button,
     .secondary-button,
     .track-link,

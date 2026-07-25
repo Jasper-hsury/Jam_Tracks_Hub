@@ -82,7 +82,7 @@ h1 {
     /* 新增：毛玻璃模糊特效 */
     backdrop-filter: blur(12px); 
     -webkit-backdrop-filter: blur(12px); /* 支援 Safari */
-    padding: 15px 50px;
+    padding: 10px 50px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.5);
     border-bottom: 1px solid rgba(196, 164, 132, 0.16);
 }
@@ -271,7 +271,7 @@ h1 {
 .nav-links a:focus-visible,
 .nav-dropdown summary:focus-visible,
 .nav-menu-button:focus-visible,
-.theme-toggle:focus-visible,
+.theme-toggle:focus-within,
 .primary-button:focus-visible,
 .secondary-button:focus-visible,
 .result-mode-button:focus-visible,
@@ -315,6 +315,8 @@ html[data-theme="light"] {
 .progression-card,
 .trainer-card,
 .theme-toggle,
+.theme-toggle-switch,
+.theme-toggle-icon,
 .primary-button,
 .secondary-button {
     transition:

@@ -26,17 +26,17 @@ C:\Users\Jaspe\OneDrive\桌面\Jam_Tracks_Hub
 index.html
 
 和弦 / Key Finder 頁面：
-chords.html
+chord-progressions.html
 chords.js
 key-finder.js
 
 Tracks 頁面：
 tracks.html
 tracks.js
-tracks.json
+data/tracks.json
 
 網站樣式：
-style.css
+styles/style.css
 
 Python API：
 api-server\app.py
@@ -54,7 +54,7 @@ powershell -ExecutionPolicy Bypass -File ".\start_render_local.ps1"
 然後打開：
 
 http://127.0.0.1:8000/index.html
-http://127.0.0.1:8000/chords.html
+http://127.0.0.1:8000/chord-progressions.html
 http://127.0.0.1:8000/tracks.html
 
 確認 API 是否正常：
@@ -92,7 +92,7 @@ git push 成功後，Render 會自動偵測 GitHub 的更新並重新部署。
 部署完成後，打開你的 Render 網站確認：
 
 https://你的-render網址/
-https://你的-render網址/chords.html
+https://你的-render網址/chord-progressions.html
 https://你的-render網址/api/health
 
 

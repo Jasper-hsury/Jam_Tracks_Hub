@@ -345,7 +345,7 @@ document.addEventListener("DOMContentLoaded", function() {
             <div class="result-actions">
                 <a class="primary-button" href="scale.html?key=${key}">Open Scale Explorer</a>
                 <a class="secondary-button" href="chord-dictionary.html?root=${root}&chord=${chordType}">Open Chord Dictionary</a>
-                <a class="secondary-button" href="chords.html?key=${key}">Open Chord Progressions</a>
+                <a class="secondary-button" href="chord-progressions.html?key=${key}">Open Chord Progressions</a>
                 <a class="secondary-button" href="tracks.html?key=${key}">Find Tracks in This Key</a>
             </div>
         `;

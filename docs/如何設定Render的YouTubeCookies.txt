@@ -72,7 +72,7 @@ https://你的-render網址/api/health
 
 再回到：
 
-https://你的-render網址/chords.html
+https://你的-render網址/chord-progressions.html
 
 貼 YouTube 連結測試分析。
 

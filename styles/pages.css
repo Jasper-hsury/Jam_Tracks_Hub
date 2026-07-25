@@ -4928,8 +4928,8 @@ html[data-theme="light"] .home-step-track .home-step-card:focus-visible {
         justify-content: center;
         align-items: center;
         min-height: 46px;
-        padding: 11px 18px;
-        border-radius: 6px;
+        padding: 7px 14px;
+        border-radius: 999px;
         text-align: center;
         line-height: 1.35;
     }
