@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chord Progressions | Jam Tracks Hub</title>
+
+    <link rel="icon" href="assets/images/icon.png" type="image/png">
+    <meta name="description" content="Explore common chord progressions by key with compact root-position guitar voicings from Jam Tracks Hub.">
+    <link rel="canonical" href="https://jamtrackshub.com/chord-progressions.html">
+    <meta property="og:title" content="Chord Progressions | Jam Tracks Hub">
+    <meta property="og:description" content="Explore common chord progressions by key with compact guitar voicings.">
+    <meta property="og:image" content="https://jamtrackshub.com/assets/images/cover.jpeg">
+    <meta property="og:url" content="https://jamtrackshub.com/chord-progressions.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Jam Tracks Hub">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Chord Progressions | Jam Tracks Hub">
+    <meta name="twitter:description" content="Explore common chord progressions by key with compact guitar voicings.">
+    <meta name="twitter:image" content="https://jamtrackshub.com/assets/images/cover.jpeg">
+
+    <script src="scripts/theme-init.js?v=20260725-friendly-insect-switch"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/base.css?v=20260725-friendly-insect-switch">
+    <link rel="stylesheet" href="styles/components.css?v=20260725-friendly-insect-switch">
+    <link rel="stylesheet" href="styles/pages.css?v=20260725-friendly-insect-switch">
+    <link rel="stylesheet" href="styles/themes.css?v=20260725-friendly-insect-switch">
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="index.html#home" class="logo">Jam Tracks Hub</a>
+        <ul class="nav-links">
+            <li><a href="index.html#home">Home</a></li>
+            <li><a href="tracks.html">Tracks</a></li>
+            <li><a href="chord-dictionary.html">Chord Dictionary</a></li>
+            <li><a href="scale.html">Scale Explorer</a></li>
+            <li><a href="key-finder.html">Key Finder</a></li>
+            <li><a href="chord-progressions.html" class="active" aria-current="page">Chord Progressions</a></li>
+            <li><a href="fretboard-trainer.html">Fretboard Trainer</a></li>
+            <li><a href="index.html#about">About</a></li>
+        </ul>
+    </nav>
+
+    <main class="tracks-page">
+        <h1>Chord Progressions</h1>
+        <p class="hero-tagline signature-slogan">Capture the Feeling. Compose the Meaning.</p>
+
+        <section class="key-selector" aria-labelledby="progressionExplorerTitle">
+            <div class="tool-section-heading">
+                <h2 id="progressionExplorerTitle" class="section-title">Chord Progression Explorer</h2>
+                <p>Choose a key, switch between triads and seventh chords, then compare guitar-friendly root-position voicings.</p>
+            </div>
+
+            <a class="select-key-button progression-write-link" href="progression-writer.html">Write Your Own Progression</a>
+
+            <button class="select-key-button" id="selectKeyButton" type="button" hidden>Select Another Key</button>
+
+            <div class="key-options" id="keyOptions">
+                <div class="key-mode-heading">
+                    <div>
+                        <span class="result-kicker">Key mode</span>
+                        <h2 class="section-title">Choose a Tonic</h2>
+                    </div>
+                    <label class="key-mode-switch" for="keyModeToggle">
+                        <span class="key-mode-label key-mode-label-major">Major</span>
+                        <span class="key-mode-toggle-shell">
+                            <input class="key-mode-toggle-input" id="keyModeToggle" type="checkbox" aria-label="Switch between major and minor keys">
+                            <span class="key-mode-toggle-handle-wrapper">
+                                <span class="key-mode-toggle-handle">
+                                    <span class="key-mode-toggle-knob"></span>
+                                    <span class="key-mode-toggle-bar-wrapper">
+                                        <span class="key-mode-toggle-bar"></span>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="key-mode-toggle-base">
+                                <span class="key-mode-toggle-base-inside"></span>
+                            </span>
+                        </span>
+                        <span class="key-mode-label key-mode-label-minor">Minor</span>
+                    </label>
+                </div>
+                <div class="key-button-grid">
+                    <button class="key-button" type="button" data-major-label="C" data-major-key="C major" data-major-notes="C, D, E, F, G, A, B" data-minor-label="Cm" data-minor-key="C minor" data-minor-notes="C, D, Eb, F, G, Ab, Bb">C</button>
+                    <button class="key-button" type="button" data-major-label="Db" data-major-key="Db major" data-major-notes="Db, Eb, F, Gb, Ab, Bb, C" data-minor-label="C#m" data-minor-key="C# minor" data-minor-notes="C#, D#, E, F#, G#, A, B">Db</button>
+                    <button class="key-button" type="button" data-major-label="D" data-major-key="D major" data-major-notes="D, E, F#, G, A, B, C#" data-minor-label="Dm" data-minor-key="D minor" data-minor-notes="D, E, F, G, A, Bb, C">D</button>
+                    <button class="key-button" type="button" data-major-label="Eb" data-major-key="Eb major" data-major-notes="Eb, F, G, Ab, Bb, C, D" data-minor-label="Ebm" data-minor-key="Eb minor" data-minor-notes="Eb, F, Gb, Ab, Bb, Cb, Db">Eb</button>
+                    <button class="key-button" type="button" data-major-label="E" data-major-key="E major" data-major-notes="E, F#, G#, A, B, C#, D#" data-minor-label="Em" data-minor-key="E minor" data-minor-notes="E, F#, G, A, B, C, D">E</button>
+                    <button class="key-button" type="button" data-major-label="F" data-major-key="F major" data-major-notes="F, G, A, Bb, C, D, E" data-minor-label="Fm" data-minor-key="F minor" data-minor-notes="F, G, Ab, Bb, C, Db, Eb">F</button>
+                    <button class="key-button" type="button" data-major-label="Gb" data-major-key="Gb major" data-major-notes="Gb, Ab, Bb, Cb, Db, Eb, F" data-minor-label="F#m" data-minor-key="F# minor" data-minor-notes="F#, G#, A, B, C#, D, E">Gb</button>
+                    <button class="key-button" type="button" data-major-label="G" data-major-key="G major" data-major-notes="G, A, B, C, D, E, F#" data-minor-label="Gm" data-minor-key="G minor" data-minor-notes="G, A, Bb, C, D, Eb, F">G</button>
+                    <button class="key-button" type="button" data-major-label="Ab" data-major-key="Ab major" data-major-notes="Ab, Bb, C, Db, Eb, F, G" data-minor-label="Abm" data-minor-key="Ab minor" data-minor-notes="Ab, Bb, Cb, Db, Eb, Fb, Gb">Ab</button>
+                    <button class="key-button" type="button" data-major-label="A" data-major-key="A major" data-major-notes="A, B, C#, D, E, F#, G#" data-minor-label="Am" data-minor-key="A minor" data-minor-notes="A, B, C, D, E, F, G">A</button>
+                    <button class="key-button" type="button" data-major-label="Bb" data-major-key="Bb major" data-major-notes="Bb, C, D, Eb, F, G, A" data-minor-label="Bbm" data-minor-key="Bb minor" data-minor-notes="Bb, C, Db, Eb, F, Gb, Ab">Bb</button>
+                    <button class="key-button" type="button" data-major-label="B" data-major-key="B major" data-major-notes="B, C#, D#, E, F#, G#, A#" data-minor-label="Bm" data-minor-key="B minor" data-minor-notes="B, C#, D, E, F#, G, A">B</button>
+                </div>
+            </div>
+
+            <div class="key-result" id="keyResult">
+                <h3>Select a key</h3>
+                <p>Click a key above to see its notes.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 Jam Tracks Hub. All rights reserved.</p>
+        <div class="social-links">
+            <a href="https://youtube.com/@weekly_backing_track?si=-Rp6XDvP0A8fclp3" target="_blank" rel="noopener noreferrer" aria-label="Visit Jam Tracks Hub YouTube channel">YouTube</a>
+            <a href="https://www.instagram.com/reyu_jasper?igsh=dmVsazFvb2pwMmsw&utm_source=qr" target="_blank" rel="noopener noreferrer" aria-label="Visit Jam Tracks Hub Instagram profile">Instagram</a>
+        </div>
+    </footer>
+
+    <button id="backToTopBtn" type="button" aria-label="Back to top">&uarr;</button>
+
+    <script src="scripts/site.js?v=20260725-friendly-insect-switch"></script>
+    <script src="scripts/chords.js?v=20260725-friendly-insect-switch"></script>
+    <script src="assets/vendor/gsap/gsap.min.js"></script>
+    <script src="assets/vendor/gsap/ScrollTrigger.min.js"></script>
+    <script src="scripts/site-animations.js?v=20260718-trainer-dropdown-hover"></script>
+</body>
+</html>

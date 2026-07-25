@@ -1,0 +1,89 @@
+如何設定 Render 的 YouTube Cookies
+=================================
+
+如果 Render 網站分析 YouTube 時出現：
+
+Sign in to confirm you're not a bot
+
+代表 API 有正常連上，但 YouTube 不信任 Render 的雲端 IP。
+這時候需要讓 yt-dlp 使用你的 YouTube cookies。
+
+
+一、先在自己的電腦匯出 cookies
+----------------------------
+
+請在你平常有登入 YouTube 的電腦上執行。
+
+如果你用 Chrome：
+
+yt-dlp --cookies-from-browser chrome --cookies youtube_cookies.txt "https://youtu.be/dQw4w9WgXcQ"
+
+如果你用 Edge：
+
+yt-dlp --cookies-from-browser edge --cookies youtube_cookies.txt "https://youtu.be/dQw4w9WgXcQ"
+
+執行成功後，會產生：
+
+youtube_cookies.txt
+
+注意：這個檔案等於登入憑證，不要上傳到 GitHub，不要公開分享。
+
+
+二、放到 Render Secret File
+-------------------------
+
+到 Render Dashboard：
+
+jamtrackshub
+→ Environment
+→ Secret Files
+→ Add Secret File
+
+File Name 填：
+
+youtube_cookies.txt
+
+File Contents 貼上 youtube_cookies.txt 的全部內容。
+
+儲存後 Render 會把它放在：
+
+/etc/secrets/youtube_cookies.txt
+
+程式已經會自動讀這個路徑。
+
+
+三、重新部署 Render
+-----------------
+
+設定完 Secret File 後，按：
+
+Manual Deploy
+→ Deploy latest commit
+
+或重新 git push 觸發部署。
+
+
+四、測試
+------
+
+先測：
+
+https://你的-render網址/api/health
+
+再回到：
+
+https://你的-render網址/chord-progressions.html
+
+貼 YouTube 連結測試分析。
+
+
+五、重要提醒
+----------
+
+1. Cookies 可能會過期。
+   如果之後又出現 bot / sign in 錯誤，就重新匯出 cookies，再更新 Render Secret File。
+
+2. 不要把 youtube_cookies.txt commit 到 GitHub。
+   本專案已經在 .gitignore 裡排除它。
+
+3. 如果你改 GitHub repo 成 Public，更要確認 cookies 沒有被加進去。

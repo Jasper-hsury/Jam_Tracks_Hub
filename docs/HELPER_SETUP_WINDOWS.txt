@@ -1,0 +1,48 @@
+Jam Tracks Hub - YouTube Helper for Windows
+
+Why this helper is needed
+YouTube often blocks cloud servers from downloading audio. The helper lets
+Jam Tracks Hub analyze a YouTube link from your own computer instead.
+
+First-time setup
+1. Right-click the downloaded zip file and choose Extract All.
+2. Open the extracted folder.
+3. Double-click:
+
+   1_INSTALL_HELPER_DEPENDENCIES.cmd
+
+4. When it finishes, double-click:
+
+   2_CONNECT_HELPER_TO_WEBSITE.cmd
+
+5. Go back to the Key Finder page.
+6. The page will try to start the helper automatically. Choose Open/Allow if
+   the browser asks.
+
+Daily use after setup
+1. Open the Jam Tracks Hub Key Finder page.
+2. The page will try to start the helper automatically.
+3. If the browser asks whether to open the local YouTube Helper, choose Open/Allow.
+4. Keep the black helper window open while analyzing YouTube links.
+
+If Start Helper does not work
+Double-click START_YOUTUBE_HELPER.cmd in this folder, then try the YouTube link
+again on the website.
+
+Requirements
+- Windows computer.
+- Python 3.10 or newer.
+- No separate ffmpeg install is required; the helper installs its own bundled
+  ffmpeg package.
+
+If YouTube download fails with HTTP 403
+Run 1_INSTALL_HELPER_DEPENDENCIES.cmd again. This updates yt-dlp inside the
+helper's local .venv environment, which fixes many YouTube download changes.
+
+Privacy
+The helper runs on your own computer at http://127.0.0.1:8765. Temporary audio
+files are deleted after analysis finishes.
+
+Note
+Uploaded audio analysis on the website does not need this helper. The helper is
+only for YouTube link analysis.

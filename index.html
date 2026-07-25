@@ -3,50 +3,61 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Track and Tone</title>
+    <title>Jam Tracks Hub</title>
 
-    <link rel="icon" href="icon.png" type="image/png" />
+    <link rel="icon" href="assets/images/icon.png" type="image/png" />
     <meta
       name="description"
-      content="Track and Tone features backing tracks, song key analysis, guitar scale diagrams, chord tools, and fretboard note training."
+      content="Jam Tracks Hub features backing tracks, song key analysis, guitar scale diagrams, chord tools, and fretboard note training."
     />
-    <link rel="canonical" href="https://jasper-music.onrender.com/" />
+    <link rel="canonical" href="https://jamtrackshub.com/" />
     <meta
       property="og:title"
-      content="Track and Tone - Backing Tracks and Original Music"
+      content="Jam Tracks Hub - Backing Tracks and Original Music"
     />
     <meta
       property="og:description"
       content="Practice with original backing tracks, analyze songs, download guitar scale diagrams, explore chords, and train fretboard note names."
     />
-    <meta
-      property="og:image"
-      content="https://jasper-music.onrender.com/cover.jpeg"
-    />
-    <meta property="og:url" content="https://jasper-music.onrender.com/" />
+    <meta property="og:image" content="https://jamtrackshub.com/assets/images/cover.jpeg" />
+    <meta property="og:url" content="https://jamtrackshub.com/" />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Jam Tracks Hub" />
     <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Jam Tracks Hub - Backing Tracks and Original Music"
+    />
+    <meta
+      name="twitter:description"
+      content="Practice with original backing tracks, analyze songs, download guitar scale diagrams, explore chords, and train fretboard note names."
+    />
+    <meta name="twitter:image" content="https://jamtrackshub.com/assets/images/cover.jpeg" />
 
-    <script src="theme-init.js?v=20260623-dark-light"></script>
+    <script src="scripts/theme-init.js?v=20260725-friendly-insect-switch"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles/base.css?v=20260718-gsap-polish-theme-fallback" />
-    <link rel="stylesheet" href="styles/components.css?v=20260623-layout-v2" />
     <link
       rel="stylesheet"
-      href="styles/pages.css?v=20260720-release-about-smoke"
+      href="styles/base.css?v=20260725-friendly-insect-switch"
+    />
+    <link rel="stylesheet" href="styles/components.css?v=20260725-friendly-insect-switch" />
+    <link
+      rel="stylesheet"
+      href="styles/pages.css?v=20260725-friendly-insect-switch"
     />
     <link
       rel="stylesheet"
-      href="styles/themes.css?v=20260718-unified-signature-subtitles"
+      href="styles/themes.css?v=20260725-friendly-insect-switch"
     />
   </head>
 
   <body>
     <nav class="navbar">
-      <a href="index.html#home" class="logo">Track and Tone</a>
+      <a href="index.html#home" class="logo">Jam Tracks Hub</a>
       <ul class="nav-links">
         <li>
           <a href="index.html#home" class="active" aria-current="page">Home</a>
@@ -55,7 +66,7 @@
         <li><a href="chord-dictionary.html">Chord Dictionary</a></li>
         <li><a href="scale.html">Scale Explorer</a></li>
         <li><a href="key-finder.html">Key Finder</a></li>
-        <li><a href="chords.html">Chord Progressions</a></li>
+        <li><a href="chord-progressions.html">Chord Progressions</a></li>
         <li><a href="fretboard-trainer.html">Fretboard Trainer</a></li>
         <li><a href="index.html#about">About</a></li>
       </ul>
@@ -64,10 +75,18 @@
     <main class="home-page">
       <section class="home-hero" id="home">
         <div class="home-section-inner">
+          <svg
+            class="home-jam-mark"
+            viewBox="0 0 940 320"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <text class="home-jam-mark-text" x="104" y="232">𝓙𝓪𝓶</text>
+          </svg>
           <p class="home-eyebrow">
             Backing tracks &middot; Fretboard tools &middot; Song analysis
           </p>
-          <h1>Track and Tone</h1>
+          <h1>Tracks Hub</h1>
           <p class="signature-slogan">
             Capture the Feeling. Compose the Meaning.
           </p>
@@ -86,7 +105,7 @@
 
           <dl class="home-metrics" aria-label="Site overview">
             <div>
-              <dt>13</dt>
+              <dt>14</dt>
               <dd>Original tracks</dd>
             </div>
             <div>
@@ -110,41 +129,103 @@
 
           <div class="home-step-rail" aria-label="Choose a music tool">
             <div class="start-grid home-start-grid home-step-track">
-              <a href="tracks.html" class="start-card home-step-card" data-motion="groove">
+              <a
+                href="tracks.html"
+                class="start-card home-step-card"
+                data-motion="groove"
+              >
                 <span class="step-motif step-motif-tracks" aria-hidden="true">
                   <svg viewBox="0 0 160 120" role="img" focusable="false">
-                    <path class="home-draw" d="M20 78 C35 56 50 100 66 78 S96 56 112 78 S136 100 148 70" />
+                    <path
+                      class="home-draw"
+                      d="M20 78 C35 56 50 100 66 78 S96 56 112 78 S136 100 148 70"
+                    />
                     <path class="home-draw home-draw-soft" d="M22 93 H138" />
-                    <circle class="home-motion-dot home-motion-dot-gold" cx="20" cy="78" data-motion-path="M20 78 C35 56 50 100 66 78 S96 56 112 78 S136 100 148 70" r="5" />
-                    <rect class="motif-panel" x="18" y="18" width="124" height="74" rx="14" />
-                    <path class="home-draw home-draw-accent" d="M34 36 H84 M34 50 H118 M34 64 H72" />
+                    <circle
+                      class="home-motion-dot home-motion-dot-gold"
+                      cx="20"
+                      cy="78"
+                      data-motion-path="M20 78 C35 56 50 100 66 78 S96 56 112 78 S136 100 148 70"
+                      r="5"
+                    />
+                    <rect
+                      class="motif-panel"
+                      x="18"
+                      y="18"
+                      width="124"
+                      height="74"
+                      rx="14"
+                    />
+                    <path
+                      class="home-draw home-draw-accent"
+                      d="M34 36 H84 M34 50 H118 M34 64 H72"
+                    />
                   </svg>
                 </span>
                 <span class="start-kicker">Practice</span>
                 <strong>Backing Tracks</strong>
-                <span>Browse tracks by key, then sort newest or oldest first.</span>
+                <span
+                  >Browse tracks by key, then sort newest or oldest first.</span
+                >
               </a>
-              <a href="chord-dictionary.html" class="start-card home-step-card" data-motion="flip">
-                <span class="step-motif step-motif-dictionary" aria-hidden="true">
+              <a
+                href="chord-dictionary.html"
+                class="start-card home-step-card"
+                data-motion="flip"
+              >
+                <span
+                  class="step-motif step-motif-dictionary"
+                  aria-hidden="true"
+                >
                   <svg viewBox="0 0 160 120" role="img" focusable="false">
-                    <path class="home-draw home-draw-soft" d="M34 20 V100 M62 20 V100 M90 20 V100 M118 20 V100 M20 36 H140 M20 62 H140 M20 88 H140" />
-                    <circle class="motif-note motif-root" cx="34" cy="36" r="10" />
+                    <path
+                      class="home-draw home-draw-soft"
+                      d="M34 20 V100 M62 20 V100 M90 20 V100 M118 20 V100 M20 36 H140 M20 62 H140 M20 88 H140"
+                    />
+                    <circle
+                      class="motif-note motif-root"
+                      cx="34"
+                      cy="36"
+                      r="10"
+                    />
                     <circle class="motif-note" cx="62" cy="62" r="9" />
                     <circle class="motif-note" cx="90" cy="88" r="9" />
                     <circle class="motif-note" cx="118" cy="36" r="9" />
-                    <path class="home-draw home-draw-accent" d="M34 36 C54 50 72 62 90 88 C102 64 110 48 118 36" />
+                    <path
+                      class="home-draw home-draw-accent"
+                      d="M34 36 C54 50 72 62 90 88 C102 64 110 48 118 36"
+                    />
                   </svg>
                 </span>
                 <span class="start-kicker">Reference</span>
                 <strong>Chord Dictionary</strong>
-                <span>Compare formulas, notes, root strings, and compact guitar shapes.</span>
+                <span
+                  >Compare formulas, notes, root strings, and compact guitar
+                  shapes.</span
+                >
               </a>
-              <a href="scale.html" class="start-card home-step-card" data-motion="map">
+              <a
+                href="scale.html"
+                class="start-card home-step-card"
+                data-motion="map"
+              >
                 <span class="step-motif step-motif-scale" aria-hidden="true">
                   <svg viewBox="0 0 160 120" role="img" focusable="false">
-                    <path class="home-draw home-draw-soft" d="M22 34 H138 M22 58 H138 M22 82 H138" />
-                    <path class="home-draw home-draw-accent" d="M28 84 C48 70 63 72 78 58 S108 36 132 38" />
-                    <circle class="home-motion-dot" cx="28" cy="84" data-motion-path="M28 84 C48 70 63 72 78 58 S108 36 132 38" r="6" />
+                    <path
+                      class="home-draw home-draw-soft"
+                      d="M22 34 H138 M22 58 H138 M22 82 H138"
+                    />
+                    <path
+                      class="home-draw home-draw-accent"
+                      d="M28 84 C48 70 63 72 78 58 S108 36 132 38"
+                    />
+                    <circle
+                      class="home-motion-dot"
+                      cx="28"
+                      cy="84"
+                      data-motion-path="M28 84 C48 70 63 72 78 58 S108 36 132 38"
+                      r="6"
+                    />
                     <circle class="motif-note" cx="28" cy="84" r="8" />
                     <circle class="motif-note" cx="78" cy="58" r="8" />
                     <circle class="motif-note" cx="132" cy="38" r="8" />
@@ -152,52 +233,143 @@
                 </span>
                 <span class="start-kicker">Visualize</span>
                 <strong>Scale Explorer</strong>
-                <span>Map scales across 15- or 22-fret necks and download a labeled PNG.</span>
+                <span
+                  >Map scales across 15- or 22-fret necks and download a labeled
+                  PNG.</span
+                >
               </a>
-              <a href="key-finder.html" class="start-card home-step-card" data-motion="scan">
-                <span class="step-motif step-motif-keyfinder" aria-hidden="true">
+              <a
+                href="key-finder.html"
+                class="start-card home-step-card"
+                data-motion="scan"
+              >
+                <span
+                  class="step-motif step-motif-keyfinder"
+                  aria-hidden="true"
+                >
                   <svg viewBox="0 0 160 120" role="img" focusable="false">
-                    <path class="home-draw home-draw-soft" d="M26 36 H136 M24 48 H134 M22 60 H132 M24 72 H134 M26 84 H136" />
-                    <path class="home-draw home-draw-accent" d="M30 76 C54 44 81 90 105 58 C118 41 130 44 142 50" />
-                    <circle class="home-motion-dot home-motion-dot-gold" cx="30" cy="76" data-motion-path="M30 76 C54 44 81 90 105 58 C118 41 130 44 142 50" r="5" />
-                    <path class="motif-note-symbol" d="M50 68 c0 7 -8 12 -15 8 c-6 -4 -4 -12 3 -15 c5 -2 10 -1 12 3 V33 h5 v35z" />
-                    <path class="motif-note-symbol motif-note-symbol-alt" d="M96 78 c0 7 -8 12 -15 8 c-6 -4 -4 -12 3 -15 c5 -2 10 -1 12 3 V39 h5 v39z" />
-                    <path class="motif-note-symbol motif-note-symbol-small" d="M126 55 c0 5 -6 9 -11 6 c-4 -3 -3 -8 2 -10 c4 -2 8 -1 9 2 V30 h4 v25z" />
+                    <path
+                      class="home-draw home-draw-soft"
+                      d="M26 36 H136 M24 48 H134 M22 60 H132 M24 72 H134 M26 84 H136"
+                    />
+                    <path
+                      class="home-draw home-draw-accent"
+                      d="M30 76 C54 44 81 90 105 58 C118 41 130 44 142 50"
+                    />
+                    <circle
+                      class="home-motion-dot home-motion-dot-gold"
+                      cx="30"
+                      cy="76"
+                      data-motion-path="M30 76 C54 44 81 90 105 58 C118 41 130 44 142 50"
+                      r="5"
+                    />
+                    <path
+                      class="motif-note-symbol"
+                      d="M50 68 c0 7 -8 12 -15 8 c-6 -4 -4 -12 3 -15 c5 -2 10 -1 12 3 V33 h5 v35z"
+                    />
+                    <path
+                      class="motif-note-symbol motif-note-symbol-alt"
+                      d="M96 78 c0 7 -8 12 -15 8 c-6 -4 -4 -12 3 -15 c5 -2 10 -1 12 3 V39 h5 v39z"
+                    />
+                    <path
+                      class="motif-note-symbol motif-note-symbol-small"
+                      d="M126 55 c0 5 -6 9 -11 6 c-4 -3 -3 -8 2 -10 c4 -2 8 -1 9 2 V30 h4 v25z"
+                    />
                   </svg>
                 </span>
                 <span class="start-kicker">Analyze</span>
                 <strong>Key Finder</strong>
-                <span>Upload audio or paste a YouTube link to inspect the likely tonal center.</span>
+                <span
+                  >Upload audio or paste a YouTube link to inspect the likely
+                  tonal center.</span
+                >
               </a>
-              <a href="chords.html" class="start-card home-step-card" data-motion="cascade">
-                <span class="step-motif step-motif-progressions" aria-hidden="true">
+              <a
+                href="chord-progressions.html"
+                class="start-card home-step-card"
+                data-motion="cascade"
+              >
+                <span
+                  class="step-motif step-motif-progressions"
+                  aria-hidden="true"
+                >
                   <svg viewBox="0 0 160 120" role="img" focusable="false">
-                    <circle class="home-draw home-draw-soft" cx="82" cy="60" r="42" />
-                    <path class="home-draw home-draw-accent" d="M82 18 A42 42 0 1 1 81.9 18" />
-                    <circle class="home-motion-dot" cx="82" cy="18" data-motion-path="M82 18 A42 42 0 1 1 81.9 18" r="5" />
-                    <g class="motif-roman"><rect x="29" y="48" width="34" height="28" rx="9" /><text x="46" y="67">I</text></g>
-                    <g class="motif-roman"><rect x="64" y="18" width="40" height="28" rx="9" /><text x="84" y="37">vi</text></g>
-                    <g class="motif-roman"><rect x="98" y="50" width="40" height="28" rx="9" /><text x="118" y="69">IV</text></g>
-                    <g class="motif-roman"><rect x="63" y="80" width="38" height="28" rx="9" /><text x="82" y="99">V</text></g>
+                    <circle
+                      class="home-draw home-draw-soft"
+                      cx="82"
+                      cy="60"
+                      r="42"
+                    />
+                    <path
+                      class="home-draw home-draw-accent"
+                      d="M82 18 A42 42 0 1 1 81.9 18"
+                    />
+                    <circle
+                      class="home-motion-dot"
+                      cx="82"
+                      cy="18"
+                      data-motion-path="M82 18 A42 42 0 1 1 81.9 18"
+                      r="5"
+                    />
+                    <g class="motif-roman">
+                      <rect x="29" y="48" width="34" height="28" rx="9" />
+                      <text x="46" y="67">I</text>
+                    </g>
+                    <g class="motif-roman">
+                      <rect x="64" y="18" width="40" height="28" rx="9" />
+                      <text x="84" y="37">vi</text>
+                    </g>
+                    <g class="motif-roman">
+                      <rect x="98" y="50" width="40" height="28" rx="9" />
+                      <text x="118" y="69">IV</text>
+                    </g>
+                    <g class="motif-roman">
+                      <rect x="63" y="80" width="38" height="28" rx="9" />
+                      <text x="82" y="99">V</text>
+                    </g>
                   </svg>
                 </span>
                 <span class="start-kicker">Create</span>
                 <strong>Chord Progressions</strong>
-                <span>Choose a key and explore common progressions for writing.</span>
+                <span
+                  >Choose a key and explore common progressions for
+                  writing.</span
+                >
               </a>
-              <a href="fretboard-trainer.html" class="start-card home-step-card" data-motion="pulse">
+              <a
+                href="fretboard-trainer.html"
+                class="start-card home-step-card"
+                data-motion="pulse"
+              >
                 <span class="step-motif step-motif-trainer" aria-hidden="true">
                   <svg viewBox="0 0 160 120" role="img" focusable="false">
-                    <path class="home-draw home-draw-soft" d="M28 20 V100 M52 20 V100 M76 20 V100 M100 20 V100 M124 20 V100 M22 34 H138 M22 58 H138 M22 82 H138" />
+                    <path
+                      class="home-draw home-draw-soft"
+                      d="M28 20 V100 M52 20 V100 M76 20 V100 M100 20 V100 M124 20 V100 M22 34 H138 M22 58 H138 M22 82 H138"
+                    />
                     <path class="home-draw home-draw-accent" d="M28 82 H124" />
-                    <circle class="motif-note motif-root" cx="52" cy="58" r="9" />
+                    <circle
+                      class="motif-note motif-root"
+                      cx="52"
+                      cy="58"
+                      r="9"
+                    />
                     <circle class="motif-note" cx="100" cy="34" r="8" />
-                    <circle class="home-motion-dot home-motion-dot-gold" cx="52" cy="58" data-motion-path="M52 58 C68 30 91 28 100 34 C118 45 118 73 124 82" r="6" />
+                    <circle
+                      class="home-motion-dot home-motion-dot-gold"
+                      cx="52"
+                      cy="58"
+                      data-motion-path="M52 58 C68 30 91 28 100 34 C118 45 118 73 124 82"
+                      r="6"
+                    />
                   </svg>
                 </span>
                 <span class="start-kicker">Train</span>
                 <strong>Fretboard Trainer</strong>
-                <span>Answer random string-and-fret questions to build note-name fluency.</span>
+                <span
+                  >Answer random string-and-fret questions to build note-name
+                  fluency.</span
+                >
               </a>
             </div>
           </div>
@@ -212,19 +384,30 @@
         <div class="home-feature-inner">
           <div>
             <p class="home-eyebrow">Featured practice audio</p>
-            <h2 id="featuredAudioTitle">W14 Soulful Ballad Backing Track in A</h2>
+            <h2 id="featuredAudioTitle">
+              W15 Deep Groove Backing Track in Dm
+            </h2>
             <p>
-              The newest release: a soulful A major ballad for expressive
-              bends, patient phrasing, and melodic storytelling.
+              The newest release: a darker D minor groove for pocket-focused
+              phrasing, melodic tension, and late-night lead ideas.
             </p>
           </div>
           <div class="audio-player-card home-audio-player home-video-player">
             <iframe
-              src="https://www.youtube.com/embed/qlBOu9Jzc5I"
-              title="W14 Soulful Ballad Backing Track in A"
+              src="https://www.youtube.com/embed/xp2pF_Kj1AE"
+              title="W15 Deep Groove Backing Track in Dm"
               loading="lazy"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen>
+              allow="
+                accelerometer;
+                autoplay;
+                clipboard-write;
+                encrypted-media;
+                gyroscope;
+                picture-in-picture;
+                web-share;
+              "
+              allowfullscreen
+            >
             </iframe>
           </div>
         </div>
@@ -247,6 +430,38 @@
           <div class="home-release-grid">
             <article class="home-release-card">
               <a
+                href="https://youtu.be/xp2pF_Kj1AE"
+                class="release-cover-link"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Listen to W15 Deep Groove Backing Track in Dm on YouTube"
+              >
+                <img src="slides/W15/W15.001.jpeg" alt="" loading="lazy" />
+              </a>
+              <div class="release-copy">
+                <p class="release-number">W15</p>
+                <h3>Deep Groove Backing Track in Dm</h3>
+                <p class="release-note">
+                  A darker D minor groove for pocket-focused phrasing and
+                  melodic tension.
+                </p>
+                <p class="track-meta">
+                  <span>D minor</span><span>Groove</span>
+                </p>
+                <div class="release-actions">
+                  <a
+                    href="https://youtu.be/xp2pF_Kj1AE"
+                    class="text-link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >YouTube</a
+                  >
+                  <a href="slides/w15.html" class="text-link">Slides</a>
+                </div>
+              </div>
+            </article>
+            <article class="home-release-card">
+              <a
                 href="https://youtu.be/qlBOu9Jzc5I?si=KafLEcAcmKFByLBp"
                 class="release-cover-link"
                 target="_blank"
@@ -259,7 +474,8 @@
                 <p class="release-number">W14</p>
                 <h3>Soulful Ballad Backing Track in A</h3>
                 <p class="release-note">
-                  A patient ballad for lyrical bends, warm phrasing, and melodic space.
+                  A patient ballad for lyrical bends, warm phrasing, and melodic
+                  space.
                 </p>
                 <p class="track-meta">
                   <span>A major</span><span>Soulful</span>
@@ -290,7 +506,8 @@
                 <p class="release-number">W13</p>
                 <h3>Slow Journey Backing Track in A</h3>
                 <p class="release-note">
-                  A reflective A major track built for slower melodic development.
+                  A reflective A major track built for slower melodic
+                  development.
                 </p>
                 <p class="track-meta">
                   <span>A major</span><span>Reflective</span>
@@ -307,37 +524,6 @@
                 </div>
               </div>
             </article>
-            <article class="home-release-card">
-              <a
-                href="https://youtu.be/voSJ3O06a0k?si=c7_oE6IIKkWnFpX2"
-                class="release-cover-link"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Listen to W12 Smooth Fusion Backing Track in E on YouTube"
-              >
-                <img src="slides/W12/W12.001.jpeg" alt="" loading="lazy" />
-              </a>
-              <div class="release-copy">
-                <p class="release-number">W12</p>
-                <h3>Smooth Fusion Backing Track in E</h3>
-                <p class="release-note">
-                  Smooth E major harmony for legato lines and fusion-flavored ideas.
-                </p>
-                <p class="track-meta">
-                  <span>E major</span><span>Fusion</span>
-                </p>
-                <div class="release-actions">
-                  <a
-                    href="https://youtu.be/voSJ3O06a0k?si=c7_oE6IIKkWnFpX2"
-                    class="text-link"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    >YouTube</a
-                  >
-                  <a href="slides/w12.html" class="text-link">Slides</a>
-                </div>
-              </div>
-            </article>
           </div>
         </div>
       </section>
@@ -346,7 +532,7 @@
         <div class="home-section-inner home-about-layout">
           <figure class="about-portrait">
             <img
-              src="cover.jpeg"
+              src="assets/images/cover.jpeg"
               alt="Jasper playing acoustic guitar on stage"
               width="600"
               height="900"
@@ -355,41 +541,114 @@
           </figure>
 
           <div class="about-copy">
-            <p class="home-eyebrow">About Jasper</p>
+            <p class="home-eyebrow">About Jam Tracks Hub</p>
             <h2 id="aboutTitle">
-              Music made for the space between practice and creation.
+              Designed by a guitarist for musicians who learn by listening.
             </h2>
             <p>
-              I am Jasper, a guitarist and music creator building weekly
-              backing tracks for players who want practice material with a real
-              sense of mood, key center, and musical direction.
+              Jam Tracks Hub is designed and built by Jasper, a guitarist and
+              music creator who turns weekly backing tracks into a focused
+              workspace for practice, harmony, and songwriting ideas.
             </p>
             <p>
-              The site combines original tracks with practical tools for
-              listening, harmony, scale mapping, chord shapes, and fretboard
-              memory. The goal is simple: help musicians hear more clearly,
-              practice with purpose, and turn small ideas into playable music.
+              Every page is shaped around real musician workflows: finding a
+              key, mapping a scale, comparing chord colors, locating notes on
+              the fretboard, and bringing the idea back to the instrument.
             </p>
             <p>
-              I keep the tools focused and musician-friendly: enough theory to
-              explain what is happening, enough visual feedback to make it
-              usable, and enough space for your ear to make the final call.
+              The design goal is calm, practical, and musical: less menu
+              hunting, more immediate sound, clear theory, and visual cues that
+              support your ear without getting in the way.
             </p>
-            <div class="about-links">
-              <a
-                href="https://youtube.com/@weekly_backing_track?si=-Rp6XDvP0A8fclp3"
-                class="primary-button"
-                target="_blank"
-                rel="noopener noreferrer"
-                >YouTube</a
-              >
-              <a
-                href="https://www.instagram.com/reyu_jasper?igsh=dmVsazFvb2pwMmsw&utm_source=qr"
-                class="secondary-button"
-                target="_blank"
-                rel="noopener noreferrer"
-                >Instagram</a
-              >
+            <div class="about-connect">
+              <div class="about-connect-copy">
+                <span>Connect</span>
+                <strong>Questions, collaborations, or track requests?</strong>
+                <p>
+                  Send a note anytime. I usually use these messages to plan
+                  new backing tracks, workflow improvements, and guitar-focused
+                  tools.
+                </p>
+                <a href="mailto:Jamtrackshubwork@gmail.com"
+                  >Jamtrackshubwork@gmail.com</a
+                >
+              </div>
+              <div class="about-links">
+                <a
+                  href="https://www.youtube.com/@Weekly_Backing_Track"
+                  class="uiverse-youtube-button home-youtube-button"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Watch Jam Tracks Hub on YouTube"
+                >
+                  <span class="home-youtube-icon-shell" aria-hidden="true">
+                    <span class="home-youtube-icon">
+                      <svg viewBox="0 0 24 24" focusable="false">
+                        <path d="M0 0h24v24H0z" fill="none"></path>
+                        <path
+                          d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"
+                          fill="currentColor"
+                        ></path>
+                      </svg>
+                    </span>
+                  </span>
+                  <span>Watch on YouTube</span>
+                </a>
+                <a
+                  href="mailto:Jamtrackshubwork@gmail.com"
+                  class="uiverse-contact-button home-contact-button"
+                  aria-label="Email Jam Tracks Hub"
+                >
+                  <span class="home-contact-outline" aria-hidden="true"></span>
+                  <span class="home-contact-state home-contact-state--default">
+                    <span class="home-contact-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" focusable="false">
+                        <path
+                          d="M14.22 21.63c-1.18 0-2.85-.83-4.17-4.8l-.72-2.16-2.16-.72c-3.96-1.32-4.79-2.99-4.79-4.17 0-1.17.83-2.85 4.79-4.18l8.49-2.83c2.12-.71 3.89-.5 4.98.58s1.3 2.86.59 4.98l-2.83 8.49c-1.33 3.98-3 4.81-4.18 4.81ZM7.64 7.03c-2.78.93-3.77 2.03-3.77 2.75 0 .72.99 1.82 3.77 2.74l2.52.84c.22.07.4.25.47.47l.84 2.52c.92 2.78 2.03 3.77 2.75 3.77.72 0 1.82-.99 2.75-3.77l2.83-8.49c.51-1.54.42-2.8-.23-3.45-.65-.65-1.91-.73-3.44-.22L7.64 7.03Z"
+                          fill="currentColor"
+                        />
+                        <path
+                          d="M10.11 14.4c-.19 0-.38-.07-.53-.22-.29-.29-.29-.77 0-1.06l3.58-3.59c.29-.29.77-.29 1.06 0 .29.29.29.77 0 1.06l-3.58 3.59c-.14.15-.34.22-.53.22Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </span>
+                    <span class="home-contact-text">
+                      <span style="--i: 0">S</span>
+                      <span style="--i: 1">e</span>
+                      <span style="--i: 2">n</span>
+                      <span style="--i: 3">d</span>
+                      <span style="--i: 4">M</span>
+                      <span style="--i: 5">e</span>
+                      <span style="--i: 6">s</span>
+                      <span style="--i: 7">s</span>
+                      <span style="--i: 8">a</span>
+                      <span style="--i: 9">g</span>
+                      <span style="--i: 10">e</span>
+                    </span>
+                  </span>
+                  <span class="home-contact-state home-contact-state--sent" aria-hidden="true">
+                    <span class="home-contact-icon">
+                      <svg viewBox="0 0 24 24" fill="none" focusable="false">
+                        <path
+                          d="M12 22.75C6.07 22.75 1.25 17.93 1.25 12S6.07 1.25 12 1.25 22.75 6.07 22.75 12 17.93 22.75 12 22.75Zm0-20C6.9 2.75 2.75 6.9 2.75 12S6.9 21.25 12 21.25s9.25-4.15 9.25-9.25S17.1 2.75 12 2.75Z"
+                          fill="currentColor"
+                        />
+                        <path
+                          d="M10.58 15.58c-.2 0-.39-.08-.53-.22l-2.83-2.83a.75.75 0 1 1 1.06-1.06l2.3 2.3 5.14-5.14a.75.75 0 1 1 1.06 1.06l-5.67 5.67c-.14.14-.33.22-.53.22Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </span>
+                    <span class="home-contact-text">
+                      <span style="--i: 5">S</span>
+                      <span style="--i: 6">e</span>
+                      <span style="--i: 7">n</span>
+                      <span style="--i: 8">t</span>
+                    </span>
+                  </span>
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -397,20 +656,20 @@
     </main>
 
     <footer class="footer">
-      <p>&copy; 2026 Track and Tone. All rights reserved.</p>
+      <p>&copy; 2026 Jam Tracks Hub. All rights reserved.</p>
       <div class="social-links">
         <a
           href="https://youtube.com/@weekly_backing_track?si=-Rp6XDvP0A8fclp3"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Visit Track and Tone YouTube channel"
+          aria-label="Visit Jam Tracks Hub YouTube channel"
           >YouTube</a
         >
         <a
           href="https://www.instagram.com/reyu_jasper?igsh=dmVsazFvb2pwMmsw&utm_source=qr"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Visit Track and Tone Instagram profile"
+          aria-label="Visit Jam Tracks Hub Instagram profile"
           >Instagram</a
         >
       </div>
@@ -420,10 +679,10 @@
       &uarr;
     </button>
 
-    <script src="site.js?v=20260718-slow-back-to-top"></script>
-    <script src="vendor/gsap/gsap.min.js"></script>
-    <script src="vendor/gsap/ScrollTrigger.min.js"></script>
-    <script src="vendor/gsap/SplitText.min.js"></script>
-    <script src="site-animations.js?v=20260719-tone-rhythm-polish"></script>
+    <script src="scripts/site.js?v=20260725-friendly-insect-switch"></script>
+    <script src="assets/vendor/gsap/gsap.min.js"></script>
+    <script src="assets/vendor/gsap/ScrollTrigger.min.js"></script>
+    <script src="assets/vendor/gsap/SplitText.min.js"></script>
+    <script src="scripts/site-animations.js?v=20260724-home-panel-scroll"></script>
   </body>
 </html>

@@ -3,35 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tracks | Track and Tone</title>
+    <title>Tracks | Jam Tracks Hub</title>
 
-    <link rel="icon" href="icon.png" type="image/png">
-    <meta name="description" content="Browse Track and Tone backing tracks by key and sort newest or oldest first.">
-    <link rel="canonical" href="https://jasper-music.onrender.com/tracks.html">
-    <meta property="og:title" content="Backing Tracks | Track and Tone">
-    <meta property="og:description" content="Browse Track and Tone guitar and piano backing tracks by key and release order.">
-    <meta property="og:image" content="https://jasper-music.onrender.com/cover.jpeg">
-    <meta property="og:url" content="https://jasper-music.onrender.com/tracks.html">
+    <link rel="icon" href="assets/images/icon.png" type="image/png">
+    <meta name="description" content="Browse Jam Tracks Hub backing tracks by key and sort newest or oldest first.">
+    <link rel="canonical" href="https://jamtrackshub.com/tracks.html">
+    <meta property="og:title" content="Backing Tracks | Jam Tracks Hub">
+    <meta property="og:description" content="Browse Jam Tracks Hub guitar and piano backing tracks by key and release order.">
+    <meta property="og:image" content="https://jamtrackshub.com/assets/images/cover.jpeg">
+    <meta property="og:url" content="https://jamtrackshub.com/tracks.html">
     <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Jam Tracks Hub">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Backing Tracks | Jam Tracks Hub">
+    <meta name="twitter:description" content="Browse Jam Tracks Hub guitar and piano backing tracks by key and release order.">
+    <meta name="twitter:image" content="https://jamtrackshub.com/assets/images/cover.jpeg">
 
-    <script src="theme-init.js?v=20260623-dark-light"></script>
+    <script src="scripts/theme-init.js?v=20260725-friendly-insect-switch"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles/base.css?v=20260718-gsap-polish-theme-fallback">
-    <link rel="stylesheet" href="styles/components.css?v=20260625-track-layout-v4">
-    <link rel="stylesheet" href="styles/pages.css?v=20260720-track-windmill-heartless">
-    <link rel="stylesheet" href="styles/themes.css?v=20260718-unified-signature-subtitles">
+    <link rel="stylesheet" href="styles/base.css?v=20260725-friendly-insect-switch">
+    <link rel="stylesheet" href="styles/components.css?v=20260725-friendly-insect-switch">
+    <link rel="stylesheet" href="styles/pages.css?v=20260725-friendly-insect-switch">
+    <link rel="stylesheet" href="styles/themes.css?v=20260725-friendly-insect-switch">
 </head>
 
 <body>
     <nav class="navbar">
-        <a href="index.html#home" class="logo">Track and Tone</a>
+        <a href="index.html#home" class="logo">Jam Tracks Hub</a>
         <ul class="nav-links">
             <li><a href="index.html#home">Home</a></li>
             <li><a href="tracks.html" class="active" aria-current="page">Tracks</a></li>
             <li><a href="chord-dictionary.html">Chord Dictionary</a></li>
             <li><a href="scale.html">Scale Explorer</a></li>
             <li><a href="key-finder.html">Key Finder</a></li>
-            <li><a href="chords.html">Chord Progressions</a></li>
+            <li><a href="chord-progressions.html">Chord Progressions</a></li>
             <li><a href="fretboard-trainer.html">Fretboard Trainer</a></li>
             <li><a href="index.html#about">About</a></li>
         </ul>
@@ -50,7 +56,7 @@
                 <span class="track-toolbar-label">Filters</span>
                 <label class="track-native-filter track-native-filter-hidden">
                 <span>Key</span>
-                <select id="trackKeyFilter">
+                <select id="trackKeyFilter" multiple>
                     <option value="all">All keys</option>
                     <option value="C major">C major</option>
                     <option value="D major">D major</option>
@@ -60,12 +66,12 @@
                     <option value="G major">G major</option>
                 </select>
                 </label>
-                <div class="track-pill-filter track-dropdown-filter" id="trackKeyPills" aria-label="Filter tracks by key">
-                    <button class="track-dropdown-toggle" type="button" aria-haspopup="true" aria-expanded="false">
+                <div class="track-key-multiselect" id="trackKeyPills" aria-label="Filter tracks by key">
+                    <button class="track-key-filter-toggle" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="trackKeyOptions">
                         Key
                         <span data-filter-current>All keys</span>
                     </button>
-                    <div class="track-pill-options"></div>
+                    <div class="track-key-options" id="trackKeyOptions"></div>
                 </div>
             </div>
 
@@ -77,12 +83,12 @@
                     <option value="oldest">Oldest first</option>
                 </select>
                 </label>
-                <div class="track-pill-filter track-dropdown-filter track-sort-filter" id="trackSortPills" aria-label="Sort tracks">
-                    <button class="track-dropdown-toggle" type="button" aria-haspopup="true" aria-expanded="false">
-                        Sort by
-                        <span data-filter-current>Newest first</span>
-                    </button>
-                    <div class="track-pill-options"></div>
+                <div class="track-sort-switch-control" id="trackSortPills" aria-label="Sort tracks">
+                    <span class="track-sort-caption">Sort by</span>
+                    <span class="track-sort-mode track-sort-mode-latest" data-sort-latest>Latest first</span>
+                    <input class="uiverse-toggle-input track-sort-switch-input" id="trackSortToggle" type="checkbox" aria-label="Switch between latest first and oldest first">
+                    <label class="uiverse-toggle track-sort-switch" for="trackSortToggle"></label>
+                    <span class="track-sort-mode track-sort-mode-oldest" data-sort-oldest>Oldest first</span>
                 </div>
             </div>
         </section>
@@ -90,9 +96,14 @@
         <p id="trackResultCount" class="track-result-count" aria-live="polite"></p>
 
         <div class="all-tracks-grid" id="tracksGrid" aria-live="polite" aria-busy="true">
-            <article class="track-card track-skeleton" aria-hidden="true"></article>
-            <article class="track-card track-skeleton" aria-hidden="true"></article>
-            <article class="track-card track-skeleton" aria-hidden="true"></article>
+            <p class="track-loading track-loading-status" role="status">
+                <span class="uiverse-loader jh-loader track-loading-spinner" aria-hidden="true">
+                    <span class="uiverse-loader-dot jh-loader-dot"></span>
+                    <span class="uiverse-loader-dot jh-loader-dot"></span>
+                    <span class="uiverse-loader-dot jh-loader-dot"></span>
+                </span>
+                <span>Loading tracks...</span>
+            </p>
         </div>
 
         <div class="track-scroll-windmill track-scroll-five-blade" aria-hidden="true">
@@ -124,20 +135,20 @@
     </main>
 
     <footer class="footer">
-        <p>&copy; 2026 Track and Tone. All rights reserved.</p>
+        <p>&copy; 2026 Jam Tracks Hub. All rights reserved.</p>
         <div class="social-links">
-            <a href="https://youtube.com/@weekly_backing_track?si=-Rp6XDvP0A8fclp3" target="_blank" rel="noopener noreferrer" aria-label="Visit Track and Tone YouTube channel">YouTube</a>
-            <a href="https://www.instagram.com/reyu_jasper?igsh=dmVsazFvb2pwMmsw&utm_source=qr" target="_blank" rel="noopener noreferrer" aria-label="Visit Track and Tone Instagram profile">Instagram</a>
+            <a href="https://youtube.com/@weekly_backing_track?si=-Rp6XDvP0A8fclp3" target="_blank" rel="noopener noreferrer" aria-label="Visit Jam Tracks Hub YouTube channel">YouTube</a>
+            <a href="https://www.instagram.com/reyu_jasper?igsh=dmVsazFvb2pwMmsw&utm_source=qr" target="_blank" rel="noopener noreferrer" aria-label="Visit Jam Tracks Hub Instagram profile">Instagram</a>
         </div>
     </footer>
 
     <button id="backToTopBtn" type="button" aria-label="Back to top">&uarr;</button>
 
-    <script src="vendor/gsap/gsap.min.js"></script>
-    <script src="vendor/gsap/Flip.min.js"></script>
-    <script src="site.js?v=20260718-slow-back-to-top"></script>
-    <script src="tracks.js?v=20260720-track-windmill-heartless"></script>
-    <script src="vendor/gsap/ScrollTrigger.min.js"></script>
-    <script src="site-animations.js?v=20260720-track-windmill-heartless"></script>
+    <script src="assets/vendor/gsap/gsap.min.js"></script>
+    <script src="assets/vendor/gsap/Flip.min.js"></script>
+    <script src="scripts/site.js?v=20260725-friendly-insect-switch"></script>
+    <script src="scripts/tracks.js?v=20260725-friendly-insect-switch"></script>
+    <script src="assets/vendor/gsap/ScrollTrigger.min.js"></script>
+    <script src="scripts/site-animations.js?v=20260720-track-windmill-heartless"></script>
 </body>
 </html>
