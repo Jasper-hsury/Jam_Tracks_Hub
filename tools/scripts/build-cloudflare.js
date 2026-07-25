@@ -16,6 +16,7 @@ const rootFiles = [
   "index.html",
   "key-finder.html",
   "privacy-policy.html",
+  "progression-writer.html",
   "scale.html",
   "service-waking.html",
   "tracks.html"
