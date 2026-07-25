@@ -22,10 +22,10 @@
 
     <script src="theme-init.js?v=20260623-dark-light"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles/base.css?v=20260724-mobile-track-action-v4">
-    <link rel="stylesheet" href="styles/components.css?v=20260724-mobile-track-action-v4">
-    <link rel="stylesheet" href="styles/pages.css?v=20260724-mobile-track-action-v4">
-    <link rel="stylesheet" href="styles/themes.css?v=20260724-mobile-track-action-v4">
+    <link rel="stylesheet" href="styles/base.css?v=20260725-uiverse-components">
+    <link rel="stylesheet" href="styles/components.css?v=20260725-uiverse-components">
+    <link rel="stylesheet" href="styles/pages.css?v=20260725-uiverse-components">
+    <link rel="stylesheet" href="styles/themes.css?v=20260725-uiverse-components">
 </head>
 
 <body>
@@ -86,8 +86,8 @@
                 <div class="track-sort-switch-control" id="trackSortPills" aria-label="Sort tracks">
                     <span class="track-sort-caption">Sort by</span>
                     <span class="track-sort-mode track-sort-mode-latest" data-sort-latest>Latest first</span>
-                    <input class="track-sort-switch-input" id="trackSortToggle" type="checkbox" aria-label="Switch between latest first and oldest first">
-                    <label class="track-sort-switch" for="trackSortToggle"></label>
+                    <input class="uiverse-toggle-input track-sort-switch-input" id="trackSortToggle" type="checkbox" aria-label="Switch between latest first and oldest first">
+                    <label class="uiverse-toggle track-sort-switch" for="trackSortToggle"></label>
                     <span class="track-sort-mode track-sort-mode-oldest" data-sort-oldest>Oldest first</span>
                 </div>
             </div>
@@ -97,10 +97,10 @@
 
         <div class="all-tracks-grid" id="tracksGrid" aria-live="polite" aria-busy="true">
             <p class="track-loading track-loading-status" role="status">
-                <span class="jh-loader track-loading-spinner" aria-hidden="true">
-                    <span class="jh-loader-dot"></span>
-                    <span class="jh-loader-dot"></span>
-                    <span class="jh-loader-dot"></span>
+                <span class="uiverse-loader jh-loader track-loading-spinner" aria-hidden="true">
+                    <span class="uiverse-loader-dot jh-loader-dot"></span>
+                    <span class="uiverse-loader-dot jh-loader-dot"></span>
+                    <span class="uiverse-loader-dot jh-loader-dot"></span>
                 </span>
                 <span>Loading tracks...</span>
             </p>
@@ -147,7 +147,7 @@
     <script src="vendor/gsap/gsap.min.js"></script>
     <script src="vendor/gsap/Flip.min.js"></script>
     <script src="site.js?v=20260718-slow-back-to-top"></script>
-    <script src="tracks.js?v=20260724-mobile-track-action-v4"></script>
+    <script src="tracks.js?v=20260725-uiverse-components"></script>
     <script src="vendor/gsap/ScrollTrigger.min.js"></script>
     <script src="site-animations.js?v=20260720-track-windmill-heartless"></script>
 </body>

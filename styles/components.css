@@ -441,26 +441,29 @@
     font-weight: bold;
 }
 
-/* Adapted from Uiverse.io tidy-walrus-92: page by dovatgabriel, local Galaxy snapshot credits G4b413l. */
+/* Uiverse component spec: loader. Adapted from tidy-walrus-92 by dovatgabriel. */
+.uiverse-loader,
 .jh-loader {
-    --jh-loader-size: 28px;
-    --jh-loader-speed: 0.8s;
-    --jh-loader-color: var(--chord-control, var(--teal));
+    --uiverse-loader-size: var(--jh-loader-size, 28px);
+    --uiverse-loader-speed: var(--jh-loader-speed, 0.8s);
+    --uiverse-loader-color: var(--jh-loader-color, var(--chord-control, var(--teal)));
     position: relative;
     display: inline-block;
     flex: 0 0 auto;
-    width: var(--jh-loader-size);
-    height: var(--jh-loader-size);
-    color: var(--jh-loader-color);
-    animation: jamLoaderSpin calc(var(--jh-loader-speed) * 2.5) infinite linear;
+    width: var(--uiverse-loader-size);
+    height: var(--uiverse-loader-size);
+    color: var(--uiverse-loader-color);
+    animation: jamLoaderSpin calc(var(--uiverse-loader-speed) * 2.5) infinite linear;
 }
 
+.uiverse-loader-dot,
 .jh-loader-dot {
     position: absolute;
     width: 30%;
     height: 100%;
 }
 
+.uiverse-loader-dot::after,
 .jh-loader-dot::after {
     content: "";
     position: absolute;
@@ -476,6 +479,7 @@
         0 4px 10px color-mix(in srgb, var(--shadow-color, rgba(0, 0, 0, 0.28)) 72%, transparent);
 }
 
+.uiverse-loader-dot:nth-child(1),
 .jh-loader-dot:nth-child(1) {
     bottom: 5%;
     left: 0;
@@ -483,13 +487,15 @@
     transform-origin: 50% 85%;
 }
 
+.uiverse-loader-dot:nth-child(1)::after,
 .jh-loader-dot:nth-child(1)::after {
     bottom: 0;
     left: 0;
-    animation: jamLoaderWobbleUp var(--jh-loader-speed) infinite ease-in-out;
-    animation-delay: calc(var(--jh-loader-speed) * -0.3);
+    animation: jamLoaderWobbleUp var(--uiverse-loader-speed) infinite ease-in-out;
+    animation-delay: calc(var(--uiverse-loader-speed) * -0.3);
 }
 
+.uiverse-loader-dot:nth-child(2),
 .jh-loader-dot:nth-child(2) {
     right: 0;
     bottom: 5%;
@@ -497,22 +503,25 @@
     transform-origin: 50% 85%;
 }
 
+.uiverse-loader-dot:nth-child(2)::after,
 .jh-loader-dot:nth-child(2)::after {
     bottom: 0;
     left: 0;
-    animation: jamLoaderWobbleUp var(--jh-loader-speed) infinite calc(var(--jh-loader-speed) * -0.15) ease-in-out;
+    animation: jamLoaderWobbleUp var(--uiverse-loader-speed) infinite calc(var(--uiverse-loader-speed) * -0.15) ease-in-out;
 }
 
+.uiverse-loader-dot:nth-child(3),
 .jh-loader-dot:nth-child(3) {
     bottom: -5%;
     left: 0;
     transform: translateX(116.666%);
 }
 
+.uiverse-loader-dot:nth-child(3)::after,
 .jh-loader-dot:nth-child(3)::after {
     top: 0;
     left: 0;
-    animation: jamLoaderWobbleDown var(--jh-loader-speed) infinite ease-in-out;
+    animation: jamLoaderWobbleDown var(--uiverse-loader-speed) infinite ease-in-out;
 }
 
 .wake-spinner,
@@ -1872,16 +1881,17 @@
     border-color: #e5d3b3;
 }
 
-/* Adapted from Uiverse.io by Na3ar-17: Toggle-switches/Na3ar-17_evil-dragon-24.html */
+/* Uiverse component spec: download button. Adapted from Uiverse.io by Na3ar-17: Toggle-switches/Na3ar-17_evil-dragon-24.html */
+.uiverse-download-button,
 .track-slides-download-link {
-    --slides-action-size: 54px;
+    --uiverse-download-size: var(--slides-action-size, 54px);
     position: relative;
     display: inline-grid;
     place-items: center;
-    width: var(--slides-action-size);
-    min-width: var(--slides-action-size);
-    height: var(--slides-action-size);
-    min-height: var(--slides-action-size);
+    width: var(--uiverse-download-size);
+    min-width: var(--uiverse-download-size);
+    height: var(--uiverse-download-size);
+    min-height: var(--uiverse-download-size);
     padding: 0;
     overflow: hidden;
     border-radius: 50%;
@@ -1893,6 +1903,7 @@
         transform 0.28s ease;
 }
 
+.uiverse-download-button::before,
 .track-slides-download-link::before {
     content: "";
     position: absolute;
@@ -1907,6 +1918,7 @@
     transition: opacity 0.22s ease;
 }
 
+.uiverse-download-button-circle,
 .track-slides-download-circle {
     position: relative;
     display: inline-grid;
@@ -1929,6 +1941,7 @@
         transform 0.28s ease;
 }
 
+.uiverse-download-button-circle::before,
 .track-slides-download-circle::before {
     content: "";
     position: absolute;
@@ -1939,6 +1952,8 @@
     transition: height 0.32s ease;
 }
 
+.uiverse-download-button-icon,
+.uiverse-download-button-square,
 .track-slides-download-icon,
 .track-slides-download-square {
     position: absolute;
@@ -1946,11 +1961,13 @@
     transition: opacity 0.24s ease, transform 0.28s ease;
 }
 
+.uiverse-download-button-icon,
 .track-slides-download-icon {
     width: 27px;
     height: 27px;
 }
 
+.uiverse-download-button-square,
 .track-slides-download-square {
     width: 13px;
     aspect-ratio: 1;
@@ -1960,16 +1977,21 @@
     transform: scale(0.75);
 }
 
+.uiverse-download-button:hover,
+.uiverse-download-button:focus-visible,
 .track-slides-download-link:hover,
 .track-slides-download-link:focus-visible {
     transform: translateY(-2px);
 }
 
+.uiverse-download-button.is-activating::before,
 .track-slides-download-link.is-activating::before {
     opacity: 1;
     animation: slidesDownloadSpark 1.6s ease-in-out infinite;
 }
 
+.uiverse-download-button.is-activating .uiverse-download-button-circle,
+.uiverse-download-button.is-activating .track-slides-download-circle,
 .track-slides-download-link.is-activating .track-slides-download-circle {
     color: var(--accent-button-text, #17130f);
     transform: rotate(180deg) scale(0.96);
@@ -1978,15 +2000,21 @@
         0 10px 24px color-mix(in srgb, var(--chord-control, #7fb7ad) 22%, transparent);
 }
 
+.uiverse-download-button.is-activating .uiverse-download-button-circle::before,
+.uiverse-download-button.is-activating .track-slides-download-circle::before,
 .track-slides-download-link.is-activating .track-slides-download-circle::before {
     height: 100%;
 }
 
+.uiverse-download-button.is-activating .uiverse-download-button-icon,
+.uiverse-download-button.is-activating .track-slides-download-icon,
 .track-slides-download-link.is-activating .track-slides-download-icon {
     opacity: 0;
     transform: translateY(7px) scale(0.7);
 }
 
+.uiverse-download-button.is-activating .uiverse-download-button-square,
+.uiverse-download-button.is-activating .track-slides-download-square,
 .track-slides-download-link.is-activating .track-slides-download-square {
     opacity: 1;
     transform: scale(1);
@@ -2327,7 +2355,9 @@ audio {
 .progression-shape-card {
     display: grid;
     gap: 8px;
+    min-width: 0;
     min-height: 210px;
+    overflow: hidden;
     padding: 12px;
     border: 1px solid rgba(115, 91, 69, 0.2);
     border-radius: 8px;
@@ -2372,6 +2402,7 @@ audio {
     display: grid;
     grid-template-columns: 24px 1fr;
     gap: 4px 7px;
+    min-width: 0;
 }
 
 .progression-open-row {
@@ -2609,6 +2640,24 @@ html:not([data-theme="light"]) .progression-group-label {
 
     .progression-shape-card {
         min-height: 0;
+    }
+
+    .progression-mini-diagram {
+        grid-template-columns: 18px minmax(0, 1fr);
+        max-width: 220px;
+        margin-inline: auto;
+    }
+
+    .progression-fret-marker {
+        width: 24px;
+        height: 24px;
+        font-size: 0.64rem;
+    }
+
+    .progression-open-tone {
+        width: 22px;
+        height: 17px;
+        font-size: 0.6rem;
     }
 }
 

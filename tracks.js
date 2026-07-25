@@ -41,12 +41,12 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function renderLoaderMarkup(extraClass) {
-        const className = extraClass ? `jh-loader ${extraClass}` : "jh-loader";
+        const className = extraClass ? `uiverse-loader jh-loader ${extraClass}` : "uiverse-loader jh-loader";
         return `
             <span class="${className}" aria-hidden="true">
-                <span class="jh-loader-dot"></span>
-                <span class="jh-loader-dot"></span>
-                <span class="jh-loader-dot"></span>
+                <span class="uiverse-loader-dot jh-loader-dot"></span>
+                <span class="uiverse-loader-dot jh-loader-dot"></span>
+                <span class="uiverse-loader-dot jh-loader-dot"></span>
             </span>
         `;
     }
@@ -262,18 +262,19 @@ document.addEventListener("DOMContentLoaded", function() {
             "track-link",
             "track-secondary-action",
             "secondary-track-link",
+            "uiverse-download-button",
             "track-slides-download-link",
             extraClass
         ].filter(Boolean).join(" ");
 
         return `
             <a href="${escapeHtml(track.downloadUrl)}" class="${className}" data-card-action="slides" download aria-label="Download slides for ${escapeHtml(track.title)}">
-                <span class="track-slides-download-circle" aria-hidden="true">
-                    <svg class="track-slides-download-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <span class="uiverse-download-button-circle track-slides-download-circle" aria-hidden="true">
+                    <svg class="uiverse-download-button-icon track-slides-download-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                         <path d="M12 5v11m0 0-4-4m4 4 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path>
                         <path d="M6 19h12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path>
                     </svg>
-                    <span class="track-slides-download-square"></span>
+                    <span class="uiverse-download-button-square track-slides-download-square"></span>
                 </span>
             </a>
         `;

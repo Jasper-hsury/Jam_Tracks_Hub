@@ -22,11 +22,11 @@
 
     <script src="theme-init.js?v=20260623-dark-light"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles/base.css?v=20260724-mobile-layout-fixes">
-    <link rel="stylesheet" href="styles/components.css?v=20260724-mobile-layout-fixes">
-    <link rel="stylesheet" href="styles/chord-dictionary.css?v=20260724-mobile-layout-fixes">
-    <link rel="stylesheet" href="styles/pages.css?v=20260724-mobile-layout-fixes">
-    <link rel="stylesheet" href="styles/themes.css?v=20260724-mobile-layout-fixes">
+    <link rel="stylesheet" href="styles/base.css?v=20260725-uiverse-components">
+    <link rel="stylesheet" href="styles/components.css?v=20260725-uiverse-components">
+    <link rel="stylesheet" href="styles/chord-dictionary.css?v=20260725-uiverse-components">
+    <link rel="stylesheet" href="styles/pages.css?v=20260725-uiverse-components">
+    <link rel="stylesheet" href="styles/themes.css?v=20260725-uiverse-components">
 </head>
 
 <body>
@@ -59,9 +59,9 @@
             </div>
 
             <div class="progression-writer-mode-control">
-                <input class="progression-writer-switch-input" id="progressionStructureToggle" type="checkbox" aria-label="Switch between chord progression with or without verse and chorus">
+                <input class="uiverse-toggle-input progression-writer-switch-input" id="progressionStructureToggle" type="checkbox" aria-label="Switch between chord progression with or without verse and chorus">
                 <span class="progression-writer-mode-label progression-writer-mode-without">Without Verse &amp; Chorus</span>
-                <label class="progression-writer-switch" for="progressionStructureToggle"></label>
+                <label class="uiverse-toggle progression-writer-switch" for="progressionStructureToggle"></label>
                 <span class="progression-writer-mode-label progression-writer-mode-with">With Verse &amp; Chorus</span>
             </div>
         </section>
@@ -91,9 +91,9 @@
                         <label class="progression-writer-meta-label" for="progressionKeyRoot">Key</label>
                     </div>
                     <div class="progression-key-mode-control">
-                        <input class="progression-writer-switch-input progression-key-mode-input" id="progressionKeyQualityToggle" type="checkbox" aria-label="Switch key between major and minor">
+                        <input class="uiverse-toggle-input progression-writer-switch-input progression-key-mode-input" id="progressionKeyQualityToggle" type="checkbox" aria-label="Switch key between major and minor">
                         <span class="progression-key-mode-label progression-key-mode-major">Major</span>
-                        <label class="progression-writer-switch progression-key-mode-switch" for="progressionKeyQualityToggle"></label>
+                        <label class="uiverse-toggle progression-writer-switch progression-key-mode-switch" for="progressionKeyQualityToggle"></label>
                         <span class="progression-key-mode-label progression-key-mode-minor">Minor</span>
                     </div>
                 </div>
@@ -204,18 +204,18 @@
             <div class="progression-writer-actions">
                 <button class="primary-button progression-writer-save-button" type="submit">Save Progression</button>
                 <div class="progression-download-layout-control">
-                    <input id="separateProgressionDownload" class="progression-download-layout-input" type="checkbox" aria-label="Show chord progression and shapes separately in downloaded image">
+                    <input id="separateProgressionDownload" class="uiverse-toggle-input progression-download-layout-input" type="checkbox" aria-label="Show chord progression and shapes separately in downloaded image">
                     <span class="progression-download-layout-label progression-download-layout-full">Full Shape Cards</span>
-                    <label class="progression-download-layout-switch" for="separateProgressionDownload"></label>
+                    <label class="uiverse-toggle progression-download-layout-switch" for="separateProgressionDownload"></label>
                     <span class="progression-download-layout-label progression-download-layout-separated">Progression &amp; Shapes Separately</span>
                 </div>
-                <button class="progression-download-button track-slides-download-link" id="downloadProgressionButton" type="button" aria-label="Download progression image">
-                    <span class="track-slides-download-circle" aria-hidden="true">
-                        <svg class="track-slides-download-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <button class="uiverse-download-button progression-download-button track-slides-download-link" id="downloadProgressionButton" type="button" aria-label="Download progression image">
+                    <span class="uiverse-download-button-circle track-slides-download-circle" aria-hidden="true">
+                        <svg class="uiverse-download-button-icon track-slides-download-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                             <path d="M12 5v11m0 0-4-4m4 4 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path>
                             <path d="M6 19h12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path>
                         </svg>
-                        <span class="track-slides-download-square"></span>
+                        <span class="uiverse-download-button-square track-slides-download-square"></span>
                     </span>
                 </button>
                 <p class="progression-writer-status" id="progressionWriterStatus" role="status" aria-live="polite"></p>
@@ -284,7 +284,7 @@
     <button id="backToTopBtn" type="button" aria-label="Back to top">&uarr;</button>
 
     <script src="site.js?v=20260718-slow-back-to-top"></script>
-    <script src="progression-writer.js?v=20260724-mobile-layout-fixes"></script>
+    <script src="progression-writer.js?v=20260725-uiverse-components"></script>
     <script src="vendor/gsap/gsap.min.js"></script>
     <script src="vendor/gsap/ScrollTrigger.min.js"></script>
     <script src="site-animations.js?v=20260718-trainer-dropdown-hover"></script>

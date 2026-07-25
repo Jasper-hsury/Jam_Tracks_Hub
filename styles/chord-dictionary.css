@@ -438,6 +438,7 @@
 
 .chord-shape-card {
     min-width: 0;
+    overflow: hidden;
     padding: 12px 10px 11px;
     background: var(--subpanel-background);
     border: 1px solid var(--border-soft);
@@ -468,6 +469,7 @@
 }
 
 .chord-diagram {
+    width: 100%;
     max-width: 200px;
     margin: 0 auto;
 }
@@ -925,5 +927,32 @@ html[data-theme="light"] .diagram-string-status.is-root strong {
 
     .chord-diagram {
         width: min(100%, 200px);
+    }
+
+    .diagram-string-status strong,
+    .diagram-finger {
+        min-width: 22px;
+        height: 22px;
+        font-size: 9px;
+    }
+}
+
+@media (max-width: 360px) {
+    .dictionary-browser,
+    .dictionary-detail {
+        padding-inline: 14px;
+    }
+
+    .dictionary-position-filter button {
+        min-height: 31px;
+        padding-inline: 9px;
+    }
+
+    .chord-diagram {
+        width: min(100%, 184px);
+    }
+
+    .diagram-neck {
+        height: 172px;
     }
 }

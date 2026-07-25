@@ -593,7 +593,10 @@ html[data-theme="light"] .theme-toggle-icon {
     transform: translateY(-1px);
 }
 
+.track-actions .uiverse-download-button,
 .track-actions .track-slides-download-link,
+.track-actions .uiverse-download-button:hover,
+.track-actions .uiverse-download-button:focus-visible,
 .track-actions .track-slides-download-link:hover,
 .track-actions .track-slides-download-link:focus-visible {
     position: relative;
@@ -608,6 +611,8 @@ html[data-theme="light"] .theme-toggle-icon {
     box-shadow: none;
 }
 
+.track-actions .uiverse-download-button:hover,
+.track-actions .uiverse-download-button:focus-visible,
 .track-actions .track-slides-download-link:hover,
 .track-actions .track-slides-download-link:focus-visible {
     color: var(--secondary-hover-text);
@@ -617,6 +622,7 @@ html[data-theme="light"] .theme-toggle-icon {
     transform: translateY(-2px);
 }
 
+.track-actions .uiverse-download-button::before,
 .track-actions .track-slides-download-link::before {
     inset: 0;
     z-index: 0;
@@ -629,11 +635,13 @@ html[data-theme="light"] .theme-toggle-icon {
     transform: rotate(-90deg) translate(28px);
 }
 
+.track-actions .uiverse-download-button.is-activating::before,
 .track-actions .track-slides-download-link.is-activating::before {
     opacity: 1;
     transform: rotate(-90deg) translate(28px);
 }
 
+.track-actions .uiverse-download-button-circle,
 .track-actions .track-slides-download-circle {
     position: relative;
     z-index: 1;
@@ -1116,6 +1124,8 @@ html[data-theme="light"] .scale-advice-detail {
     .track-key-checkbox-visual,
     .track-key-checkbox-inner,
     .track-sort-mode,
+    .uiverse-toggle,
+    .uiverse-toggle::after,
     .track-sort-switch,
     .track-sort-switch::after,
     .progression-writer-mode-label,
@@ -1123,6 +1133,11 @@ html[data-theme="light"] .scale-advice-detail {
     .progression-writer-switch::after,
     .progression-download-layout-switch,
     .progression-download-layout-switch::after,
+    .uiverse-download-button,
+    .uiverse-download-button-circle,
+    .uiverse-download-button-circle::before,
+    .uiverse-download-button-icon,
+    .uiverse-download-button-square,
     .track-slides-download-link,
     .track-slides-download-circle,
     .track-slides-download-circle::before,
@@ -1131,8 +1146,11 @@ html[data-theme="light"] .scale-advice-detail {
         transition-duration: 0.001ms !important;
     }
 
+    .uiverse-loader,
+    .uiverse-loader-dot::after,
     .jh-loader,
     .jh-loader-dot::after,
+    .uiverse-download-button::before,
     .track-slides-download-link::before {
         animation-duration: 0.001ms !important;
         animation-iteration-count: 1 !important;

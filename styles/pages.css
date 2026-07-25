@@ -1040,8 +1040,11 @@ iframe {
     transform: translateY(-1px);
 }
 
-/* Adapted from Uiverse.io by vinodjangid07: Toggle-switches/vinodjangid07_lucky-mole-65.html */
-.track-sort-switch-input {
+/* Uiverse component spec: toggle. Adapted from Uiverse.io by vinodjangid07: Toggle-switches/vinodjangid07_lucky-mole-65.html */
+.uiverse-toggle-input,
+.track-sort-switch-input,
+.progression-writer-switch-input,
+.progression-download-layout-input {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -1049,16 +1052,21 @@ iframe {
     pointer-events: none;
 }
 
+.uiverse-toggle,
 .track-sort-switch {
+    --uiverse-toggle-width: 78px;
+    --uiverse-toggle-height: 38px;
+    --uiverse-toggle-knob-size: var(--uiverse-toggle-height);
+    --uiverse-toggle-travel: calc(var(--uiverse-toggle-width) - var(--uiverse-toggle-knob-size));
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 78px;
-    height: 38px;
+    width: var(--uiverse-toggle-width);
+    height: var(--uiverse-toggle-height);
     flex: 0 0 auto;
     background-color: color-mix(in srgb, var(--surface-soft) 82%, var(--text) 18%);
-    border-radius: 20px;
+    border-radius: 999px;
     cursor: pointer;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
     box-shadow:
@@ -1066,12 +1074,13 @@ iframe {
         rgba(255, 255, 255, 0.1) 0 1px 1px;
 }
 
+.uiverse-toggle::after,
 .track-sort-switch::after {
     content: "";
     position: absolute;
     left: 0;
-    width: 38px;
-    height: 38px;
+    width: var(--uiverse-toggle-knob-size);
+    height: var(--uiverse-toggle-knob-size);
     background:
         conic-gradient(
             color-mix(in srgb, var(--gold) 54%, #555),
@@ -1085,14 +1094,20 @@ iframe {
     transition: transform 0.3s ease;
 }
 
+.uiverse-toggle-input:checked + .uiverse-toggle,
+.uiverse-toggle-input:checked ~ .uiverse-toggle,
 .track-sort-switch-input:checked + .track-sort-switch {
     background-color: color-mix(in srgb, var(--teal) 58%, var(--surface-soft));
 }
 
+.uiverse-toggle-input:checked + .uiverse-toggle::after,
+.uiverse-toggle-input:checked ~ .uiverse-toggle::after,
 .track-sort-switch-input:checked + .track-sort-switch::after {
-    transform: translateX(40px);
+    transform: translateX(var(--uiverse-toggle-travel));
 }
 
+.uiverse-toggle-input:focus-visible + .uiverse-toggle,
+.uiverse-toggle-input:focus-visible ~ .uiverse-toggle,
 .track-sort-switch-input:focus-visible + .track-sort-switch {
     outline: 3px solid var(--focus-ring);
     outline-offset: 3px;
@@ -1181,57 +1196,9 @@ iframe {
     transform: translateY(-1px);
 }
 
-/* Adapted from Uiverse.io by vinodjangid07: Toggle-switches/vinodjangid07_lucky-mole-65.html */
-.progression-writer-switch-input {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    opacity: 0;
-    pointer-events: none;
-}
-
 .progression-writer-switch {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 80px;
-    height: 40px;
-    flex: 0 0 auto;
-    background-color: color-mix(in srgb, var(--surface-soft) 82%, var(--text) 18%);
-    border-radius: 20px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    box-shadow:
-        rgba(0, 0, 0, 0.22) 0 2px 4px inset,
-        rgba(255, 255, 255, 0.1) 0 1px 1px;
-}
-
-.progression-writer-switch::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    width: 40px;
-    height: 40px;
-    background:
-        conic-gradient(
-            color-mix(in srgb, var(--gold) 54%, #555),
-            #fffaf4,
-            color-mix(in srgb, var(--gold) 44%, #5f5f5f),
-            #fff7ec,
-            color-mix(in srgb, var(--gold) 54%, #555)
-        );
-    border-radius: 50%;
-    box-shadow: 5px 2px 7px rgba(8, 8, 8, 0.3);
-    transition: transform 0.3s ease;
-}
-
-.progression-writer-switch-input:checked ~ .progression-writer-switch {
-    background-color: color-mix(in srgb, var(--teal) 58%, var(--surface-soft));
-}
-
-.progression-writer-switch-input:checked ~ .progression-writer-switch::after {
-    transform: translateX(40px);
+    --uiverse-toggle-width: 80px;
+    --uiverse-toggle-height: 40px;
 }
 
 .progression-writer-switch-input:checked ~ .progression-writer-mode-with {
@@ -1365,14 +1332,13 @@ iframe {
 }
 
 .progression-key-mode-switch {
-    width: 64px;
-    height: 32px;
-    border-radius: 16px;
+    --uiverse-toggle-width: 64px;
+    --uiverse-toggle-height: 32px;
 }
 
 .progression-key-mode-switch::after {
-    width: 32px;
-    height: 32px;
+    width: var(--uiverse-toggle-knob-size);
+    height: var(--uiverse-toggle-knob-size);
 }
 
 .progression-key-mode-input:not(:checked) ~ .progression-key-mode-major,
@@ -1382,7 +1348,7 @@ iframe {
 }
 
 .progression-key-mode-input:checked ~ .progression-key-mode-switch::after {
-    transform: translateX(32px);
+    transform: translateX(var(--uiverse-toggle-travel));
 }
 
 .progression-writer-entry,
@@ -1503,6 +1469,7 @@ iframe {
     grid-template-columns: minmax(0, 1fr) minmax(190px, 220px);
     align-items: start;
     gap: 10px;
+    overflow: hidden;
     padding: 12px;
 }
 
@@ -1535,6 +1502,7 @@ iframe {
 
 .progression-writer-shape-card .chord-diagram {
     width: min(100%, 220px);
+    min-width: 0;
     max-width: 220px;
     grid-column: 2;
     grid-row: 1;
@@ -1769,61 +1737,14 @@ body.is-shape-picker-open {
     transition: color 0.2s ease, transform 0.2s ease;
 }
 
-.progression-download-layout-input {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    opacity: 0;
-    pointer-events: none;
-}
-
 .progression-download-layout-switch {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 0 0 auto;
-    width: 80px;
-    height: 40px;
-    background-color: color-mix(in srgb, var(--surface-soft) 82%, var(--text) 18%);
-    border-radius: 20px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    box-shadow:
-        rgba(0, 0, 0, 0.22) 0 2px 4px inset,
-        rgba(255, 255, 255, 0.1) 0 1px 1px;
-}
-
-.progression-download-layout-switch::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    width: 40px;
-    height: 40px;
-    background:
-        conic-gradient(
-            color-mix(in srgb, var(--gold) 54%, #555),
-            #fffaf4,
-            color-mix(in srgb, var(--gold) 44%, #5f5f5f),
-            #fff7ec,
-            color-mix(in srgb, var(--gold) 54%, #555)
-        );
-    border-radius: 50%;
-    box-shadow: 5px 2px 7px rgba(8, 8, 8, 0.3);
-    transition: transform 0.3s ease;
+    --uiverse-toggle-width: 80px;
+    --uiverse-toggle-height: 40px;
 }
 
 .progression-download-layout-input:not(:checked) ~ .progression-download-layout-full {
     color: var(--teal);
     transform: translateY(-1px);
-}
-
-.progression-download-layout-input:checked ~ .progression-download-layout-switch {
-    background-color: color-mix(in srgb, var(--teal) 58%, var(--surface-soft));
-}
-
-.progression-download-layout-input:checked ~ .progression-download-layout-switch::after {
-    transform: translateX(40px);
 }
 
 .progression-download-layout-input:checked ~ .progression-download-layout-separated {
@@ -2769,6 +2690,7 @@ html[data-theme="light"] .track-scroll-five-blade-rotor use {
     .progression-writer-shape-card .chord-diagram {
         grid-column: auto;
         grid-row: auto;
+        width: min(100%, 210px);
         justify-self: center;
     }
 
@@ -2807,6 +2729,11 @@ html[data-theme="light"] .track-scroll-five-blade-rotor use {
 
     .progression-writer-chord-actions {
         flex-direction: column;
+    }
+
+    .progression-writer-shape-picker-card .chord-diagram {
+        width: min(100%, 190px);
+        justify-self: center;
     }
 
     .track-filter-actions {
@@ -2863,6 +2790,7 @@ html[data-theme="light"] .track-scroll-five-blade-rotor use {
         display: flex;
         align-items: center;
         justify-content: flex-start;
+        flex-wrap: wrap;
         gap: 10px;
         margin-top: 0;
     }
@@ -2876,7 +2804,7 @@ html[data-theme="light"] .track-scroll-five-blade-rotor use {
     }
 
     .tracks-library-page .track-secondary-actions {
-        display: flex;
+        display: inline-flex;
         width: auto;
         justify-content: center;
         flex-wrap: nowrap;
@@ -2973,6 +2901,7 @@ html[data-theme="light"] .track-scroll-five-blade-rotor use {
 @media (max-width: 430px) {
     .tracks-library-page .track-card {
         padding-inline: 16px;
+        grid-template-columns: minmax(0, 1fr) 50px;
     }
 
     .tracks-library-page .track-card-main {
@@ -2993,6 +2922,53 @@ html[data-theme="light"] .track-scroll-five-blade-rotor use {
         min-width: var(--slides-action-size);
         height: var(--slides-action-size);
         min-height: var(--slides-action-size);
+    }
+
+    .progression-writer-page {
+        padding-inline: 16px;
+    }
+
+    .progression-writer-panel,
+    .progression-writer-meta,
+    .progression-writer-entry,
+    .progression-writer-saved {
+        padding-inline: 16px;
+    }
+
+    .progression-writer-mode-control,
+    .progression-download-layout-control {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+        gap: 9px;
+    }
+
+    .progression-writer-mode-label,
+    .progression-download-layout-label {
+        white-space: normal;
+    }
+
+    .progression-writer-mode-without,
+    .progression-download-layout-full {
+        text-align: right;
+    }
+
+    .progression-writer-mode-with,
+    .progression-download-layout-separated {
+        text-align: left;
+    }
+
+    .progression-writer-shape-card .chord-diagram {
+        width: min(100%, 190px);
+    }
+}
+
+@media (max-width: 360px) {
+    .tracks-library-page .track-card {
+        grid-template-columns: 1fr;
+    }
+
+    .tracks-library-page .track-actions {
+        justify-self: start;
     }
 }
 
@@ -4168,15 +4144,73 @@ html[data-theme="light"] .home-step-track .home-step-card:focus-visible {
     line-height: 1.8;
 }
 
+.about-connect {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 22px;
+    margin-top: 42px;
+    padding: 20px;
+    background:
+        linear-gradient(135deg, color-mix(in srgb, var(--teal) 8%, transparent), transparent 46%),
+        color-mix(in srgb, var(--surface-raised) 72%, transparent);
+    border: 1px solid var(--border-soft);
+    border-left: 4px solid color-mix(in srgb, var(--teal) 70%, var(--gold-light));
+    border-radius: 8px;
+    box-shadow: 0 18px 38px color-mix(in srgb, var(--shadow-color) 58%, transparent);
+}
+
+.about-connect-copy {
+    display: grid;
+    gap: 7px;
+    min-width: 0;
+}
+
+.about-connect-copy span {
+    color: var(--teal);
+    font-size: 12px;
+    font-weight: 850;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.about-connect-copy strong {
+    color: var(--text);
+    font-size: 18px;
+    line-height: 1.35;
+}
+
+.about-connect-copy p {
+    max-width: 48ch;
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.about-connect-copy a {
+    width: fit-content;
+    color: var(--gold-light);
+    font-size: 13px;
+    font-weight: 800;
+    overflow-wrap: anywhere;
+    text-underline-offset: 4px;
+}
+
+.about-connect-copy a:hover {
+    color: var(--teal);
+}
+
 .about-links {
     display: grid;
     align-items: center;
     justify-items: start;
     gap: 18px;
-    margin-top: 42px;
+    margin-top: 0;
 }
 
 /* Adapted from Uiverse.io by vikramsinghnegi: Buttons/vikramsinghnegi_massive-panda-81.html */
+.uiverse-youtube-button,
 .home-youtube-button {
     display: inline-flex;
     align-items: center;
@@ -4197,6 +4231,8 @@ html[data-theme="light"] .home-step-track .home-step-card:focus-visible {
         background-color 0.3s ease;
 }
 
+.uiverse-youtube-button:hover,
+.uiverse-youtube-button:focus-visible,
 .home-youtube-button:hover,
 .home-youtube-button:focus-visible {
     color: white;
@@ -4204,11 +4240,13 @@ html[data-theme="light"] .home-step-track .home-step-card:focus-visible {
     transform: translateY(-3px);
 }
 
+.uiverse-youtube-button:active,
 .home-youtube-button:active {
     box-shadow: 0 2px 5px color-mix(in srgb, var(--shadow-color) 62%, transparent);
     transform: scale(0.95);
 }
 
+.uiverse-youtube-button > span:last-child,
 .home-youtube-button > span:last-child {
     display: block;
     margin-left: 0.4em;
@@ -4242,17 +4280,22 @@ html[data-theme="light"] .home-step-track .home-step-card:focus-visible {
     transition: transform 0.3s ease;
 }
 
+.uiverse-youtube-button:hover .home-youtube-icon,
+.uiverse-youtube-button:focus-visible .home-youtube-icon,
 .home-youtube-button:hover .home-youtube-icon,
 .home-youtube-button:focus-visible .home-youtube-icon {
     background-color: rgba(255, 255, 255, 0.5);
 }
 
+.uiverse-youtube-button:hover svg,
+.uiverse-youtube-button:focus-visible svg,
 .home-youtube-button:hover svg,
 .home-youtube-button:focus-visible svg {
     transform: rotate(45deg);
 }
 
 /* Adapted from Uiverse.io by marcelodolza: Buttons/marcelodolza_fat-zebra-11.html */
+.uiverse-contact-button,
 .home-contact-button {
     --contact-primary: var(--teal);
     --contact-neutral-1: color-mix(in srgb, var(--surface-raised) 88%, white 12%);
@@ -4284,6 +4327,8 @@ html[data-theme="light"] .home-step-track .home-step-card:focus-visible {
         color 0.28s ease;
 }
 
+.uiverse-contact-button::before,
+.uiverse-contact-button::after,
 .home-contact-button::before,
 .home-contact-button::after {
     content: "";
@@ -4291,6 +4336,7 @@ html[data-theme="light"] .home-step-track .home-step-card:focus-visible {
     pointer-events: none;
 }
 
+.uiverse-contact-button::before,
 .home-contact-button::before {
     inset: 5px;
     z-index: 2;
@@ -4299,6 +4345,7 @@ html[data-theme="light"] .home-step-track .home-step-card:focus-visible {
     filter: blur(0.5px);
 }
 
+.uiverse-contact-button::after,
 .home-contact-button::after {
     inset: 0;
     z-index: 0;
@@ -4412,6 +4459,8 @@ html[data-theme="light"] .home-step-track .home-step-card:focus-visible {
     transform: scale(1.12);
 }
 
+.uiverse-contact-button:hover,
+.uiverse-contact-button:focus-visible,
 .home-contact-button:hover,
 .home-contact-button:focus-visible {
     color: var(--text);
@@ -4422,33 +4471,44 @@ html[data-theme="light"] .home-step-track .home-step-card:focus-visible {
     transform: scale(1.02);
 }
 
+.uiverse-contact-button:hover::after,
+.uiverse-contact-button:focus-visible::after,
 .home-contact-button:hover::after,
 .home-contact-button:focus-visible::after {
     box-shadow: inset 0 -1px 3px color-mix(in srgb, white 72%, transparent);
     transform: scale(1.05, 1.1);
 }
 
+.uiverse-contact-button:hover .home-contact-outline,
+.uiverse-contact-button:focus-visible .home-contact-outline,
 .home-contact-button:hover .home-contact-outline,
 .home-contact-button:focus-visible .home-contact-outline {
     opacity: 1;
 }
 
+.uiverse-contact-button:hover .home-contact-outline::before,
+.uiverse-contact-button:focus-visible .home-contact-outline::before,
 .home-contact-button:hover .home-contact-outline::before,
 .home-contact-button:focus-visible .home-contact-outline::before {
     animation-play-state: running;
 }
 
+.uiverse-contact-button:hover .home-contact-icon,
+.uiverse-contact-button:focus-visible .home-contact-icon,
 .home-contact-button:hover .home-contact-icon,
 .home-contact-button:focus-visible .home-contact-icon {
     transform: rotate(45deg) scale(1.12);
 }
 
+.uiverse-contact-button:hover .home-contact-text span,
+.uiverse-contact-button:focus-visible .home-contact-text span,
 .home-contact-button:hover .home-contact-text span,
 .home-contact-button:focus-visible .home-contact-text span {
     opacity: 1;
     animation: homeContactWave 0.5s ease forwards calc(var(--i) * 0.02s);
 }
 
+.uiverse-contact-button:active,
 .home-contact-button:active {
     transform: scale(1);
     box-shadow:
@@ -4456,39 +4516,84 @@ html[data-theme="light"] .home-step-track .home-step-card:focus-visible {
         0 10px 3px -3px color-mix(in srgb, var(--shadow-color) 76%, transparent);
 }
 
+.uiverse-contact-button:focus .home-contact-state--default,
 .home-contact-button:focus .home-contact-state--default {
     position: absolute;
 }
 
+.uiverse-contact-button:focus .home-contact-state--default .home-contact-text span,
 .home-contact-button:focus .home-contact-state--default .home-contact-text span {
     animation: homeContactDisappear 0.6s ease forwards calc(var(--i) * 0.03s);
     opacity: 1;
 }
 
+.uiverse-contact-button:focus .home-contact-state--default .home-contact-icon,
 .home-contact-button:focus .home-contact-state--default .home-contact-icon {
     transform: rotate(0) scale(1.12);
 }
 
+.uiverse-contact-button:focus .home-contact-state--default .home-contact-icon svg,
 .home-contact-button:focus .home-contact-state--default .home-contact-icon svg {
     animation: homeContactTakeOff 0.8s linear forwards;
 }
 
+.uiverse-contact-button:focus .home-contact-state--default .home-contact-icon::before,
 .home-contact-button:focus .home-contact-state--default .home-contact-icon::before {
     animation: homeContactContrail 0.8s linear forwards;
 }
 
+.uiverse-contact-button:focus .home-contact-state--sent,
 .home-contact-button:focus .home-contact-state--sent {
     display: flex;
 }
 
+.uiverse-contact-button:focus .home-contact-state--sent .home-contact-text span,
 .home-contact-button:focus .home-contact-state--sent .home-contact-text span {
     animation: homeContactSlideDown 0.8s ease forwards calc(var(--i) * 0.2s);
     opacity: 0;
 }
 
+.uiverse-contact-button:focus .home-contact-state--sent .home-contact-icon svg,
 .home-contact-button:focus .home-contact-state--sent .home-contact-icon svg {
     animation: homeContactAppear 1.2s ease forwards 0.8s;
     opacity: 0;
+}
+
+@media (max-width: 680px) {
+    .home-about-layout {
+        grid-template-columns: 1fr;
+        gap: 28px;
+    }
+
+    .about-copy {
+        max-width: none;
+    }
+
+    .about-connect {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+        gap: 18px;
+        margin-top: 30px;
+        padding: 18px;
+    }
+
+    .about-links {
+        justify-items: start;
+    }
+}
+
+@media (max-width: 430px) {
+    .uiverse-youtube-button,
+    .home-youtube-button {
+        width: 100%;
+        max-width: 260px;
+        font-size: 15px;
+    }
+
+    .uiverse-contact-button,
+    .home-contact-button {
+        min-width: 162px;
+    }
 }
 
 @keyframes homeContactSpin {
@@ -4631,8 +4736,13 @@ html[data-theme="light"] .home-step-track .home-step-card:focus-visible {
 }
 
 @media (prefers-reduced-motion: reduce) {
+    .uiverse-youtube-button,
+    .uiverse-youtube-button *,
     .home-youtube-button,
     .home-youtube-button *,
+    .uiverse-contact-button,
+    .uiverse-contact-button::before,
+    .uiverse-contact-button::after,
     .home-contact-button,
     .home-contact-button::before,
     .home-contact-button::after,
@@ -4646,10 +4756,20 @@ html[data-theme="light"] .home-step-track .home-step-card:focus-visible {
         transition: none;
     }
 
+    .uiverse-youtube-button:hover,
+    .uiverse-youtube-button:focus-visible,
+    .uiverse-youtube-button:hover svg,
+    .uiverse-youtube-button:focus-visible svg,
     .home-youtube-button:hover,
     .home-youtube-button:focus-visible,
     .home-youtube-button:hover svg,
     .home-youtube-button:focus-visible svg,
+    .uiverse-contact-button:hover,
+    .uiverse-contact-button:focus-visible,
+    .uiverse-contact-button:hover::after,
+    .uiverse-contact-button:focus-visible::after,
+    .uiverse-contact-button:hover .home-contact-icon,
+    .uiverse-contact-button:focus-visible .home-contact-icon,
     .home-contact-button:hover,
     .home-contact-button:focus-visible,
     .home-contact-button:hover::after,

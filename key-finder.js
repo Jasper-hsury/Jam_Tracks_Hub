@@ -512,10 +512,10 @@ document.addEventListener("DOMContentLoaded", function() {
         keyFinderResult.innerHTML = `
             <div class="analysis-progress" role="status">
                 <div class="analysis-progress-heading">
-                    <span class="jh-loader analysis-spinner" aria-hidden="true">
-                        <span class="jh-loader-dot"></span>
-                        <span class="jh-loader-dot"></span>
-                        <span class="jh-loader-dot"></span>
+                    <span class="uiverse-loader jh-loader analysis-spinner" aria-hidden="true">
+                        <span class="uiverse-loader-dot jh-loader-dot"></span>
+                        <span class="uiverse-loader-dot jh-loader-dot"></span>
+                        <span class="uiverse-loader-dot jh-loader-dot"></span>
                     </span>
                     <div>
                         <strong>${escapeHtml(job.stage || "Analyzing audio")}</strong>
