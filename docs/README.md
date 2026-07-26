@@ -7,9 +7,9 @@ Jam Tracks Hub is a musician-focused website for backing tracks, fretboard study
 
 Daily Umami analytics snapshot for Jam Tracks Hub.
 
-_Analytics screenshot will appear here after `UMAMI_SHARE_URL` is configured and the workflow runs._
+![Umami analytics dashboard](../assets/analytics/umami-dashboard.png)
 
-Last updated: pending setup
+Last updated: Jul 26, 2026, 10:15 AM
 <!-- UMAMI_ANALYTICS_END -->
 
 ## What The Site Includes
