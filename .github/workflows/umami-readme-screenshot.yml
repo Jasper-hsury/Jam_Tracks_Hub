@@ -1,0 +1,52 @@
+name: Umami README Screenshot
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "15 22 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  update-readme-screenshot:
+    runs-on: ubuntu-latest
+    env:
+      UMAMI_SHARE_URL: ${{ secrets.UMAMI_SHARE_URL || vars.UMAMI_SHARE_URL }}
+      REPORT_TIMEZONE: Asia/Taipei
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Playwright
+        if: env.UMAMI_SHARE_URL != ''
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+
+      - name: Skip when Share URL is missing
+        if: env.UMAMI_SHARE_URL == ''
+        run: echo "::notice::Skipping README screenshot. Add UMAMI_SHARE_URL as a repository secret or variable to enable daily Umami dashboard screenshots."
+
+      - name: Update README analytics screenshot
+        if: env.UMAMI_SHARE_URL != ''
+        run: node tools/scripts/update-umami-readme-screenshot.js
+
+      - name: Commit README analytics update
+        if: env.UMAMI_SHARE_URL != ''
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/README.md assets/analytics
+          if git diff --cached --quiet; then
+            echo "No README analytics changes to commit."
+          else
+            git commit -m "Update README Umami analytics screenshot"
+            git push
+          fi

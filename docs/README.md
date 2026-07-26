@@ -2,6 +2,16 @@
 
 Jam Tracks Hub is a musician-focused website for backing tracks, fretboard study, chord exploration, and songwriting support. It combines original practice tracks with practical tools for understanding harmony, mapping guitar shapes, finding keys, and exporting custom chord progression diagrams.
 
+<!-- UMAMI_ANALYTICS_START -->
+## Website Analytics
+
+Daily Umami analytics snapshot for Jam Tracks Hub.
+
+_Analytics screenshot will appear here after `UMAMI_SHARE_URL` is configured and the workflow runs._
+
+Last updated: pending setup
+<!-- UMAMI_ANALYTICS_END -->
+
 ## What The Site Includes
 
 - `index.html`: homepage with the site introduction, quick navigation panels, and contact section.

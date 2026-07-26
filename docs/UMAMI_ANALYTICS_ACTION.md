@@ -120,3 +120,43 @@ analytics-report-title.txt
 ```
 
 These files are generated output and should not be committed.
+
+## README Screenshot Without API Access
+
+The repository also includes a free-plan friendly workflow:
+
+```text
+.github/workflows/umami-readme-screenshot.yml
+```
+
+It opens the public Umami Share URL once per day, captures a screenshot, saves it to:
+
+```text
+assets/analytics/umami-dashboard.png
+```
+
+Then it updates:
+
+```text
+docs/README.md
+```
+
+This does not require an Umami API key.
+
+Required setup:
+
+```text
+Settings -> Secrets and variables -> Actions
+```
+
+Add either a repository secret or variable:
+
+```text
+UMAMI_SHARE_URL
+```
+
+Use the public share link from:
+
+```text
+Umami -> Websites -> jamtrackshub.com -> Edit -> Share URL
+```
