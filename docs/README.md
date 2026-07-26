@@ -36,7 +36,9 @@ _Analytics screenshot will appear here after `UMAMI_SHARE_URL` is configured and
 
 Daily Umami analytics snapshot for Jam Tracks Hub.
 
-Last updated: pending setup
+![Umami analytics dashboard](../assets/analytics/umami-dashboard.png)
+
+Last updated: Jul 26, 2026, 10:15 AM
 <!-- UMAMI_ANALYTICS_END -->
 
 ## Tool Preview
