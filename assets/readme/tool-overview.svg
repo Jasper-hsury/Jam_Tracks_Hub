@@ -1,0 +1,51 @@
+<svg width="1200" height="760" viewBox="0 0 1200 760" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="760" rx="34" fill="#f8f2e9"/>
+  <rect x="24" y="24" width="1152" height="712" rx="28" fill="#fffdf8" stroke="#dfd1c0" stroke-width="2"/>
+
+  <text x="72" y="96" fill="#94633f" font-family="Georgia, serif" font-size="52" font-weight="700">Jam Tracks Hub</text>
+  <text x="72" y="134" fill="#2a837c" font-family="Arial, sans-serif" font-size="20" font-weight="700" letter-spacing="2">BACKING TRACKS · FRETBOARD TOOLS · SONGWRITING</text>
+  <text x="72" y="176" fill="#504842" font-family="Arial, sans-serif" font-size="22" font-weight="600">A practical workspace for practice tracks, harmony study, guitar shapes,</text>
+  <text x="72" y="206" fill="#504842" font-family="Arial, sans-serif" font-size="22" font-weight="600">and custom progression exports.</text>
+
+  <g transform="translate(72 248)">
+    <rect width="320" height="190" rx="18" fill="#f2eadf" stroke="#dfd1c0" stroke-width="2"/>
+    <text x="28" y="62" fill="#2d2723" font-family="Arial, sans-serif" font-size="29" font-weight="800">Backing Track</text>
+    <text x="28" y="100" fill="#6e6258" font-family="Arial, sans-serif" font-size="18" font-weight="600">Filter by key, sort releases,</text>
+    <text x="28" y="126" fill="#6e6258" font-family="Arial, sans-serif" font-size="18" font-weight="600">and download slide decks.</text>
+  </g>
+
+  <g transform="translate(440 248)">
+    <rect width="320" height="190" rx="18" fill="#f2eadf" stroke="#dfd1c0" stroke-width="2"/>
+    <text x="28" y="62" fill="#2d2723" font-family="Arial, sans-serif" font-size="29" font-weight="800">Chord Dictionary</text>
+    <text x="28" y="100" fill="#6e6258" font-family="Arial, sans-serif" font-size="18" font-weight="600">Search voicings, filter shapes,</text>
+    <text x="28" y="126" fill="#6e6258" font-family="Arial, sans-serif" font-size="18" font-weight="600">and compare fret positions.</text>
+  </g>
+
+  <g transform="translate(808 248)">
+    <rect width="320" height="190" rx="18" fill="#f2eadf" stroke="#dfd1c0" stroke-width="2"/>
+    <text x="28" y="62" fill="#2d2723" font-family="Arial, sans-serif" font-size="29" font-weight="800">Scale Explorer</text>
+    <text x="28" y="100" fill="#6e6258" font-family="Arial, sans-serif" font-size="18" font-weight="600">Map guitar scale notes</text>
+    <text x="28" y="126" fill="#6e6258" font-family="Arial, sans-serif" font-size="18" font-weight="600">and download PNG diagrams.</text>
+  </g>
+
+  <g transform="translate(72 486)">
+    <rect width="320" height="190" rx="18" fill="#f2eadf" stroke="#dfd1c0" stroke-width="2"/>
+    <text x="28" y="62" fill="#2d2723" font-family="Arial, sans-serif" font-size="29" font-weight="800">Key Finder</text>
+    <text x="28" y="100" fill="#6e6258" font-family="Arial, sans-serif" font-size="18" font-weight="600">Analyze YouTube or audio</text>
+    <text x="28" y="126" fill="#6e6258" font-family="Arial, sans-serif" font-size="18" font-weight="600">with the FastAPI helper.</text>
+  </g>
+
+  <g transform="translate(440 486)">
+    <rect width="320" height="190" rx="18" fill="#f2eadf" stroke="#dfd1c0" stroke-width="2"/>
+    <text x="28" y="62" fill="#2d2723" font-family="Arial, sans-serif" font-size="29" font-weight="800">Chord Progression</text>
+    <text x="28" y="100" fill="#6e6258" font-family="Arial, sans-serif" font-size="18" font-weight="600">Explore common patterns</text>
+    <text x="28" y="126" fill="#6e6258" font-family="Arial, sans-serif" font-size="18" font-weight="600">in major and minor keys.</text>
+  </g>
+
+  <g transform="translate(808 486)">
+    <rect width="320" height="190" rx="18" fill="#f2eadf" stroke="#dfd1c0" stroke-width="2"/>
+    <text x="28" y="62" fill="#2d2723" font-family="Arial, sans-serif" font-size="29" font-weight="800">Fretboard Trainer</text>
+    <text x="28" y="100" fill="#6e6258" font-family="Arial, sans-serif" font-size="18" font-weight="600">Practice note locations</text>
+    <text x="28" y="126" fill="#6e6258" font-family="Arial, sans-serif" font-size="18" font-weight="600">across the guitar neck.</text>
+  </g>
+</svg>

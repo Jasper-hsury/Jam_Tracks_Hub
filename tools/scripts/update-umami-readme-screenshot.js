@@ -2,9 +2,10 @@ const fs = require("fs");
 const path = require("path");
 
 const SHARE_URL = process.env.UMAMI_SHARE_URL;
-const README_PATH = process.env.README_PATH || "docs/README.md";
+const README_PATH = process.env.README_PATH || "README.md";
 const IMAGE_PATH = process.env.ANALYTICS_IMAGE_PATH || "assets/analytics/umami-dashboard.png";
-const IMAGE_MARKDOWN_PATH = process.env.ANALYTICS_IMAGE_MARKDOWN_PATH || "../assets/analytics/umami-dashboard.png";
+const IMAGE_MARKDOWN_PATH = process.env.ANALYTICS_IMAGE_MARKDOWN_PATH || "assets/analytics/umami-dashboard.png";
+const HISTORY_DIR = process.env.ANALYTICS_HISTORY_DIR || "assets/analytics/history";
 const UPDATED_AT = process.env.ANALYTICS_UPDATED_AT || new Date().toISOString();
 
 const START_MARKER = "<!-- UMAMI_ANALYTICS_START -->";
@@ -27,17 +28,33 @@ function formatUpdatedAt(value) {
   }).format(date);
 }
 
+function formatHistoryDate(value) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return value.replace(/[^a-z0-9-]/gi, "-").toLowerCase();
+  }
+
+  return new Intl.DateTimeFormat("en-CA", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    timeZone: process.env.REPORT_TIMEZONE || "Asia/Taipei"
+  }).format(date);
+}
+
 function buildReadmeBlock({ screenshotAvailable }) {
   const imageSection = screenshotAvailable
-    ? `![Umami analytics dashboard](${IMAGE_MARKDOWN_PATH})`
+    ? `<p align="center">
+  <img src="${IMAGE_MARKDOWN_PATH}" alt="Umami analytics dashboard" width="100%" />
+</p>`
     : "_Analytics screenshot will appear here after `UMAMI_SHARE_URL` is configured and the workflow runs._";
 
   return `${START_MARKER}
+${imageSection}
+
 ## Website Analytics
 
 Daily Umami analytics snapshot for Jam Tracks Hub.
-
-${imageSection}
 
 Last updated: ${formatUpdatedAt(UPDATED_AT)}
 ${END_MARKER}`;
@@ -57,7 +74,7 @@ function updateReadme({ screenshotAvailable }) {
     return;
   }
 
-  const insertAfter = "\n## What The Site Includes";
+  const insertAfter = "\n## Tool Preview";
   if (readme.includes(insertAfter)) {
     fs.writeFileSync(README_PATH, readme.replace(insertAfter, `\n${block}\n${insertAfter}`));
     return;
@@ -105,9 +122,14 @@ async function captureScreenshot() {
     fullPage: true
   });
 
+  const historyPath = path.join(HISTORY_DIR, `${formatHistoryDate(UPDATED_AT)}.png`);
+  ensureDir(historyPath);
+  fs.copyFileSync(IMAGE_PATH, historyPath);
+
   await browser.close();
   updateReadme({ screenshotAvailable: true });
   console.log(`Saved Umami screenshot to ${IMAGE_PATH}`);
+  console.log(`Saved Umami history screenshot to ${historyPath}`);
 }
 
 captureScreenshot().catch((error) => {
