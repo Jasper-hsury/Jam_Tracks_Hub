@@ -2,6 +2,8 @@
 
 This workflow creates a weekly GitHub issue with a simple Jam Tracks Hub performance report from Umami.
 
+Important: the website tracking script does not require a paid Umami API key. The API key is only required if you want GitHub Actions to automatically fetch Umami data and create report issues.
+
 It reports:
 
 - Pageviews
@@ -24,6 +26,8 @@ The workflow runs:
 - Every Monday at 06:00 Asia/Taipei time
 - Manually from GitHub Actions using `Run workflow`
 
+If API credentials are not configured, the scheduled workflow exits cleanly with a notice instead of failing.
+
 ## Required Secrets
 
 Set these in GitHub:
@@ -38,13 +42,23 @@ Always required:
 UMAMI_WEBSITE_ID
 ```
 
+For the live site, the tracking script is already installed in the page `<head>` tags:
+
+```html
+<script defer src="https://cloud.umami.is/script.js" data-website-id="c8dfc471-6512-4344-8e1b-25566e1a93cd"></script>
+```
+
+This is enough for normal dashboard analytics on Umami Cloud.
+
 ## Umami Cloud Setup
 
-For Umami Cloud, add:
+For automated GitHub issue reports on Umami Cloud, add:
 
 ```text
 UMAMI_API_KEY
 ```
+
+Umami Cloud API keys require a Pro plan. If the account is on the free plan, the website still tracks visits in the Umami dashboard, but this automated GitHub report will skip itself until API credentials are added.
 
 Optional override:
 

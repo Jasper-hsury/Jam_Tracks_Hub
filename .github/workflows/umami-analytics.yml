@@ -36,10 +36,22 @@ jobs:
         with:
           node-version: 20
 
+      - name: Check Umami API access
+        id: umami-access
+        run: |
+          if [ -n "$UMAMI_WEBSITE_ID" ] && { [ -n "$UMAMI_API_KEY" ] || { [ -n "$UMAMI_BASE_URL" ] && [ -n "$UMAMI_USERNAME" ] && [ -n "$UMAMI_PASSWORD" ]; }; }; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Skipping Umami report. Website tracking still works, but automated reports need an Umami Cloud Pro API key or self-hosted Umami credentials."
+          fi
+
       - name: Generate Umami analytics report
+        if: steps.umami-access.outputs.enabled == 'true'
         run: node tools/scripts/umami-analytics-report.js
 
       - name: Upload analytics report artifact
+        if: steps.umami-access.outputs.enabled == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: umami-analytics-report
@@ -48,6 +60,7 @@ jobs:
             analytics-report-title.txt
 
       - name: Create report issue
+        if: steps.umami-access.outputs.enabled == 'true'
         uses: actions/github-script@v7
         with:
           script: |
