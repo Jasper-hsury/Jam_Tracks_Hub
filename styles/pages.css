@@ -1785,9 +1785,113 @@ body.is-shape-picker-open {
     margin-top: 22px;
 }
 
+.progression-writer-saved-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
+}
+
+.progression-writer-saved-heading .result-kicker {
+    margin-bottom: 6px;
+}
+
 .progression-writer-saved .section-title {
     margin-bottom: 0;
     font-size: 24px;
+}
+
+.progression-writer-saved-count {
+    color: var(--teal);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.progression-writer-saved-controls {
+    display: grid;
+    grid-template-columns: minmax(260px, 1fr) auto;
+    align-items: end;
+    gap: 14px;
+    padding: 14px;
+    background: var(--panel-background);
+    border: 1px solid var(--border-soft);
+    border-radius: 8px;
+    box-shadow: 0 14px 30px var(--shadow-color);
+}
+
+.progression-writer-saved-picker {
+    display: grid;
+    gap: 7px;
+    min-width: 0;
+    color: var(--text);
+    font-weight: 800;
+}
+
+.progression-writer-saved-picker span {
+    color: var(--teal);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.progression-writer-saved-picker select {
+    width: 100%;
+    min-height: 46px;
+    padding: 0 14px;
+    color: var(--text);
+    background: var(--subpanel-background);
+    border: 1px solid var(--border-soft);
+    border-radius: 8px;
+    font: inherit;
+    font-weight: 800;
+}
+
+.progression-writer-saved-actions,
+.progression-writer-saved-item-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.progression-writer-saved-actions .secondary-button,
+.progression-writer-saved-item-actions .secondary-button {
+    min-width: 0;
+    padding: 10px 14px;
+    font-size: 13px;
+    line-height: 1;
+}
+
+.progression-writer-saved-item-actions .secondary-button {
+    min-width: 78px;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 800;
+    text-align: center;
+}
+
+.progression-writer-saved-item-actions .saved-progression-delete {
+    color: var(--gold);
+    background: transparent;
+    border: 1px solid var(--gold);
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.progression-writer-saved-item-actions .saved-progression-delete:hover {
+    color: var(--secondary-hover-text);
+    background: var(--secondary-hover-background);
+    border-color: var(--hover-border);
+}
+
+.progression-writer-saved-item-actions .secondary-button span {
+    color: inherit;
+    font-size: inherit;
+    line-height: inherit;
 }
 
 .progression-writer-saved-list {
@@ -1798,7 +1902,7 @@ body.is-shape-picker-open {
 .progression-writer-saved-item {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    align-items: flex-start;
+    align-items: center;
     gap: 14px;
     padding: 12px 14px;
     background: var(--subpanel-background);
@@ -1806,7 +1910,12 @@ body.is-shape-picker-open {
     border-radius: 8px;
 }
 
-.progression-writer-saved-item div {
+.progression-writer-saved-item.is-active {
+    border-color: color-mix(in srgb, var(--teal) 55%, var(--border-soft));
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--teal) 28%, transparent), 0 14px 30px var(--shadow-color);
+}
+
+.progression-writer-saved-summary {
     display: grid;
     gap: 5px;
     min-width: 0;
@@ -2679,10 +2788,31 @@ html[data-theme="light"] .track-scroll-five-blade-rotor use {
 
     .progression-writer-entry-heading,
     .progression-writer-actions,
+    .progression-writer-saved-heading,
+    .progression-writer-saved-controls,
     .progression-writer-saved-item {
         grid-template-columns: 1fr;
         flex-direction: column;
         align-items: stretch;
+    }
+
+    .progression-writer-saved-heading {
+        align-items: flex-start;
+    }
+
+    .progression-writer-saved-count {
+        white-space: normal;
+    }
+
+    .progression-writer-saved-actions,
+    .progression-writer-saved-item-actions {
+        justify-content: flex-start;
+    }
+
+    .progression-writer-saved-actions .secondary-button,
+    .progression-writer-saved-item-actions .secondary-button,
+    .progression-writer-saved-item-actions .saved-progression-delete {
+        flex: 1 1 130px;
     }
 
     .progression-download-layout-control {

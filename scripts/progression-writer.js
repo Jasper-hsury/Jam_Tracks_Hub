@@ -4,6 +4,12 @@ document.addEventListener("DOMContentLoaded", function() {
     const form = document.getElementById("progressionWriterForm");
     const status = document.getElementById("progressionWriterStatus");
     const savedList = document.getElementById("writerSavedProgressions");
+    const savedPicker = document.getElementById("writerSavedProgressionPicker");
+    const savedCount = document.getElementById("writerSavedProgressionCount");
+    const loadSavedButton = document.getElementById("writerLoadProgressionButton");
+    const duplicateSavedButton = document.getElementById("writerDuplicateProgressionButton");
+    const clearWriterButton = document.getElementById("writerClearProgressionButton");
+    const exportJsonButton = document.getElementById("writerExportJsonButton");
     const songNameInput = document.getElementById("progressionSongName");
     const keyRootSelect = document.getElementById("progressionKeyRoot");
     const keyQualityToggle = document.getElementById("progressionKeyQualityToggle");
@@ -115,6 +121,7 @@ document.addEventListener("DOMContentLoaded", function() {
         rootString: "all"
     };
     let downloadActionTimer = null;
+    let activeSavedProgressionId = null;
 
     function escapeHtml(value) {
         return String(value || "")
@@ -216,6 +223,103 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function writeSavedProgressions(items) {
         window.localStorage.setItem(storageKey, JSON.stringify(items));
+    }
+
+    function createProgressionId() {
+        return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    }
+
+    function normalizeShapeIndex(value) {
+        const number = Number(value);
+        return Number.isInteger(number) && number >= 0 ? number : 0;
+    }
+
+    function normalizeChordItem(item) {
+        if (typeof item === "string") {
+            const symbol = normalizeChordSymbol(item) || item.trim();
+            return symbol ? { symbol, shapeIndex: 0 } : null;
+        }
+
+        if (!item || typeof item !== "object") {
+            return null;
+        }
+
+        const rawSymbol = item.symbol || item.chord || item.name || "";
+        const symbol = normalizeChordSymbol(rawSymbol) || String(rawSymbol).trim();
+        if (!symbol) {
+            return null;
+        }
+
+        return {
+            symbol,
+            shapeIndex: normalizeShapeIndex(item.shapeIndex)
+        };
+    }
+
+    function normalizeChordItems(items) {
+        return Array.isArray(items) ? items.map(normalizeChordItem).filter(Boolean) : [];
+    }
+
+    function inferSavedKeyParts(item) {
+        const fallbackRoot = keyRootSelect?.value || "A";
+        const fallbackQuality = keyQualityToggle?.checked ? "minor" : "major";
+
+        if (item?.keyRoot) {
+            return {
+                root: item.keyRoot,
+                quality: item.keyQuality === "minor" ? "minor" : "major"
+            };
+        }
+
+        const match = String(item?.key || "").trim().match(/^(.+?)\s+(major|minor)$/i);
+        if (match) {
+            return {
+                root: match[1],
+                quality: match[2].toLowerCase()
+            };
+        }
+
+        return {
+            root: fallbackRoot,
+            quality: fallbackQuality
+        };
+    }
+
+    function normalizeSavedRecord(item) {
+        if (!item || typeof item !== "object") {
+            return null;
+        }
+
+        const keyParts = inferSavedKeyParts(item);
+        const mode = item.mode === "sections" ? "sections" : "single";
+        const sourceSections = item.sections || {};
+        const sections = {
+            single: normalizeChordItems(sourceSections.single || item.chords),
+            verse: normalizeChordItems(sourceSections.verse || item.verse),
+            chorus: normalizeChordItems(sourceSections.chorus || item.chorus)
+        };
+
+        return {
+            id: String(item.id || createProgressionId()),
+            mode,
+            createdAt: item.createdAt || new Date().toISOString(),
+            updatedAt: item.updatedAt || item.createdAt || new Date().toISOString(),
+            songName: String(item.songName || ""),
+            keyRoot: keyParts.root,
+            keyQuality: keyParts.quality,
+            key: `${keyParts.root} ${keyParts.quality === "minor" ? "Minor" : "Major"}`,
+            bpm: String(item.bpm || ""),
+            separateDownload: Boolean(item.separateDownload),
+            sections
+        };
+    }
+
+    function getSavedProgressions() {
+        return readSavedProgressions().map(normalizeSavedRecord).filter(Boolean);
+    }
+
+    function findSavedProgression(id) {
+        return getSavedProgressions().find(item => item.id === id) || null;
     }
 
     function setStatus(message) {
@@ -1349,13 +1453,16 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             input.value = normalized;
-            chords.push(normalized);
+            chords.push({
+                symbol: normalized,
+                shapeIndex: normalizeShapeIndex(input.closest(".progression-writer-chord-field")?.dataset.shapeIndex)
+            });
         });
 
         return { chords, invalid };
     }
 
-    function addChordField(sectionName) {
+    function addChordField(sectionName, options = {}) {
         const list = form.querySelector(`[data-chord-list="${sectionName}"]`);
         if (!list) {
             return;
@@ -1370,7 +1477,17 @@ document.addEventListener("DOMContentLoaded", function() {
             <div class="progression-writer-shape-preview" data-shape-preview></div>
         `;
         list.appendChild(field);
-        field.querySelector("input")?.focus();
+        const input = field.querySelector("input");
+        const value = options.value || "";
+        const shapeIndex = normalizeShapeIndex(options.shapeIndex);
+        if (input && value) {
+            input.value = value;
+            field.dataset.shapeIndex = String(shapeIndex);
+            renderFieldShape(input, shapeIndex);
+        }
+        if (options.focus !== false) {
+            input?.focus();
+        }
     }
 
     function renumberChordFields(list) {
@@ -1415,12 +1532,172 @@ document.addEventListener("DOMContentLoaded", function() {
         setStatus("Chord deleted.");
     }
 
-    function buildProgressionRecord() {
+    function clearChordField(field) {
+        const input = field.querySelector("input");
+        const preview = field.querySelector("[data-shape-preview]");
+        if (input) {
+            input.value = "";
+        }
+        field.removeAttribute("data-shape-index");
+        if (preview) {
+            preview.innerHTML = "";
+        }
+    }
+
+    function ensureChordFieldCount(sectionName, count) {
+        const list = form.querySelector(`[data-chord-list="${sectionName}"]`);
+        if (!list) {
+            return;
+        }
+
+        let fields = Array.from(list.querySelectorAll(".progression-writer-chord-field"));
+        while (fields.length < count) {
+            addChordField(sectionName, { focus: false });
+            fields = Array.from(list.querySelectorAll(".progression-writer-chord-field"));
+        }
+
+        while (fields.length > count && fields.length > 1) {
+            fields[fields.length - 1].remove();
+            fields = Array.from(list.querySelectorAll(".progression-writer-chord-field"));
+        }
+
+        renumberChordFields(list);
+    }
+
+    function applySectionChords(sectionName, chords, minimumCount = 4) {
+        const normalizedChords = normalizeChordItems(chords);
+        const list = form.querySelector(`[data-chord-list="${sectionName}"]`);
+        if (!list) {
+            return;
+        }
+
+        ensureChordFieldCount(sectionName, Math.max(minimumCount, normalizedChords.length));
+        Array.from(list.querySelectorAll(".progression-writer-chord-field")).forEach(function(field, index) {
+            const input = field.querySelector("input");
+            const chord = normalizedChords[index];
+            if (!input) {
+                return;
+            }
+
+            if (!chord) {
+                clearChordField(field);
+                return;
+            }
+
+            input.value = chord.symbol;
+            field.dataset.shapeIndex = String(normalizeShapeIndex(chord.shapeIndex));
+            renderFieldShape(input, normalizeShapeIndex(chord.shapeIndex));
+        });
+    }
+
+    function summarizeChordItems(items) {
+        const chords = normalizeChordItems(items);
+        return chords.length ? chords.map(item => item.symbol).join(" - ") : "";
+    }
+
+    function progressionRecordTitle(item) {
+        return item.mode === "sections" ? "With Verse & Chorus" : "Chord Progression";
+    }
+
+    function applyProgressionRecord(record) {
+        const item = normalizeSavedRecord(record);
+        if (!item) {
+            setStatus("Could not load that saved progression.");
+            return;
+        }
+
+        activeSavedProgressionId = item.id;
+        structureToggle.checked = item.mode === "sections";
+        if (songNameInput) {
+            songNameInput.value = item.songName;
+        }
+        if (keyRootSelect) {
+            keyRootSelect.value = item.keyRoot;
+        }
+        if (keyQualityToggle) {
+            keyQualityToggle.checked = item.keyQuality === "minor";
+        }
+        if (bpmInput) {
+            bpmInput.value = item.bpm;
+        }
+        if (separateDownloadToggle) {
+            separateDownloadToggle.checked = item.separateDownload;
+        }
+
+        syncMode();
+        applySectionChords("single", item.sections.single);
+        applySectionChords("verse", item.sections.verse);
+        applySectionChords("chorus", item.sections.chorus);
+        renderSavedProgressions();
+        setStatus("Saved progression loaded.");
+    }
+
+    function clearCurrentProgression() {
+        activeSavedProgressionId = null;
+        if (songNameInput) {
+            songNameInput.value = "";
+        }
+        if (bpmInput) {
+            bpmInput.value = "";
+        }
+        if (separateDownloadToggle) {
+            separateDownloadToggle.checked = false;
+        }
+        applySectionChords("single", []);
+        applySectionChords("verse", []);
+        applySectionChords("chorus", []);
+        renderSavedProgressions();
+        setStatus("Progression cleared.");
+    }
+
+    function duplicateProgression(record) {
+        const source = normalizeSavedRecord(record);
+        if (!source) {
+            setStatus("Pick or save a progression before duplicating.");
+            return;
+        }
+
+        const now = new Date().toISOString();
+        const copy = {
+            ...source,
+            id: createProgressionId(),
+            createdAt: now,
+            updatedAt: now,
+            songName: source.songName ? `${source.songName} Copy` : ""
+        };
+        const saved = getSavedProgressions();
+        saved.unshift(copy);
+        writeSavedProgressions(saved.slice(0, 12));
+        applyProgressionRecord(copy);
+        setStatus("Progression duplicated.");
+    }
+
+    function exportProgressionJson(record) {
+        const item = normalizeSavedRecord(record);
+        if (!item) {
+            setStatus("Add at least one chord before exporting.");
+            return;
+        }
+
+        const filenameBase = item.songName || item.key || "custom-progression";
+        const blob = new Blob([JSON.stringify(item, null, 2)], { type: "application/json;charset=utf-8" });
+        downloadBlob(blob, `${fileSafeName(filenameBase)}-progression.json`);
+    }
+
+    function selectedSavedRecord() {
+        return findSavedProgression(savedPicker?.value || activeSavedProgressionId);
+    }
+
+    function buildProgressionRecord(existingRecord) {
         const mode = getMode();
-        const createdAt = new Date().toISOString();
+        const now = new Date().toISOString();
+        const existing = existingRecord ? normalizeSavedRecord(existingRecord) : null;
         const songName = songNameInput?.value.trim() || "";
+        const keyRoot = keyRootSelect?.value || "A";
+        const keyQuality = keyQualityToggle?.checked ? "minor" : "major";
         const key = selectedKeyLabel();
         const bpm = bpmInput?.value.trim() || "";
+        const separateDownload = Boolean(separateDownloadToggle?.checked);
 
         if (mode === "sections") {
             const verseResult = readSectionChords("verse");
@@ -1434,14 +1711,21 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             return {
-                id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+                id: existing?.id || createProgressionId(),
                 mode,
-                createdAt,
+                createdAt: existing?.createdAt || now,
+                updatedAt: now,
                 songName,
+                keyRoot,
+                keyQuality,
                 key,
                 bpm,
-                verse: verseResult.chords,
-                chorus: chorusResult.chords
+                separateDownload,
+                sections: {
+                    single: existing?.sections.single || [],
+                    verse: verseResult.chords,
+                    chorus: chorusResult.chords
+                }
             };
         }
 
@@ -1454,29 +1738,38 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         return {
-            id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+            id: existing?.id || createProgressionId(),
             mode,
-            createdAt,
+            createdAt: existing?.createdAt || now,
+            updatedAt: now,
             songName,
+            keyRoot,
+            keyQuality,
             key,
             bpm,
-            chords: singleResult.chords
+            separateDownload,
+            sections: {
+                single: singleResult.chords,
+                verse: existing?.sections.verse || [],
+                chorus: existing?.sections.chorus || []
+            }
         };
     }
 
     function formatSavedProgression(item) {
+        const record = normalizeSavedRecord(item);
         const meta = [
-            item.songName ? escapeHtml(item.songName) : "",
-            item.key ? escapeHtml(item.key) : "",
-            item.bpm ? `${escapeHtml(item.bpm)} BPM` : ""
+            record.songName ? escapeHtml(record.songName) : "",
+            record.key ? escapeHtml(record.key) : "",
+            record.bpm ? `${escapeHtml(record.bpm)} BPM` : ""
         ].filter(Boolean).join(" | ");
         const metaLine = meta ? `<span>${meta}</span>` : "";
 
-        if (item.mode === "sections") {
-            const verse = item.verse?.length ? item.verse.join(" - ") : "No verse chords";
-            const chorus = item.chorus?.length ? item.chorus.join(" - ") : "No chorus chords";
+        if (record.mode === "sections") {
+            const verse = summarizeChordItems(record.sections.verse) || "No verse chords";
+            const chorus = summarizeChordItems(record.sections.chorus) || "No chorus chords";
             return `
-                <strong>With Verse &amp; Chorus</strong>
+                <strong>${progressionRecordTitle(record)}</strong>
                 ${metaLine}
                 <span>Verse: ${escapeHtml(verse)}</span>
                 <span>Chorus: ${escapeHtml(chorus)}</span>
@@ -1484,14 +1777,44 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         return `
-            <strong>Chord Progression</strong>
+            <strong>${progressionRecordTitle(record)}</strong>
             ${metaLine}
-            <span>${escapeHtml((item.chords || []).join(" - "))}</span>
+            <span>${escapeHtml(summarizeChordItems(record.sections.single) || "No chords")}</span>
         `;
     }
 
     function renderSavedProgressions() {
-        const saved = readSavedProgressions();
+        const saved = getSavedProgressions();
+        const activeExists = saved.some(item => item.id === activeSavedProgressionId);
+        if (!activeExists) {
+            activeSavedProgressionId = null;
+        }
+
+        if (savedCount) {
+            savedCount.textContent = saved.length
+                ? `${saved.length} saved ${saved.length === 1 ? "progression" : "progressions"}`
+                : "No saved progressions";
+        }
+
+        if (savedPicker) {
+            savedPicker.disabled = !saved.length;
+            savedPicker.innerHTML = saved.length
+                ? saved.map(item => {
+                    const label = [
+                        item.songName || progressionRecordTitle(item),
+                        item.key,
+                        item.bpm ? `${item.bpm} BPM` : ""
+                    ].filter(Boolean).join(" | ");
+                    return `<option value="${escapeHtml(item.id)}">${escapeHtml(label)}</option>`;
+                }).join("")
+                : '<option value="">No saved progressions yet</option>';
+            savedPicker.value = activeSavedProgressionId || saved[0]?.id || "";
+        }
+
+        if (loadSavedButton) {
+            loadSavedButton.disabled = !saved.length;
+        }
+
         if (!saved.length) {
             savedList.innerHTML = '<p class="saved-progression-empty">No saved progressions yet.</p>';
             return;
@@ -1499,11 +1822,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
         savedList.innerHTML = saved.map(function(item) {
             return `
-                <article class="progression-writer-saved-item">
-                    <div>
+                <article class="progression-writer-saved-item${item.id === activeSavedProgressionId ? " is-active" : ""}">
+                    <div class="progression-writer-saved-summary">
                         ${formatSavedProgression(item)}
                     </div>
-                    <button class="saved-progression-delete" type="button" data-delete-progression="${escapeHtml(item.id)}">Delete</button>
+                    <div class="progression-writer-saved-item-actions">
+                        <button class="secondary-button" type="button" data-load-progression="${escapeHtml(item.id)}"><span>Load</span></button>
+                        <button class="secondary-button" type="button" data-duplicate-progression="${escapeHtml(item.id)}"><span>Duplicate</span></button>
+                        <button class="secondary-button" type="button" data-export-progression="${escapeHtml(item.id)}"><span>JSON</span></button>
+                        <button class="secondary-button saved-progression-delete" type="button" data-delete-progression="${escapeHtml(item.id)}"><span>Delete</span></button>
+                    </div>
                 </article>
             `;
         }).join("");
@@ -1604,7 +1932,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
     form.addEventListener("submit", function(event) {
         event.preventDefault();
-        const record = buildProgressionRecord();
+        const saved = getSavedProgressions();
+        const existingRecord = activeSavedProgressionId
+            ? saved.find(item => item.id === activeSavedProgressionId)
+            : null;
+        const record = buildProgressionRecord(existingRecord);
         if (!record) {
             setStatus("Add at least one chord before saving.");
             return;
@@ -1614,20 +1946,111 @@ document.addEventListener("DOMContentLoaded", function() {
             return;
         }
 
-        const saved = readSavedProgressions();
-        saved.unshift(record);
+        const existingIndex = saved.findIndex(item => item.id === record.id);
+        if (existingIndex >= 0) {
+            saved[existingIndex] = record;
+        } else {
+            saved.unshift(record);
+        }
+        activeSavedProgressionId = record.id;
         writeSavedProgressions(saved.slice(0, 12));
         renderSavedProgressions();
-        setStatus("Progression saved.");
+        setStatus(existingIndex >= 0 ? "Saved progression updated." : "Progression saved.");
+    });
+
+    savedPicker?.addEventListener("change", function() {
+        const record = findSavedProgression(savedPicker.value);
+        if (record) {
+            applyProgressionRecord(record);
+        }
+    });
+
+    loadSavedButton?.addEventListener("click", function() {
+        const record = selectedSavedRecord();
+        if (!record) {
+            setStatus("Pick a saved progression first.");
+            return;
+        }
+        applyProgressionRecord(record);
+    });
+
+    duplicateSavedButton?.addEventListener("click", function() {
+        const selected = selectedSavedRecord();
+        if (selected) {
+            duplicateProgression(selected);
+            return;
+        }
+
+        const record = buildProgressionRecord();
+        if (!record) {
+            setStatus("Add at least one chord before duplicating.");
+            return;
+        }
+        if (record.error) {
+            setStatus(record.error);
+            return;
+        }
+        duplicateProgression(record);
+    });
+
+    clearWriterButton?.addEventListener("click", clearCurrentProgression);
+
+    exportJsonButton?.addEventListener("click", function() {
+        const existingRecord = activeSavedProgressionId
+            ? findSavedProgression(activeSavedProgressionId)
+            : null;
+        const record = buildProgressionRecord(existingRecord);
+        if (!record) {
+            setStatus("Add at least one chord before exporting.");
+            return;
+        }
+        if (record.error) {
+            setStatus(record.error);
+            return;
+        }
+        exportProgressionJson(record);
+        setStatus("Progression JSON exported.");
     });
 
     savedList.addEventListener("click", function(event) {
+        const loadButton = event.target.closest("[data-load-progression]");
+        if (loadButton) {
+            const record = findSavedProgression(loadButton.dataset.loadProgression);
+            if (record) {
+                applyProgressionRecord(record);
+            }
+            return;
+        }
+
+        const duplicateButton = event.target.closest("[data-duplicate-progression]");
+        if (duplicateButton) {
+            const record = findSavedProgression(duplicateButton.dataset.duplicateProgression);
+            if (record) {
+                duplicateProgression(record);
+            }
+            return;
+        }
+
+        const exportButton = event.target.closest("[data-export-progression]");
+        if (exportButton) {
+            const record = findSavedProgression(exportButton.dataset.exportProgression);
+            if (record) {
+                exportProgressionJson(record);
+                setStatus("Progression JSON exported.");
+            }
+            return;
+        }
+
         const deleteButton = event.target.closest("[data-delete-progression]");
         if (!deleteButton) {
             return;
         }
 
-        const nextSaved = readSavedProgressions().filter(item => item.id !== deleteButton.dataset.deleteProgression);
+        const deleteId = deleteButton.dataset.deleteProgression;
+        const nextSaved = getSavedProgressions().filter(item => item.id !== deleteId);
+        if (activeSavedProgressionId === deleteId) {
+            activeSavedProgressionId = null;
+        }
         writeSavedProgressions(nextSaved);
         renderSavedProgressions();
         setStatus("Saved progression deleted.");
