@@ -1,0 +1,63 @@
+name: Umami Analytics Report
+
+on:
+  workflow_dispatch:
+    inputs:
+      days:
+        description: "Number of days to include in the report"
+        required: false
+        default: "7"
+  schedule:
+    - cron: "0 22 * * 0"
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  create-report:
+    runs-on: ubuntu-latest
+    env:
+      REPORT_DAYS: ${{ github.event.inputs.days || '7' }}
+      REPORT_TIMEZONE: Asia/Taipei
+      UMAMI_WEBSITE_ID: ${{ secrets.UMAMI_WEBSITE_ID }}
+      UMAMI_API_KEY: ${{ secrets.UMAMI_API_KEY }}
+      UMAMI_API_ENDPOINT: ${{ secrets.UMAMI_API_ENDPOINT }}
+      UMAMI_BASE_URL: ${{ secrets.UMAMI_BASE_URL }}
+      UMAMI_USERNAME: ${{ secrets.UMAMI_USERNAME }}
+      UMAMI_PASSWORD: ${{ secrets.UMAMI_PASSWORD }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Generate Umami analytics report
+        run: node tools/scripts/umami-analytics-report.js
+
+      - name: Upload analytics report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: umami-analytics-report
+          path: |
+            analytics-report.md
+            analytics-report-title.txt
+
+      - name: Create report issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require("fs");
+            const title = fs.readFileSync("analytics-report-title.txt", "utf8").trim();
+            const body = fs.readFileSync("analytics-report.md", "utf8");
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title,
+              body
+            });
