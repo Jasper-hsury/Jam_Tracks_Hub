@@ -30,8 +30,6 @@ Jam Tracks Hub combines original practice tracks with practical tools for unders
 </p>
 
 <!-- UMAMI_ANALYTICS_START -->
-_Analytics screenshot will appear here after `UMAMI_SHARE_URL` is configured and the workflow runs._
-
 ## Website Analytics
 
 Daily Umami analytics snapshot for Jam Tracks Hub.
@@ -43,17 +41,17 @@ Last updated: Jul 26, 2026, 10:15 AM
 
 ## Tool Preview
 
-| Page | What it does |
-| --- | --- |
-| `index.html` | Homepage with the site introduction, quick navigation panels, and contact section. |
-| `tracks.html` | Backing track library with multi-key filtering, newest/oldest sorting, and direct slide downloads. |
-| `chord-dictionary.html` | Searchable guitar chord dictionary with multiple voicings and shape filters. |
-| `scale.html` | Scale explorer for guitar fretboard diagrams and downloadable scale images. |
-| `key-finder.html` | YouTube/audio key finder powered by the local or deployed API. |
-| `chord-progressions.html` | Chord progression explorer with major/minor key selection and common progression groups. |
+| Page                      | What it does                                                                                                                        |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `index.html`              | Homepage with the site introduction, quick navigation panels, and contact section.                                                  |
+| `tracks.html`             | Backing track library with multi-key filtering, newest/oldest sorting, and direct slide downloads.                                  |
+| `chord-dictionary.html`   | Searchable guitar chord dictionary with multiple voicings and shape filters.                                                        |
+| `scale.html`              | Scale explorer for guitar fretboard diagrams and downloadable scale images.                                                         |
+| `key-finder.html`         | YouTube/audio key finder powered by the local or deployed API.                                                                      |
+| `chord-progressions.html` | Chord progression explorer with major/minor key selection and common progression groups.                                            |
 | `progression-writer.html` | Custom progression writer with chord inputs, voicing selection, save/download image output, and separated progression/shape export. |
-| `fretboard-trainer.html` | Guitar fretboard practice tool. |
-| `privacy-policy.html` | Privacy policy. |
+| `fretboard-trainer.html`  | Guitar fretboard practice tool.                                                                                                     |
+| `privacy-policy.html`     | Privacy policy.                                                                                                                     |
 
 ## Interface Gallery
 
@@ -103,7 +101,7 @@ C major progression example.
   <img src="../assets/readme/progression-writer-preview.png" alt="Progression Writer page preview" width="100%" />
 </p>
 
-下載後的範例圖片。
+Image sample
 
 <p align="center">
   <img src="../assets/readme/progression-writer-download-example.png" alt="Downloaded progression diagram example" width="100%" />
@@ -148,19 +146,19 @@ Jasper-music-main/
 
 Key files:
 
-| File | Purpose |
-| --- | --- |
-| `styles/base.css` | Layout foundations, navigation, global utilities. |
-| `styles/components.css` | Reusable UI components. |
-| `styles/pages.css` | Page-specific sections and tool layouts. |
-| `styles/themes.css` | Light/dark theme variables and theme overrides. |
-| `styles/chord-dictionary.css` | Chord diagram and chord dictionary-specific styling. |
-| `scripts/site.js` | Shared navigation, theme switch, and site-level behavior. |
-| `scripts/theme-init.js` | Early theme loading before page paint. |
-| `scripts/tracks.js` | Track filtering, sorting, and download behavior. |
-| `scripts/chords.js` | Chord progression explorer logic. |
-| `scripts/progression-writer.js` | Custom progression writer and export logic. |
-| `data/tracks.json` | Backing track data source. |
+| File                            | Purpose                                                   |
+| ------------------------------- | --------------------------------------------------------- |
+| `styles/base.css`               | Layout foundations, navigation, global utilities.         |
+| `styles/components.css`         | Reusable UI components.                                   |
+| `styles/pages.css`              | Page-specific sections and tool layouts.                  |
+| `styles/themes.css`             | Light/dark theme variables and theme overrides.           |
+| `styles/chord-dictionary.css`   | Chord diagram and chord dictionary-specific styling.      |
+| `scripts/site.js`               | Shared navigation, theme switch, and site-level behavior. |
+| `scripts/theme-init.js`         | Early theme loading before page paint.                    |
+| `scripts/tracks.js`             | Track filtering, sorting, and download behavior.          |
+| `scripts/chords.js`             | Chord progression explorer logic.                         |
+| `scripts/progression-writer.js` | Custom progression writer and export logic.               |
+| `data/tracks.json`              | Backing track data source.                                |
 
 ## Local Development
 
@@ -243,11 +241,11 @@ Example track object:
 
 ## Automation
 
-| Workflow | Purpose |
-| --- | --- |
-| `.github/workflows/ci.yml` | Runs JavaScript syntax checks and Cloudflare static build checks. |
-| `.github/workflows/umami-analytics.yml` | Creates analytics issue reports when Umami API access is configured. |
-| `.github/workflows/umami-readme-screenshot.yml` | Captures the public Umami dashboard and updates this README daily. |
+| Workflow                                        | Purpose                                                              |
+| ----------------------------------------------- | -------------------------------------------------------------------- |
+| `.github/workflows/ci.yml`                      | Runs JavaScript syntax checks and Cloudflare static build checks.    |
+| `.github/workflows/umami-analytics.yml`         | Creates analytics issue reports when Umami API access is configured. |
+| `.github/workflows/umami-readme-screenshot.yml` | Captures the public Umami dashboard and updates this README daily.   |
 
 Analytics screenshots:
 
@@ -261,6 +259,7 @@ More details:
 ```text
 docs/UMAMI_ANALYTICS_ACTION.md
 docs/GITHUB_WORKFLOW.md
+docs/SUBSCRIBE_SETUP.md
 ```
 
 ## Roadmap

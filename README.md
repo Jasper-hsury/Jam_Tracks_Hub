@@ -30,13 +30,13 @@ Jam Tracks Hub combines original practice tracks with practical tools for unders
 </p>
 
 <!-- UMAMI_ANALYTICS_START -->
-_Analytics screenshot will appear here after `UMAMI_SHARE_URL` is configured and the workflow runs._
-
 ## Website Analytics
 
 Daily Umami analytics snapshot for Jam Tracks Hub.
 
 Last updated: pending setup
+
+_Analytics screenshot will appear here after `UMAMI_SHARE_URL` is configured and the workflow runs._
 <!-- UMAMI_ANALYTICS_END -->
 
 ## Tool Preview
@@ -101,7 +101,7 @@ C major progression example.
   <img src="assets/readme/progression-writer-preview.png" alt="Progression Writer page preview" width="100%" />
 </p>
 
-下載後的範例圖片。
+Image sample
 
 <p align="center">
   <img src="assets/readme/progression-writer-download-example.png" alt="Downloaded progression diagram example" width="100%" />
@@ -259,6 +259,7 @@ More details:
 ```text
 docs/UMAMI_ANALYTICS_ACTION.md
 docs/GITHUB_WORKFLOW.md
+docs/SUBSCRIBE_SETUP.md
 ```
 
 ## Roadmap

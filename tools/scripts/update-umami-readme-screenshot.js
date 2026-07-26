@@ -50,13 +50,13 @@ function buildReadmeBlock({ screenshotAvailable }) {
     : "_Analytics screenshot will appear here after `UMAMI_SHARE_URL` is configured and the workflow runs._";
 
   return `${START_MARKER}
-${imageSection}
-
 ## Website Analytics
 
 Daily Umami analytics snapshot for Jam Tracks Hub.
 
 Last updated: ${formatUpdatedAt(UPDATED_AT)}
+
+${imageSection}
 ${END_MARKER}`;
 }
 
