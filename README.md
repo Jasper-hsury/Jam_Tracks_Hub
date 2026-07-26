@@ -20,13 +20,13 @@
 </div>
 
 <p align="center">
-  <img src="../assets/readme/home-preview.png" alt="Jam Tracks Hub homepage preview" width="100%" />
+  <img src="assets/readme/home-preview.png" alt="Jam Tracks Hub homepage preview" width="100%" />
 </p>
 
 Jam Tracks Hub combines original practice tracks with practical tools for understanding harmony, mapping guitar shapes, finding keys, and exporting custom chord progression diagrams. The goal is simple: less menu hunting, more focused practice and songwriting.
 
 <p align="center">
-  <img src="../assets/readme/tool-overview.svg" alt="Jam Tracks Hub tool overview" width="100%" />
+  <img src="assets/readme/tool-overview.svg" alt="Jam Tracks Hub tool overview" width="100%" />
 </p>
 
 <!-- UMAMI_ANALYTICS_START -->
@@ -36,9 +36,7 @@ _Analytics screenshot will appear here after `UMAMI_SHARE_URL` is configured and
 
 Daily Umami analytics snapshot for Jam Tracks Hub.
 
-![Umami analytics dashboard](../assets/analytics/umami-dashboard.png)
-
-Last updated: Jul 26, 2026, 10:15 AM
+Last updated: pending setup
 <!-- UMAMI_ANALYTICS_END -->
 
 ## Tool Preview
@@ -60,33 +58,33 @@ Last updated: Jul 26, 2026, 10:15 AM
 ### Backing Track
 
 <p align="center">
-  <img src="../assets/readme/backing-track-preview.png" alt="Backing Track page preview" width="100%" />
+  <img src="assets/readme/backing-track-preview.png" alt="Backing Track page preview" width="100%" />
 </p>
 
 ### Chord Dictionary
 
 <p align="center">
-  <img src="../assets/readme/chord-dictionary-overview.png" alt="Chord Dictionary overview preview" width="100%" />
+  <img src="assets/readme/chord-dictionary-overview.png" alt="Chord Dictionary overview preview" width="100%" />
 </p>
 
 <p align="center">
-  <img src="../assets/readme/chord-dictionary-shapes.png" alt="Chord Dictionary guitar shapes preview" width="100%" />
+  <img src="assets/readme/chord-dictionary-shapes.png" alt="Chord Dictionary guitar shapes preview" width="100%" />
 </p>
 
 ### Scale Explorer
 
 <p align="center">
-  <img src="../assets/readme/scale-explorer-builder.png" alt="Scale Explorer builder preview" width="100%" />
+  <img src="assets/readme/scale-explorer-builder.png" alt="Scale Explorer builder preview" width="100%" />
 </p>
 
 <p align="center">
-  <img src="../assets/readme/scale-explorer-fretboard.png" alt="Scale Explorer fretboard diagram preview" width="100%" />
+  <img src="assets/readme/scale-explorer-fretboard.png" alt="Scale Explorer fretboard diagram preview" width="100%" />
 </p>
 
 ### Key Finder
 
 <p align="center">
-  <img src="../assets/readme/key-finder-preview.png" alt="Key Finder page preview" width="100%" />
+  <img src="assets/readme/key-finder-preview.png" alt="Key Finder page preview" width="100%" />
 </p>
 
 ### Chord Progression
@@ -94,25 +92,25 @@ Last updated: Jul 26, 2026, 10:15 AM
 C major progression example.
 
 <p align="center">
-  <img src="../assets/readme/chord-progression-c-major.png" alt="Chord Progression C major preview" width="100%" />
+  <img src="assets/readme/chord-progression-c-major.png" alt="Chord Progression C major preview" width="100%" />
 </p>
 
 ### Write Your Own Progression
 
 <p align="center">
-  <img src="../assets/readme/progression-writer-preview.png" alt="Progression Writer page preview" width="100%" />
+  <img src="assets/readme/progression-writer-preview.png" alt="Progression Writer page preview" width="100%" />
 </p>
 
 下載後的範例圖片。
 
 <p align="center">
-  <img src="../assets/readme/progression-writer-download-example.png" alt="Downloaded progression diagram example" width="100%" />
+  <img src="assets/readme/progression-writer-download-example.png" alt="Downloaded progression diagram example" width="100%" />
 </p>
 
 ### Fretboard Trainer
 
 <p align="center">
-  <img src="../assets/readme/fretboard-trainer-preview.png" alt="Fretboard Trainer page preview" width="100%" />
+  <img src="assets/readme/fretboard-trainer-preview.png" alt="Fretboard Trainer page preview" width="100%" />
 </p>
 
 ## Highlights

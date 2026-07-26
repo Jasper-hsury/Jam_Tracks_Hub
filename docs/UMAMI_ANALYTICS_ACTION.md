@@ -135,10 +135,16 @@ It opens the public Umami Share URL once per day, captures a screenshot, saves i
 assets/analytics/umami-dashboard.png
 ```
 
+It also keeps dated history snapshots in:
+
+```text
+assets/analytics/history/YYYY-MM-DD.png
+```
+
 Then it updates:
 
 ```text
-docs/README.md
+README.md
 ```
 
 This does not require an Umami API key.
