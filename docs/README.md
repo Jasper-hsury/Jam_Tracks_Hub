@@ -30,6 +30,8 @@ Jam Tracks Hub combines original practice tracks with practical tools for unders
 </p>
 
 <!-- UMAMI_ANALYTICS_START -->
+_Analytics screenshot will appear here after `UMAMI_SHARE_URL` is configured and the workflow runs._
+
 ## Website Analytics
 
 Daily Umami analytics snapshot for Jam Tracks Hub.
