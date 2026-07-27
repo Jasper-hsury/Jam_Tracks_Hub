@@ -50,8 +50,6 @@ function buildReadmeBlock({ screenshotAvailable }) {
     : "_Analytics screenshot will appear here after `UMAMI_SHARE_URL` is configured and the workflow runs._";
 
   return `${START_MARKER}
-${imageSection}
-
 ## Website Analytics
 
 Daily Umami analytics snapshot for Jam Tracks Hub.
@@ -213,10 +211,6 @@ async function captureScreenshot() {
       clip: { x: 250, y: 280, width: 1300, height: 560 }
     });
   }
-
-  const historyPath = path.join(HISTORY_DIR, `${formatHistoryDate(UPDATED_AT)}.png`);
-  ensureDir(historyPath);
-  fs.copyFileSync(IMAGE_PATH, historyPath);
 
   const historyPath = path.join(HISTORY_DIR, `${formatHistoryDate(UPDATED_AT)}.png`);
   ensureDir(historyPath);
