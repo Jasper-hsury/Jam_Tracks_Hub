@@ -38,7 +38,11 @@ Jam Tracks Hub combines original practice tracks with practical tools for unders
 
 Daily Umami analytics snapshot for Jam Tracks Hub.
 
-Last updated: Jul 27, 2026, 7:11 AM
+Last updated: Jul 27, 2026, 8:30 AM
+
+<p align="center">
+  <img src="assets/analytics/umami-dashboard.png" alt="Umami analytics dashboard" width="100%" />
+</p>
 <!-- UMAMI_ANALYTICS_END -->
 
 ## Tool Preview
