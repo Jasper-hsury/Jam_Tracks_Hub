@@ -93,6 +93,18 @@
     font: inherit;
 }
 
+.scale-select-field select:hover {
+    background: var(--control-hover-background);
+    border-color: var(--hover-border);
+}
+
+.scale-select-field select:focus {
+    background: var(--control-hover-background);
+    border-color: var(--teal);
+    outline: 3px solid var(--focus-ring);
+    outline-offset: 3px;
+}
+
 .scale-root-field,
 .scale-length-field,
 .scale-view-field,
@@ -156,6 +168,15 @@
     color: var(--chord-accent-text);
     background: var(--chord-accent);
     border-color: var(--chord-accent);
+}
+
+.scale-root-grid button.is-selected:hover,
+.scale-length-toggle button.is-selected:hover,
+.scale-range-buttons button.is-selected:hover,
+.scale-label-toggle button.is-selected:hover {
+    color: var(--chord-accent-text);
+    background: var(--chord-accent-hover);
+    border-color: var(--chord-accent-hover);
 }
 
 .scale-root-grid button:focus-visible,
@@ -234,8 +255,11 @@
 }
 
 .scale-download-button:disabled {
-    cursor: wait;
-    opacity: 0.72;
+    cursor: not-allowed;
+    opacity: var(--disabled-opacity);
+    filter: saturate(0.78);
+    transform: none;
+    box-shadow: none;
 }
 
 .scale-play-button:hover {
@@ -246,8 +270,11 @@
 }
 
 .scale-play-button:disabled {
-    cursor: wait;
-    opacity: 0.72;
+    cursor: not-allowed;
+    opacity: var(--disabled-opacity);
+    filter: saturate(0.78);
+    transform: none;
+    box-shadow: none;
 }
 
 .scale-interval-list {
@@ -288,6 +315,22 @@
     background: var(--secondary-hover-background);
     border-color: var(--hover-border);
     transform: translateY(-1px);
+}
+
+html[data-theme="light"] :is(
+    .scale-root-grid button,
+    .scale-length-toggle button,
+    .scale-range-buttons button,
+    .scale-label-toggle button,
+    .scale-download-button,
+    .scale-play-button,
+    .scale-tool-links a
+):hover:not(:disabled) {
+    color: var(--light-button-hover-text);
+    background: var(--light-button-hover-background);
+    border-color: var(--light-button-hover-border);
+    box-shadow: var(--light-button-hover-shadow);
+    transform: var(--light-button-hover-transform);
 }
 
 .scale-interval-chip {
