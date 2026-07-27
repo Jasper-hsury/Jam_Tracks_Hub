@@ -13,23 +13,6 @@
         margin: 30px auto;
     }
 
-    .navbar {
-        flex-direction: column;
-        gap: 15px;
-        padding: 15px;
-    }
-
-    .nav-links {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 10px 20px;
-    }
-
-    .nav-links a {
-        display: inline-block;
-        padding: 8px 4px;
-    }
-
     h1 {
         font-size: 36px;
     }
@@ -5188,12 +5171,37 @@ html[data-theme="light"] .home-step-track .home-step-card:focus-visible {
 }
 
 @media (max-width: 1180px) {
+    body.nav-drawer-open {
+        overflow: hidden;
+    }
+
     .navbar {
         display: grid;
         grid-template-columns: 54px minmax(0, 1fr) 54px;
         align-items: center;
         gap: 8px;
         padding: 16px clamp(18px, 4vw, 32px);
+    }
+
+    .navbar::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: 118;
+        background: rgba(247, 244, 239, 0.66);
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 0.24s ease, visibility 0s linear 0.24s;
+    }
+
+    .navbar.menu-open::before {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transition-delay: 0s;
     }
 
     .logo {
@@ -5212,6 +5220,7 @@ html[data-theme="light"] .home-step-track .home-step-card:focus-visible {
         display: grid;
         width: 54px;
         height: 54px;
+        z-index: 140;
     }
 
     .navbar.menu-open .nav-menu-button span:nth-child(1) {
@@ -5229,49 +5238,54 @@ html[data-theme="light"] .home-step-track .home-step-card:focus-visible {
 
     .nav-links {
         display: grid;
-        grid-column: 1 / -1;
-        justify-items: center;
-        width: 100%;
-        gap: 8px;
-        max-height: 0;
-        overflow: hidden;
-        padding-top: 0;
-        margin-top: 0;
-        border-top: 1px solid rgba(196, 164, 132, 0.14);
+        align-content: start;
+        justify-items: end;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 130;
+        width: min(420px, 66.666vw);
+        height: 100dvh;
+        gap: 10px;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding: max(92px, calc(env(safe-area-inset-top) + 78px)) clamp(22px, 6vw, 38px) max(28px, env(safe-area-inset-bottom));
+        margin: 0;
+        background:
+            linear-gradient(135deg, color-mix(in srgb, var(--panel-background) 98%, var(--surface) 2%), color-mix(in srgb, var(--surface-soft) 88%, var(--panel-background) 12%));
+        border-left: 1px solid var(--border-soft);
+        box-shadow: -22px 0 52px color-mix(in srgb, var(--shadow-color) 92%, transparent);
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
-        transform: translateY(-7px);
+        transform: translateX(104%);
         transition:
-            max-height 0.28s ease,
-            padding-top 0.22s ease,
             opacity 0.18s ease,
-            transform 0.22s ease,
-            visibility 0s linear 0.28s;
+            transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+            visibility 0s linear 0.3s;
     }
 
     .navbar.menu-open .nav-links {
-        max-height: 780px;
-        padding-top: 22px;
-        padding-bottom: 18px;
         opacity: 1;
         visibility: visible;
         pointer-events: auto;
-        transform: translateY(0);
-        transition-delay: 0s, 0s, 0.07s, 0.07s, 0s;
+        transform: translateX(0);
+        transition-delay: 0s;
     }
 
     .nav-links > li {
         display: flex;
-        justify-content: center;
+        justify-content: flex-end;
+        width: 100%;
         opacity: 0;
-        transform: translateY(-4px);
+        transform: translateX(16px);
         transition: opacity 0.16s ease, transform 0.16s ease;
     }
 
     .navbar.menu-open .nav-links > li {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateX(0);
     }
 
     .navbar.menu-open .nav-links > li:nth-child(1) {
@@ -5316,36 +5330,105 @@ html[data-theme="light"] .home-step-track .home-step-card:focus-visible {
 
     .nav-links li,
     .nav-links a,
+    .nav-dropdown,
+    .nav-dropdown details,
+    .nav-dropdown summary,
     .theme-toggle {
-        width: min(360px, 82vw);
+        width: 100%;
+    }
+
+    .nav-theme-item {
+        align-self: end;
+        margin-top: auto;
+        padding-top: 18px;
+        border-top: 1px solid color-mix(in srgb, var(--border-soft) 72%, transparent);
     }
 
     .nav-links a,
+    .nav-dropdown summary,
     .theme-toggle {
         box-sizing: border-box;
         display: inline-flex;
-        justify-content: center;
+        justify-content: flex-end;
         align-items: center;
-        min-height: 46px;
-        padding: 7px 14px;
+        min-height: 50px;
+        padding: 7px 0 7px 18px;
         border-radius: 999px;
-        text-align: center;
+        text-align: right;
         line-height: 1.35;
     }
 
+    .nav-dropdown summary {
+        gap: 10px;
+    }
+
+    .nav-dropdown summary::before {
+        order: 0;
+        margin-left: 0;
+        margin-right: auto;
+        transform: rotate(135deg) translate(-1px, -1px);
+    }
+
+    .nav-dropdown details[open] > summary::before {
+        transform: rotate(225deg) translate(-1px, -1px);
+    }
+
+    .nav-submenu {
+        position: static;
+        justify-items: end;
+        min-width: 0;
+        width: 100%;
+        margin: 2px 0 4px;
+        padding: 0;
+        background: transparent;
+        border: 0;
+        box-shadow: none;
+        opacity: 1;
+        pointer-events: auto;
+        transform: none;
+    }
+
+    .nav-submenu::before {
+        content: none;
+    }
+
+    .nav-submenu a {
+        padding: 8px 0 8px 18px;
+        text-align: right;
+        white-space: normal;
+    }
+
     .nav-theme-toggle {
-        justify-content: center;
-        min-height: 46px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+        min-height: 50px;
+        padding: 7px 0 7px 18px;
         border-radius: 999px;
         transform: none;
     }
 
+    .nav-theme-toggle .theme-toggle-label {
+        display: block;
+        color: inherit;
+        font-size: 16px;
+        font-weight: bold;
+        letter-spacing: 0;
+        line-height: 1.35;
+        text-transform: uppercase;
+    }
+
+    .nav-theme-toggle .theme-toggle-switch {
+        flex: 0 0 auto;
+    }
+
     .nav-links a.active::after {
-        left: 50%;
-        right: auto;
+        left: auto;
+        right: 0;
         bottom: 2px;
         width: 52px;
-        transform: translateX(-50%);
+        transform: none;
     }
 
     @media (prefers-reduced-motion: reduce) {

@@ -396,6 +396,10 @@ html[data-theme="light"] .tracks-library-page .track-card:hover {
     pointer-events: none;
 }
 
+.theme-toggle-label {
+    display: none;
+}
+
 .theme-toggle-switch {
     display: inline-flex;
     align-items: center;
@@ -511,8 +515,24 @@ html[data-theme="light"] .theme-toggle.is-light-theme {
     .nav-theme-toggle {
         --theme-switch-size: 46px;
         min-height: 46px;
+        color: var(--text);
+        background: transparent;
         border-radius: 999px;
+        box-shadow: none;
         transform: none;
+    }
+
+    html[data-theme="light"] .nav-theme-toggle,
+    .nav-theme-toggle.is-light-theme,
+    html[data-theme="light"] .nav-theme-toggle.is-light-theme {
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .nav-theme-toggle:hover {
+        color: var(--gold-light);
+        background: transparent;
+        box-shadow: none;
     }
 }
 

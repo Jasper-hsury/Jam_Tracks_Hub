@@ -42,6 +42,7 @@ document.addEventListener("DOMContentLoaded", function() {
             window.clearTimeout(menuTransitionTimer);
             navbar.classList.remove("menu-transitioning");
             navbar.classList.remove("menu-open");
+            body.classList.remove("nav-drawer-open");
             menuButton.setAttribute("aria-expanded", "false");
             menuButton.setAttribute("aria-label", "Open navigation menu");
             navDropdowns.forEach(dropdown => {
@@ -55,6 +56,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         menuButton.addEventListener("click", function() {
             const isOpen = navbar.classList.toggle("menu-open");
+            body.classList.toggle("nav-drawer-open", isOpen);
             navbar.classList.add("menu-transitioning");
             window.clearTimeout(menuTransitionTimer);
             menuTransitionTimer = window.setTimeout(() => {
@@ -83,6 +85,14 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         document.addEventListener("click", function(event) {
+            if (
+                navbar.classList.contains("menu-open")
+                && !navLinks.contains(event.target)
+                && !menuButton.contains(event.target)
+            ) {
+                closeMenu(false);
+            }
+
             navDropdowns.forEach(dropdown => {
                 if (!dropdown.contains(event.target)) {
                     dropdown.open = false;
@@ -103,6 +113,7 @@ document.addEventListener("DOMContentLoaded", function() {
         themeToggle.className = "theme-toggle";
         themeToggle.innerHTML = `
             <input class="theme-toggle-input" type="checkbox" aria-label="Switch between dark and light theme">
+            <span class="theme-toggle-label">Appearance</span>
             <span class="theme-toggle-switch" aria-hidden="true">
                 <svg class="theme-toggle-icon" viewBox="0 0 128 128" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
                     <path class="theme-toggle-icon-base" d="M77.547 120.684h-5.765l-1.698 3.012a7.477 7.477 0 0 1-6.513 3.804h-.003a7.479 7.479 0 0 1-6.513-3.804l-1.698-3.012h-5.765v-4.06h27.956v4.06z"></path>
