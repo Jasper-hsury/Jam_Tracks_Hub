@@ -6,19 +6,23 @@
     <title>Write Your Own Progression | Jam Tracks Hub</title>
 
     <link rel="icon" href="assets/images/icon.png" type="image/png">
-    <meta name="description" content="Write a custom chord progression with or without verse and chorus sections on Jam Tracks Hub.">
+    <meta name="description" content="Write custom chord progressions, choose guitar voicings, save drafts, and export clean printable chord diagrams.">
     <link rel="canonical" href="https://jamtrackshub.com/progression-writer.html">
     <meta property="og:title" content="Write Your Own Progression | Jam Tracks Hub">
-    <meta property="og:description" content="Choose a custom chord progression format with or without verse and chorus sections.">
-    <meta property="og:image" content="https://jamtrackshub.com/assets/images/cover.jpeg">
+    <meta property="og:description" content="Write custom chord progressions, choose guitar voicings, save drafts, and export clean printable chord diagrams.">
+    <meta property="og:image" content="https://jamtrackshub.com/share_icon.png">
+    <meta property="og:image:width" content="2500">
+    <meta property="og:image:height" content="1230">
+    <meta property="og:image:alt" content="Jam Tracks Hub preview card for backing tracks and guitar tools.">
     <meta property="og:url" content="https://jamtrackshub.com/progression-writer.html">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Jam Tracks Hub">
     <meta property="og:locale" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Write Your Own Progression | Jam Tracks Hub">
-    <meta name="twitter:description" content="Choose a custom chord progression format with or without verse and chorus sections.">
-    <meta name="twitter:image" content="https://jamtrackshub.com/assets/images/cover.jpeg">
+    <meta name="twitter:description" content="Write custom chord progressions, choose guitar voicings, save drafts, and export clean printable chord diagrams.">
+    <meta name="twitter:image" content="https://jamtrackshub.com/share_icon.png">
+    <meta name="twitter:image:alt" content="Jam Tracks Hub preview card for backing tracks and guitar tools.">
 
     <script src="scripts/theme-init.js?v=20260725-friendly-insect-switch"></script>
     <script defer src="https://cloud.umami.is/script.js" data-website-id="c8dfc471-6512-4344-8e1b-25566e1a93cd"></script>
@@ -267,7 +271,26 @@
         </div>
 
         <section class="progression-writer-saved" aria-labelledby="savedWriterProgressionsTitle">
-            <h2 id="savedWriterProgressionsTitle" class="section-title">Saved Progressions</h2>
+            <div class="progression-writer-saved-heading">
+                <div>
+                    <h2 id="savedWriterProgressionsTitle" class="section-title">Saved Progression</h2>
+                </div>
+                <span class="progression-writer-saved-count" id="writerSavedProgressionCount">No saved progressions</span>
+            </div>
+            <div class="progression-writer-saved-controls">
+                <label class="progression-writer-saved-picker" for="writerSavedProgressionPicker">
+                    <span>Saved progression</span>
+                    <select id="writerSavedProgressionPicker" disabled>
+                        <option value="">No saved progressions yet</option>
+                    </select>
+                </label>
+                <div class="progression-writer-saved-actions">
+                    <button class="secondary-button" id="writerLoadProgressionButton" type="button" disabled><span>Load</span></button>
+                    <button class="secondary-button" id="writerDuplicateProgressionButton" type="button"><span>Duplicate</span></button>
+                    <button class="secondary-button" id="writerClearProgressionButton" type="button"><span>Clear All</span></button>
+                    <button class="secondary-button" id="writerExportJsonButton" type="button"><span>Export JSON</span></button>
+                </div>
+            </div>
             <div class="progression-writer-saved-list" id="writerSavedProgressions">
                 <p class="saved-progression-empty">No saved progressions yet.</p>
             </div>
@@ -285,7 +308,7 @@
     <button id="backToTopBtn" type="button" aria-label="Back to top">&uarr;</button>
 
     <script src="scripts/site.js?v=20260725-friendly-insect-switch"></script>
-    <script src="scripts/progression-writer.js?v=20260725-friendly-insect-switch"></script>
+    <script src="scripts/progression-writer.js?v=20260726-save-upgrade"></script>
     <script src="assets/vendor/gsap/gsap.min.js"></script>
     <script src="assets/vendor/gsap/ScrollTrigger.min.js"></script>
     <script src="scripts/site-animations.js?v=20260718-trainer-dropdown-hover"></script>

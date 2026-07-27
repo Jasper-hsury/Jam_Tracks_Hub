@@ -169,6 +169,73 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
+    const subscribeForm = document.getElementById("homeSubscribeForm");
+    if (subscribeForm) {
+        const emailInput = subscribeForm.querySelector("input[type='email']");
+        const status = document.getElementById("homeSubscribeStatus");
+        const submitButton = subscribeForm.querySelector("button[type='submit']");
+        const endpoint = subscribeForm.dataset.subscribeEndpoint || "/api/subscribe";
+        const source = subscribeForm.dataset.subscribeSource || "website";
+
+        subscribeForm.addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            if (!emailInput || !emailInput.checkValidity()) {
+                emailInput?.reportValidity();
+                return;
+            }
+
+            const email = emailInput.value.trim().toLowerCase();
+            const honeypotInput = subscribeForm.querySelector("input[name='website']");
+
+            if (status) {
+                status.textContent = "Saving your email...";
+            }
+            if (submitButton) {
+                submitButton.disabled = true;
+            }
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: "POST",
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        email,
+                        website: honeypotInput?.value || "",
+                        source,
+                        page: window.location.pathname || "/"
+                    })
+                });
+                const payload = await response.json().catch(function() {
+                    return {};
+                });
+
+                if (!response.ok || !payload.ok) {
+                    throw new Error(payload.message || "Subscription request failed.");
+                }
+
+                if (status) {
+                    status.textContent = payload.status === "already_subscribed"
+                        ? "You're already on the list."
+                        : "You're on the list. Thank you!";
+                }
+                emailInput.value = "";
+            } catch (error) {
+                console.error("Subscribe request failed", error);
+                if (status) {
+                    status.textContent = "Subscription is not available yet. Please try again later.";
+                }
+            } finally {
+                if (submitButton) {
+                    submitButton.disabled = false;
+                }
+            }
+        });
+    }
+
     if (backToTopButton) {
         let backToTopFrame = 0;
 
