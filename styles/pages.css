@@ -5188,7 +5188,7 @@ html[data-theme="light"] .home-step-track .home-step-card:focus-visible {
         position: fixed;
         inset: 0;
         z-index: 118;
-        background: rgba(247, 244, 239, 0.66);
+        background: rgba(8, 8, 8, 0.58);
         backdrop-filter: blur(2px);
         -webkit-backdrop-filter: blur(2px);
         opacity: 0;
@@ -5253,7 +5253,7 @@ html[data-theme="light"] .home-step-track .home-step-card:focus-visible {
         padding: max(92px, calc(env(safe-area-inset-top) + 78px)) clamp(22px, 6vw, 38px) max(28px, env(safe-area-inset-bottom));
         margin: 0;
         background:
-            linear-gradient(135deg, color-mix(in srgb, var(--panel-background) 98%, var(--surface) 2%), color-mix(in srgb, var(--surface-soft) 88%, var(--panel-background) 12%));
+            linear-gradient(135deg, rgba(28, 28, 27, 0.98), rgba(21, 20, 19, 0.98));
         border-left: 1px solid var(--border-soft);
         box-shadow: -22px 0 52px color-mix(in srgb, var(--shadow-color) 92%, transparent);
         opacity: 0;
@@ -5272,6 +5272,15 @@ html[data-theme="light"] .home-step-track .home-step-card:focus-visible {
         pointer-events: auto;
         transform: translateX(0);
         transition-delay: 0s;
+    }
+
+    html[data-theme="light"] .navbar::before {
+        background: rgba(247, 244, 239, 0.66);
+    }
+
+    html[data-theme="light"] .nav-links {
+        background:
+            linear-gradient(135deg, color-mix(in srgb, var(--panel-background) 98%, var(--surface) 2%), color-mix(in srgb, var(--surface-soft) 88%, var(--panel-background) 12%));
     }
 
     .nav-links > li {
