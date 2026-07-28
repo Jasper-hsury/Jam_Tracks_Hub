@@ -12,5 +12,10 @@ youtube_cookies.txt
 Thumbs.db
 incoming-tracks/
 dist/
+.pnpm-store/
+node_modules/
+pnpm-lock.yaml
+Update_Track_Instructions.txt
+subscribers-csv-download-instructions.txt
 analytics-report.md
 analytics-report-title.txt
