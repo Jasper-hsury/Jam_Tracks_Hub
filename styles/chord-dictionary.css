@@ -917,6 +917,7 @@ html[data-theme="light"] .diagram-string-status.is-root strong {
 
     .dictionary-search,
     .dictionary-play-button {
+        flex: none;
         width: 100%;
     }
 

@@ -710,11 +710,11 @@ document.addEventListener("DOMContentLoaded", function() {
                             const chordGroups = chords.length > 4 ? chunkProgressionItems(chords, 4) : [chords];
                             const numeralGroups = chords.length > 4 ? chunkProgressionItems(progression.numerals, 4) : [progression.numerals];
 
-                            return chordGroups.map(function(chordGroup, groupIndex) {
+                            const renderProgressionSummary = function(chordGroup, groupIndex, showGroupedStyle = true) {
                                 const numeralGroup = numeralGroups[groupIndex] || [];
                                 const groupStart = groupIndex * 4 + 1;
                                 const groupEnd = groupStart + chordGroup.length - 1;
-                                const voicingCountClass = chordGroup.length === 4 ? " has-four-voicings" : "";
+                                const countClass = ` progression-count-${chordGroup.length}`;
                                 const renderedNumerals = numeralGroup.map(function(numeral) {
                                     return `<span class="progression-numeral-token">${escapeProgressionHtml(numeral)}</span>`;
                                 }).join("");
@@ -722,16 +722,48 @@ document.addEventListener("DOMContentLoaded", function() {
                                     return `<span class="progression-chord-token">${escapeProgressionHtml(chord)}</span>`;
                                 }).join("");
                                 const renderedStyle = chordGroups.length > 1
-                                    ? `${escapeProgressionHtml(progression.style)} <span class="progression-group-label">Bars ${groupStart}-${groupEnd}</span>`
+                                    ? `<span class="progression-group-label">Bars ${groupStart}-${groupEnd}</span>${showGroupedStyle ? `<span class="progression-style-name">${escapeProgressionHtml(progression.style)}</span>` : ""}`
                                     : escapeProgressionHtml(progression.style);
 
                                 return `
-                                <article class="progression-voicing-card${voicingCountClass}">
                                     <div class="progression-voicing-summary">
-                                        <span class="progression-numerals">${renderedNumerals}</span>
-                                        <span class="progression-compact-chords">${renderedChords}</span>
+                                        <span class="progression-numerals${countClass}">${renderedNumerals}</span>
+                                        <span class="progression-compact-chords${countClass}">${renderedChords}</span>
                                         <p class="progression-style">${renderedStyle}</p>
                                     </div>
+                                `;
+                            };
+
+                            if (chordGroups.length > 1) {
+                                return `
+                                    <article class="progression-voicing-card has-four-voicings has-grouped-bars">
+                                        <div class="progression-summary-stack">
+                                            ${chordGroups.map(function(chordGroup, groupIndex) {
+                                                return renderProgressionSummary(chordGroup, groupIndex, groupIndex === chordGroups.length - 1);
+                                            }).join("")}
+                                        </div>
+                                        <div class="progression-voicing-stack">
+                                            ${chordGroups.map(function(chordGroup, groupIndex) {
+                                                const groupStart = groupIndex * 4 + 1;
+                                                const groupEnd = groupStart + chordGroup.length - 1;
+
+                                                return `
+                                                    <div class="progression-chord-voicings progression-chord-voicing-group" aria-label="Bars ${groupStart}-${groupEnd} chord shapes">
+                                                        ${chordGroup.map(renderProgressionChordShape).join("")}
+                                                    </div>
+                                                `;
+                                            }).join("")}
+                                        </div>
+                                    </article>
+                                `;
+                            }
+
+                            return chordGroups.map(function(chordGroup, groupIndex) {
+                                const voicingCountClass = chordGroup.length === 4 ? " has-four-voicings" : "";
+
+                                return `
+                                <article class="progression-voicing-card${voicingCountClass}">
+                                    ${renderProgressionSummary(chordGroup, groupIndex)}
                                     <div class="progression-chord-voicings">
                                         ${chordGroup.map(renderProgressionChordShape).join("")}
                                     </div>

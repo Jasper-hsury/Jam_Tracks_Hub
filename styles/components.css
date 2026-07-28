@@ -2258,6 +2258,22 @@ audio {
     align-items: start;
 }
 
+.progression-summary-stack,
+.progression-voicing-stack {
+    display: grid;
+    gap: 16px;
+    min-width: 0;
+}
+
+.progression-voicing-card.has-grouped-bars .progression-voicing-summary:not(:last-child) {
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(115, 91, 69, 0.14);
+}
+
+.progression-voicing-card.has-grouped-bars .progression-style:empty {
+    display: none;
+}
+
 .progression-voicing-summary {
     display: grid;
     align-content: start;
@@ -2313,10 +2329,14 @@ audio {
 
 .progression-group-label {
     display: block;
-    margin-top: 4px;
     color: rgba(58, 50, 43, 0.58);
     font-size: 0.82rem;
     font-weight: 800;
+}
+
+.progression-style-name {
+    display: block;
+    margin-top: 4px;
 }
 
 .progression-chord-voicings {
@@ -2332,10 +2352,42 @@ audio {
 .progression-voicing-card.has-four-voicings .progression-numerals,
 .progression-voicing-card.has-four-voicings .progression-compact-chords {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
     align-items: center;
     column-gap: 8px;
     row-gap: 8px;
+}
+
+.progression-numerals[class*="progression-count-"],
+.progression-compact-chords[class*="progression-count-"] {
+    display: grid;
+    align-items: center;
+    column-gap: 8px;
+    row-gap: 8px;
+}
+
+.progression-numerals[class*="progression-count-"] .progression-numeral-token,
+.progression-compact-chords[class*="progression-count-"] .progression-chord-token {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    text-align: center;
+}
+
+.progression-count-1 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.progression-count-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.progression-count-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.progression-count-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .progression-voicing-card.has-four-voicings .progression-numeral-token,
@@ -2569,6 +2621,10 @@ html:not([data-theme="light"]) .progression-extension-option.is-selected {
         0 12px 22px rgba(0, 0, 0, 0.24);
 }
 
+html:not([data-theme="light"]) .progression-voicing-card.has-grouped-bars .progression-voicing-summary:not(:last-child) {
+    border-bottom-color: rgba(229, 211, 179, 0.14);
+}
+
 html:not([data-theme="light"]) .progression-style,
 html:not([data-theme="light"]) .progression-shape-card-head span,
 html:not([data-theme="light"]) .progression-open-row,
@@ -2596,7 +2652,27 @@ html:not([data-theme="light"]) .progression-group-label {
         order: 1;
     }
 
+    .progression-summary-stack {
+        order: 1;
+    }
+
+    .progression-compact-chords {
+        order: 1;
+    }
+
+    .progression-numerals {
+        order: 2;
+    }
+
+    .progression-style {
+        order: 3;
+    }
+
     .progression-chord-voicings {
+        order: 2;
+    }
+
+    .progression-voicing-stack {
         order: 2;
     }
 
@@ -2607,7 +2683,7 @@ html:not([data-theme="light"]) .progression-group-label {
 
     .progression-voicing-card.has-four-voicings .progression-numerals,
     .progression-voicing-card.has-four-voicings .progression-compact-chords {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 }
 
@@ -2635,7 +2711,7 @@ html:not([data-theme="light"]) .progression-group-label {
 
     .progression-voicing-card.has-four-voicings .progression-numerals,
     .progression-voicing-card.has-four-voicings .progression-compact-chords {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 
     .progression-shape-card {

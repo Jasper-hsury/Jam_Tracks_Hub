@@ -516,6 +516,67 @@ document.addEventListener("DOMContentLoaded", function() {
         return canvas;
     }
 
+    function isIosSafariLike() {
+        const userAgent = window.navigator.userAgent || "";
+        const platform = window.navigator.platform || "";
+
+        return /iPad|iPhone|iPod/.test(userAgent)
+            || (platform === "MacIntel" && window.navigator.maxTouchPoints > 1);
+    }
+
+    function downloadImageUrl(url, fileName) {
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `${fileName}.png`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+    }
+
+    function showIosImagePreview(previewWindow, url, fileName) {
+        if (!previewWindow || previewWindow.closed) {
+            window.location.href = url;
+            return;
+        }
+
+        previewWindow.document.open();
+        previewWindow.document.write(`
+            <!doctype html>
+            <html lang="en">
+                <head>
+                    <meta charset="utf-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1">
+                    <title>${fileName}.png</title>
+                    <style>
+                        body {
+                            margin: 0;
+                            padding: 18px;
+                            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                            color: #241d17;
+                            background: #f7f4ef;
+                        }
+                        p {
+                            margin: 0 0 14px;
+                            font-weight: 700;
+                        }
+                        img {
+                            display: block;
+                            width: 100%;
+                            height: auto;
+                            border-radius: 10px;
+                            box-shadow: 0 12px 32px rgba(91, 70, 52, 0.18);
+                        }
+                    </style>
+                </head>
+                <body>
+                    <p>Long press the image, then save or share it.</p>
+                    <img src="${url}" alt="${fileName}">
+                </body>
+            </html>
+        `);
+        previewWindow.document.close();
+    }
+
     function downloadScaleImage() {
         downloadButton.disabled = true;
         const originalText = downloadButton.lastChild.textContent;
@@ -523,19 +584,39 @@ document.addEventListener("DOMContentLoaded", function() {
 
         try {
             const canvas = drawScaleImage();
+            const usePreview = isIosSafariLike();
+            const previewWindow = usePreview ? window.open("", "_blank") : null;
             const fileName = `${getRootName()}-${getScale().name}-frets-${fretStart}-${fretEnd}`
                 .toLowerCase()
                 .replace(/#/g, "sharp")
                 .replace(/[^a-z0-9]+/g, "-")
                 .replace(/^-|-$/g, "");
-            const link = document.createElement("a");
-            link.href = canvas.toDataURL("image/png");
-            link.download = `${fileName}.png`;
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-            downloadButton.disabled = false;
-            downloadButton.lastChild.textContent = originalText;
+
+            canvas.toBlob(function(blob) {
+                if (!blob) {
+                    const dataUrl = canvas.toDataURL("image/png");
+                    if (usePreview) {
+                        showIosImagePreview(previewWindow, dataUrl, fileName);
+                    } else {
+                        downloadImageUrl(dataUrl, fileName);
+                    }
+                    downloadButton.disabled = false;
+                    downloadButton.lastChild.textContent = originalText;
+                    return;
+                }
+
+                const url = URL.createObjectURL(blob);
+                if (usePreview) {
+                    showIosImagePreview(previewWindow, url, fileName);
+                    window.setTimeout(() => URL.revokeObjectURL(url), 120000);
+                } else {
+                    downloadImageUrl(url, fileName);
+                    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+                }
+
+                downloadButton.disabled = false;
+                downloadButton.lastChild.textContent = originalText;
+            }, "image/png");
         } catch (error) {
             console.error("Scale image download failed:", error);
             downloadButton.disabled = false;
