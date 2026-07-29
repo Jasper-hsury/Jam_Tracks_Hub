@@ -807,6 +807,7 @@ html[data-theme="light"] .theme-toggle.is-light-theme {
 .start-card:hover,
 .home-release-card:hover,
 .audio-player-card:hover,
+.key-finder-panel:hover,
 .progression-card:hover,
 .note-card:hover {
     color: var(--text);

@@ -233,59 +233,72 @@ def download_audio(youtube_url, download_dir):
     output_template = str(download_dir / f"{video_id}.%(ext)s")
     audio_path = download_dir / f"{video_id}.wav"
 
-    base_command = [
-        sys.executable,
-        "-m",
-        "yt_dlp",
-        "--no-playlist",
-        "--js-runtimes",
-        "deno",
-        "--js-runtimes",
-        "node",
-        "--js-runtimes",
-        "quickjs",
-        "--js-runtimes",
-        "bun",
-        *youtube_cookie_args(download_dir),
-        "--ffmpeg-location",
-        FFMPEG_COMMAND,
-        "--quiet",
-        "--no-warnings",
-        "--force-overwrites",
-        "--no-continue",
-        "--retries",
-        "3",
-        "--fragment-retries",
-        "3",
-        "--socket-timeout",
-        "20",
-        "-x",
-        "--audio-format",
-        "wav",
-        "-o",
-        output_template,
-    ]
-
     download_errors = []
+    cookie_args = youtube_cookie_args(download_dir)
+    cookie_attempts = [cookie_args]
+    if cookie_args:
+        cookie_attempts.append([])
     format_attempts = [None, "18/best"]
 
-    for format_selector in format_attempts:
-        command = [*base_command]
+    for cookie_attempt in cookie_attempts:
+        base_command = [
+            sys.executable,
+            "-m",
+            "yt_dlp",
+            "--no-playlist",
+            "--js-runtimes",
+            "deno",
+            "--js-runtimes",
+            "node",
+            "--js-runtimes",
+            "quickjs",
+            "--js-runtimes",
+            "bun",
+            *cookie_attempt,
+            "--ffmpeg-location",
+            FFMPEG_COMMAND,
+            "--quiet",
+            "--no-warnings",
+            "--force-overwrites",
+            "--no-continue",
+            "--retries",
+            "3",
+            "--fragment-retries",
+            "3",
+            "--socket-timeout",
+            "20",
+            "-x",
+            "--audio-format",
+            "wav",
+            "-o",
+            output_template,
+        ]
 
-        if format_selector:
-            command.extend(["-f", format_selector])
+        for format_selector in format_attempts:
+            command = [*base_command]
 
-        command.append(youtube_url)
+            if format_selector:
+                command.extend(["-f", format_selector])
 
-        try:
-            run_command(command)
-            break
-        except RuntimeError as error:
-            download_errors.append(str(error))
-            lower_error = str(error).lower()
+            command.append(youtube_url)
 
-            if "403" not in lower_error and "forbidden" not in lower_error:
-                raise
+            try:
+                run_command(command)
+                break
+            except RuntimeError as error:
+                download_errors.append(str(error))
+                lower_error = str(error).lower()
+                is_retryable_block = any(
+                    marker in lower_error
+                    for marker in ["403", "forbidden", "youtube blocked", "cookies may have expired"]
+                )
+
+                if not is_retryable_block:
+                    raise
+        else:
+            continue
+
+        break
     else:
         raise RuntimeError(download_errors[-1] if download_errors else "YouTube download failed.")
 

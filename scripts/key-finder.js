@@ -2,6 +2,11 @@ document.addEventListener("DOMContentLoaded", function() {
     const HISTORY_KEY = "jasperMusicKeyFinderHistory";
     const RESULT_MODE_KEY = "jasperMusicKeyFinderResultMode";
     const apiBaseUrl = window.JASPER_MUSIC_CONFIG?.apiBaseUrl ?? "http://127.0.0.1:8000";
+    const productionApiBaseUrl = window.JASPER_MUSIC_CONFIG?.productionApiBaseUrl ?? "https://jasper-music.onrender.com";
+    const youtubeSiteApiBaseUrlCandidates = Array.from(new Set([
+        apiBaseUrl,
+        productionApiBaseUrl
+    ]));
     const configuredYoutubeHelperBaseUrl = window.JASPER_MUSIC_CONFIG?.youtubeHelperBaseUrl ?? "http://localhost:8765";
     const youtubeHelperBaseUrlCandidates = Array.from(new Set([
         configuredYoutubeHelperBaseUrl,
@@ -533,7 +538,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const lowerMessage = String(message || "").toLowerCase();
         let suggestedFix = inputType === "file"
             ? "MP3 or WAV is the most stable. Try an audio-only file under 25 MB."
-            : "Start the local YouTube Helper on this computer, then try Analyze link again.";
+            : "Try again in a moment. If YouTube blocks the cloud analyzer, upload an audio file or use the Local Helper.";
 
         if (lowerMessage.includes("timed out") || lowerMessage.includes("render returned")) {
             suggestedFix = "The analyzer exceeded the hosting limit. Try a shorter MP3/WAV file, or run the local API.";
@@ -547,7 +552,7 @@ document.addEventListener("DOMContentLoaded", function() {
             inputType === "youtube" &&
             (lowerMessage.includes("youtube blocked") || lowerMessage.includes("cookies may have expired"))
         ) {
-            suggestedFix = "The site API reached YouTube, but YouTube blocked the server cookies. Try Start Helper for the local fallback, refresh the Render YouTube cookies, or upload an audio file.";
+            suggestedFix = "The cloud API reached YouTube, but YouTube rejected the server cookies. Refresh the Render YouTube cookies, use Local Helper on this computer, or upload an audio file.";
         }
 
         if (inputType === "youtube" && lowerMessage.includes("sign in to confirm")) {
@@ -557,6 +562,9 @@ document.addEventListener("DOMContentLoaded", function() {
         const statusText = inputType === "youtube"
             ? youtubeHelperStatus?.querySelector(".status-text")?.textContent
             : apiStatus?.querySelector(".status-text")?.textContent;
+        const displayStatus = inputType === "youtube" && lowerMessage.includes("youtube blocked")
+            ? "Cloud API blocked by YouTube"
+            : statusText;
 
         keyFinderResult.className = "key-finder-result is-error";
         keyFinderResult.innerHTML = `
@@ -565,7 +573,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 <p>${escapeHtml(message)}</p>
                 <dl>
                     <div><dt>API URL</dt><dd>${escapeHtml(apiDisplayUrl(displayBaseUrl))}</dd></div>
-                    <div><dt>Status</dt><dd>${escapeHtml(statusText || "Unknown")}</dd></div>
+                    <div><dt>Status</dt><dd>${escapeHtml(displayStatus || "Unknown")}</dd></div>
                     <div><dt>Suggested fix</dt><dd>${escapeHtml(suggestedFix)}</dd></div>
                 </dl>
             </div>
@@ -618,7 +626,8 @@ document.addEventListener("DOMContentLoaded", function() {
         youtubeHelperStatus.querySelector(".status-text").textContent = message;
 
         if (startYoutubeHelperButton) {
-            startYoutubeHelperButton.hidden = state === "is-online" && message === "YouTube Helper connected";
+            const mentionsHelper = message.toLowerCase().includes("helper");
+            startYoutubeHelperButton.hidden = state === "is-online" || !mentionsHelper;
             startYoutubeHelperButton.disabled = false;
         }
     }
@@ -638,8 +647,8 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    function useSiteApiForYoutube(message = "YouTube via site API") {
-        youtubeAnalysisBaseUrl = apiBaseUrl;
+    function useSiteApiForYoutube(baseUrl = apiBaseUrl, message = "YouTube via site API") {
+        youtubeAnalysisBaseUrl = baseUrl;
         setYoutubeHelperStatus("is-online", message);
         clearHelperStartError();
     }
@@ -922,28 +931,38 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     async function analyzeYoutubeUrlWithFallback(url) {
-        try {
-            youtubeAnalysisBaseUrl = apiBaseUrl;
-            useSiteApiForYoutube();
-            return await analyzeYoutubeUrl(url, apiBaseUrl);
-        } catch (siteApiError) {
-            if (siteApiError.name === "AbortError") {
-                throw siteApiError;
-            }
+        let siteApiError = null;
 
+        for (const siteBaseUrl of youtubeSiteApiBaseUrlCandidates) {
             try {
-                setYoutubeHelperStatus("is-checking", "Trying local YouTube Helper...");
-                await ensureYoutubeHelperIsReachable(activeController.signal);
-                return await analyzeYoutubeUrl(url, youtubeHelperBaseUrl);
-            } catch (helperError) {
-                if (helperError.name === "AbortError") {
-                    throw helperError;
+                const isCloudApi = siteBaseUrl === productionApiBaseUrl && siteBaseUrl !== apiBaseUrl;
+                useSiteApiForYoutube(siteBaseUrl, isCloudApi ? "YouTube via cloud API" : "YouTube via site API");
+                return await analyzeYoutubeUrl(url, siteBaseUrl);
+            } catch (error) {
+                if (error.name === "AbortError") {
+                    throw error;
                 }
 
-                throw new Error(
-                    `${siteApiError.message} Local helper fallback also could not be reached from this browser.`
-                );
+                error.analysisBaseUrl = siteBaseUrl;
+                siteApiError = error;
+                setYoutubeHelperStatus("is-checking", "Trying another analyzer...");
             }
+        }
+
+        try {
+            setYoutubeHelperStatus("is-checking", "Trying local YouTube Helper...");
+            await ensureYoutubeHelperIsReachable(activeController.signal);
+            return await analyzeYoutubeUrl(url, youtubeHelperBaseUrl);
+        } catch (helperError) {
+            if (helperError.name === "AbortError") {
+                throw helperError;
+            }
+
+            const combinedError = new Error(
+                `${siteApiError?.message || "The site analyzers could not process this YouTube link."} Local Helper fallback also could not be reached from this browser.`
+            );
+            combinedError.analysisBaseUrl = siteApiError?.analysisBaseUrl || youtubeAnalysisBaseUrl;
+            throw combinedError;
         }
     }
 
@@ -1065,7 +1084,6 @@ document.addEventListener("DOMContentLoaded", function() {
         renderJobProgress({ stage: "Downloading YouTube audio", progress: 12 });
 
         try {
-            await ensureApiIsReachable(activeController.signal);
             const job = await analyzeYoutubeUrlWithFallback(url);
             const data = job.result;
             renderKeyFinderResult(data);
@@ -1074,7 +1092,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if (error.name === "AbortError") {
                 setStatus("Stopped waiting for the analysis. The server may finish the job in the background.", "is-error");
             } else {
-                renderErrorReport(error.message, "youtube", youtubeAnalysisBaseUrl);
+                renderErrorReport(error.message, "youtube", error.analysisBaseUrl || youtubeAnalysisBaseUrl);
             }
         } finally {
             activeController = null;

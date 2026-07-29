@@ -55,7 +55,7 @@
         <section class="key-finder-panel" aria-labelledby="keyFinderTitle">
             <div class="tool-section-heading compact-heading">
                 <h2 id="keyFinderTitle" class="section-title">Analyze a Song</h2>
-                <p>Upload an audio file for the most stable estimate. YouTube links can use the site API or the local helper.</p>
+                <p>Paste a YouTube link for automatic key analysis, or upload an audio file when you want the most stable estimate.</p>
             </div>
 
             <div class="key-finder-status-row">
@@ -90,10 +90,25 @@
                 </div>
             </div>
 
+            <div class="key-finder-divider key-finder-divider-primary">
+                <span>YouTube link</span>
+            </div>
+            <div class="key-finder-form key-finder-form-primary">
+                <input id="youtubeKeyUrl" type="url" placeholder="https://youtu.be/..." autocomplete="off" aria-label="YouTube link">
+                <button id="analyzeKeyButton" class="primary-button" type="button">Analyze Link</button>
+                <button id="cancelAnalyzeButton" class="secondary-button" type="button" hidden>Cancel</button>
+            </div>
+            <p class="upload-privacy-note">
+                The analyzer downloads a short temporary audio copy on the server, estimates the tonal center, then removes the temporary file.
+            </p>
+
+            <div class="key-finder-divider">
+                <span>Or upload audio</span>
+            </div>
             <div class="key-finder-upload">
                 <input id="audioKeyFile" type="file" accept="audio/*,.aac,.aiff,.flac,.m4a,.mp3,.mp4,.ogg,.wav,.webm" aria-label="Audio file" aria-describedby="audioFileRequirements uploadPrivacyNote">
                 <label class="upload-file-label" for="audioKeyFile">
-                    <span>Primary</span>
+                    <span>Audio file</span>
                     <strong id="audioFileName">Choose an audio file</strong>
                     <small id="audioFileRequirements">MP3/WAV recommended. MP4 or WEBM should be audio-only and under 25 MB.</small>
                 </label>
@@ -103,13 +118,11 @@
                 Your upload is used only for analysis and is deleted from temporary storage when the job finishes.
             </p>
 
-            <div class="key-finder-divider">
-                <span>Advanced: optional local YouTube helper</span>
-            </div>
-            <div class="helper-install-card" aria-label="Local Helper setup instructions">
+            <details class="helper-install-card helper-install-details" aria-label="Local Helper setup instructions">
+                <summary>Local Helper fallback</summary>
                 <div class="helper-install-copy">
-                    <strong>Want local YouTube link analysis?</strong>
-                    <p>The site API can analyze YouTube links. Install the helper only if you want a local fallback on this computer.</p>
+                    <strong>Use this only if YouTube blocks the site API.</strong>
+                    <p>The regular site analyzer is the default path. The helper runs on your computer as a backup for YouTube links that the server cannot download.</p>
                     <ol>
                         <li>On Mac, unzip the helper and run INSTALL_MAC_HELPER_PROTOCOL.command once.</li>
                         <li>On Windows, unzip the helper and run the setup files once.</li>
@@ -124,13 +137,7 @@
                         Download for Windows
                     </a>
                 </div>
-            </div>
-
-            <div class="key-finder-form">
-                <input id="youtubeKeyUrl" type="url" placeholder="https://youtu.be/..." autocomplete="off" aria-label="YouTube link">
-                <button id="analyzeKeyButton" class="secondary-button" type="button">Analyze link</button>
-                <button id="cancelAnalyzeButton" class="secondary-button" type="button" hidden>Cancel</button>
-            </div>
+            </details>
 
             <div class="key-finder-result key-finder-empty" id="keyFinderResult" role="status" aria-live="polite" aria-atomic="false">
                 <span>Ready when you are.</span>
@@ -157,8 +164,8 @@
     <button id="backToTopBtn" type="button" aria-label="Back to top">&uarr;</button>
 
     <script src="scripts/site.js?v=20260728-mobile-polish"></script>
-    <script src="scripts/site-config.js?v=20260705-localhost-helper"></script>
-    <script src="scripts/key-finder.js?v=20260725-friendly-insect-switch"></script>
+    <script src="scripts/site-config.js?v=20260729-youtube-key-api"></script>
+    <script src="scripts/key-finder.js?v=20260729-youtube-key-api"></script>
     <script src="assets/vendor/gsap/gsap.min.js"></script>
     <script src="assets/vendor/gsap/ScrollTrigger.min.js"></script>
     <script src="scripts/site-animations.js?v=20260718-trainer-dropdown-hover"></script>

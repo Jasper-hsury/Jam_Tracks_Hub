@@ -335,8 +335,7 @@ html[data-theme="light"] {
 .dictionary-detail,
 .progression-card,
 .trainer-card,
-.key-finder-panel,
-.key-finder-result {
+.key-finder-panel {
     position: relative;
     overflow: hidden;
 }
@@ -348,9 +347,7 @@ html[data-theme="light"] {
 .dictionary-browser::before,
 .dictionary-detail::before,
 .progression-card::before,
-.trainer-card::before,
-.key-finder-panel::before,
-.key-finder-result::before {
+.trainer-card::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -380,9 +377,7 @@ html[data-theme="light"] {
 .dictionary-browser:hover::before,
 .dictionary-detail:hover::before,
 .progression-card:hover::before,
-.trainer-card:hover::before,
-.key-finder-panel:hover::before,
-.key-finder-result:hover::before {
+.trainer-card:hover::before {
     opacity: 1;
     transform: translateX(44%);
 }

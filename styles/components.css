@@ -123,6 +123,23 @@
     margin-top: 18px;
 }
 
+.key-finder-form-primary {
+    align-items: stretch;
+    margin-top: 18px;
+}
+
+.key-finder-form-primary input {
+    min-height: 58px;
+    padding-inline: 18px;
+    font-size: 16px;
+}
+
+.key-finder-form-primary .primary-button,
+.key-finder-form-primary .secondary-button {
+    min-height: 58px;
+    white-space: nowrap;
+}
+
 .key-finder-upload input[type="file"] {
     position: absolute;
     width: 1px;
@@ -205,6 +222,11 @@
     font-size: 12px;
     font-weight: bold;
     text-transform: uppercase;
+}
+
+.key-finder-divider-primary {
+    margin-top: 20px;
+    color: var(--teal);
 }
 
 .key-finder-divider::before,
@@ -299,6 +321,44 @@
     border-radius: 8px;
 }
 
+.helper-install-details {
+    display: block;
+    margin-top: 16px;
+}
+
+.helper-install-details summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--teal);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    list-style: none;
+}
+
+.helper-install-details summary::-webkit-details-marker {
+    display: none;
+}
+
+.helper-install-details summary::after {
+    content: "+";
+    color: var(--gold-light);
+    font-size: 22px;
+    line-height: 1;
+}
+
+.helper-install-details[open] summary {
+    margin-bottom: 14px;
+}
+
+.helper-install-details[open] summary::after {
+    content: "-";
+}
+
 .helper-install-copy strong {
     display: block;
     margin-bottom: 4px;
@@ -346,6 +406,17 @@
 }
 
 @media (max-width: 720px) {
+    .key-finder-form-primary,
+    .key-finder-form {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .key-finder-form-primary .primary-button,
+    .key-finder-form-primary .secondary-button {
+        width: 100%;
+    }
+
     .helper-install-card {
         grid-template-columns: 1fr;
         justify-items: stretch;
