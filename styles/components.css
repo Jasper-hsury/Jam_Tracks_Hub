@@ -123,20 +123,19 @@
     margin-top: 18px;
 }
 
-.key-finder-form-primary {
+.key-finder-link-form {
     align-items: stretch;
     margin-top: 18px;
 }
 
-.key-finder-form-primary input {
-    min-height: 58px;
+.key-finder-link-form input {
+    min-height: 52px;
     padding-inline: 18px;
     font-size: 16px;
 }
 
-.key-finder-form-primary .primary-button,
-.key-finder-form-primary .secondary-button {
-    min-height: 58px;
+.key-finder-link-form .secondary-button {
+    min-height: 52px;
     white-space: nowrap;
 }
 
@@ -406,14 +405,13 @@
 }
 
 @media (max-width: 720px) {
-    .key-finder-form-primary,
+    .key-finder-link-form,
     .key-finder-form {
         display: grid;
         grid-template-columns: 1fr;
     }
 
-    .key-finder-form-primary .primary-button,
-    .key-finder-form-primary .secondary-button {
+    .key-finder-link-form .secondary-button {
         width: 100%;
     }
 

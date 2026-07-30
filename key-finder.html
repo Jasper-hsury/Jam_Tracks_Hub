@@ -6,10 +6,10 @@
     <title>Song Key Finder | Jam Tracks Hub</title>
 
     <link rel="icon" href="assets/images/icon.png" type="image/png">
-    <meta name="description" content="Analyze audio files or YouTube links to estimate song keys and compare likely tonal centers.">
+    <meta name="description" content="Upload audio files to estimate song keys, with optional YouTube link analysis when cloud access is available.">
     <link rel="canonical" href="https://jamtrackshub.com/key-finder.html">
     <meta property="og:title" content="Song Key Finder | Jam Tracks Hub">
-    <meta property="og:description" content="Analyze audio files or YouTube links to estimate song keys and compare likely tonal centers.">
+    <meta property="og:description" content="Upload audio files to estimate song keys, with optional YouTube link analysis when cloud access is available.">
     <meta property="og:image" content="https://jamtrackshub.com/share_icon.png">
     <meta property="og:image:width" content="2500">
     <meta property="og:image:height" content="1230">
@@ -20,7 +20,7 @@
     <meta property="og:locale" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Song Key Finder | Jam Tracks Hub">
-    <meta name="twitter:description" content="Analyze audio files or YouTube links to estimate song keys and compare likely tonal centers.">
+    <meta name="twitter:description" content="Upload audio files to estimate song keys, with optional YouTube link analysis when cloud access is available.">
     <meta name="twitter:image" content="https://jamtrackshub.com/share_icon.png">
     <meta name="twitter:image:alt" content="Jam Tracks Hub preview card for backing tracks and guitar tools.">
 
@@ -28,7 +28,7 @@
     <script defer src="https://cloud.umami.is/script.js" data-website-id="c8dfc471-6512-4344-8e1b-25566e1a93cd"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles/base.css?v=20260725-friendly-insect-switch">
-    <link rel="stylesheet" href="styles/components.css?v=20260728-mobile-polish">
+    <link rel="stylesheet" href="styles/components.css?v=20260730-key-finder-priority">
     <link rel="stylesheet" href="styles/pages.css?v=20260728-mobile-polish">
     <link rel="stylesheet" href="styles/themes.css?v=20260728-mobile-polish">
 </head>
@@ -55,7 +55,7 @@
         <section class="key-finder-panel" aria-labelledby="keyFinderTitle">
             <div class="tool-section-heading compact-heading">
                 <h2 id="keyFinderTitle" class="section-title">Analyze a Song</h2>
-                <p>Paste a YouTube link for automatic key analysis, or upload an audio file when you want the most stable estimate.</p>
+                <p>Upload an audio file for the most reliable key estimate. YouTube link analysis is available as a secondary option when cloud access or the local helper can reach the video.</p>
             </div>
 
             <div class="key-finder-status-row">
@@ -91,19 +91,7 @@
             </div>
 
             <div class="key-finder-divider key-finder-divider-primary">
-                <span>YouTube link</span>
-            </div>
-            <div class="key-finder-form key-finder-form-primary">
-                <input id="youtubeKeyUrl" type="url" placeholder="https://youtu.be/..." autocomplete="off" aria-label="YouTube link">
-                <button id="analyzeKeyButton" class="primary-button" type="button">Analyze Link</button>
-                <button id="cancelAnalyzeButton" class="secondary-button" type="button" hidden>Cancel</button>
-            </div>
-            <p class="upload-privacy-note">
-                The analyzer downloads a short temporary audio copy on the server, estimates the tonal center, then removes the temporary file.
-            </p>
-
-            <div class="key-finder-divider">
-                <span>Or upload audio</span>
+                <span>Recommended: upload audio</span>
             </div>
             <div class="key-finder-upload">
                 <input id="audioKeyFile" type="file" accept="audio/*,.aac,.aiff,.flac,.m4a,.mp3,.mp4,.ogg,.wav,.webm" aria-label="Audio file" aria-describedby="audioFileRequirements uploadPrivacyNote">
@@ -118,11 +106,23 @@
                 Your upload is used only for analysis and is deleted from temporary storage when the job finishes.
             </p>
 
+            <div class="key-finder-divider">
+                <span>Optional: YouTube link</span>
+            </div>
+            <div class="key-finder-form key-finder-link-form">
+                <input id="youtubeKeyUrl" type="url" placeholder="https://youtu.be/..." autocomplete="off" aria-label="YouTube link">
+                <button id="analyzeKeyButton" class="secondary-button" type="button">Analyze Link</button>
+                <button id="cancelAnalyzeButton" class="secondary-button" type="button" hidden>Cancel</button>
+            </div>
+            <p class="upload-privacy-note">
+                YouTube analysis depends on cloud download access. If YouTube blocks the server, use the local helper or upload an audio file instead.
+            </p>
+
             <details class="helper-install-card helper-install-details" aria-label="Local Helper setup instructions">
                 <summary>Local Helper fallback</summary>
                 <div class="helper-install-copy">
-                    <strong>Use this only if YouTube blocks the site API.</strong>
-                    <p>The regular site analyzer is the default path. The helper runs on your computer as a backup for YouTube links that the server cannot download.</p>
+                    <strong>Use this only for YouTube links that the cloud API cannot download.</strong>
+                    <p>The helper runs on your computer as a backup for YouTube links. Uploaded audio files do not need the helper.</p>
                     <ol>
                         <li>On Mac, unzip the helper and run INSTALL_MAC_HELPER_PROTOCOL.command once.</li>
                         <li>On Windows, unzip the helper and run the setup files once.</li>
