@@ -284,15 +284,15 @@ document.addEventListener("DOMContentLoaded", function() {
         const videoId = getYouTubeVideoId(track.youtubeUrl);
         const hasYouTubeLink = Boolean(videoId && track.youtubeUrl && track.youtubeUrl !== "#");
         const coverUrl = track.coverUrl || (videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : "");
-        const coverStyle = coverUrl
-            ? ` style="--track-cover-url: url('${escapeHtml(coverUrl)}');"`
+        const coverImage = coverUrl
+            ? `<img class="track-cover-image" src="${escapeHtml(coverUrl)}" alt="" loading="lazy" decoding="async">`
             : "";
         const clickAttributes = hasYouTubeLink
             ? ` role="link" tabindex="0" data-youtube-url="${escapeHtml(track.youtubeUrl)}" aria-label="Open ${escapeHtml(track.title)} on YouTube"`
             : "";
 
         return `
-            <article class="track-card${hasYouTubeLink ? " track-card-clickable" : ""}"${coverStyle}${clickAttributes}
+            <article class="track-card${hasYouTubeLink ? " track-card-clickable" : ""}"${clickAttributes}
                 data-flip-id="track-${escapeHtml(track.id)}"
                 data-title="${escapeHtml(`${track.id} ${track.title}`)}"
                 data-key="${escapeHtml(track.key)}"
@@ -300,6 +300,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 data-mood="${escapeHtml(track.mood)}"
                 data-instrument="${escapeHtml(track.instrument)}"
                 data-bpm="${escapeHtml(track.bpm)}">
+                <div class="track-cover-media" aria-hidden="true">
+                    ${coverImage}
+                </div>
                 <div class="track-card-main">
                     <div class="track-card-title-row">
                         <h2>${escapeHtml(track.id)} ${escapeHtml(track.title)}</h2>

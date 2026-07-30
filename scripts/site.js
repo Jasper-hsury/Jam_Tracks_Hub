@@ -23,6 +23,37 @@ document.addEventListener("DOMContentLoaded", function() {
         navbar.setAttribute("aria-label", "Primary navigation");
         navLinks.id = navLinks.id || "primaryNavigation";
         const navDropdowns = Array.from(navLinks.querySelectorAll(".nav-dropdown details"));
+        const currentPage = window.location.pathname.split("/").pop() || "index.html";
+        const compactToolLinks = [
+            {
+                href: "key-finder.html",
+                label: "Key Finder"
+            },
+            {
+                href: "fretboard-trainer.html",
+                label: "Fretboard Trainer"
+            }
+        ];
+        const isCompactToolActive = compactToolLinks.some(link => currentPage === link.href);
+        const compactToolsItem = document.createElement("li");
+        compactToolsItem.className = "nav-compact-tools-item";
+        compactToolsItem.innerHTML = `
+            <details class="nav-compact-tools${isCompactToolActive ? " is-active" : ""}">
+                <summary>
+                    <span>Tools</span>
+                </summary>
+                <div class="nav-compact-tools-menu">
+                    ${compactToolLinks.map(link => `
+                        <a href="${link.href}"${currentPage === link.href ? " class=\"active\" aria-current=\"page\"" : ""}>${link.label}</a>
+                    `).join("")}
+                </div>
+            </details>
+        `;
+        const compactToolsDetails = compactToolsItem.querySelector("details");
+        if (compactToolsDetails) {
+            navDropdowns.push(compactToolsDetails);
+        }
+        navLinks.appendChild(compactToolsItem);
 
         const menuButton = document.createElement("button");
         menuButton.className = "nav-menu-button";

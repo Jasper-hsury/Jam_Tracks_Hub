@@ -437,6 +437,96 @@ iframe {
     position: relative;
 }
 
+.nav-links > .nav-compact-tools-item {
+    display: none;
+}
+
+.nav-compact-tools {
+    position: relative;
+}
+
+.nav-compact-tools summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text, #e0e0e0);
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1.2;
+    list-style: none;
+    cursor: pointer;
+    transition:
+        color 0.2s ease,
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+.nav-compact-tools summary::-webkit-details-marker {
+    display: none;
+}
+
+.nav-compact-tools summary::after {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg) translateY(-2px);
+    transition: transform 0.18s ease;
+}
+
+.nav-compact-tools[open] summary::after {
+    transform: rotate(225deg) translate(-2px, -1px);
+}
+
+.nav-compact-tools-menu {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    z-index: 125;
+    display: grid;
+    min-width: 210px;
+    padding: 8px;
+    background: var(--panel-background);
+    border: 1px solid var(--border-soft);
+    border-radius: 8px;
+    box-shadow: 0 16px 34px var(--shadow-color);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-6px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.nav-compact-tools-menu::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 100%;
+    height: 12px;
+}
+
+.nav-compact-tools[open] .nav-compact-tools-menu {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.nav-compact-tools-menu a {
+    display: block;
+    padding: 10px 11px;
+    border-radius: 5px;
+    white-space: nowrap;
+}
+
+.nav-compact-tools-menu a:hover,
+.nav-compact-tools-menu a.active {
+    color: var(--gold-light);
+    background: color-mix(in srgb, var(--control-hover-background) 42%, transparent);
+}
+
 .nav-links a.active::after,
 .nav-dropdown summary.active::after {
     content: "";
@@ -447,6 +537,65 @@ iframe {
     height: 2px;
     background: linear-gradient(90deg, var(--gold), var(--teal));
     border-radius: 999px;
+}
+
+@media (min-width: 1181px) and (max-width: 1380px) {
+    .navbar {
+        gap: clamp(16px, 2vw, 26px);
+        padding: 10px clamp(28px, 3vw, 42px);
+    }
+
+    .logo {
+        flex: 0 1 174px;
+        max-width: 174px;
+        font-size: clamp(22px, 2vw, 26px);
+        line-height: 1.08;
+    }
+
+    .nav-links {
+        gap: clamp(12px, 1.2vw, 17px);
+    }
+
+    .nav-links > li:nth-child(5),
+    .nav-links > li:nth-child(7) {
+        display: none;
+    }
+
+    .nav-links > .nav-compact-tools-item {
+        display: flex;
+        position: relative;
+        align-items: center;
+    }
+
+    .nav-compact-tools summary {
+        min-height: 44px;
+        padding: 0 15px;
+        color: var(--text);
+        background: color-mix(in srgb, var(--control-background) 62%, transparent);
+        border: 1px solid color-mix(in srgb, var(--border-soft) 86%, transparent);
+        border-radius: 999px;
+        box-shadow: 0 7px 16px color-mix(in srgb, var(--shadow-color) 38%, transparent);
+    }
+
+    .nav-compact-tools summary:hover,
+    .nav-compact-tools.is-active summary,
+    .nav-compact-tools[open] summary {
+        color: var(--secondary-hover-text);
+        background: color-mix(in srgb, var(--control-hover-background) 78%, transparent);
+        border-color: color-mix(in srgb, var(--hover-border) 70%, transparent);
+        box-shadow: 0 9px 20px color-mix(in srgb, var(--shadow-color) 44%, transparent);
+        transform: translateY(-1px);
+    }
+
+    html[data-theme="light"] .nav-compact-tools summary {
+        background: color-mix(in srgb, var(--surface-raised) 84%, transparent);
+    }
+
+    html[data-theme="light"] .nav-compact-tools summary:hover,
+    html[data-theme="light"] .nav-compact-tools.is-active summary,
+    html[data-theme="light"] .nav-compact-tools[open] summary {
+        background: color-mix(in srgb, var(--secondary-hover-background) 84%, transparent);
+    }
 }
 
 .start-grid {
@@ -2088,32 +2237,35 @@ body.is-shape-picker-open {
         radial-gradient(circle at 76% 18%, color-mix(in srgb, var(--gold-light) 12%, transparent), transparent 24%);
 }
 
-.tracks-library-page .track-card::after {
-    content: "";
+.tracks-library-page .track-cover-media {
     position: absolute;
     inset: 0 auto 0 0;
     z-index: 0;
     width: clamp(340px, 23vw, 424px);
     background:
         linear-gradient(90deg, rgba(42, 30, 21, 0.04), rgba(42, 30, 21, 0.01)),
-        var(--track-cover-url, linear-gradient(135deg, rgba(154, 107, 68, 0.92), rgba(127, 183, 173, 0.52))),
         linear-gradient(135deg, rgba(154, 107, 68, 0.92), rgba(127, 183, 173, 0.52));
-    background-position: center calc(50% + var(--track-cover-y, 0px));
-    background-repeat: no-repeat;
-    background-size: cover;
     border-right: 1px solid color-mix(in srgb, var(--border-soft) 72%, transparent);
     opacity: 0.98;
     filter: saturate(1) contrast(0.98);
     transition: width 0.3s ease, opacity 0.3s ease, filter 0.3s ease;
 }
 
-.tracks-library-page .track-card:hover::after {
+.tracks-library-page .track-cover-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center calc(50% + var(--track-cover-y, 0px));
+}
+
+.tracks-library-page .track-card:hover .track-cover-media {
     width: clamp(352px, 24vw, 442px);
     opacity: 1;
     filter: saturate(1.06) contrast(1.02);
 }
 
-.tracks-library-page .track-card > * {
+.tracks-library-page .track-card > :not(.track-cover-media) {
     position: relative;
     z-index: 1;
 }
@@ -2892,16 +3044,19 @@ html[data-theme="light"] .track-scroll-five-blade-rotor use {
         row-gap: 12px;
     }
 
-    .tracks-library-page .track-card::after {
+    .tracks-library-page .track-cover-media {
         inset: 0 0 auto 0;
         width: auto;
         height: 124px;
-        background-position: center;
         border-right: 0;
         border-bottom: 1px solid color-mix(in srgb, var(--border-soft) 72%, transparent);
     }
 
-    .tracks-library-page .track-card:hover::after {
+    .tracks-library-page .track-cover-image {
+        object-position: center;
+    }
+
+    .tracks-library-page .track-card:hover .track-cover-media {
         width: auto;
     }
 
@@ -3190,7 +3345,6 @@ html[data-theme="light"] .track-scroll-five-blade-rotor use {
     inset: 0;
     pointer-events: none;
     background:
-        linear-gradient(90deg, transparent 0 7%, color-mix(in srgb, var(--gold) 8%, transparent) 7.2% 7.4%, transparent 7.7% 100%),
         repeating-linear-gradient(0deg, transparent 0 34px, color-mix(in srgb, var(--teal) 8%, transparent) 35px 36px, transparent 37px 70px);
     -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 12%, black 76%, transparent 100%);
     mask-image: linear-gradient(90deg, transparent 0%, black 12%, black 76%, transparent 100%);
