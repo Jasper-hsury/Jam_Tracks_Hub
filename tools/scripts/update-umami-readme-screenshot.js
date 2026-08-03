@@ -11,6 +11,13 @@ const UPDATED_AT = process.env.ANALYTICS_UPDATED_AT || new Date().toISOString();
 const START_MARKER = "<!-- UMAMI_ANALYTICS_START -->";
 const END_MARKER = "<!-- UMAMI_ANALYTICS_END -->";
 
+class ScreenshotValidationError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "ScreenshotValidationError";
+  }
+}
+
 function ensureDir(filePath) {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
 }
@@ -166,6 +173,35 @@ async function findTrafficChartElement(page) {
   return element;
 }
 
+async function findDashboardIssue(page) {
+  return page.evaluate(() => {
+    const visibleText = document.body?.innerText || "";
+    const errorPatterns = [
+      /Something went wrong/i,
+      /Cannot destructure property/i,
+      /Application error/i,
+      /Unhandled Runtime Error/i,
+      /TypeError:/i
+    ];
+
+    const matchedError = errorPatterns.find((pattern) => pattern.test(visibleText));
+    if (matchedError) {
+      return visibleText
+        .split("\n")
+        .map((line) => line.trim())
+        .filter(Boolean)
+        .slice(0, 8)
+        .join(" | ");
+    }
+
+    if (!/Visitors/i.test(visibleText) || !/Views/i.test(visibleText)) {
+      return "The shared Umami dashboard loaded, but the expected Visitors/Views chart text was not present.";
+    }
+
+    return "";
+  });
+}
+
 async function captureScreenshot() {
   if (!SHARE_URL) {
     console.log("UMAMI_SHARE_URL is not configured. README analytics block will show setup guidance.");
@@ -177,52 +213,62 @@ async function captureScreenshot() {
   ensureDir(IMAGE_PATH);
 
   const browser = await chromium.launch();
-  const page = await browser.newPage({
-    viewport: { width: 1600, height: 1200 },
-    deviceScaleFactor: 1
-  });
+  try {
+    const page = await browser.newPage({
+      viewport: { width: 1600, height: 1200 },
+      deviceScaleFactor: 1
+    });
 
-  await page.goto(SHARE_URL, { waitUntil: "networkidle", timeout: 60000 });
-  await page.waitForTimeout(5000);
+    await page.goto(SHARE_URL, { waitUntil: "networkidle", timeout: 60000 });
+    await page.waitForTimeout(5000);
 
-  await page.evaluate(() => {
-    const removableSelectors = [
-      "button:has-text('Close')",
-      "[aria-label*='cookie' i]",
-      "[class*='cookie' i]",
-      "[class*='banner' i]"
-    ];
+    await page.evaluate(() => {
+      const removableSelectors = [
+        "button:has-text('Close')",
+        "[aria-label*='cookie' i]",
+        "[class*='cookie' i]",
+        "[class*='banner' i]"
+      ];
 
-    for (const selector of removableSelectors) {
-      for (const element of document.querySelectorAll(selector)) {
-        element.remove();
+      for (const selector of removableSelectors) {
+        for (const element of document.querySelectorAll(selector)) {
+          element.remove();
+        }
       }
-    }
-  }).catch(() => {});
+    }).catch(() => {});
 
-  const chartElement = await findTrafficChartElement(page);
-  if (chartElement) {
+    const dashboardIssue = await findDashboardIssue(page);
+    if (dashboardIssue) {
+      throw new ScreenshotValidationError(`Umami dashboard did not render a valid traffic chart. ${dashboardIssue}`);
+    }
+
+    const chartElement = await findTrafficChartElement(page);
+    if (!chartElement) {
+      throw new ScreenshotValidationError("Could not find a valid Umami traffic chart element. Existing README screenshot was preserved.");
+    }
+
     await chartElement.screenshot({ path: IMAGE_PATH });
     await chartElement.dispose();
-  } else {
-    console.warn("Could not find the Umami traffic chart. Falling back to a fixed chart-area crop.");
-    await page.screenshot({
-      path: IMAGE_PATH,
-      clip: { x: 250, y: 280, width: 1300, height: 560 }
-    });
+
+    const historyPath = path.join(HISTORY_DIR, `${formatHistoryDate(UPDATED_AT)}.png`);
+    ensureDir(historyPath);
+    fs.copyFileSync(IMAGE_PATH, historyPath);
+
+    updateReadme({ screenshotAvailable: true });
+    console.log(`Saved Umami screenshot to ${IMAGE_PATH}`);
+    console.log(`Saved Umami history screenshot to ${historyPath}`);
+  } finally {
+    await browser.close();
   }
-
-  const historyPath = path.join(HISTORY_DIR, `${formatHistoryDate(UPDATED_AT)}.png`);
-  ensureDir(historyPath);
-  fs.copyFileSync(IMAGE_PATH, historyPath);
-
-  await browser.close();
-  updateReadme({ screenshotAvailable: true });
-  console.log(`Saved Umami screenshot to ${IMAGE_PATH}`);
-  console.log(`Saved Umami history screenshot to ${historyPath}`);
 }
 
 captureScreenshot().catch((error) => {
+  if (error instanceof ScreenshotValidationError) {
+    console.warn(error.message);
+    console.warn("Skipped README analytics update so the previous valid screenshot remains in place.");
+    return;
+  }
+
   console.error(error);
   process.exit(1);
 });
