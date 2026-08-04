@@ -44,6 +44,7 @@
     "chordProgressions": "和弦進行｜Jam Tracks Hub",
     "progressionWriter": "自訂你的和弦進行｜Jam Tracks Hub",
     "fretboardTrainer": "指板練習｜Jam Tracks Hub",
+    "feedback": "意見回饋｜Jam Tracks Hub",
     "privacy": "隱私權政策｜Jam Tracks Hub",
     "notFound": "找不到頁面｜Jam Tracks Hub"
   },
@@ -102,7 +103,10 @@
       "25": "在 YouTube 觀看",
       "26": "訂閱",
       "27": "當新的即興伴奏發佈時接收通知。",
-      "28": "加入通知名單"
+      "28": "加入通知名單",
+      "29": "提供意見",
+      "30": "傳送訊息",
+      "31": "已傳送"
     }
   },
   "pages": {
@@ -388,6 +392,24 @@
       "lowE": "低音 E",
       "highE": "高音 E",
       "referenceExample": "範例：第 5 弦第 7 格是 E，因為第 5 弦的空弦音為 A，向上七個半音即為 E。"
+    },
+    "feedback": {
+      "eyebrow": "意見回饋",
+      "title": "分享你的改善建議",
+      "lead": "告訴我你想討論的主題，以及 Jam Tracks Hub 可以如何更貼近你的練習需求。",
+      "formTitle": "送出回饋",
+      "formCopy": "簡短留言就很有幫助。我會依據這些建議規劃新工具、改善不清楚的操作流程，並調整未來的即興伴奏方向。",
+      "topicLabel": "主題",
+      "topicPlaceholder": "導覽、曲目下載、和弦工具……",
+      "suggestionLabel": "改善建議",
+      "suggestionPlaceholder": "這個頁面或工具可以如何變得更實用？",
+      "submit": "送出回饋",
+      "backToHome": "回到主頁",
+      "sending": "送出中……",
+      "success": "謝謝，你的回饋已送出。",
+      "error": "目前無法送出回饋，請稍後再試。",
+      "topicRequired": "請先輸入主題。",
+      "suggestionRequired": "請先輸入改善建議。"
     }
   },
   "notFound": {

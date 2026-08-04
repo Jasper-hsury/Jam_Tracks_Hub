@@ -893,6 +893,27 @@ html[data-theme="light"] .language-switch-button:hover {
     transform: translateY(-3px) scale(1.008);
 }
 
+.feedback-page .key-finder-panel:hover {
+    background: var(--panel-background);
+    border-color: var(--border-soft);
+    border-left-color: var(--teal);
+    box-shadow: var(--card-shadow);
+    transform: none;
+}
+
+.feedback-actions .primary-button,
+.feedback-actions .secondary-button {
+    box-sizing: border-box;
+    flex: 0 0 148px;
+    width: 148px;
+    min-width: 148px;
+    height: 48px;
+    min-height: 48px;
+    padding: 0;
+    font-size: 0.9rem;
+    line-height: 1;
+}
+
 .upload-file-label {
     color: var(--text);
     background:

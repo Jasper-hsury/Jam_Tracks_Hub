@@ -11,6 +11,7 @@ const rootFiles = [
   "404.html",
   "chord-dictionary.html",
   "chord-progressions.html",
+  "feedback.html",
   "fretboard-trainer.html",
   "googlec8a4768d207b3044.html",
   "index.html",

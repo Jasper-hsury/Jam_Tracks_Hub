@@ -4654,7 +4654,7 @@ html[data-language="zh-TW"] .home-release-card .release-number {
 
 .about-links {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: flex-start;
     gap: 12px;
@@ -4717,6 +4717,171 @@ html[data-language="zh-TW"] .home-release-card .release-number {
 
 .about-connect .home-subscribe-button {
     padding-inline: 1em;
+}
+
+.feedback-page {
+    max-width: 980px;
+    margin-top: clamp(96px, 8vw, 128px);
+}
+
+.home-feedback-button {
+    min-width: 132px;
+}
+
+.home-feedback-button .home-contact-icon {
+    position: relative;
+    z-index: 3;
+    inset: auto;
+    margin: 0 8px 0 0;
+    transform: scale(1.06);
+}
+
+.home-feedback-button .home-contact-icon::before {
+    display: none;
+}
+
+.home-feedback-button .home-feedback-button-text {
+    position: relative;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+.home-feedback-button:hover .home-feedback-button-text,
+.home-feedback-button:focus-visible .home-feedback-button-text {
+    animation: none;
+}
+
+.home-feedback-button:hover .home-contact-icon,
+.home-feedback-button:focus-visible .home-contact-icon {
+    transform: translateX(1px) rotate(12deg) scale(1.06);
+}
+
+.feedback-panel {
+    display: grid;
+    gap: 24px;
+    overflow: visible;
+}
+
+.feedback-panel::before {
+    display: none;
+}
+
+.feedback-form {
+    display: grid;
+    gap: 20px;
+}
+
+.feedback-field {
+    display: grid;
+    gap: 8px;
+}
+
+.feedback-field label {
+    color: var(--teal);
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.feedback-field input,
+.feedback-field textarea {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    color: var(--control-text);
+    background: var(--control-background);
+    border: 1px solid var(--border-soft);
+    padding: 0.95rem 1rem;
+    font: inherit;
+    line-height: 1.5;
+    transition:
+        background-color 0.18s ease,
+        border-color 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+.feedback-field input {
+    border-radius: 999px;
+}
+
+.feedback-field textarea {
+    resize: vertical;
+    min-height: 180px;
+    border-radius: 14px;
+}
+
+.feedback-field input::placeholder,
+.feedback-field textarea::placeholder {
+    color: var(--placeholder-text);
+}
+
+.feedback-field input:focus,
+.feedback-field textarea:focus {
+    color: var(--control-text);
+    background: var(--control-hover-background);
+    border-color: var(--teal);
+    outline: 3px solid var(--focus-ring);
+    outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .feedback-field input:not(:disabled):not([readonly]):not(:focus):hover,
+    .feedback-field textarea:not(:disabled):not([readonly]):not(:focus):hover {
+        background: var(--control-hover-background);
+        border-color: var(--hover-border);
+        box-shadow: 0 2px 10px color-mix(in srgb, var(--shadow-color) 36%, transparent);
+    }
+}
+
+.feedback-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.feedback-actions .primary-button,
+.feedback-actions .secondary-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    flex: 0 0 148px;
+    width: 148px;
+    min-width: 148px;
+    height: 48px;
+    min-height: 48px;
+    padding: 0;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 900;
+    line-height: 1;
+    text-align: center;
+}
+
+.feedback-actions .primary-button::before,
+.feedback-actions .secondary-button::before {
+    border-radius: inherit;
+}
+
+.feedback-status {
+    min-height: 1.45em;
+    margin: 0;
+    color: var(--teal);
+    font-weight: 850;
+}
+
+.feedback-status[data-tone="error"] {
+    color: #e7a2ac;
+}
+
+.feedback-status[data-tone="success"] {
+    color: var(--teal);
 }
 
 /* Adapted from Uiverse.io by vikramsinghnegi: Buttons/vikramsinghnegi_massive-panda-81.html */
@@ -4948,8 +5113,8 @@ html[data-language="zh-TW"] .home-release-card .release-number {
 
 .home-contact-text span {
     display: block;
-    opacity: 0;
-    animation: homeContactSlideDown 0.8s ease forwards calc(var(--i) * 0.03s);
+    opacity: 1;
+    animation: none;
 }
 
 .home-contact-state--default .home-contact-text span:nth-child(4) {
@@ -5015,7 +5180,9 @@ html[data-language="zh-TW"] .home-release-card .release-number {
 .home-contact-button:hover .home-contact-text span,
 .home-contact-button:focus-visible .home-contact-text span {
     opacity: 1;
-    animation: homeContactWave 0.5s ease forwards calc(var(--i) * 0.02s);
+    animation: none;
+    color: inherit;
+    transform: none;
 }
 
 .uiverse-contact-button:active,
@@ -5028,12 +5195,12 @@ html[data-language="zh-TW"] .home-release-card .release-number {
 
 .uiverse-contact-button:focus .home-contact-state--default,
 .home-contact-button:focus .home-contact-state--default {
-    position: absolute;
+    position: relative;
 }
 
 .uiverse-contact-button:focus .home-contact-state--default .home-contact-text span,
 .home-contact-button:focus .home-contact-state--default .home-contact-text span {
-    animation: homeContactDisappear 0.6s ease forwards calc(var(--i) * 0.03s);
+    animation: none;
     opacity: 1;
 }
 
@@ -5044,29 +5211,31 @@ html[data-language="zh-TW"] .home-release-card .release-number {
 
 .uiverse-contact-button:focus .home-contact-state--default .home-contact-icon svg,
 .home-contact-button:focus .home-contact-state--default .home-contact-icon svg {
-    animation: homeContactTakeOff 0.8s linear forwards;
+    animation: none;
 }
 
 .uiverse-contact-button:focus .home-contact-state--default .home-contact-icon::before,
 .home-contact-button:focus .home-contact-state--default .home-contact-icon::before {
-    animation: homeContactContrail 0.8s linear forwards;
+    animation: none;
+    opacity: 0;
+    width: 0;
 }
 
 .uiverse-contact-button:focus .home-contact-state--sent,
 .home-contact-button:focus .home-contact-state--sent {
-    display: flex;
+    display: none;
 }
 
 .uiverse-contact-button:focus .home-contact-state--sent .home-contact-text span,
 .home-contact-button:focus .home-contact-state--sent .home-contact-text span {
-    animation: homeContactSlideDown 0.8s ease forwards calc(var(--i) * 0.2s);
-    opacity: 0;
+    animation: none;
+    opacity: 1;
 }
 
 .uiverse-contact-button:focus .home-contact-state--sent .home-contact-icon svg,
 .home-contact-button:focus .home-contact-state--sent .home-contact-icon svg {
-    animation: homeContactAppear 1.2s ease forwards 0.8s;
-    opacity: 0;
+    animation: none;
+    opacity: 1;
 }
 
 @media (max-width: 680px) {
@@ -5139,6 +5308,13 @@ html[data-language="zh-TW"] .home-release-card .release-number {
     .about-connect .home-youtube-button {
         width: auto;
         max-width: none;
+        padding: 0.58em 0.82em;
+        font-size: 12px;
+    }
+
+    .about-connect .home-feedback-button {
+        width: auto;
+        min-height: 38px;
         padding: 0.58em 0.82em;
         font-size: 12px;
     }

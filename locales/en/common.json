@@ -44,6 +44,7 @@
     "chordProgressions": "Chord Progressions | Jam Tracks Hub",
     "progressionWriter": "Write Your Own Progression | Jam Tracks Hub",
     "fretboardTrainer": "Fretboard Trainer | Jam Tracks Hub",
+    "feedback": "Feedback | Jam Tracks Hub",
     "privacy": "Privacy Policy | Jam Tracks Hub",
     "notFound": "Page Not Found | Jam Tracks Hub"
   },
@@ -102,7 +103,10 @@
       "25": "Watch on YouTube",
       "26": "Subscribe",
       "27": "Get a note when a new backing track is released.",
-      "28": "Join the List"
+      "28": "Join the List",
+      "29": "Give Feedback",
+      "30": "Send Message",
+      "31": "Sent"
     }
   },
   "pages": {
@@ -388,6 +392,24 @@
       "lowE": "Low E",
       "highE": "High E",
       "referenceExample": "Example: string 5, fret 7 is E because the fifth string starts on A and moves up seven semitones."
+    },
+    "feedback": {
+      "eyebrow": "Feedback",
+      "title": "Share a suggestion",
+      "lead": "Tell me what topic you have in mind and how Jam Tracks Hub could work better for your practice.",
+      "formTitle": "Send feedback",
+      "formCopy": "Short notes are perfect. I use these suggestions to plan new tools, fix confusing flows, and shape future backing tracks.",
+      "topicLabel": "Topic",
+      "topicPlaceholder": "Navigation, track downloads, chord tools...",
+      "suggestionLabel": "Improvement suggestion",
+      "suggestionPlaceholder": "What would make this page or tool more useful?",
+      "submit": "Send Feedback",
+      "backToHome": "Back to Home",
+      "sending": "Sending...",
+      "success": "Thanks. Your feedback was sent.",
+      "error": "Could not send feedback. Please try again.",
+      "topicRequired": "Please enter a topic.",
+      "suggestionRequired": "Please enter your suggestion."
     }
   },
   "notFound": {
