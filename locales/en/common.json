@@ -88,7 +88,7 @@
       "11": "Train",
       "12": "Answer random string-and-fret questions to build note-name fluency.",
       "13": "Featured practice audio",
-      "14": "The newest release: an E major pop track for bright melodic hooks, clean phrasing, and chorus lift.",
+      "14": "The newest release: a C minor rock track for expressive phrasing, melodic tension, and verse-to-chorus lift.",
       "15": "Recent work",
       "16": "Latest Releases",
       "17": "View all tracks",
@@ -449,6 +449,7 @@
   "W15": "Deep Groove Backing Track in Dm",
   "W16": "Mellow Comfort Backing Track in F",
   "W17": "Amazing Crush Backing Track in E",
+  "W18": "Missing You Rock Backing Track in Cm",
   "track": {
     "descriptor": {
       "01": "Reflective",
