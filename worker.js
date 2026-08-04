@@ -4,6 +4,11 @@ import {
     onRequestPost as onSubscribePost
 } from "./functions/api/subscribe.js";
 import {
+    onRequestGet as onFeedbackGet,
+    onRequestOptions as onFeedbackOptions,
+    onRequestPost as onFeedbackPost
+} from "./functions/api/feedback.js";
+import {
     onRequestGet as onSubscribersCsvGet
 } from "./functions/api/subscribers.csv.js";
 
@@ -32,6 +37,19 @@ export default {
             }
             if (request.method === "GET") {
                 return onSubscribeGet(context);
+            }
+            return methodNotAllowed();
+        }
+
+        if (url.pathname === "/api/feedback") {
+            if (request.method === "OPTIONS") {
+                return onFeedbackOptions(context);
+            }
+            if (request.method === "POST") {
+                return onFeedbackPost(context);
+            }
+            if (request.method === "GET") {
+                return onFeedbackGet(context);
             }
             return methodNotAllowed();
         }
