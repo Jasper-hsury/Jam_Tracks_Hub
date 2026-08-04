@@ -6,5 +6,12 @@
   "assets": {
     "binding": "ASSETS",
     "directory": "./dist"
-  }
+  },
+  "d1_databases": [
+    {
+      "binding": "SUBSCRIBERS_DB",
+      "database_name": "jamtrackshub_subscribers",
+      "database_id": "9fbeaf79-817b-47fa-afc2-15f37712df46"
+    }
+  ]
 }
