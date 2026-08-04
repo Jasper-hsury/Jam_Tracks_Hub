@@ -40,6 +40,7 @@
     <meta name="twitter:image:alt" content="Jam Tracks Hub preview image" />
 
     <script src="scripts/theme-init.js?v=20260725-friendly-insect-switch"></script>
+    <script src="scripts/i18n-init.js?v=20260804-no-language-flash"></script>
     <script defer src="https://cloud.umami.is/script.js" data-website-id="c8dfc471-6512-4344-8e1b-25566e1a93cd"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@700&display=swap"
@@ -52,15 +53,15 @@
     <link rel="stylesheet" href="styles/components.css?v=20260728-mobile-polish" />
     <link
       rel="stylesheet"
-      href="styles/pages.css?v=20260730-tablet-logo"
+      href="styles/pages.css?v=20260804-nav-controls"
     />
     <link
       rel="stylesheet"
-      href="styles/themes.css?v=20260801-color-mix-fallback"
+      href="styles/themes.css?v=20260804-nav-controls"
     />
   </head>
 
-  <body>
+  <body data-i18n-title="titles.home">
     <nav class="navbar">
       <a href="index.html#home" class="logo">Jam Tracks Hub</a>
       <ul class="nav-links">
@@ -88,22 +89,22 @@
           >
             <text class="home-jam-mark-text" x="104" y="232">𝓙𝓪𝓶</text>
           </svg>
-          <p class="home-eyebrow">
+          <p class="home-eyebrow" data-i18n="home.hero.eyebrow">
             Backing tracks &middot; Fretboard tools &middot; Song analysis
           </p>
-          <h1>Tracks Hub</h1>
-          <p class="signature-slogan">
+          <h1 data-i18n="home.hero.title">Jam Tracks Hub</h1>
+          <p class="signature-slogan" data-i18n="home.hero.tagline">
             Capture the Feeling. Compose the Meaning.
           </p>
-          <p class="home-lead">
+          <p class="home-lead" data-i18n="home.hero.description">
             Original practice tracks and focused tools for musicians who want to
             listen, understand harmony, map the fretboard, and create with
             purpose.
           </p>
 
           <div class="hero-actions">
-            <a href="tracks.html" class="primary-button">Explore Tracks</a>
-            <a href="key-finder.html" class="secondary-button"
+            <a href="tracks.html" class="primary-button" data-i18n="home.hero.exploreTracks">Explore Tracks</a>
+            <a href="key-finder.html" class="secondary-button" data-i18n="home.hero.analyzeSong"
               >Analyze a Song</a
             >
           </div>
@@ -111,15 +112,15 @@
           <dl class="home-metrics" aria-label="Site overview">
             <div>
               <dt>16</dt>
-              <dd>Original tracks</dd>
+              <dd data-i18n="home.hero.stats.tracks">Original tracks</dd>
             </div>
             <div>
               <dt>24</dt>
-              <dd>Major and minor keys</dd>
+              <dd data-i18n="home.hero.stats.keys">Major and minor keys</dd>
             </div>
             <div>
               <dt>6</dt>
-              <dd>Creative tools</dd>
+              <dd data-i18n="home.hero.stats.tools">Creative tools</dd>
             </div>
           </dl>
         </div>
@@ -128,8 +129,8 @@
       <section class="home-tools" aria-labelledby="homeToolsTitle">
         <div class="home-section-inner">
           <div class="home-section-heading">
-            <p class="home-eyebrow">Start here</p>
-            <h2 id="homeToolsTitle">Choose your next step</h2>
+            <p class="home-eyebrow" data-i18n="home.tools.eyebrow">Start here</p>
+            <h2 id="homeToolsTitle" data-i18n="home.tools.title">Choose your next step</h2>
           </div>
 
           <div class="home-step-rail" aria-label="Choose a music tool">
@@ -167,9 +168,9 @@
                     />
                   </svg>
                 </span>
-                <span class="start-kicker">Practice</span>
-                <strong>Backing Tracks</strong>
-                <span
+                <span class="start-kicker" data-i18n="home.extra.01">Practice</span>
+                <strong data-i18n="home.tools.tracks">Backing Tracks</strong>
+                <span data-i18n="home.extra.02"
                   >Browse tracks by key, then sort newest or oldest first.</span
                 >
               </a>
@@ -202,9 +203,9 @@
                     />
                   </svg>
                 </span>
-                <span class="start-kicker">Reference</span>
-                <strong>Chord Dictionary</strong>
-                <span
+                <span class="start-kicker" data-i18n="home.extra.03">Reference</span>
+                <strong data-i18n="home.tools.dictionary">Chord Dictionary</strong>
+                <span data-i18n="home.extra.04"
                   >Compare formulas, notes, root strings, and compact guitar
                   shapes.</span
                 >
@@ -236,9 +237,9 @@
                     <circle class="motif-note" cx="132" cy="38" r="8" />
                   </svg>
                 </span>
-                <span class="start-kicker">Visualize</span>
-                <strong>Scale Explorer</strong>
-                <span
+                <span class="start-kicker" data-i18n="home.extra.05">Visualize</span>
+                <strong data-i18n="home.tools.scale">Scale Explorer</strong>
+                <span data-i18n="home.extra.06"
                   >Map scales across 15- or 22-fret necks and download a labeled
                   PNG.</span
                 >
@@ -282,9 +283,9 @@
                     />
                   </svg>
                 </span>
-                <span class="start-kicker">Analyze</span>
-                <strong>Key Finder</strong>
-                <span
+                <span class="start-kicker" data-i18n="home.extra.07">Analyze</span>
+                <strong data-i18n="home.tools.keyFinder">Key Finder</strong>
+                <span data-i18n="home.extra.08"
                   >Upload audio or paste a YouTube link to inspect the likely
                   tonal center.</span
                 >
@@ -334,9 +335,9 @@
                     </g>
                   </svg>
                 </span>
-                <span class="start-kicker">Create</span>
-                <strong>Chord Progressions</strong>
-                <span
+                <span class="start-kicker" data-i18n="home.extra.09">Create</span>
+                <strong data-i18n="home.tools.progressions">Chord Progressions</strong>
+                <span data-i18n="home.extra.10"
                   >Choose a key and explore common progressions for
                   writing.</span
                 >
@@ -369,9 +370,9 @@
                     />
                   </svg>
                 </span>
-                <span class="start-kicker">Train</span>
-                <strong>Fretboard Trainer</strong>
-                <span
+                <span class="start-kicker" data-i18n="home.extra.11">Train</span>
+                <strong data-i18n="home.tools.trainer">Fretboard Trainer</strong>
+                <span data-i18n="home.extra.12"
                   >Answer random string-and-fret questions to build note-name
                   fluency.</span
                 >
@@ -388,11 +389,11 @@
       >
         <div class="home-feature-inner">
           <div>
-            <p class="home-eyebrow">Featured practice audio</p>
-            <h2 id="featuredAudioTitle">
+            <p class="home-eyebrow" data-i18n="home.extra.13">Featured practice audio</p>
+            <h2 id="featuredAudioTitle" data-track-heading data-track-id="W17" data-track-title="Amazing Crush Backing Track in E" data-track-key="E major">
               W17 Amazing Crush Backing Track in E
             </h2>
-            <p>
+            <p data-i18n="home.extra.14">
               The newest release: an E major pop track for bright melodic
               hooks, clean phrasing, and chorus lift.
             </p>
@@ -426,10 +427,10 @@
         <div class="home-section-inner">
           <div class="home-section-heading home-section-heading-row">
             <div>
-              <p class="home-eyebrow">Recent work</p>
-              <h2 id="latestReleasesTitle">Latest Releases</h2>
+              <p class="home-eyebrow" data-i18n="home.extra.15">Recent work</p>
+              <h2 id="latestReleasesTitle" data-i18n="home.extra.16">Latest Releases</h2>
             </div>
-            <a href="tracks.html" class="text-link">View all tracks</a>
+            <a href="tracks.html" class="text-link" data-i18n="home.extra.17">View all tracks</a>
           </div>
 
           <div class="home-release-grid">
@@ -440,12 +441,19 @@
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Listen to W17 Amazing Crush Backing Track in E on YouTube"
+                data-i18n-aria-label="pages.tracks.openOnYouTube"
+                data-i18n-var-title="W17 Amazing Crush Backing Track in E"
+                data-track-id="W17"
+                data-track-title="Amazing Crush Backing Track in E"
+                data-track-key="E major"
               >
                 <img src="slides/W17/W17.001.jpeg" alt="" loading="lazy" />
               </a>
               <div class="release-copy">
                 <p class="release-number">W17</p>
-                <h3>Amazing Crush Backing Track in E</h3>
+                <h3 data-track-heading data-track-week="localized" data-track-id="W17" data-track-title="Amazing Crush Backing Track in E" data-track-key="E major">
+                  W17 Amazing Crush Backing Track in E
+                </h3>
                 <p class="release-note">
                   A bright E major pop track for melodic hooks and chorus lift.
                 </p>
@@ -460,7 +468,7 @@
                     rel="noopener noreferrer"
                     >YouTube</a
                   >
-                  <a href="slides/w17.html" class="text-link">Slides</a>
+                  <a href="slides/w17.html" class="text-link" data-i18n="pages.tracks.downloadSlides">Slides</a>
                 </div>
               </div>
             </article>
@@ -471,12 +479,19 @@
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Listen to W16 Mellow Comfort Backing Track in F on YouTube"
+                data-i18n-aria-label="pages.tracks.openOnYouTube"
+                data-i18n-var-title="W16 Mellow Comfort Backing Track in F"
+                data-track-id="W16"
+                data-track-title="Mellow Comfort Backing Track in F"
+                data-track-key="F major"
               >
                 <img src="slides/W16/W16.001.jpeg" alt="" loading="lazy" />
               </a>
               <div class="release-copy">
                 <p class="release-number">W16</p>
-                <h3>Mellow Comfort Backing Track in F</h3>
+                <h3 data-track-heading data-track-week="localized" data-track-id="W16" data-track-title="Mellow Comfort Backing Track in F" data-track-key="F major">
+                  W16 Mellow Comfort Backing Track in F
+                </h3>
                 <p class="release-note">
                   A mellow F major track for warm phrasing and gentle color
                   changes.
@@ -492,7 +507,7 @@
                     rel="noopener noreferrer"
                     >YouTube</a
                   >
-                  <a href="slides/w16.html" class="text-link">Slides</a>
+                  <a href="slides/w16.html" class="text-link" data-i18n="pages.tracks.downloadSlides">Slides</a>
                 </div>
               </div>
             </article>
@@ -503,12 +518,19 @@
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Listen to W15 Deep Groove Backing Track in Dm on YouTube"
+                data-i18n-aria-label="pages.tracks.openOnYouTube"
+                data-i18n-var-title="W15 Deep Groove Backing Track in Dm"
+                data-track-id="W15"
+                data-track-title="Deep Groove Backing Track in Dm"
+                data-track-key="D minor"
               >
                 <img src="slides/W15/W15.001.jpeg" alt="" loading="lazy" />
               </a>
               <div class="release-copy">
                 <p class="release-number">W15</p>
-                <h3>Deep Groove Backing Track in Dm</h3>
+                <h3 data-track-heading data-track-week="localized" data-track-id="W15" data-track-title="Deep Groove Backing Track in Dm" data-track-key="D minor">
+                  W15 Deep Groove Backing Track in Dm
+                </h3>
                 <p class="release-note">
                   A darker D minor groove for pocket-focused phrasing and
                   melodic tension.
@@ -524,7 +546,7 @@
                     rel="noopener noreferrer"
                     >YouTube</a
                   >
-                  <a href="slides/w15.html" class="text-link">Slides</a>
+                  <a href="slides/w15.html" class="text-link" data-i18n="pages.tracks.downloadSlides">Slides</a>
                 </div>
               </div>
             </article>
@@ -545,30 +567,30 @@
           </figure>
 
           <div class="about-copy">
-            <p class="home-eyebrow">About Jam Tracks Hub</p>
-            <h2 id="aboutTitle">
+            <p class="home-eyebrow" data-i18n="home.about.eyebrow">About Jam Tracks Hub</p>
+            <h2 id="aboutTitle" data-i18n="home.extra.18">
               Designed by a guitarist for musicians who learn by listening.
             </h2>
-            <p>
+            <p data-i18n="home.extra.19">
               Jam Tracks Hub is designed and built by Jasper, a guitarist and
               music creator who turns weekly backing tracks into a focused
               workspace for practice, harmony, and songwriting ideas.
             </p>
-            <p>
+            <p data-i18n="home.extra.20">
               Every page is shaped around real musician workflows: finding a
               key, mapping a scale, comparing chord colors, locating notes on
               the fretboard, and bringing the idea back to the instrument.
             </p>
-            <p>
+            <p data-i18n="home.extra.21">
               The design goal is calm, practical, and musical: less menu
               hunting, more immediate sound, clear theory, and visual cues that
               support your ear without getting in the way.
             </p>
             <div class="about-connect">
               <div class="about-connect-copy">
-                <span>Connect</span>
-                <strong>Questions, collaborations, or track requests?</strong>
-                <p>
+                <span data-i18n="home.extra.22">Connect</span>
+                <strong data-i18n="home.extra.23">Questions, collaborations, or track requests?</strong>
+                <p data-i18n="home.extra.24">
                   Send a note anytime. I usually use these messages to plan
                   new backing tracks, workflow improvements, and guitar-focused
                   tools.
@@ -599,7 +621,7 @@
                         </svg>
                       </span>
                     </span>
-                    <span>Watch on YouTube</span>
+                    <span data-i18n="home.extra.25">Watch on YouTube</span>
                   </a>
                   <a
                     href="mailto:Jamtrackshubwork@gmail.com"
@@ -663,8 +685,8 @@
                 data-subscribe-endpoint="/api/subscribe"
                 data-subscribe-source="homepage-about"
               >
-                <span class="home-subscribe-title">Subscribe</span>
-                <p class="home-subscribe-content">
+                <span class="home-subscribe-title" data-i18n="home.extra.26">Subscribe</span>
+                <p class="home-subscribe-content" data-i18n="home.extra.27">
                   Get a note when a new backing track is released.
                 </p>
                 <div class="home-subscribe-form">
@@ -686,7 +708,7 @@
                     aria-hidden="true"
                   />
                   <button class="home-subscribe-button" type="submit">
-                    Join the List
+                    <span data-i18n="home.extra.28">Join the List</span>
                   </button>
                 </div>
                 <p
@@ -725,7 +747,8 @@
       &uarr;
     </button>
 
-    <script src="scripts/site.js?v=20260730-tablet-logo"></script>
+    <script src="scripts/site.js?v=20260804-nav-controls"></script>
+    <script src="scripts/i18n.js?v=20260804-nav-controls"></script>
     <script src="assets/vendor/gsap/gsap.min.js"></script>
     <script src="assets/vendor/gsap/ScrollTrigger.min.js"></script>
     <script src="assets/vendor/gsap/SplitText.min.js"></script>

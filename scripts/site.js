@@ -203,6 +203,11 @@ document.addEventListener("DOMContentLoaded", function() {
             const themeItem = document.createElement("li");
             themeItem.className = "nav-theme-item";
             themeToggle.classList.add("nav-theme-toggle");
+            const appearanceLabel = document.createElement("span");
+            appearanceLabel.className = "nav-appearance-label";
+            appearanceLabel.dataset.i18n = "nav.appearance";
+            appearanceLabel.textContent = "Appearance";
+            themeItem.appendChild(appearanceLabel);
             themeItem.appendChild(themeToggle);
             navLinks.appendChild(themeItem);
         } else {

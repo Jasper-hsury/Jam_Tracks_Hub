@@ -45,6 +45,10 @@ document.addEventListener("DOMContentLoaded", function() {
         return NOTES.find(note => note.pitch === pitch)?.label || "Unknown";
     }
 
+    function t(key, fallback, variables) {
+        return window.JasperI18n?.translate?.(key, fallback, variables) ?? fallback;
+    }
+
     function exactNoteName(pitch) {
         return noteLabel(pitch).split(" / ")[0];
     }
@@ -73,7 +77,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function updateScore() {
         scoreCorrect.textContent = String(correctCount);
         scoreTotal.textContent = String(totalCount);
-        trainerProgress.textContent = `${totalCount} answered`;
+        trainerProgress.textContent = t("pages.fretboardTrainer.answered", "{{count}} answered", { count: totalCount });
     }
 
     function renderQuestion() {
@@ -84,7 +88,7 @@ document.addEventListener("DOMContentLoaded", function() {
         questionStringName.textContent = `${currentQuestion.string.name} string`;
         questionFret.textContent = String(currentQuestion.fret);
         trainerFeedback.className = "trainer-feedback";
-        trainerFeedback.textContent = "Choose the note name below.";
+        trainerFeedback.textContent = t("pages.fretboardTrainer.chooseNote", "Choose the note name below.");
 
         noteAnswerGrid.querySelectorAll("button").forEach(button => {
             button.disabled = false;
@@ -120,8 +124,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
         trainerFeedback.className = `trainer-feedback ${isCorrect ? "is-correct" : "is-wrong"}`;
         trainerFeedback.textContent = isCorrect
-            ? `Correct. String ${currentQuestion.string.number}, fret ${currentQuestion.fret} is ${exactNoteName(currentQuestion.pitch)}.`
-            : `Not quite. String ${currentQuestion.string.number}, fret ${currentQuestion.fret} is ${exactNoteName(currentQuestion.pitch)}.`;
+            ? t("pages.fretboardTrainer.correct", "Correct. {{note}} is the note at string {{string}}, fret {{fret}}.", {
+                note: exactNoteName(currentQuestion.pitch),
+                string: currentQuestion.string.number,
+                fret: currentQuestion.fret
+            })
+            : t("pages.fretboardTrainer.wrong", "Not this time. That note is {{note}}.", {
+                note: exactNoteName(currentQuestion.pitch),
+                string: currentQuestion.string.number,
+                fret: currentQuestion.fret
+            });
 
         updateScore();
     }
@@ -140,7 +152,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
         hasAnswered = true;
         trainerFeedback.className = "trainer-feedback is-revealed";
-        trainerFeedback.textContent = `Answer: ${exactNoteName(currentQuestion.pitch)}. String ${currentQuestion.string.number} starts on ${currentQuestion.string.name}; add ${currentQuestion.fret} semitones.`;
+        trainerFeedback.textContent = t("pages.fretboardTrainer.answerDetail", "Answer: {{note}}. String {{string}} starts on {{stringName}}; add {{fret}} semitones.", {
+            note: exactNoteName(currentQuestion.pitch),
+            string: currentQuestion.string.number,
+            stringName: currentQuestion.string.name,
+            fret: currentQuestion.fret
+        });
     }
 
     function renderAnswerButtons() {
@@ -170,4 +187,11 @@ document.addEventListener("DOMContentLoaded", function() {
     renderAnswerButtons();
     updateScore();
     renderQuestion();
+
+    window.addEventListener("jasper:language-change", function() {
+        updateScore();
+        if (!hasAnswered) {
+            trainerFeedback.textContent = t("pages.fretboardTrainer.chooseNote", "Choose the note name below.");
+        }
+    });
 });

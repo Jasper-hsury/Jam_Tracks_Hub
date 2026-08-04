@@ -291,6 +291,35 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    function t(key, fallback, variables) {
+        return window.JasperI18n?.translate?.(key, fallback, variables) ?? fallback;
+    }
+
+    const progressionCopyTranslationKeys = {
+        "Pop staples": "progression.extra.01",
+        "Songwriting basics": "progression.extra.02",
+        "12 bar blues": "progression.extra.03",
+        "Jazz essentials": "progression.extra.04",
+        "Neo soul / jazz colors": "progression.extra.05",
+        "Minor pop staples": "progression.extra.06",
+        "Pop / Rock / Worship": "progression.extra.07",
+        "Emotional Pop": "progression.extra.08",
+        "50s Progression / Ballad": "progression.extra.09",
+        "Classic / Folk Foundation": "progression.extra.10",
+        "Jazz / Smooth Turnaround": "progression.extra.11",
+        "Neo Soul / R&B Resolution": "progression.extra.12",
+        "Minor Jazz Cadence": "progression.extra.13",
+        "A direct four-chord loop for modern songs and big choruses.": "progression.extra.14",
+        "Starts on the relative minor for a more wistful version of the pop loop.": "progression.extra.15",
+        "Classic circular movement for ballads, oldies, and gentle songwriting.": "progression.extra.16",
+        "Twelve-bar form with the turnaround on the last bar.": "progression.extra.17"
+    };
+
+    function translateProgressionCopy(value) {
+        const key = progressionCopyTranslationKeys[value];
+        return key ? t(key, value) : value;
+    }
+
     function positiveModulo(value, modulo) {
         return ((value % modulo) + modulo) % modulo;
     }
@@ -479,7 +508,7 @@ document.addEventListener("DOMContentLoaded", function() {
             return `
                 <a class="progression-shape-card progression-shape-card-fallback" href="${dictionaryUrl}">
                     <strong>${safeChordName}</strong>
-                    <span>Open Chord Dictionary</span>
+                    <span>${escapeProgressionHtml(t("nav.chordDictionary", "Chord Dictionary"))}</span>
                 </a>
             `;
         }
@@ -527,10 +556,10 @@ document.addEventListener("DOMContentLoaded", function() {
         }).join("");
 
         return `
-            <a class="progression-shape-card" href="${dictionaryUrl}" aria-label="Open ${safeChordName} in Chord Dictionary">
+            <a class="progression-shape-card" href="${dictionaryUrl}" aria-label="${escapeProgressionHtml(t("pages.chordProgressions.openDictionary", "Open {{chord}} in Chord Dictionary", { chord: chordName }))}">
                 <div class="progression-shape-card-head">
                     <strong>${safeChordName}</strong>
-                    <span>Root pos.</span>
+                    <span>${escapeProgressionHtml(t("pages.chordDictionary.rootPosition", "Root pos."))}</span>
                 </div>
                 <div class="progression-shape-frets">${escapeProgressionHtml(displayFrets)}</div>
                 <div class="progression-mini-diagram" aria-hidden="true">
@@ -697,9 +726,13 @@ document.addEventListener("DOMContentLoaded", function() {
             return `
                 <details class="progression-voicing-category" ${categoryIndex === 0 ? "open" : ""}>
                     <summary class="progression-category-heading progression-voicing-heading">
-                        <span class="progression-category-title">${escapeProgressionHtml(category)}</span>
+                        <span class="progression-category-title">${escapeProgressionHtml(translateProgressionCopy(category))}</span>
                         <span class="progression-category-meta">
-                            <strong>${categoryCount} ${categoryCount === 1 ? "progression" : "progressions"}</strong>
+                            <strong>${escapeProgressionHtml(t(
+                                categoryCount === 1 ? "pages.chordProgressions.progressionCount_one" : "pages.chordProgressions.progressionCount_other",
+                                "{{count}} progressions",
+                                { count: categoryCount }
+                            ))}</strong>
                         </span>
                     </summary>
                     <div class="progression-voicing-grid">
@@ -722,14 +755,14 @@ document.addEventListener("DOMContentLoaded", function() {
                                     return `<span class="progression-chord-token">${escapeProgressionHtml(chord)}</span>`;
                                 }).join("");
                                 const renderedStyle = chordGroups.length > 1
-                                    ? `<span class="progression-group-label">Bars ${groupStart}-${groupEnd}</span>${showGroupedStyle ? `<span class="progression-style-name">${escapeProgressionHtml(progression.style)}</span>` : ""}`
-                                    : escapeProgressionHtml(progression.style);
+                                    ? `<span class="progression-group-label">${escapeProgressionHtml(t("pages.chordProgressions.bars", "Bars {{start}}-{{end}}", { start: groupStart, end: groupEnd }))}</span>${showGroupedStyle ? `<span class="progression-style-name">${escapeProgressionHtml(translateProgressionCopy(progression.style))}</span>` : ""}`
+                                    : escapeProgressionHtml(translateProgressionCopy(progression.style));
 
                                 return `
                                     <div class="progression-voicing-summary">
                                         <span class="progression-numerals${countClass}">${renderedNumerals}</span>
                                         <span class="progression-compact-chords${countClass}">${renderedChords}</span>
-                                        <p class="progression-style">${renderedStyle}</p>
+                                        <p class="progression-style${countClass}">${renderedStyle}</p>
                                     </div>
                                 `;
                             };
@@ -748,7 +781,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                                 const groupEnd = groupStart + chordGroup.length - 1;
 
                                                 return `
-                                                    <div class="progression-chord-voicings progression-chord-voicing-group" aria-label="Bars ${groupStart}-${groupEnd} chord shapes">
+                                                    <div class="progression-chord-voicings progression-chord-voicing-group" aria-label="${escapeProgressionHtml(t("pages.chordProgressions.shapeLabel", "Bars {{start}}-{{end}} chord shapes", { start: groupStart, end: groupEnd }))}">
                                                         ${chordGroup.map(renderProgressionChordShape).join("")}
                                                     </div>
                                                 `;
@@ -841,7 +874,7 @@ document.addEventListener("DOMContentLoaded", function() {
             card.classList.remove("is-current", "is-next");
         });
         document.querySelectorAll(".progression-play-button").forEach(function(button) {
-            button.textContent = "Loop";
+            button.textContent = t("pages.chordProgressions.loop", "Loop");
         });
     }
 
@@ -1429,7 +1462,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const playButton = card.querySelector(".progression-play-button");
 
         if (playButton) {
-            playButton.textContent = "Playing";
+            playButton.textContent = t("pages.chordProgressions.playing", "Playing");
         }
 
         function scheduleCycle(cycleStartTime, cycleIndex) {
@@ -1506,11 +1539,11 @@ document.addEventListener("DOMContentLoaded", function() {
                             <span>${item.numerals.join(" - ")}</span>
                             <span>${item.chords.join(" - ")}</span>
                         </div>
-                        <button class="saved-progression-delete" type="button" data-saved-id="${item.id}" aria-label="Delete saved progression">Delete</button>
+                        <button class="saved-progression-delete" type="button" data-saved-id="${item.id}" aria-label="${escapeProgressionHtml(t("pages.chordProgressions.delete", "Delete"))}">${escapeProgressionHtml(t("pages.chordProgressions.delete", "Delete"))}</button>
                     </article>
                 `;
             }).join("")
-            : `<p class="saved-progression-empty">No saved progressions yet.</p>`;
+            : `<p class="saved-progression-empty">${escapeProgressionHtml(t("pages.progressionWriter.noSavedOption", "No saved progressions yet."))}</p>`;
     }
 
     function saveProgression(button) {
@@ -1519,7 +1552,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const style = decodeURIComponent(button.dataset.style || "");
         const item = {
             id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
-            key: selectedKeyButton?.dataset.key || "Selected key",
+            key: selectedKeyButton?.dataset.key || t("pages.chordProgressions.selectedKey", "Selected key"),
             chords,
             numerals,
             style
@@ -1527,9 +1560,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
         writeSavedProgressions([item, ...readSavedProgressions()]);
         renderSavedProgressions();
-        button.textContent = "Saved";
+        button.textContent = t("pages.chordProgressions.saved", "Saved");
         window.setTimeout(function() {
-            button.textContent = "Save";
+            button.textContent = t("pages.chordProgressions.save", "Save");
         }, 1200);
     }
 
@@ -1537,7 +1570,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const chords = JSON.parse(decodeURIComponent(button.dataset.chords));
         const numerals = JSON.parse(decodeURIComponent(button.dataset.numerals));
         const style = decodeURIComponent(button.dataset.style || "");
-        const keyName = selectedKeyButton?.dataset.key || "Selected key";
+        const keyName = selectedKeyButton?.dataset.key || t("pages.chordProgressions.selectedKey", "Selected key");
         const content = [
             "Jam Tracks Hub - Chord Progression",
             "",
@@ -1671,33 +1704,33 @@ document.addEventListener("DOMContentLoaded", function() {
         keyResult.innerHTML = `
             <div class="selected-key-heading progression-selected-heading">
                 <div>
-                    <span class="result-kicker">Selected key</span>
+                    <span class="result-kicker">${escapeProgressionHtml(t("pages.chordProgressions.selectedKey", "Selected key"))}</span>
                     <h3>${escapeProgressionHtml(keyName)}</h3>
                 </div>
             </div>
             <section class="progression-section progression-library-section">
                 <div class="progression-toolbar progression-toolbar-simple">
                     <div class="progression-toolbar-heading">
-                        <span class="result-kicker">Chord library</span>
-                        <h4>Common Progressions</h4>
-                        <p>Switch between triads and seventh chords. Each chord includes a compact root-position guitar shape.</p>
+                        <span class="result-kicker">${escapeProgressionHtml(t("pages.chordProgressions.chordLibrary", "Chord library"))}</span>
+                        <h4>${escapeProgressionHtml(t("pages.chordProgressions.commonProgressions", "Common Progressions"))}</h4>
+                        <p>${escapeProgressionHtml(t("pages.chordProgressions.libraryIntro", "Switch between triads and seventh chords. Each chord includes a compact root-position guitar shape."))}</p>
                     </div>
                     <div class="progression-chord-mode-control">
-                        <span>Chords</span>
-                        <div class="progression-extension-toggle" role="group" aria-label="Chord type">
+                        <span>${escapeProgressionHtml(t("pages.chordProgressions.chords", "Chords"))}</span>
+                        <div class="progression-extension-toggle" role="group" aria-label="${escapeProgressionHtml(t("pages.chordProgressions.chordType", "Chord type"))}">
                             <button
                                 class="progression-extension-option${settings.extension === "triads" ? " is-selected" : ""}"
                                 type="button"
                                 data-chord-extension="triads"
                                 aria-pressed="${settings.extension === "triads"}">
-                                Triads
+                                ${escapeProgressionHtml(t("pages.chordProgressions.triads", "Triads"))}
                             </button>
                             <button
                                 class="progression-extension-option${settings.extension === "sevenths" ? " is-selected" : ""}"
                                 type="button"
                                 data-chord-extension="sevenths"
                                 aria-pressed="${settings.extension === "sevenths"}">
-                                Seventh chords
+                                ${escapeProgressionHtml(t("pages.chordProgressions.sevenths", "Seventh chords"))}
                             </button>
                         </div>
                     </div>
@@ -1736,8 +1769,8 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         keyResult.innerHTML = `
-            <h3>Select a ${currentKeyMode} key</h3>
-            <p>Click a tonic above to see its notes.</p>
+            <h3>${escapeProgressionHtml(t("pages.chordProgressions.selectMajorKey", "Select a {{mode}} key", { mode: currentKeyMode }))}</h3>
+            <p>${escapeProgressionHtml(t("pages.chordProgressions.selectTonicCopy", "Click a tonic above to see its notes."))}</p>
         `;
     });
 
@@ -1761,8 +1794,8 @@ document.addEventListener("DOMContentLoaded", function() {
             button.setAttribute("aria-pressed", "false");
         });
         keyResult.innerHTML = `
-            <h3>Select a key</h3>
-            <p>Click a key above to see its notes.</p>
+            <h3>${escapeProgressionHtml(t("pages.chordProgressions.selectKey", "Select a key"))}</h3>
+            <p>${escapeProgressionHtml(t("pages.chordProgressions.selectKeyCopy", "Click a key above to see its notes."))}</p>
         `;
     });
 
@@ -1779,4 +1812,17 @@ document.addEventListener("DOMContentLoaded", function() {
             renderSelectedKey(requestedButton, false);
         }
     }
+
+    window.addEventListener("jasper:language-change", function() {
+        refreshKeyModeButtons();
+        if (selectedKeyButton) {
+            renderSelectedKey(selectedKeyButton, false);
+            return;
+        }
+
+        keyResult.innerHTML = `
+            <h3>${escapeProgressionHtml(t("pages.chordProgressions.selectKey", "Select a key"))}</h3>
+            <p>${escapeProgressionHtml(t("pages.chordProgressions.selectKeyCopy", "Click a key above to see its notes."))}</p>
+        `;
+    });
 });

@@ -25,16 +25,17 @@
     <meta name="twitter:image:alt" content="Jam Tracks Hub preview card for backing tracks and guitar tools.">
 
     <script src="scripts/theme-init.js?v=20260725-friendly-insect-switch"></script>
+    <script src="scripts/i18n-init.js?v=20260804-no-language-flash"></script>
     <script defer src="https://cloud.umami.is/script.js" data-website-id="c8dfc471-6512-4344-8e1b-25566e1a93cd"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles/base.css?v=20260725-friendly-insect-switch">
     <link rel="stylesheet" href="styles/components.css?v=20260728-mobile-polish">
-    <link rel="stylesheet" href="styles/pages.css?v=20260730-tablet-logo">
-    <link rel="stylesheet" href="styles/themes.css?v=20260801-color-mix-fallback">
+    <link rel="stylesheet" href="styles/pages.css?v=20260804-nav-controls">
+    <link rel="stylesheet" href="styles/themes.css?v=20260804-nav-controls">
     <link rel="stylesheet" href="styles/chord-dictionary.css?v=20260728-mobile-polish">
 </head>
 
-<body>
+<body data-i18n-title="titles.chordDictionary">
     <nav class="navbar">
         <a href="index.html#home" class="logo">Jam Tracks Hub</a>
         <ul class="nav-links">
@@ -51,26 +52,26 @@
 
     <main class="tracks-page chord-dictionary-page">
         <header class="dictionary-heading">
-            <p class="home-eyebrow">Chord tones &middot; formulas &middot; guitar shapes</p>
-            <h1>Chord Dictionary</h1>
-            <p class="hero-tagline signature-slogan">Name the harmony. See the notes. Find a shape.</p>
+            <p class="home-eyebrow" data-i18n="pages.chordDictionary.eyebrow">Chord tones &middot; formulas &middot; guitar shapes</p>
+            <h1 data-i18n="pages.chordDictionary.title">Chord Dictionary</h1>
+            <p class="hero-tagline signature-slogan" data-i18n="pages.chordDictionary.tagline">Name the harmony. See the notes. Find a shape.</p>
         </header>
 
         <section class="dictionary-workspace" aria-labelledby="dictionaryBrowseTitle">
             <div class="dictionary-browser">
                 <div class="dictionary-browser-heading">
                     <div>
-                        <p class="dictionary-kicker">Step 1</p>
-                        <h2 id="dictionaryBrowseTitle">Choose a root and chord type</h2>
+                        <p class="dictionary-kicker" data-i18n="pages.chordDictionary.step">Step 1</p>
+                        <h2 id="dictionaryBrowseTitle" data-i18n="pages.chordDictionary.browseTitle">Choose a root and chord type</h2>
                     </div>
                     <label class="dictionary-search" for="chordSearch">
-                        <span>Chord symbol or type</span>
-                        <input id="chordSearch" type="search" placeholder="Try Cm7, CM7, C7, suspended..." autocomplete="off">
+                        <span data-i18n="pages.chordDictionary.searchLabel">Chord symbol or type</span>
+                        <input id="chordSearch" type="search" placeholder="Try Cm7, CM7, C7, suspended..." data-i18n-placeholder="pages.chordDictionary.searchPlaceholder" autocomplete="off">
                     </label>
                 </div>
 
                 <fieldset class="dictionary-root-field">
-                    <legend>Root note</legend>
+                    <legend data-i18n="pages.chordDictionary.rootNote">Root note</legend>
                     <div class="dictionary-root-grid" id="dictionaryRootGrid">
                         <button type="button" class="is-selected" data-root="0" aria-pressed="true">C</button>
                         <button type="button" data-root="1" aria-pressed="false">C#</button>
@@ -93,55 +94,55 @@
             <aside class="dictionary-detail" aria-labelledby="selectedChordName">
                 <div class="dictionary-detail-heading">
                     <div>
-                        <p class="dictionary-kicker">Selected chord</p>
+                        <p class="dictionary-kicker" data-i18n="pages.chordDictionary.selectedChord">Selected chord</p>
                         <h2 id="selectedChordName">C Major</h2>
                         <p id="selectedChordDescription">The basic major triad: stable, open, and resolved.</p>
                     </div>
                     <button class="dictionary-play-button" id="playChordButton" type="button">
                         <span aria-hidden="true">&#9654;</span>
-                        Play chord
+                        <span data-i18n="pages.chordDictionary.playChord">Play chord</span>
                     </button>
                 </div>
 
                 <dl class="dictionary-facts">
                     <div>
-                        <dt>Symbol</dt>
+                        <dt data-i18n="pages.chordDictionary.symbol">Symbol</dt>
                         <dd id="selectedChordSymbol">C</dd>
                     </div>
                     <div>
-                        <dt>Formula</dt>
+                        <dt data-i18n="pages.chordDictionary.formula">Formula</dt>
                         <dd id="selectedChordFormula">1 - 3 - 5</dd>
                     </div>
                     <div>
-                        <dt>Notes</dt>
+                        <dt data-i18n="pages.chordDictionary.notes">Notes</dt>
                         <dd id="selectedChordNotes">C - E - G</dd>
                     </div>
                 </dl>
 
-                <div class="dictionary-related-actions" id="dictionaryRelatedActions" aria-label="Related music tools"></div>
+                <div class="dictionary-related-actions" id="dictionaryRelatedActions" aria-label="Related music tools" data-i18n-aria-label="pages.chordDictionary.relatedTools"></div>
 
                 <div class="dictionary-shape-heading">
                     <div>
-                        <h3>Available guitar shapes</h3>
-                        <p>Standard tuning E A D G B E. Shapes use at most four adjacent frets. X means mute; O means open.</p>
+                        <h3 data-i18n="pages.chordDictionary.availableShapes">Available guitar shapes</h3>
+                        <p data-i18n="pages.chordDictionary.shapeHelp">Standard tuning E A D G B E. Shapes use at most four adjacent frets. X means mute; O means open.</p>
                     </div>
-                    <span id="shapeCount">Finding shapes</span>
+                    <span id="shapeCount" data-i18n="pages.chordDictionary.findingShapes">Finding shapes</span>
                 </div>
 
                 <div class="dictionary-position-filter" id="shapePositionFilter" aria-label="Filter chord shapes by fret area">
-                    <span>Position</span>
-                    <button type="button" class="is-selected" data-position="all" aria-pressed="true">All</button>
-                    <button type="button" data-position="0" aria-pressed="false">Near 0</button>
-                    <button type="button" data-position="3" aria-pressed="false">Near 3</button>
-                    <button type="button" data-position="5" aria-pressed="false">Near 5</button>
-                    <button type="button" data-position="7" aria-pressed="false">Near 7</button>
-                    <button type="button" data-position="9" aria-pressed="false">Near 9</button>
-                    <button type="button" data-position="12" aria-pressed="false">Near 12</button>
+                    <span data-i18n="pages.chordDictionary.position">Position</span>
+                    <button type="button" class="is-selected" data-position="all" aria-pressed="true" data-i18n="common.all">All</button>
+                    <button type="button" data-position="0" aria-pressed="false" data-i18n="pages.chordDictionary.near" data-i18n-var-fret="0">Near 0</button>
+                    <button type="button" data-position="3" aria-pressed="false" data-i18n="pages.chordDictionary.near" data-i18n-var-fret="3">Near 3</button>
+                    <button type="button" data-position="5" aria-pressed="false" data-i18n="pages.chordDictionary.near" data-i18n-var-fret="5">Near 5</button>
+                    <button type="button" data-position="7" aria-pressed="false" data-i18n="pages.chordDictionary.near" data-i18n-var-fret="7">Near 7</button>
+                    <button type="button" data-position="9" aria-pressed="false" data-i18n="pages.chordDictionary.near" data-i18n-var-fret="9">Near 9</button>
+                    <button type="button" data-position="12" aria-pressed="false" data-i18n="pages.chordDictionary.near" data-i18n-var-fret="12">Near 12</button>
                 </div>
 
                 <div class="dictionary-position-filter dictionary-root-string-filter" id="shapeRootStringFilter" aria-label="Filter chord shapes by root string">
-                    <span>Root string</span>
-                    <button type="button" class="is-selected" data-root-string="all" aria-pressed="true">All</button>
+                    <span data-i18n="pages.chordDictionary.rootString">Root string</span>
+                    <button type="button" class="is-selected" data-root-string="all" aria-pressed="true" data-i18n="common.all">All</button>
                     <button type="button" data-root-string="6" aria-pressed="false">6th E</button>
                     <button type="button" data-root-string="5" aria-pressed="false">5th A</button>
                     <button type="button" data-root-string="4" aria-pressed="false">4th D</button>
@@ -151,18 +152,18 @@
                 </div>
 
                 <div class="dictionary-position-filter dictionary-triad-filter" id="shapeTriadFilter" aria-label="Filter chord shapes by string set">
-                    <span>String set</span>
-                    <button type="button" class="is-selected" data-triad-set="all" aria-pressed="true">All shapes</button>
-                    <button type="button" data-triad-set="top-three" aria-pressed="false">1-3 triads</button>
-                    <button type="button" data-triad-set="top-four" aria-pressed="false">1-4 triads / 7ths</button>
-                    <button type="button" data-triad-set="top-five" aria-pressed="false">1-5 triads / 7ths</button>
+                    <span data-i18n="pages.chordDictionary.stringSet">String set</span>
+                    <button type="button" class="is-selected" data-triad-set="all" aria-pressed="true" data-i18n="pages.chordDictionary.allShapes">All shapes</button>
+                    <button type="button" data-triad-set="top-three" aria-pressed="false" data-i18n="pages.chordDictionary.topThree">1-3 triads</button>
+                    <button type="button" data-triad-set="top-four" aria-pressed="false" data-i18n="pages.chordDictionary.topFour">1-4 triads / 7ths</button>
+                    <button type="button" data-triad-set="top-five" aria-pressed="false" data-i18n="pages.chordDictionary.topFive">1-5 triads / 7ths</button>
                 </div>
 
                 <div class="dictionary-shape-grid" id="chordShapeGrid"></div>
                 <nav class="dictionary-pagination" id="shapePagination" aria-label="Chord shape pages" hidden>
-                    <button id="previousShapesButton" type="button">Previous</button>
+                    <button id="previousShapesButton" type="button" data-i18n="common.previous">Previous</button>
                     <span id="shapePageStatus" aria-live="polite">Page 1 of 1</span>
-                    <button id="nextShapesButton" type="button">Next</button>
+                    <button id="nextShapesButton" type="button" data-i18n="common.next">Next</button>
                 </nav>
             </aside>
         </section>
@@ -176,11 +177,12 @@
         </div>
     </footer>
 
-    <button id="backToTopBtn" type="button" aria-label="Back to top">&uarr;</button>
+    <button id="backToTopBtn" type="button" aria-label="Back to top" data-i18n-aria-label="common.backToTop">&uarr;</button>
 
     <script src="assets/vendor/gsap/gsap.min.js"></script>
     <script src="assets/vendor/gsap/Flip.min.js"></script>
-    <script src="scripts/site.js?v=20260730-tablet-logo"></script>
+    <script src="scripts/site.js?v=20260804-nav-controls"></script>
+    <script src="scripts/i18n.js?v=20260804-nav-controls"></script>
     <script src="scripts/chord-dictionary.js?v=20260722-shape-entry-polish"></script>
     <script src="assets/vendor/gsap/ScrollTrigger.min.js"></script>
     <script src="scripts/site-animations.js?v=20260722-shape-entry-polish"></script>

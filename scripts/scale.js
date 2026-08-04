@@ -60,6 +60,16 @@ document.addEventListener("DOMContentLoaded", function() {
             description: "A dramatic minor scale with a raised seventh that strongly pulls back to the root."
         }
     };
+    const SCALE_TYPE_TRANSLATION_IDS = {
+        "major": "major",
+        "natural-minor": "naturalMinor",
+        "major-pentatonic": "majorPentatonic",
+        "minor-pentatonic": "minorPentatonic",
+        "blues": "blues",
+        "dorian": "dorian",
+        "mixolydian": "mixolydian",
+        "harmonic-minor": "harmonicMinor"
+    };
 
     const scaleTypeSelect = document.getElementById("scaleType");
     const rootGrid = document.getElementById("scaleRootGrid");
@@ -73,6 +83,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const playButton = document.getElementById("playScaleButton");
     const downloadButton = document.getElementById("downloadScaleButton");
     const toolLinks = document.getElementById("scaleToolLinks");
+    const playButtonLabel = playButton?.querySelector("[data-i18n='pages.scaleExplorer.playScale']");
+    const downloadButtonLabel = downloadButton?.querySelector("[data-i18n='pages.scaleExplorer.downloadPng']");
 
     let rootPitch = 9;
     let neckFrets = 15;
@@ -84,6 +96,43 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function getScale() {
         return SCALE_TYPES[scaleTypeSelect.value];
+    }
+
+    function getScaleTranslationId() {
+        return SCALE_TYPE_TRANSLATION_IDS[scaleTypeSelect.value] || scaleTypeSelect.value;
+    }
+
+    function t(key, fallback, variables) {
+        return window.JasperI18n?.translate?.(key, fallback, variables) ?? fallback;
+    }
+
+    function escapeHtml(value) {
+        return String(value ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    function setPlayButtonLabel(key, fallback) {
+        if (playButtonLabel) {
+            playButtonLabel.textContent = t(key, fallback);
+        }
+    }
+
+    function setDownloadButtonLabel(key, fallback) {
+        if (downloadButtonLabel) {
+            downloadButtonLabel.textContent = t(key, fallback);
+        }
+    }
+
+    function getScaleName() {
+        return t(`scale.${getScaleTranslationId()}.name`, getScale().name);
+    }
+
+    function getScaleDescription() {
+        return t(`scale.${getScaleTranslationId()}.description`, getScale().description);
     }
 
     function getNoteNames() {
@@ -155,8 +204,8 @@ document.addEventListener("DOMContentLoaded", function() {
     function renderSummary() {
         const scale = getScale();
         const noteNames = getNoteNames();
-        scaleTitle.textContent = `${getRootName()} ${scale.name}`;
-        scaleDescription.textContent = scale.description;
+        scaleTitle.textContent = `${getRootName()} ${getScaleName()}`;
+        scaleDescription.textContent = getScaleDescription();
         intervalList.innerHTML = "";
 
         scale.intervals.forEach((interval, index) => {
@@ -179,9 +228,9 @@ document.addEventListener("DOMContentLoaded", function() {
             const chord = mode === "minor" ? "minor" : "major";
 
             toolLinks.innerHTML = `
-                <a href="chord-dictionary.html?root=${root}&chord=${chord}">Open ${getRootName()} ${chord} chord shapes</a>
-                <a href="chord-progressions.html?key=${key}">Build progressions in this key</a>
-                <a href="fretboard-trainer.html">Practice note names</a>
+                <a href="chord-dictionary.html?root=${root}&chord=${chord}">${escapeHtml(t("pages.scaleExplorer.openChordShapes", "Open {{root}} chord shapes", { root: `${getRootName()} ${chord}` }))}</a>
+                <a href="chord-progressions.html?key=${key}">${escapeHtml(t("pages.scaleExplorer.buildProgressions", "Build progressions in this key"))}</a>
+                <a href="fretboard-trainer.html">${escapeHtml(t("pages.scaleExplorer.practiceNoteNames", "Practice note names"))}</a>
             `;
         }
     }
@@ -265,7 +314,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         const corner = document.createElement("div");
         corner.className = "fretboard-corner";
-        corner.textContent = "String";
+        corner.textContent = t("pages.scaleExplorer.string", "String");
         corner.setAttribute("aria-hidden", "true");
         fretboard.appendChild(corner);
 
@@ -309,7 +358,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         fretboard.setAttribute(
             "aria-label",
-            `${getRootName()} ${getScale().name} on guitar frets ${fretStart} through ${fretEnd}`
+            t("pages.scaleExplorer.fretboardLabel", "{{scale}} scale on a guitar fretboard", { scale: `${getRootName()} ${getScaleName()}` })
         );
     }
 
@@ -382,7 +431,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         context.fillStyle = "#8e613d";
         context.font = "700 34px Georgia, serif";
-        context.fillText(`${getRootName()} ${scale.name}`, outerPadding, 74);
+        context.fillText(`${getRootName()} ${getScaleName()}`, outerPadding, 74);
         context.fillStyle = "#4d433b";
         context.font = "600 16px Arial, sans-serif";
         context.fillText(
@@ -569,7 +618,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     </style>
                 </head>
                 <body>
-                    <p>Long press the image, then save or share it.</p>
+                    <p>${escapeHtml(t("pages.scaleExplorer.saveImageHint", "Long press the image, then save or share it."))}</p>
                     <img src="${url}" alt="${fileName}">
                 </body>
             </html>
@@ -579,8 +628,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function downloadScaleImage() {
         downloadButton.disabled = true;
-        const originalText = downloadButton.lastChild.textContent;
-        downloadButton.lastChild.textContent = " Preparing";
+        setDownloadButtonLabel("pages.scaleExplorer.preparing", "Preparing");
 
         try {
             const canvas = drawScaleImage();
@@ -601,7 +649,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         downloadImageUrl(dataUrl, fileName);
                     }
                     downloadButton.disabled = false;
-                    downloadButton.lastChild.textContent = originalText;
+                    setDownloadButtonLabel("pages.scaleExplorer.downloadPng", "Download PNG");
                     return;
                 }
 
@@ -615,12 +663,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
 
                 downloadButton.disabled = false;
-                downloadButton.lastChild.textContent = originalText;
+                setDownloadButtonLabel("pages.scaleExplorer.downloadPng", "Download PNG");
             }, "image/png");
         } catch (error) {
             console.error("Scale image download failed:", error);
             downloadButton.disabled = false;
-            downloadButton.lastChild.textContent = originalText;
+            setDownloadButtonLabel("pages.scaleExplorer.downloadPng", "Download PNG");
         }
     }
 
@@ -644,7 +692,7 @@ document.addEventListener("DOMContentLoaded", function() {
         isPlaying = true;
         playButton.disabled = true;
         playButton.classList.add("is-playing");
-        playButton.lastChild.textContent = " Playing";
+        setPlayButtonLabel("pages.scaleExplorer.playing", "Playing");
 
         const scale = getScale();
         const sequence = [...scale.intervals, 12];
@@ -672,7 +720,7 @@ document.addEventListener("DOMContentLoaded", function() {
             isPlaying = false;
             playButton.disabled = false;
             playButton.classList.remove("is-playing");
-            playButton.lastChild.textContent = " Play scale";
+            setPlayButtonLabel("pages.scaleExplorer.playScale", "Play scale");
         }, sequence.length * 280 + 180);
     }
 
@@ -758,4 +806,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
     applyInitialParams();
     render();
+    window.addEventListener("jasper:language-change", function() {
+        render();
+        if (!isPlaying) {
+            setPlayButtonLabel("pages.scaleExplorer.playScale", "Play scale");
+        }
+        if (!downloadButton?.disabled) {
+            setDownloadButtonLabel("pages.scaleExplorer.downloadPng", "Download PNG");
+        }
+    });
 });

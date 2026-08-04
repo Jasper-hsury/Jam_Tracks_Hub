@@ -25,15 +25,16 @@
     <meta name="twitter:image:alt" content="Jam Tracks Hub preview card for backing tracks and guitar tools.">
 
     <script src="scripts/theme-init.js?v=20260725-friendly-insect-switch"></script>
+    <script src="scripts/i18n-init.js?v=20260804-no-language-flash"></script>
     <script defer src="https://cloud.umami.is/script.js" data-website-id="c8dfc471-6512-4344-8e1b-25566e1a93cd"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles/base.css?v=20260725-friendly-insect-switch">
     <link rel="stylesheet" href="styles/components.css?v=20260730-key-finder-priority">
-    <link rel="stylesheet" href="styles/pages.css?v=20260730-tablet-logo">
-    <link rel="stylesheet" href="styles/themes.css?v=20260801-color-mix-fallback">
+    <link rel="stylesheet" href="styles/pages.css?v=20260804-nav-controls">
+    <link rel="stylesheet" href="styles/themes.css?v=20260804-nav-controls">
 </head>
 
-<body>
+<body data-i18n-title="titles.keyFinder">
     <nav class="navbar">
         <a href="index.html#home" class="logo">Jam Tracks Hub</a>
         <ul class="nav-links">
@@ -49,31 +50,31 @@
     </nav>
 
     <main class="tracks-page key-finder-page">
-        <h1>Song Key Finder</h1>
-        <p class="hero-tagline signature-slogan">Listen deeper. Find the tonal center.</p>
+        <h1 data-i18n="pages.keyFinder.title">Song Key Finder</h1>
+        <p class="hero-tagline signature-slogan" data-i18n="pages.keyFinder.tagline">Listen deeper. Find the tonal center.</p>
 
         <section class="key-finder-panel" aria-labelledby="keyFinderTitle">
             <div class="tool-section-heading compact-heading">
-                <h2 id="keyFinderTitle" class="section-title">Analyze a Song</h2>
-                <p>Upload an audio file for the most reliable key estimate. YouTube link analysis is available as a secondary option when cloud access or the local helper can reach the video.</p>
+                <h2 id="keyFinderTitle" class="section-title" data-i18n="pages.keyFinder.analyzeTitle">Analyze a Song</h2>
+                <p data-i18n="pages.keyFinder.intro">Upload an audio file for the most reliable key estimate. YouTube link analysis is available as a secondary option when cloud access or the local helper can reach the video.</p>
             </div>
 
             <div class="key-finder-status-row">
                 <div class="api-status" id="apiStatus" role="status" aria-live="polite">
                     <span class="status-dot"></span>
-                    <span class="status-text">Checking API...</span>
+                    <span class="status-text" data-i18n="pages.keyFinder.checkingApi">Checking API...</span>
                 </div>
                 <div class="api-status helper-status" id="youtubeHelperStatus" role="status" aria-live="polite">
                     <span class="status-dot"></span>
-                    <span class="status-text">Checking YouTube access...</span>
+                    <span class="status-text" data-i18n="pages.keyFinder.checkingYoutube">Checking YouTube access...</span>
                 </div>
                 <button class="text-button helper-start-button" id="startYoutubeHelperButton" type="button" hidden>
-                    Start Helper
+                    <span data-i18n="pages.keyFinder.startHelper">Start Helper</span>
                 </button>
 
-                <div class="segmented-control" role="group" aria-label="Result detail">
-                    <button class="result-mode-button active" type="button" data-result-mode="quick" aria-pressed="true">Quick</button>
-                    <button class="result-mode-button" type="button" data-result-mode="detailed" aria-pressed="false">Detailed</button>
+                <div class="segmented-control" role="group" aria-label="Result detail" data-i18n-aria-label="pages.keyFinder.resultDetail">
+                    <button class="result-mode-button active" type="button" data-result-mode="quick" aria-pressed="true" data-i18n="pages.keyFinder.quick">Quick</button>
+                    <button class="result-mode-button" type="button" data-result-mode="detailed" aria-pressed="false" data-i18n="pages.keyFinder.detailed">Detailed</button>
                 </div>
             </div>
 
@@ -84,69 +85,69 @@
                     <span class="jh-loader-dot"></span>
                 </span>
                 <div>
-                    <strong id="serviceWakeTitle">Waking the analyzer</strong>
-                    <p id="serviceWakeCopy">The first request after an idle period can take a few seconds.</p>
-                    <a class="service-wake-link" href="service-waking.html">Open service status</a>
+                    <strong id="serviceWakeTitle" data-i18n="pages.keyFinder.wakingTitle">Waking the analyzer</strong>
+                    <p id="serviceWakeCopy" data-i18n="pages.keyFinder.wakingCopy">The first request after an idle period can take a few seconds.</p>
+                    <a class="service-wake-link" href="service-waking.html" data-i18n="pages.keyFinder.openServiceStatus">Open service status</a>
                 </div>
             </div>
 
             <div class="key-finder-divider key-finder-divider-primary">
-                <span>Recommended: upload audio</span>
+                <span data-i18n="pages.keyFinder.uploadDivider">Recommended: upload audio</span>
             </div>
             <div class="key-finder-upload">
-                <input id="audioKeyFile" type="file" accept="audio/*,.aac,.aiff,.flac,.m4a,.mp3,.mp4,.ogg,.wav,.webm" aria-label="Audio file" aria-describedby="audioFileRequirements uploadPrivacyNote">
+                <input id="audioKeyFile" type="file" accept="audio/*,.aac,.aiff,.flac,.m4a,.mp3,.mp4,.ogg,.wav,.webm" aria-label="Audio file" data-i18n-aria-label="pages.keyFinder.audioFile" aria-describedby="audioFileRequirements uploadPrivacyNote">
                 <label class="upload-file-label" for="audioKeyFile">
-                    <span>Audio file</span>
-                    <strong id="audioFileName">Choose an audio file</strong>
-                    <small id="audioFileRequirements">MP3/WAV recommended. MP4 or WEBM should be audio-only and under 25 MB.</small>
+                    <span data-i18n="pages.keyFinder.audioFile">Audio file</span>
+                    <strong id="audioFileName" data-i18n="pages.keyFinder.chooseAudioFile">Choose an audio file</strong>
+                    <small id="audioFileRequirements" data-i18n="pages.keyFinder.audioRequirements">MP3/WAV recommended. MP4 or WEBM should be audio-only and under 25 MB.</small>
                 </label>
-                <button id="analyzeFileButton" class="primary-button analyze-file-button" type="button">Analyze File</button>
+                <button id="analyzeFileButton" class="primary-button analyze-file-button" type="button" data-i18n="pages.keyFinder.analyzeFile">Analyze File</button>
             </div>
-            <p class="upload-privacy-note" id="uploadPrivacyNote">
+            <p class="upload-privacy-note" id="uploadPrivacyNote" data-i18n="pages.keyFinder.uploadPrivacy">
                 Your upload is used only for analysis and is deleted from temporary storage when the job finishes.
             </p>
 
             <div class="key-finder-divider">
-                <span>Optional: YouTube link</span>
+                <span data-i18n="pages.keyFinder.youtubeDivider">Optional: YouTube link</span>
             </div>
             <div class="key-finder-form key-finder-link-form">
-                <input id="youtubeKeyUrl" type="url" placeholder="https://youtu.be/..." autocomplete="off" aria-label="YouTube link">
-                <button id="analyzeKeyButton" class="secondary-button" type="button">Analyze Link</button>
-                <button id="cancelAnalyzeButton" class="secondary-button" type="button" hidden>Cancel</button>
+                <input id="youtubeKeyUrl" type="url" placeholder="https://youtu.be/..." data-i18n-placeholder="pages.keyFinder.youtubePlaceholder" autocomplete="off" aria-label="YouTube link" data-i18n-aria-label="pages.keyFinder.youtubeLink">
+                <button id="analyzeKeyButton" class="secondary-button" type="button" data-i18n="pages.keyFinder.analyzeLink">Analyze Link</button>
+                <button id="cancelAnalyzeButton" class="secondary-button" type="button" hidden data-i18n="common.cancel">Cancel</button>
             </div>
-            <p class="upload-privacy-note">
+            <p class="upload-privacy-note" data-i18n="pages.keyFinder.youtubePrivacy">
                 YouTube analysis depends on cloud download access. If YouTube blocks the server, use the local helper or upload an audio file instead.
             </p>
 
-            <details class="helper-install-card helper-install-details" aria-label="Local Helper setup instructions">
-                <summary>Local Helper fallback</summary>
+            <details class="helper-install-card helper-install-details" aria-label="Local Helper setup instructions" data-i18n-aria-label="pages.keyFinder.helperSetup">
+                <summary data-i18n="pages.keyFinder.helperSummary">Local Helper fallback</summary>
                 <div class="helper-install-copy">
-                    <strong>Use this only for YouTube links that the cloud API cannot download.</strong>
-                    <p>The helper runs on your computer as a backup for YouTube links. Uploaded audio files do not need the helper.</p>
+                    <strong data-i18n="pages.keyFinder.helperLead">Use this only for YouTube links that the cloud API cannot download.</strong>
+                    <p data-i18n="pages.keyFinder.helperCopy">The helper runs on your computer as a backup for YouTube links. Uploaded audio files do not need the helper.</p>
                     <ol>
-                        <li>On Mac, unzip the helper and run INSTALL_MAC_HELPER_PROTOCOL.command once.</li>
-                        <li>On Windows, unzip the helper and run the setup files once.</li>
-                        <li>Return here and use Start Helper only when you want to run the local fallback.</li>
+                        <li data-i18n="pages.keyFinder.helperMac">On Mac, unzip the helper and run INSTALL_MAC_HELPER_PROTOCOL.command once.</li>
+                        <li data-i18n="pages.keyFinder.helperWindows">On Windows, unzip the helper and run the setup files once.</li>
+                        <li data-i18n="pages.keyFinder.helperReturn">Return here and use Start Helper only when you want to run the local fallback.</li>
                     </ol>
                 </div>
                 <div class="helper-download-actions">
-                    <a class="secondary-button helper-download-link" href="downloads/jasper-youtube-helper-mac.zip" download>
+                    <a class="secondary-button helper-download-link" href="downloads/jasper-youtube-helper-mac.zip" download data-i18n="pages.keyFinder.downloadMac">
                         Download for Mac
                     </a>
-                    <a class="secondary-button helper-download-link" href="downloads/jasper-youtube-helper-windows.zip" download>
+                    <a class="secondary-button helper-download-link" href="downloads/jasper-youtube-helper-windows.zip" download data-i18n="pages.keyFinder.downloadWindows">
                         Download for Windows
                     </a>
                 </div>
             </details>
 
             <div class="key-finder-result key-finder-empty" id="keyFinderResult" role="status" aria-live="polite" aria-atomic="false">
-                <span>Ready when you are.</span>
+                <span data-i18n="pages.keyFinder.ready">Ready when you are.</span>
             </div>
 
             <div class="analysis-history" id="analysisHistory" hidden>
                 <div class="history-heading">
-                    <h3>Recent analyses</h3>
-                    <button id="clearHistoryButton" class="text-button" type="button">Clear</button>
+                    <h3 data-i18n="pages.keyFinder.recentAnalyses">Recent analyses</h3>
+                    <button id="clearHistoryButton" class="text-button" type="button" data-i18n="common.clear">Clear</button>
                 </div>
                 <ul id="analysisHistoryList"></ul>
             </div>
@@ -161,9 +162,10 @@
         </div>
     </footer>
 
-    <button id="backToTopBtn" type="button" aria-label="Back to top">&uarr;</button>
+    <button id="backToTopBtn" type="button" aria-label="Back to top" data-i18n-aria-label="common.backToTop">&uarr;</button>
 
-    <script src="scripts/site.js?v=20260730-tablet-logo"></script>
+    <script src="scripts/site.js?v=20260804-nav-controls"></script>
+    <script src="scripts/i18n.js?v=20260804-nav-controls"></script>
     <script src="scripts/site-config.js?v=20260729-youtube-key-api"></script>
     <script src="scripts/key-finder.js?v=20260729-youtube-key-api"></script>
     <script src="assets/vendor/gsap/gsap.min.js"></script>

@@ -2077,6 +2077,23 @@ body.is-shape-picker-open {
     margin: 0;
 }
 
+.track-title-display,
+[data-track-heading] {
+    text-wrap: balance;
+    overflow-wrap: break-word;
+}
+
+.track-title-week,
+.track-title-name,
+.track-title-separator,
+.track-title-key {
+    display: inline;
+}
+
+html[data-language="zh-TW"] [data-track-heading].is-wrapped .track-title-separator {
+    display: none;
+}
+
 .favorite-track-button {
     display: inline-grid;
     place-items: center;
@@ -3667,6 +3684,9 @@ html:not([data-theme="light"]) .home-hero {
     margin-top: 0;
     overflow: hidden;
     opacity: 0;
+    line-height: 1.52;
+    overflow-wrap: break-word;
+    text-wrap: balance;
     transform: translateY(10px);
     transition:
         max-height 0.42s ease,
@@ -3678,7 +3698,7 @@ html:not([data-theme="light"]) .home-hero {
 .home-step-card:hover > span:last-child,
 .home-step-card:focus-visible > span:last-child {
     justify-self: center;
-    width: min(100%, 320px);
+    width: min(100%, 32ch);
     max-height: 5.5rem;
     margin-top: 10px;
     opacity: 1;
@@ -4380,6 +4400,10 @@ html[data-theme="light"] .home-step-track .home-step-card:focus-visible {
     text-transform: uppercase;
 }
 
+html[data-language="zh-TW"] .home-release-card .release-number {
+    display: none;
+}
+
 .text-link {
     color: var(--teal);
     font-weight: bold;
@@ -4430,6 +4454,7 @@ html[data-theme="light"] .home-step-track .home-step-card:focus-visible {
 .about-copy > p:not(.home-eyebrow) {
     color: var(--muted);
     line-height: 1.8;
+    white-space: pre-line;
 }
 
 /* Adapted from Uiverse.io by satyamchaudharydev: Forms/satyamchaudharydev_cold-lionfish-49.html */
@@ -5492,6 +5517,10 @@ html[data-theme="light"] .home-step-track .home-step-card:focus-visible {
         transition-delay: 0.315s;
     }
 
+    .navbar.menu-open .nav-links > li:nth-child(11) {
+        transition-delay: 0.34s;
+    }
+
     .nav-links li,
     .nav-links a,
     .nav-dropdown,
@@ -5502,10 +5531,38 @@ html[data-theme="light"] .home-step-track .home-step-card:focus-visible {
     }
 
     .nav-theme-item {
+        display: grid;
+        grid-template-columns: minmax(0, auto) 46px 46px;
+        align-items: center;
+        justify-content: end;
+        gap: 12px;
         align-self: end;
         margin-top: auto;
         padding-top: 18px;
         border-top: 1px solid color-mix(in srgb, var(--border-soft) 72%, transparent);
+    }
+
+    .nav-appearance-label {
+        display: block;
+        color: var(--text);
+        font-size: 16px;
+        font-weight: bold;
+        letter-spacing: 0;
+        line-height: 1.35;
+        text-align: right;
+        text-transform: uppercase;
+    }
+
+    .nav-language-item {
+        justify-content: flex-end;
+    }
+
+    .language-switch-button {
+        width: 46px;
+        height: 46px;
+        min-width: 46px;
+        min-height: 46px;
+        margin-left: auto;
     }
 
     .nav-links a,
@@ -5520,6 +5577,15 @@ html[data-theme="light"] .home-step-track .home-step-card:focus-visible {
         border-radius: 999px;
         text-align: right;
         line-height: 1.35;
+    }
+
+    .nav-language-toggle {
+        width: 46px;
+        height: 46px;
+        min-width: 46px;
+        min-height: 46px;
+        padding: 7px;
+        margin-left: auto;
     }
 
     .nav-dropdown summary {
@@ -5565,22 +5631,18 @@ html[data-theme="light"] .home-step-track .home-step-card:focus-visible {
     .nav-theme-toggle {
         display: inline-flex;
         align-items: center;
-        justify-content: flex-end;
-        gap: 10px;
-        min-height: 50px;
-        padding: 7px 0 7px 18px;
+        justify-content: center;
+        width: 46px;
+        height: 46px;
+        min-width: 46px;
+        min-height: 46px;
+        padding: 7px;
         border-radius: 999px;
         transform: none;
     }
 
     .nav-theme-toggle .theme-toggle-label {
-        display: block;
-        color: inherit;
-        font-size: 16px;
-        font-weight: bold;
-        letter-spacing: 0;
-        line-height: 1.35;
-        text-transform: uppercase;
+        display: none;
     }
 
     .nav-theme-toggle .theme-toggle-switch {

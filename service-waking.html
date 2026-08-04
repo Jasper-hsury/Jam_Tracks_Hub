@@ -24,14 +24,15 @@
     <meta name="twitter:image:alt" content="Jam Tracks Hub preview image">
     <link rel="icon" href="assets/images/icon.png" type="image/png">
     <script src="scripts/theme-init.js?v=20260725-friendly-insect-switch"></script>
+    <script src="scripts/i18n-init.js?v=20260804-no-language-flash"></script>
     <script defer src="https://cloud.umami.is/script.js" data-website-id="c8dfc471-6512-4344-8e1b-25566e1a93cd"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles/base.css?v=20260725-friendly-insect-switch">
     <link rel="stylesheet" href="styles/components.css?v=20260728-mobile-polish">
-    <link rel="stylesheet" href="styles/pages.css?v=20260730-tablet-logo">
-    <link rel="stylesheet" href="styles/themes.css?v=20260801-color-mix-fallback">
+    <link rel="stylesheet" href="styles/pages.css?v=20260804-nav-controls">
+    <link rel="stylesheet" href="styles/themes.css?v=20260804-nav-controls">
 </head>
-<body>
+<body data-i18n-title="service.wakingAnalyzer">
     <nav class="navbar">
         <a href="index.html#home" class="logo">Jam Tracks Hub</a>
         <ul class="nav-links">
@@ -52,14 +53,14 @@
             <span class="jh-loader-dot"></span>
             <span class="jh-loader-dot"></span>
         </span>
-        <p class="status-page-code">KEY FINDER</p>
-        <h1>Waking the analyzer</h1>
-        <p id="wakeMessage" role="status" aria-live="polite">
+        <p class="status-page-code" data-i18n="service.keyFinder">KEY FINDER</p>
+        <h1 data-i18n="service.wakingAnalyzer">Waking the analyzer</h1>
+        <p id="wakeMessage" role="status" aria-live="polite" data-i18n="service.starting">
             The service is starting. This can take a short moment after it has been idle.
         </p>
         <div class="status-page-actions">
-            <button class="primary-button" id="retryWakeButton" type="button">Check Again</button>
-            <a class="secondary-button" href="key-finder.html">Back to Key Finder</a>
+            <button class="primary-button" id="retryWakeButton" type="button" data-i18n="service.checkAgain">Check Again</button>
+            <a class="secondary-button" href="key-finder.html" data-i18n="service.backToKeyFinder">Back to Key Finder</a>
         </div>
     </main>
 
@@ -72,7 +73,8 @@
     </footer>
 
     <script src="scripts/site-config.js?v=20260729-youtube-key-api"></script>
-    <script src="scripts/site.js?v=20260730-tablet-logo"></script>
+    <script src="scripts/site.js?v=20260804-nav-controls"></script>
+    <script src="scripts/i18n.js?v=20260804-nav-controls"></script>
     <script src="assets/vendor/gsap/gsap.min.js"></script>
     <script src="assets/vendor/gsap/ScrollTrigger.min.js"></script>
     <script src="scripts/site-animations.js?v=20260718-trainer-dropdown-hover"></script>
@@ -87,10 +89,14 @@
         const HEALTH_TIMEOUT_MS = 8000;
         let attempts = 0;
 
+        function t(key, fallback) {
+            return window.JasperI18n?.translate?.(key, fallback) ?? fallback;
+        }
+
         async function checkService() {
             attempts += 1;
             retryButton.disabled = true;
-            message.textContent = "Checking the analyzer...";
+            message.textContent = t("pages.keyFinder.checkingApi", "Checking the analyzer...");
             const controller = new AbortController();
             const timeout = window.setTimeout(function() {
                 controller.abort();
@@ -105,15 +111,15 @@
                     throw new Error("Service is still starting");
                 }
 
-                message.textContent = "The analyzer is ready. Returning to Key Finder...";
+                message.textContent = t("pages.keyFinder.apiReady", "The analyzer is ready. Returning to Key Finder...");
                 window.setTimeout(function() {
                     window.location.href = "key-finder.html";
                 }, 700);
                 return;
             } catch (error) {
                 message.textContent = attempts < 6
-                    ? "Still waking up. We will check again automatically."
-                    : "The analyzer is taking longer than expected. Please check again.";
+                    ? t("service.starting", "Still waking up. We will check again automatically.")
+                    : t("pages.keyFinder.unavailableCopy", "The analyzer is taking longer than expected. Please check again.");
                 retryButton.disabled = false;
             } finally {
                 window.clearTimeout(timeout);

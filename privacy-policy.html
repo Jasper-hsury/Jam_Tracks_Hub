@@ -23,13 +23,14 @@
     <meta name="twitter:image:alt" content="Jam Tracks Hub preview image">
     <link rel="icon" href="assets/images/icon.png" type="image/png">
     <script src="scripts/theme-init.js?v=20260725-friendly-insect-switch"></script>
+    <script src="scripts/i18n-init.js?v=20260804-no-language-flash"></script>
     <script defer src="https://cloud.umami.is/script.js" data-website-id="c8dfc471-6512-4344-8e1b-25566e1a93cd"></script>
     <link rel="stylesheet" href="styles/base.css?v=20260725-friendly-insect-switch">
     <link rel="stylesheet" href="styles/components.css?v=20260728-mobile-polish">
-    <link rel="stylesheet" href="styles/pages.css?v=20260730-tablet-logo">
-    <link rel="stylesheet" href="styles/themes.css?v=20260801-color-mix-fallback">
+    <link rel="stylesheet" href="styles/pages.css?v=20260804-nav-controls">
+    <link rel="stylesheet" href="styles/themes.css?v=20260804-nav-controls">
 </head>
-<body>
+<body data-i18n-title="titles.privacy">
     <nav class="navbar" aria-label="Primary navigation">
         <a href="index.html#home" class="logo">Jam Tracks Hub</a>
         <ul class="nav-links">
@@ -45,27 +46,27 @@
     </nav>
 
     <main class="tracks-page" id="main-content">
-        <h1>Jam Tracks Hub Song Key Finder Privacy Policy</h1>
-        <p class="hero-tagline">Effective date: June 23, 2026</p>
+        <h1 data-i18n="privacy.title">Jam Tracks Hub Song Key Finder Privacy Policy</h1>
+        <p class="hero-tagline" data-i18n="privacy.effectiveDate">Effective date: June 23, 2026</p>
 
         <section class="key-finder-panel">
             <div class="tool-section-heading">
-                <h2 class="section-title">What the extension does</h2>
-                <p>
+                <h2 class="section-title" data-i18n="privacy.body.01">What the extension does</h2>
+                <p data-i18n="privacy.body.02">
                     Jam Tracks Hub Song Key Finder estimates the musical key of an audio file or a
                     YouTube video selected by the user.
                 </p>
             </div>
 
             <div class="result-section">
-                <h2>Data processed</h2>
-                <p>
+                <h2 data-i18n="privacy.body.03">Data processed</h2>
+                <p data-i18n="privacy.body.04">
                     When you choose an audio file, the extension sends that file to
                     <code>https://jamtrackshub.com</code> for musical-key analysis.
                     When you submit a YouTube link, the extension sends that URL to the same
                     service so its audio can be retrieved and analyzed.
                 </p>
-                <p>
+                <p data-i18n="privacy.body.05">
                     The extension may read the URL of the currently active browser tab only
                     when you open the extension, so it can prefill the form when that tab is
                     a YouTube video.
@@ -73,18 +74,18 @@
             </div>
 
             <div class="result-section">
-                <h2>Storage and retention</h2>
-                <p>
+                <h2 data-i18n="privacy.body.06">Storage and retention</h2>
+                <p data-i18n="privacy.body.07">
                     Uploaded and downloaded audio is stored temporarily while the analysis
                     job runs and is deleted when processing finishes. The service may retain
                     the submitted YouTube URL and analysis result in operational analysis
                     history for reliability and troubleshooting.
                 </p>
-                <p>
+                <p data-i18n="privacy.body.08">
                     Recent results and interface preferences are stored locally in your
                     browser. You can clear recent results from the extension.
                 </p>
-                <p>
+                <p data-i18n="privacy.body.09">
                     If you join the email list, your email address is stored so Jam Tracks
                     Hub can send updates about new backing tracks and related site news.
                     You may request removal by contacting the site owner.
@@ -92,8 +93,8 @@
             </div>
 
             <div class="result-section">
-                <h2>How data is used</h2>
-                <p>
+                <h2 data-i18n="privacy.body.10">How data is used</h2>
+                <p data-i18n="privacy.body.11">
                     Data is used only to provide musical-key analysis, maintain service
                     reliability, send requested email updates, and troubleshoot failures.
                     It is not sold, used for advertising, or used to determine
@@ -102,8 +103,8 @@
             </div>
 
             <div class="result-section">
-                <h2>Sharing and security</h2>
-                <p>
+                <h2 data-i18n="privacy.body.12">Sharing and security</h2>
+                <p data-i18n="privacy.body.13">
                     Data is processed by the hosting and infrastructure providers required
                     to operate the analysis service. Reasonable technical measures are used
                     to protect data in transit and during temporary processing.
@@ -111,8 +112,8 @@
             </div>
 
             <div class="result-section">
-                <h2>Your choices</h2>
-                <p>
+                <h2 data-i18n="privacy.body.14">Your choices</h2>
+                <p data-i18n="privacy.body.15">
                     You may use file upload or YouTube analysis only when you choose to do
                     so. You can clear locally stored analysis history at any time or
                     uninstall the extension to remove its local data.
@@ -120,8 +121,8 @@
             </div>
 
             <div class="result-section">
-                <h2>Contact</h2>
-                <p>
+                <h2 data-i18n="privacy.body.16">Contact</h2>
+                <p data-i18n="privacy.body.17">
                     For privacy questions, contact the developer through the support contact
                     shown on the Chrome Web Store listing.
                 </p>
@@ -132,7 +133,8 @@
     <footer class="footer">
         <p>&copy; 2026 Jam Tracks Hub. All rights reserved.</p>
     </footer>
-    <script src="scripts/site.js?v=20260730-tablet-logo"></script>
+    <script src="scripts/site.js?v=20260804-nav-controls"></script>
+    <script src="scripts/i18n.js?v=20260804-nav-controls"></script>
     <script src="assets/vendor/gsap/gsap.min.js"></script>
     <script src="assets/vendor/gsap/ScrollTrigger.min.js"></script>
     <script src="scripts/site-animations.js?v=20260718-trainer-dropdown-hover"></script>

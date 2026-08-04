@@ -25,15 +25,16 @@
     <meta name="twitter:image:alt" content="Jam Tracks Hub preview card for backing tracks and guitar tools.">
 
     <script src="scripts/theme-init.js?v=20260725-friendly-insect-switch"></script>
+    <script src="scripts/i18n-init.js?v=20260804-no-language-flash"></script>
     <script defer src="https://cloud.umami.is/script.js" data-website-id="c8dfc471-6512-4344-8e1b-25566e1a93cd"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles/base.css?v=20260725-friendly-insect-switch">
     <link rel="stylesheet" href="styles/components.css?v=20260728-mobile-polish">
-    <link rel="stylesheet" href="styles/pages.css?v=20260730-tablet-logo">
-    <link rel="stylesheet" href="styles/themes.css?v=20260801-color-mix-fallback">
+    <link rel="stylesheet" href="styles/pages.css?v=20260804-nav-controls">
+    <link rel="stylesheet" href="styles/themes.css?v=20260804-nav-controls">
 </head>
 
-<body>
+<body data-i18n-title="titles.chordProgressions">
     <nav class="navbar">
         <a href="index.html#home" class="logo">Jam Tracks Hub</a>
         <ul class="nav-links">
@@ -49,29 +50,29 @@
     </nav>
 
     <main class="tracks-page">
-        <h1>Chord Progressions</h1>
-        <p class="hero-tagline signature-slogan">Capture the Feeling. Compose the Meaning.</p>
+        <h1 data-i18n="pages.chordProgressions.title">Chord Progressions</h1>
+        <p class="hero-tagline signature-slogan" data-i18n="pages.chordProgressions.tagline">Capture the Feeling. Compose the Meaning.</p>
 
         <section class="key-selector" aria-labelledby="progressionExplorerTitle">
             <div class="tool-section-heading">
-                <h2 id="progressionExplorerTitle" class="section-title">Chord Progression Explorer</h2>
-                <p>Choose a key, switch between triads and seventh chords, then compare guitar-friendly root-position voicings.</p>
+                <h2 id="progressionExplorerTitle" class="section-title" data-i18n="pages.chordProgressions.explorerTitle">Chord Progression Explorer</h2>
+                <p data-i18n="pages.chordProgressions.intro">Choose a key, switch between triads and seventh chords, then compare guitar-friendly root-position voicings.</p>
             </div>
 
-            <a class="select-key-button progression-write-link" href="progression-writer.html">Write Your Own Progression</a>
+            <a class="select-key-button progression-write-link" href="progression-writer.html" data-i18n="pages.chordProgressions.writeOwn">Write Your Own Progression</a>
 
-            <button class="select-key-button" id="selectKeyButton" type="button" hidden>Select Another Key</button>
+            <button class="select-key-button" id="selectKeyButton" type="button" hidden data-i18n="pages.chordProgressions.selectAnother">Select Another Key</button>
 
             <div class="key-options" id="keyOptions">
                 <div class="key-mode-heading">
                     <div>
-                        <span class="result-kicker">Key mode</span>
-                        <h2 class="section-title">Choose a Tonic</h2>
+                        <span class="result-kicker" data-i18n="pages.chordProgressions.keyMode">Key mode</span>
+                        <h2 class="section-title" data-i18n="pages.chordProgressions.chooseTonic">Choose a Tonic</h2>
                     </div>
                     <label class="key-mode-switch" for="keyModeToggle">
-                        <span class="key-mode-label key-mode-label-major">Major</span>
+                        <span class="key-mode-label key-mode-label-major" data-i18n="pages.chordProgressions.major">Major</span>
                         <span class="key-mode-toggle-shell">
-                            <input class="key-mode-toggle-input" id="keyModeToggle" type="checkbox" aria-label="Switch between major and minor keys">
+                            <input class="key-mode-toggle-input" id="keyModeToggle" type="checkbox" aria-label="Switch between major and minor keys" data-i18n-aria-label="pages.chordProgressions.switchMode">
                             <span class="key-mode-toggle-handle-wrapper">
                                 <span class="key-mode-toggle-handle">
                                     <span class="key-mode-toggle-knob"></span>
@@ -84,7 +85,7 @@
                                 <span class="key-mode-toggle-base-inside"></span>
                             </span>
                         </span>
-                        <span class="key-mode-label key-mode-label-minor">Minor</span>
+                        <span class="key-mode-label key-mode-label-minor" data-i18n="pages.chordProgressions.minor">Minor</span>
                     </label>
                 </div>
                 <div class="key-button-grid">
@@ -104,8 +105,8 @@
             </div>
 
             <div class="key-result" id="keyResult">
-                <h3>Select a key</h3>
-                <p>Click a key above to see its notes.</p>
+                <h3 data-i18n="pages.chordProgressions.selectKey">Select a key</h3>
+                <p data-i18n="pages.chordProgressions.selectKeyCopy">Click a key above to see its notes.</p>
             </div>
         </section>
     </main>
@@ -118,9 +119,10 @@
         </div>
     </footer>
 
-    <button id="backToTopBtn" type="button" aria-label="Back to top">&uarr;</button>
+    <button id="backToTopBtn" type="button" aria-label="Back to top" data-i18n-aria-label="common.backToTop">&uarr;</button>
 
-    <script src="scripts/site.js?v=20260730-tablet-logo"></script>
+    <script src="scripts/site.js?v=20260804-nav-controls"></script>
+    <script src="scripts/i18n.js?v=20260804-nav-controls"></script>
     <script src="scripts/chords.js?v=20260728-mobile-polish"></script>
     <script src="assets/vendor/gsap/gsap.min.js"></script>
     <script src="assets/vendor/gsap/ScrollTrigger.min.js"></script>

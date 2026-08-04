@@ -124,6 +124,20 @@ document.addEventListener("DOMContentLoaded", function() {
     let audioContext = null;
     let isPlaying = false;
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const chordDescriptionKeys = {
+        major: "chord.description.major",
+        minor: "chord.description.minor",
+        dominant7: "chord.description.7",
+        major7: "chord.description.maj7",
+        minor7: "chord.description.m7",
+        halfDiminished7: "chord.description.m7b5",
+        sus4: "chord.description.sus4",
+        sus2: "chord.description.sus2"
+    };
+
+    function t(key, fallback, variables) {
+        return window.JasperI18n?.translate?.(key, fallback, variables) ?? fallback;
+    }
 
     function noteNames() {
         return FLAT_ROOTS.has(rootPitch) ? NOTE_NAMES_FLAT : NOTE_NAMES_SHARP;
@@ -163,11 +177,22 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function chordDisplayName(chord) {
-        return chord.id === "major" ? `${rootName()} Major` : `${rootName()} ${chord.name}`;
+        if (chord.id === "major") {
+            return `${rootName()} major`;
+        }
+        if (chord.id === "minor") {
+            return `${rootName()} minor`;
+        }
+        return `${rootName()} ${chord.name}`;
     }
 
     function chordSymbolText(chord) {
         return `${rootName()}${chord.suffix}`;
+    }
+
+    function chordDescriptionText(chord) {
+        const key = chordDescriptionKeys[chord.id];
+        return key ? t(key, chord.description) : chord.description;
     }
 
     function chordPitchClasses(chord) {
@@ -899,7 +924,10 @@ document.addEventListener("DOMContentLoaded", function() {
         shapePagination.hidden = pageCount <= 1;
         previousShapesButton.disabled = shapePage === 0;
         nextShapesButton.disabled = shapePage >= pageCount - 1;
-        shapePageStatus.textContent = `Page ${shapePage + 1} of ${pageCount}`;
+        shapePageStatus.textContent = t("pages.chordDictionary.pageStatus", "Page {{page}} of {{total}}", {
+            page: shapePage + 1,
+            total: pageCount
+        });
 
         if (flipState) {
             animateShapeFlip(flipState);
@@ -928,9 +956,28 @@ document.addEventListener("DOMContentLoaded", function() {
         const hasActiveFilter = selectedPosition !== "all" || selectedRootString !== "all";
         const triadSetLabel = triadStringSetRange(selectedTriadSet)?.label || "all string sets";
         const hasActiveShapeFilter = hasActiveFilter || selectedTriadSet !== "all";
-        shapeCount.textContent = hasActiveShapeFilter
-            ? `${filteredVoicings.length} of ${selectedVoicings.length} shapes matching ${positionLabel}, ${rootStringLabelText}, ${triadSetLabel}`
-            : `${filteredVoicings.length} ${filteredVoicings.length === 1 ? "shape" : "shapes"} found`;
+        if (hasActiveShapeFilter) {
+            shapeCount.textContent = t(
+                filteredVoicings.length === 1
+                    ? "pages.chordDictionary.shapeCountFiltered_one"
+                    : "pages.chordDictionary.shapeCountFiltered_other",
+                "{{count}} of {{total}} shapes shown",
+                {
+                    count: filteredVoicings.length,
+                    total: selectedVoicings.length
+                }
+            );
+        } else {
+            shapeCount.textContent = t(
+                filteredVoicings.length === 1
+                    ? "pages.chordDictionary.shapeCount_one"
+                    : "pages.chordDictionary.shapeCount_other",
+                "{{count}} shapes found",
+                {
+                    count: filteredVoicings.length
+                }
+            );
+        }
 
         if (!filteredVoicings.length) {
             const emptyMessage = selectedTriadSet !== "all" && !chordAllowedForStringSet(selectedChord, selectedTriadSet)
@@ -953,7 +1000,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function renderSelectedChord() {
         chordName.textContent = chordDisplayName(selectedChord);
-        chordDescription.textContent = selectedChord.description;
+        chordDescription.textContent = chordDescriptionText(selectedChord);
         chordSymbol.textContent = chordSymbolText(selectedChord);
         chordFormula.textContent = selectedChord.formula.join(" · ");
         chordNotes.textContent = chordNoteNames(selectedChord).join(" · ");
@@ -964,9 +1011,9 @@ document.addEventListener("DOMContentLoaded", function() {
             const key = encodeURIComponent(`${rootName()} ${relatedKeyMode(selectedChord)}`);
 
             relatedActions.innerHTML = `
-                <a href="scale.html?root=${root}&type=${scaleType}">View matching scale</a>
-                <a href="chord-progressions.html?key=${key}">Build progressions from this root</a>
-                <a href="fretboard-trainer.html">Practice fretboard notes</a>
+                <a href="scale.html?root=${root}&type=${scaleType}">${t("pages.chordDictionary.viewScale", "View matching scale")}</a>
+                <a href="chord-progressions.html?key=${key}">${t("pages.chordDictionary.buildProgressions", "Build progressions from this root")}</a>
+                <a href="fretboard-trainer.html">${t("pages.chordDictionary.practiceNotes", "Practice fretboard notes")}</a>
             `;
         }
 
@@ -975,7 +1022,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (!selectedVoicings.length) {
             filteredVoicings = [];
             shapePagination.hidden = true;
-            shapeCount.textContent = "No shapes found";
+            shapeCount.textContent = t("pages.chordDictionary.noShapes", "No shapes found");
             shapeGrid.innerHTML = `
                 <div class="dictionary-empty">
                     <strong>No compact six-string shape was found.</strong>
@@ -1012,7 +1059,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         isPlaying = true;
         playButton.disabled = true;
-        playButton.lastChild.textContent = " Playing";
+        playButton.lastChild.textContent = ` ${t("pages.chordDictionary.playing", "Playing")}`;
         const startTime = context.currentTime + 0.04;
         const frets = filteredVoicings[0].frets;
 
@@ -1040,7 +1087,7 @@ document.addEventListener("DOMContentLoaded", function() {
         window.setTimeout(() => {
             isPlaying = false;
             playButton.disabled = false;
-            playButton.lastChild.textContent = " Play chord";
+            playButton.lastChild.textContent = ` ${t("pages.chordDictionary.playChord", "Play chord")}`;
         }, 1400);
     }
 
@@ -1166,4 +1213,5 @@ document.addEventListener("DOMContentLoaded", function() {
 
     applyInitialParams();
     render();
+    window.addEventListener("jasper:language-change", render);
 });

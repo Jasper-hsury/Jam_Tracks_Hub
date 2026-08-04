@@ -66,6 +66,10 @@ document.addEventListener("DOMContentLoaded", function() {
             .replace(/'/g, "&#039;");
     }
 
+    function t(key, fallback, variables) {
+        return window.JasperI18n?.translate?.(key, fallback, variables) ?? fallback;
+    }
+
     function apiUrl(path, baseUrl = apiBaseUrl) {
         return `${baseUrl.replace(/\/$/, "")}${path}`;
     }
@@ -200,8 +204,8 @@ document.addEventListener("DOMContentLoaded", function() {
                             <strong>${escapeHtml(item.finalKey)}</strong>
                             <span>${escapeHtml(confidence)} - ${escapeHtml(item.time)}</span>
                         </div>
-                        <span>${escapeHtml(item.reference || "Uploaded audio")}</span>
-                        <em>${hasDetails ? "View full result" : "Re-analyze to save details"}</em>
+                        <span>${escapeHtml(item.reference || t("pages.keyFinder.uploadedAudio", "Uploaded audio"))}</span>
+                        <em>${escapeHtml(hasDetails ? t("pages.keyFinder.viewFullResult", "View full result") : t("pages.keyFinder.reanalyzeDetails", "Re-analyze to save details"))}</em>
                     </button>
                 </li>
             `;
@@ -231,7 +235,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         return `
             <div class="key-finder-candidates">
-                <p>Other possible keys <span>rule score compared with final key</span></p>
+                <p>${escapeHtml(t("keyFinder.dynamic.14", "Other possible keys"))} <span>rule score compared with final key</span></p>
                 <ul>
                     ${possibleKeys.slice(0, 4).map(function(candidate) {
                         return `
@@ -243,7 +247,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     }).join("")}
                 </ul>
                 <small class="key-finder-candidates-note">
-                    These are not probabilities. Values above 1.0x mean the rule-based score was stronger than the final ML-led key.
+                    ${escapeHtml(t("keyFinder.dynamic.15", "These are not probabilities. Values above 1.0x mean the rule-based score was stronger than the final ML-led key."))}
                 </small>
             </div>
         `;
@@ -251,10 +255,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function renderEvidence(data) {
         const items = [
-            ["ML confidence", formatPercent(data.ml_confidence, "Not used")],
-            ["Rule strength", formatPercent(data.rule_confidence)],
-            ["Top gap", formatPercent(data.rule_gap)],
-            ["Keyboard/Bass gap", formatPercent(data.priority_gap)]
+            [t("keyFinder.dynamic.16", "ML confidence"), formatPercent(data.ml_confidence, "Not used")],
+            [t("keyFinder.dynamic.17", "Rule strength"), formatPercent(data.rule_confidence)],
+            [t("keyFinder.dynamic.18", "Top gap"), formatPercent(data.rule_gap)],
+            [t("keyFinder.dynamic.19", "Keyboard/Bass gap"), formatPercent(data.priority_gap)]
         ];
 
         return `
@@ -321,9 +325,9 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         const rows = [
-            ["ML direct key", details.key],
-            ["ML family", details.family],
-            ["ML mode", details.mode]
+            [t("keyFinder.dynamic.20", "ML direct key"), details.key],
+            [t("keyFinder.dynamic.21", "ML family"), details.family],
+            [t("keyFinder.dynamic.22", "ML mode"), details.mode]
         ];
 
         return `
@@ -335,7 +339,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         : "";
                     return `<p><span>${escapeHtml(row[0])}</span>${escapeHtml(prediction?.prediction || "Not available")}${escapeHtml(suffix)}</p>`;
                 }).join("")}
-                <p><span>ML basis</span>${escapeHtml(details.basis || "Not available")}</p>
+                <p><span>${escapeHtml(t("keyFinder.dynamic.23", "ML basis"))}</span>${escapeHtml(details.basis || "Not available")}</p>
             </div>
         `;
     }
@@ -348,10 +352,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
         return `
             <div class="result-actions">
-                <a class="primary-button" href="scale.html?key=${key}">Open Scale Explorer</a>
-                <a class="secondary-button" href="chord-dictionary.html?root=${root}&chord=${chordType}">Open Chord Dictionary</a>
-                <a class="secondary-button" href="chord-progressions.html?key=${key}">Open Chord Progressions</a>
-                <a class="secondary-button" href="tracks.html?key=${key}">Find Tracks in This Key</a>
+                <a class="primary-button" href="scale.html?key=${key}">${escapeHtml(t("keyFinder.dynamic.24", "Open Scale Explorer"))}</a>
+                <a class="secondary-button" href="chord-dictionary.html?root=${root}&chord=${chordType}">${escapeHtml(t("keyFinder.dynamic.25", "Open Chord Dictionary"))}</a>
+                <a class="secondary-button" href="chord-progressions.html?key=${key}">${escapeHtml(t("keyFinder.dynamic.26", "Open Chord Progressions"))}</a>
+                <a class="secondary-button" href="tracks.html?key=${key}">${escapeHtml(t("keyFinder.dynamic.27", "Find Tracks in This Key"))}</a>
             </div>
         `;
     }
@@ -418,20 +422,20 @@ document.addEventListener("DOMContentLoaded", function() {
         return `
             <section class="result-explanation" aria-label="Key result explanation">
                 <div class="result-explanation-heading">
-                    <span>Result explanation</span>
+                    <span>${escapeHtml(t("keyFinder.dynamic.05", "Result explanation"))}</span>
                     <strong>${escapeHtml(confidenceText)}</strong>
                 </div>
                 <div class="result-explanation-grid">
                     <article class="result-explanation-card">
-                        <h4>What this means</h4>
+                        <h4>${escapeHtml(t("keyFinder.dynamic.06", "What this means"))}</h4>
                         <p>${escapeHtml(meaning)}</p>
                     </article>
                     <article class="result-explanation-card">
-                        <h4>Why this result</h4>
+                        <h4>${escapeHtml(t("keyFinder.dynamic.07", "Why this result"))}</h4>
                         <p>${escapeHtml(reason)}</p>
                     </article>
                     <article class="result-explanation-card">
-                        <h4>Next check</h4>
+                        <h4>${escapeHtml(t("keyFinder.dynamic.08", "Next check"))}</h4>
                         <p>${escapeHtml(nextCheck)}</p>
                     </article>
                 </div>
@@ -444,26 +448,26 @@ document.addEventListener("DOMContentLoaded", function() {
         const confidence = data.confidence === null || data.confidence === undefined
             ? null
             : Math.max(0, Math.min(100, Number(data.confidence)));
-        const confidenceLabel = confidence === null ? "Rule estimate" : `${confidence.toFixed(1)}%`;
+        const confidenceLabel = confidence === null ? t("keyFinder.dynamic.03", "Rule estimate") : `${confidence.toFixed(1)}%`;
         const confidenceWidth = confidence === null ? 0 : confidence;
         const notes = data.main_notes?.length ? data.main_notes.join(", ") : "No clear notes";
         const certainty = data.certainty || "medium";
-        const cachedLabel = data.cached ? "Cached result" : data.source || "analysis";
+        const cachedLabel = data.cached ? t("keyFinder.dynamic.04", "Cached result") : data.source || "analysis";
 
         keyFinderResult.className = `key-finder-result result-mode-${currentResultMode}`;
         keyFinderResult.innerHTML = `
             <div class="result-summary">
-                <span class="result-kicker">Final key</span>
+                <span class="result-kicker">${escapeHtml(t("keyFinder.dynamic.01", "Final key"))}</span>
                 <div class="result-title-row">
                     <strong class="key-finder-final">${escapeHtml(data.final_key)}</strong>
-                    <span class="certainty-badge certainty-${escapeHtml(certainty)}">${escapeHtml(certainty)} certainty</span>
+                    <span class="certainty-badge certainty-${escapeHtml(certainty)}">${escapeHtml(t("keyFinder.dynamic.02", "{{certainty}} certainty", { certainty }))}</span>
                 </div>
                 <span class="result-source">${escapeHtml(cachedLabel)}</span>
             </div>
 
             <div class="confidence-row">
                 <div class="confidence-label">
-                    <span>${escapeHtml(data.confidence_label || "Confidence")}</span>
+                    <span>${escapeHtml(data.confidence_label || t("pages.keyFinder.confidence", "Confidence"))}</span>
                     <strong>${escapeHtml(confidenceLabel)}</strong>
                 </div>
                 <div class="confidence-bar" aria-hidden="true">
@@ -478,11 +482,11 @@ document.addEventListener("DOMContentLoaded", function() {
             ${renderResultExplanation(data, confidence)}
 
             <div class="result-details">
-                <p><span>Key family</span>${escapeHtml(data.key_family || "Not available")}</p>
-                <p><span>Main notes</span>${escapeHtml(notes)}</p>
-                <p class="result-detail-section"><span>Rule-based</span>${escapeHtml(data.rule_key || "Not available")}</p>
-                <p class="result-detail-section"><span>Keyboard/Bass</span>${escapeHtml(data.priority_key || "Not available")}</p>
-                <p class="result-detail-section"><span>Model version</span>${escapeHtml(data.model_version || "Not available")}</p>
+                <p><span>${escapeHtml(t("keyFinder.dynamic.09", "Key family"))}</span>${escapeHtml(data.key_family || "Not available")}</p>
+                <p><span>${escapeHtml(t("keyFinder.dynamic.10", "Main notes"))}</span>${escapeHtml(notes)}</p>
+                <p class="result-detail-section"><span>${escapeHtml(t("keyFinder.dynamic.11", "Rule-based"))}</span>${escapeHtml(data.rule_key || "Not available")}</p>
+                <p class="result-detail-section"><span>${escapeHtml(t("keyFinder.dynamic.12", "Keyboard/Bass"))}</span>${escapeHtml(data.priority_key || "Not available")}</p>
+                <p class="result-detail-section"><span>${escapeHtml(t("keyFinder.dynamic.13", "Model version"))}</span>${escapeHtml(data.model_version || "Not available")}</p>
             </div>
 
             ${renderPossibleKeys(data.possible_keys)}
@@ -569,12 +573,12 @@ document.addEventListener("DOMContentLoaded", function() {
         keyFinderResult.className = "key-finder-result is-error";
         keyFinderResult.innerHTML = `
             <div class="error-report">
-                <strong>Analysis failed</strong>
+                <strong>${escapeHtml(t("pages.keyFinder.analysisFailed", "Analysis failed"))}</strong>
                 <p>${escapeHtml(message)}</p>
                 <dl>
-                    <div><dt>API URL</dt><dd>${escapeHtml(apiDisplayUrl(displayBaseUrl))}</dd></div>
-                    <div><dt>Status</dt><dd>${escapeHtml(displayStatus || "Unknown")}</dd></div>
-                    <div><dt>Suggested fix</dt><dd>${escapeHtml(suggestedFix)}</dd></div>
+                    <div><dt>${escapeHtml(t("pages.keyFinder.apiUrl", "API URL"))}</dt><dd>${escapeHtml(apiDisplayUrl(displayBaseUrl))}</dd></div>
+                    <div><dt>${escapeHtml(t("pages.keyFinder.status", "Status"))}</dt><dd>${escapeHtml(displayStatus || "Unknown")}</dd></div>
+                    <div><dt>${escapeHtml(t("pages.keyFinder.suggestedFix", "Suggested fix"))}</dt><dd>${escapeHtml(suggestedFix)}</dd></div>
                 </dl>
             </div>
         `;
@@ -600,19 +604,21 @@ document.addEventListener("DOMContentLoaded", function() {
         apiStatus.className = `api-status ${state}`;
         apiStatus.querySelector(".status-text").textContent = message;
         if (serviceWakePanel) {
-            const isStarting = state === "is-checking" && message === "API starting...";
+            const isStarting = state === "is-checking";
             const isOffline = state === "is-offline";
             serviceWakePanel.hidden = !isStarting && !isOffline;
             serviceWakePanel.classList.toggle("is-offline", isOffline);
 
             if (serviceWakeTitle) {
-                serviceWakeTitle.textContent = isOffline ? "Analyzer unavailable" : "Waking the analyzer";
+                serviceWakeTitle.textContent = isOffline
+                    ? t("pages.keyFinder.unavailableTitle", "Analyzer unavailable")
+                    : t("pages.keyFinder.wakingTitle", "Waking the analyzer");
             }
 
             if (serviceWakeCopy) {
                 serviceWakeCopy.textContent = isOffline
-                    ? "Open the service status page to retry the connection."
-                    : "The first request after an idle period can take a few seconds.";
+                    ? t("pages.keyFinder.unavailableCopy", "Refresh in a moment, or use the local helper/upload fallback.")
+                    : t("pages.keyFinder.wakingCopy", "The first request after an idle period can take a few seconds.");
             }
         }
     }
@@ -643,11 +649,11 @@ document.addEventListener("DOMContentLoaded", function() {
             text.includes("INSTALL_MAC_HELPER_PROTOCOL") ||
             text.includes("START_YOUTUBE_HELPER_MAC")
         ) {
-            setStatus("Ready when you are.", "key-finder-empty");
+            setStatus(t("pages.keyFinder.ready", "Ready when you are."), "key-finder-empty");
         }
     }
 
-    function useSiteApiForYoutube(baseUrl = apiBaseUrl, message = "YouTube via site API") {
+    function useSiteApiForYoutube(baseUrl = apiBaseUrl, message = t("pages.keyFinder.siteApi", "YouTube via site API")) {
         youtubeAnalysisBaseUrl = baseUrl;
         setYoutubeHelperStatus("is-online", message);
         clearHelperStartError();
@@ -665,13 +671,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 throw new Error(`API health check returned ${response.status}.`);
             }
 
-            setApiStatus("is-online", "API connected");
+            setApiStatus("is-online", t("pages.keyFinder.apiConnected", "API connected"));
         } catch (error) {
             if (error.name === "AbortError") {
                 throw error;
             }
 
-            setApiStatus("is-offline", "API offline");
+            setApiStatus("is-offline", t("pages.keyFinder.apiOffline", "Analyzer unavailable"));
             throw new Error(`Cannot connect to the Key Finder API at ${apiDisplayUrl()}.`);
         }
     }
@@ -720,7 +726,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 youtubeHelperBaseUrl = helperBaseUrl;
                 youtubeAnalysisBaseUrl = helperBaseUrl;
-                setYoutubeHelperStatus("is-online", "YouTube Helper connected");
+                setYoutubeHelperStatus("is-online", t("pages.keyFinder.helperConnected", "YouTube Helper connected"));
                 return;
             } catch (error) {
                 lastError = error;
@@ -730,7 +736,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
 
-        setYoutubeHelperStatus("is-offline", "YouTube Helper offline");
+        setYoutubeHelperStatus("is-offline", t("pages.keyFinder.helperOffline", "YouTube Helper offline"));
         throw new Error(
             `Cannot connect to the local YouTube Helper at ${youtubeHelperDisplayUrl()}. ` +
             "Start it with START_YOUTUBE_HELPER_MAC.command on Mac, or START_YOUTUBE_HELPER.cmd on Windows.",
@@ -745,7 +751,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }, API_HEALTH_TIMEOUT_MS);
 
         try {
-            setApiStatus("is-checking", apiRetryCount ? "API starting..." : "Checking API...");
+            setApiStatus("is-checking", apiRetryCount ? t("pages.keyFinder.apiStarting", "API starting...") : t("pages.keyFinder.checkingApi", "Checking API..."));
             await ensureApiIsReachable(controller.signal);
             apiRetryCount = 0;
             if (apiRetryTimer) {
@@ -755,10 +761,10 @@ document.addEventListener("DOMContentLoaded", function() {
         } catch (error) {
             if (apiRetryCount < API_RETRY_LIMIT) {
                 apiRetryCount += 1;
-                setApiStatus("is-checking", "API starting...");
+                setApiStatus("is-checking", t("pages.keyFinder.apiStarting", "API starting..."));
                 apiRetryTimer = window.setTimeout(checkApiStatus, API_RETRY_DELAY_MS);
             } else {
-                setApiStatus("is-offline", "API offline");
+                setApiStatus("is-offline", t("pages.keyFinder.apiOffline", "Analyzer unavailable"));
             }
         } finally {
             window.clearTimeout(timeout);
@@ -776,7 +782,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }, HELPER_HEALTH_TOTAL_TIMEOUT_MS);
 
         try {
-            setYoutubeHelperStatus("is-checking", "Checking YouTube Helper...");
+            setYoutubeHelperStatus("is-checking", t("pages.keyFinder.checkingHelper", "Checking YouTube Helper..."));
             await ensureYoutubeHelperIsReachable(controller.signal);
         } catch (error) {
             useSiteApiForYoutube();
@@ -799,7 +805,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 return true;
             } catch (error) {
                 if (error.name !== "AbortError") {
-                    setYoutubeHelperStatus("is-checking", "Waiting for YouTube Helper...");
+                    setYoutubeHelperStatus("is-checking", t("pages.keyFinder.waitingHelper", "Waiting for YouTube Helper..."));
                 }
             } finally {
                 window.clearTimeout(timeout);
@@ -831,8 +837,8 @@ document.addEventListener("DOMContentLoaded", function() {
     async function startYoutubeHelperFromBrowser(options = {}) {
         const isAutomatic = options.automatic === true;
         const launchMessage = isAutomatic
-            ? "Starting YouTube Helper..."
-            : "Opening YouTube Helper...";
+            ? t("pages.keyFinder.startingHelper", "Starting YouTube Helper...")
+            : t("pages.keyFinder.openingHelper", "Opening YouTube Helper...");
         setYoutubeHelperStatus("is-checking", launchMessage);
 
         try {
@@ -840,10 +846,10 @@ document.addEventListener("DOMContentLoaded", function() {
             const connected = await waitForYoutubeHelperAfterLaunch();
 
             if (!connected) {
-                setYoutubeHelperStatus("is-offline", "YouTube Helper offline");
+                setYoutubeHelperStatus("is-offline", t("pages.keyFinder.helperOffline", "YouTube Helper offline"));
             }
         } catch (error) {
-            setYoutubeHelperStatus("is-offline", "YouTube Helper offline");
+            setYoutubeHelperStatus("is-offline", t("pages.keyFinder.helperOffline", "YouTube Helper offline"));
         }
     }
 
@@ -936,7 +942,7 @@ document.addEventListener("DOMContentLoaded", function() {
         for (const siteBaseUrl of youtubeSiteApiBaseUrlCandidates) {
             try {
                 const isCloudApi = siteBaseUrl === productionApiBaseUrl && siteBaseUrl !== apiBaseUrl;
-                useSiteApiForYoutube(siteBaseUrl, isCloudApi ? "YouTube via cloud API" : "YouTube via site API");
+                useSiteApiForYoutube(siteBaseUrl, isCloudApi ? t("pages.keyFinder.cloudApi", "YouTube via cloud API") : t("pages.keyFinder.siteApi", "YouTube via site API"));
                 return await analyzeYoutubeUrl(url, siteBaseUrl);
             } catch (error) {
                 if (error.name === "AbortError") {
@@ -945,12 +951,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 error.analysisBaseUrl = siteBaseUrl;
                 siteApiError = error;
-                setYoutubeHelperStatus("is-checking", "Trying another analyzer...");
+                setYoutubeHelperStatus("is-checking", t("pages.keyFinder.tryingAnalyzer", "Trying another analyzer..."));
             }
         }
 
         try {
-            setYoutubeHelperStatus("is-checking", "Trying local YouTube Helper...");
+            setYoutubeHelperStatus("is-checking", t("pages.keyFinder.tryingHelper", "Trying local YouTube Helper..."));
             await ensureYoutubeHelperIsReachable(activeController.signal);
             return await analyzeYoutubeUrl(url, youtubeHelperBaseUrl);
         } catch (helperError) {
@@ -995,7 +1001,7 @@ document.addEventListener("DOMContentLoaded", function() {
         localStorage.removeItem(HISTORY_KEY);
         currentResultData = null;
         renderHistory();
-        setStatus("Ready when you are.", "key-finder-empty");
+        setStatus(t("pages.keyFinder.ready", "Ready when you are."), "key-finder-empty");
     });
 
     startYoutubeHelperButton?.addEventListener("click", function() {
@@ -1024,7 +1030,7 @@ document.addEventListener("DOMContentLoaded", function() {
     audioKeyFile?.addEventListener("change", function() {
         const file = audioKeyFile.files?.[0];
         if (audioFileName) {
-            audioFileName.textContent = file ? file.name : "Choose an audio file";
+            audioFileName.textContent = file ? file.name : t("pages.keyFinder.chooseAudioFile", "Choose an audio file");
         }
     });
 
@@ -1032,24 +1038,24 @@ document.addEventListener("DOMContentLoaded", function() {
         const file = audioKeyFile?.files?.[0];
 
         if (!file) {
-            setStatus("Please choose an audio file.", "is-error");
+            setStatus(t("pages.keyFinder.emptyFile", "Choose an audio file first."), "is-error");
             return;
         }
 
         if (file.size > MAX_UPLOAD_BYTES) {
-            setStatus("Please upload a file under 60 MB.", "is-error");
+            setStatus(t("pages.keyFinder.fileTooLarge", "Choose a file under 25 MB."), "is-error");
             return;
         }
 
         const extension = getFileExtension(file.name);
         if (HEAVY_CONTAINER_EXTENSIONS.has(extension) && file.size > MAX_CONTAINER_UPLOAD_BYTES) {
-            setStatus("Please export this MP4/WEBM as MP3 or WAV under 25 MB.", "is-error");
+            setStatus(t("pages.keyFinder.containerTooLarge", "Please export this MP4/WEBM as MP3 or WAV under 25 MB."), "is-error");
             return;
         }
 
         activeController = new AbortController();
         setAnalyzingState(true);
-        renderJobProgress({ stage: "Uploading audio", progress: 4 });
+        renderJobProgress({ stage: t("pages.keyFinder.uploading", "Uploading audio"), progress: 4 });
 
         try {
             await ensureApiIsReachable(activeController.signal);
@@ -1061,7 +1067,7 @@ document.addEventListener("DOMContentLoaded", function() {
             keyFinderResult.focus({ preventScroll: true });
         } catch (error) {
             if (error.name === "AbortError") {
-                setStatus("Stopped waiting for the analysis. The server may finish the job in the background.", "is-error");
+                setStatus(t("pages.keyFinder.stopped", "Stopped waiting for the analysis. The server may finish the job in the background."), "is-error");
             } else {
                 renderErrorReport(error.message, "file", apiBaseUrl);
             }
@@ -1075,13 +1081,13 @@ document.addEventListener("DOMContentLoaded", function() {
         const url = youtubeKeyUrl.value.trim();
 
         if (!url) {
-            setStatus("Please paste a YouTube link.", "is-error");
+            setStatus(t("pages.keyFinder.emptyYoutube", "Paste a YouTube link first."), "is-error");
             return;
         }
 
         activeController = new AbortController();
         setAnalyzingState(true);
-        renderJobProgress({ stage: "Downloading YouTube audio", progress: 12 });
+        renderJobProgress({ stage: t("pages.keyFinder.downloadingYoutube", "Downloading YouTube audio"), progress: 12 });
 
         try {
             const job = await analyzeYoutubeUrlWithFallback(url);
@@ -1090,7 +1096,7 @@ document.addEventListener("DOMContentLoaded", function() {
             addHistoryItem(url, data, "youtube");
         } catch (error) {
             if (error.name === "AbortError") {
-                setStatus("Stopped waiting for the analysis. The server may finish the job in the background.", "is-error");
+                setStatus(t("pages.keyFinder.stopped", "Stopped waiting for the analysis. The server may finish the job in the background."), "is-error");
             } else {
                 renderErrorReport(error.message, "youtube", error.analysisBaseUrl || youtubeAnalysisBaseUrl);
             }
@@ -1119,4 +1125,12 @@ document.addEventListener("DOMContentLoaded", function() {
     checkApiStatus();
     checkYoutubeHelperStatus();
     window.setInterval(checkYoutubeHelperStatus, 15000);
+    window.addEventListener("jasper:language-change", function() {
+        renderHistory();
+        if (!currentResultData && keyFinderResult.classList.contains("key-finder-empty")) {
+            setStatus(t("pages.keyFinder.ready", "Ready when you are."), "key-finder-empty");
+        } else if (currentResultData) {
+            renderKeyFinderResult(currentResultData);
+        }
+    });
 });

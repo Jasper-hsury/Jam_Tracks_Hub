@@ -25,16 +25,17 @@
     <meta name="twitter:image:alt" content="Jam Tracks Hub preview card for backing tracks and guitar tools.">
 
     <script src="scripts/theme-init.js?v=20260725-friendly-insect-switch"></script>
+    <script src="scripts/i18n-init.js?v=20260804-no-language-flash"></script>
     <script defer src="https://cloud.umami.is/script.js" data-website-id="c8dfc471-6512-4344-8e1b-25566e1a93cd"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles/base.css?v=20260725-friendly-insect-switch">
     <link rel="stylesheet" href="styles/components.css?v=20260728-mobile-polish">
-    <link rel="stylesheet" href="styles/pages.css?v=20260730-tablet-logo">
-    <link rel="stylesheet" href="styles/themes.css?v=20260801-color-mix-fallback">
+    <link rel="stylesheet" href="styles/pages.css?v=20260804-nav-controls">
+    <link rel="stylesheet" href="styles/themes.css?v=20260804-nav-controls">
     <link rel="stylesheet" href="styles/scale.css?v=20260718-scale-original">
 </head>
 
-<body>
+<body data-i18n-title="titles.scaleExplorer">
     <nav class="navbar">
         <a href="index.html#home" class="logo">Jam Tracks Hub</a>
         <ul class="nav-links">
@@ -51,24 +52,24 @@
 
     <main class="tracks-page scale-page">
         <header class="scale-page-heading">
-            <p class="home-eyebrow">Fretboard · intervals · scale shapes</p>
-            <h1>Scale Explorer</h1>
-            <p class="hero-tagline signature-slogan">See the pattern. Hear the color. Learn the neck.</p>
+            <p class="home-eyebrow" data-i18n="pages.scaleExplorer.eyebrow">Fretboard · intervals · scale shapes</p>
+            <h1 data-i18n="pages.scaleExplorer.title">Scale Explorer</h1>
+            <p class="hero-tagline signature-slogan" data-i18n="pages.scaleExplorer.tagline">See the pattern. Hear the color. Learn the neck.</p>
         </header>
 
         <section class="scale-workspace" aria-labelledby="scaleControlsHeading">
             <div class="scale-control-panel">
                 <div class="scale-control-heading">
                     <div>
-                        <p class="scale-section-kicker">Build a scale</p>
-                        <h2 id="scaleControlsHeading">Choose the sound</h2>
+                        <p class="scale-section-kicker" data-i18n="pages.scaleExplorer.build">Build a scale</p>
+                        <h2 id="scaleControlsHeading" data-i18n="pages.scaleExplorer.chooseSound">Choose the sound</h2>
                     </div>
-                    <p>Standard tuning: E A D G B E</p>
+                    <p data-i18n="pages.scaleExplorer.standardTuning">Standard tuning: E A D G B E</p>
                 </div>
 
                 <div class="scale-control-grid">
                     <label class="scale-select-field" for="scaleType">
-                        <span>Scale type</span>
+                        <span data-i18n="pages.scaleExplorer.scaleType">Scale type</span>
                         <select id="scaleType">
                             <option value="major">Major</option>
                             <option value="natural-minor">Natural Minor</option>
@@ -82,7 +83,7 @@
                     </label>
 
                     <fieldset class="scale-root-field">
-                        <legend>Root note</legend>
+                        <legend data-i18n="pages.scaleExplorer.rootNote">Root note</legend>
                         <div class="scale-root-grid" id="scaleRootGrid">
                             <button type="button" data-root="0">C</button>
                             <button type="button" data-root="1">C#</button>
@@ -103,53 +104,53 @@
 
             <div class="scale-summary" aria-live="polite">
                 <div>
-                    <p class="scale-section-kicker">Current scale</p>
+                    <p class="scale-section-kicker" data-i18n="pages.scaleExplorer.currentScale">Current scale</p>
                     <h2 id="scaleTitle">A Minor Pentatonic</h2>
                     <p id="scaleDescription">A focused five-note sound used throughout rock, blues, and modern guitar playing.</p>
                 </div>
                 <div class="scale-summary-actions">
                     <button class="scale-play-button" id="playScaleButton" type="button">
                         <span aria-hidden="true">&#9654;</span>
-                        Play scale
+                        <span data-i18n="pages.scaleExplorer.playScale">Play scale</span>
                     </button>
                     <button class="scale-download-button" id="downloadScaleButton" type="button">
                         <span aria-hidden="true">&#8595;</span>
-                        Download PNG
+                        <span data-i18n="pages.scaleExplorer.downloadPng">Download PNG</span>
                     </button>
                 </div>
-                <div class="scale-interval-list" id="scaleIntervalList" aria-label="Scale intervals"></div>
-                <div class="scale-tool-links" id="scaleToolLinks" aria-label="Related music tools"></div>
+                <div class="scale-interval-list" id="scaleIntervalList" aria-label="Scale intervals" data-i18n-aria-label="pages.scaleExplorer.scaleIntervals"></div>
+                <div class="scale-tool-links" id="scaleToolLinks" aria-label="Related music tools" data-i18n-aria-label="pages.scaleExplorer.relatedTools"></div>
             </div>
 
             <div class="scale-display-toolbar">
                 <fieldset class="scale-length-field">
-                    <legend>Guitar neck</legend>
+                    <legend data-i18n="pages.scaleExplorer.guitarNeck">Guitar neck</legend>
                     <div class="segmented-control scale-length-toggle" id="scaleLengthToggle">
-                        <button type="button" class="is-selected" data-fret-count="15" aria-pressed="true">15 frets</button>
-                        <button type="button" data-fret-count="22" aria-pressed="false">22 frets</button>
+                        <button type="button" class="is-selected" data-fret-count="15" aria-pressed="true" data-i18n="pages.scaleExplorer.frets" data-i18n-var-count="15">15 frets</button>
+                        <button type="button" data-fret-count="22" aria-pressed="false" data-i18n="pages.scaleExplorer.frets" data-i18n-var-count="22">22 frets</button>
                     </div>
                 </fieldset>
 
                 <fieldset class="scale-view-field">
-                    <legend>Fret range</legend>
+                    <legend data-i18n="pages.scaleExplorer.fretRange">Fret range</legend>
                     <div class="scale-range-buttons" id="scaleRangeButtons"></div>
                 </fieldset>
 
                 <fieldset class="scale-label-field">
-                    <legend>Marker labels</legend>
+                    <legend data-i18n="pages.scaleExplorer.markerLabels">Marker labels</legend>
                     <div class="segmented-control scale-label-toggle">
-                        <button type="button" class="is-selected" data-label-mode="note" aria-pressed="true">Notes</button>
-                        <button type="button" data-label-mode="degree" aria-pressed="false">Degrees</button>
+                        <button type="button" class="is-selected" data-label-mode="note" aria-pressed="true" data-i18n="pages.scaleExplorer.notes">Notes</button>
+                        <button type="button" data-label-mode="degree" aria-pressed="false" data-i18n="pages.scaleExplorer.degrees">Degrees</button>
                     </div>
                 </fieldset>
             </div>
 
             <div class="fretboard-card">
                 <div class="fretboard-help">
-                    <span><i class="scale-legend-root" aria-hidden="true"></i>Root</span>
-                    <span>Scroll sideways on smaller screens</span>
+                    <span><i class="scale-legend-root" aria-hidden="true"></i><span data-i18n="pages.scaleExplorer.root">Root</span></span>
+                    <span data-i18n="pages.scaleExplorer.scrollHint">Scroll sideways on smaller screens</span>
                 </div>
-                <div class="fretboard-scroll" tabindex="0" aria-label="Scrollable guitar fretboard">
+                <div class="fretboard-scroll" tabindex="0" aria-label="Scrollable guitar fretboard" data-i18n-aria-label="pages.scaleExplorer.guitarNeck">
                     <div class="fretboard" id="fretboard" role="img" aria-label="A minor pentatonic scale on a guitar fretboard"></div>
                 </div>
             </div>
@@ -164,9 +165,10 @@
         </div>
     </footer>
 
-    <button id="backToTopBtn" type="button" aria-label="Back to top">&uarr;</button>
+    <button id="backToTopBtn" type="button" aria-label="Back to top" data-i18n-aria-label="common.backToTop">&uarr;</button>
 
-    <script src="scripts/site.js?v=20260730-tablet-logo"></script>
+    <script src="scripts/site.js?v=20260804-nav-controls"></script>
+    <script src="scripts/i18n.js?v=20260804-nav-controls"></script>
     <script src="scripts/scale.js?v=20260728-mobile-polish"></script>
     <script src="assets/vendor/gsap/gsap.min.js"></script>
     <script src="assets/vendor/gsap/ScrollTrigger.min.js"></script>

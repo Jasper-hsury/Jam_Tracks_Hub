@@ -25,15 +25,16 @@
     <meta name="twitter:image:alt" content="Jam Tracks Hub preview card for backing tracks and guitar tools.">
 
     <script src="scripts/theme-init.js?v=20260725-friendly-insect-switch"></script>
+    <script src="scripts/i18n-init.js?v=20260804-no-language-flash"></script>
     <script defer src="https://cloud.umami.is/script.js" data-website-id="c8dfc471-6512-4344-8e1b-25566e1a93cd"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles/base.css?v=20260725-friendly-insect-switch">
     <link rel="stylesheet" href="styles/components.css?v=20260728-mobile-polish">
-    <link rel="stylesheet" href="styles/pages.css?v=20260730-tablet-logo">
-    <link rel="stylesheet" href="styles/themes.css?v=20260801-color-mix-fallback">
+    <link rel="stylesheet" href="styles/pages.css?v=20260804-nav-controls">
+    <link rel="stylesheet" href="styles/themes.css?v=20260804-nav-controls">
 </head>
 
-<body>
+<body data-i18n-title="titles.tracks">
     <nav class="navbar">
         <a href="index.html#home" class="logo">Jam Tracks Hub</a>
         <ul class="nav-links">
@@ -51,18 +52,18 @@
     <main class="tracks-page tracks-library-page">
         <div class="page-heading-row">
             <div>
-                <h1>All Backing Tracks</h1>
-                <p class="hero-tagline signature-slogan">Capture the Feeling. Compose the Meaning.</p>
+                <h1 data-i18n="pages.tracks.title">All Backing Tracks</h1>
+                <p class="hero-tagline signature-slogan" data-i18n="pages.tracks.tagline">Capture the Feeling. Compose the Meaning.</p>
             </div>
         </div>
 
-        <section class="track-controls track-toolbar" aria-label="Track filters">
+        <section class="track-controls track-toolbar" aria-label="Track filters" data-i18n-aria-label="pages.tracks.filtersLabel">
             <div class="track-toolbar-group">
-                <span class="track-toolbar-label">Filters</span>
+                <span class="track-toolbar-label" data-i18n="pages.tracks.filtersLabel">Filters</span>
                 <label class="track-native-filter track-native-filter-hidden">
-                <span>Key</span>
+                <span data-i18n="pages.tracks.keyLabel">Key</span>
                 <select id="trackKeyFilter" multiple>
-                    <option value="all">All keys</option>
+                    <option value="all" data-i18n="pages.tracks.allKeys">All keys</option>
                     <option value="C major">C major</option>
                     <option value="D major">D major</option>
                     <option value="E minor">E minor</option>
@@ -71,10 +72,10 @@
                     <option value="G major">G major</option>
                 </select>
                 </label>
-                <div class="track-key-multiselect" id="trackKeyPills" aria-label="Filter tracks by key">
+                <div class="track-key-multiselect" id="trackKeyPills" aria-label="Filter tracks by key" data-i18n-aria-label="pages.tracks.filterByKey">
                     <button class="track-key-filter-toggle" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="trackKeyOptions">
-                        Key
-                        <span data-filter-current>All keys</span>
+                        <span data-i18n="pages.tracks.keyLabel">Key</span>
+                        <span data-filter-current data-i18n="pages.tracks.allKeys">All keys</span>
                     </button>
                     <div class="track-key-options" id="trackKeyOptions"></div>
                 </div>
@@ -82,18 +83,18 @@
 
             <div class="track-toolbar-group track-toolbar-sort">
                 <label class="track-native-filter track-native-filter-hidden">
-                <span>Sort</span>
+                <span data-i18n="pages.tracks.sortLabel">Sort</span>
                 <select id="trackSortSelect">
-                    <option value="newest">Newest first</option>
-                    <option value="oldest">Oldest first</option>
+                    <option value="newest" data-i18n="pages.tracks.newestFirst">Newest first</option>
+                    <option value="oldest" data-i18n="pages.tracks.oldestFirst">Oldest first</option>
                 </select>
                 </label>
-                <div class="track-sort-switch-control" id="trackSortPills" aria-label="Sort tracks">
-                    <span class="track-sort-caption">Sort by</span>
-                    <span class="track-sort-mode track-sort-mode-latest" data-sort-latest>Latest first</span>
-                    <input class="uiverse-toggle-input track-sort-switch-input" id="trackSortToggle" type="checkbox" aria-label="Switch between latest first and oldest first">
+                <div class="track-sort-switch-control" id="trackSortPills" aria-label="Sort tracks" data-i18n-aria-label="pages.tracks.sortLabel">
+                    <span class="track-sort-caption" data-i18n="pages.tracks.sortBy">Sort by</span>
+                    <span class="track-sort-mode track-sort-mode-latest" data-sort-latest data-i18n="pages.tracks.latestFirst">Latest first</span>
+                    <input class="uiverse-toggle-input track-sort-switch-input" id="trackSortToggle" type="checkbox" aria-label="Switch between latest first and oldest first" data-i18n-aria-label="pages.tracks.switchSort">
                     <label class="uiverse-toggle track-sort-switch" for="trackSortToggle"></label>
-                    <span class="track-sort-mode track-sort-mode-oldest" data-sort-oldest>Oldest first</span>
+                    <span class="track-sort-mode track-sort-mode-oldest" data-sort-oldest data-i18n="pages.tracks.oldestFirst">Oldest first</span>
                 </div>
             </div>
         </section>
@@ -107,7 +108,7 @@
                     <span class="uiverse-loader-dot jh-loader-dot"></span>
                     <span class="uiverse-loader-dot jh-loader-dot"></span>
                 </span>
-                <span>Loading tracks...</span>
+                <span data-i18n="pages.tracks.loading">Loading tracks...</span>
             </p>
         </div>
 
@@ -147,11 +148,12 @@
         </div>
     </footer>
 
-    <button id="backToTopBtn" type="button" aria-label="Back to top">&uarr;</button>
+    <button id="backToTopBtn" type="button" aria-label="Back to top" data-i18n-aria-label="common.backToTop">&uarr;</button>
 
     <script src="assets/vendor/gsap/gsap.min.js"></script>
     <script src="assets/vendor/gsap/Flip.min.js"></script>
-    <script src="scripts/site.js?v=20260730-tablet-logo"></script>
+    <script src="scripts/site.js?v=20260804-nav-controls"></script>
+    <script src="scripts/i18n.js?v=20260804-nav-controls"></script>
     <script src="scripts/tracks.js?v=20260730-track-cover-images"></script>
     <script src="assets/vendor/gsap/ScrollTrigger.min.js"></script>
     <script src="scripts/site-animations.js?v=20260720-track-windmill-heartless"></script>

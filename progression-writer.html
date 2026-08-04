@@ -25,16 +25,17 @@
     <meta name="twitter:image:alt" content="Jam Tracks Hub preview card for backing tracks and guitar tools.">
 
     <script src="scripts/theme-init.js?v=20260725-friendly-insect-switch"></script>
+    <script src="scripts/i18n-init.js?v=20260804-no-language-flash"></script>
     <script defer src="https://cloud.umami.is/script.js" data-website-id="c8dfc471-6512-4344-8e1b-25566e1a93cd"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles/base.css?v=20260725-friendly-insect-switch">
     <link rel="stylesheet" href="styles/components.css?v=20260728-mobile-polish">
     <link rel="stylesheet" href="styles/chord-dictionary.css?v=20260728-mobile-polish">
-    <link rel="stylesheet" href="styles/pages.css?v=20260730-tablet-logo">
-    <link rel="stylesheet" href="styles/themes.css?v=20260801-color-mix-fallback">
+    <link rel="stylesheet" href="styles/pages.css?v=20260804-nav-controls">
+    <link rel="stylesheet" href="styles/themes.css?v=20260804-nav-controls">
 </head>
 
-<body>
+<body data-i18n-title="titles.progressionWriter">
     <nav class="navbar">
         <a href="index.html#home" class="logo">Jam Tracks Hub</a>
         <ul class="nav-links">
@@ -52,30 +53,30 @@
     <main class="tracks-page progression-writer-page">
         <div class="page-heading-row progression-writer-heading">
             <div>
-                <h1>Write Your Own Progression</h1>
-                <p class="hero-tagline signature-slogan">Capture the Feeling. Compose the Meaning.</p>
+                <h1 data-i18n="pages.progressionWriter.title">Write Your Own Progression</h1>
+                <p class="hero-tagline signature-slogan" data-i18n="pages.progressionWriter.tagline">Capture the Feeling. Compose the Meaning.</p>
             </div>
         </div>
 
         <section class="progression-writer-panel" aria-labelledby="progressionWriterModeTitle">
             <div class="tool-section-heading progression-writer-copy">
-                <span class="result-kicker">Progression format</span>
-                <h2 id="progressionWriterModeTitle" class="section-title">Chord Progression</h2>
+                <span class="result-kicker" data-i18n="pages.progressionWriter.format">Progression format</span>
+                <h2 id="progressionWriterModeTitle" class="section-title" data-i18n="pages.progressionWriter.modeTitle">Chord Progression</h2>
             </div>
 
             <div class="progression-writer-mode-control">
-                <input class="uiverse-toggle-input progression-writer-switch-input" id="progressionStructureToggle" type="checkbox" aria-label="Switch between chord progression with or without verse and chorus">
-                <span class="progression-writer-mode-label progression-writer-mode-without">Without Verse &amp; Chorus</span>
+                <input class="uiverse-toggle-input progression-writer-switch-input" id="progressionStructureToggle" type="checkbox" aria-label="Switch between chord progression with or without verse and chorus" data-i18n-aria-label="pages.progressionWriter.switchStructure">
+                <span class="progression-writer-mode-label progression-writer-mode-without" data-i18n="pages.progressionWriter.withoutVerseChorus">Without Verse &amp; Chorus</span>
                 <label class="uiverse-toggle progression-writer-switch" for="progressionStructureToggle"></label>
-                <span class="progression-writer-mode-label progression-writer-mode-with">With Verse &amp; Chorus</span>
+                <span class="progression-writer-mode-label progression-writer-mode-with" data-i18n="pages.progressionWriter.withVerseChorus">With Verse &amp; Chorus</span>
             </div>
         </section>
 
         <form class="progression-writer-form" id="progressionWriterForm">
-            <section class="progression-writer-meta" aria-label="Song information">
+            <section class="progression-writer-meta" aria-label="Song information" data-i18n-aria-label="pages.progressionWriter.songInformation">
                 <div class="progression-writer-meta-field">
-                    <input id="progressionSongName" class="progression-writer-meta-input" type="text" name="songName" placeholder="Song Name" autocomplete="off">
-                    <label class="progression-writer-meta-label" for="progressionSongName">Song Name</label>
+                    <input id="progressionSongName" class="progression-writer-meta-input" type="text" name="songName" placeholder="Song Name" autocomplete="off" data-i18n-placeholder="pages.progressionWriter.songName">
+                    <label class="progression-writer-meta-label" for="progressionSongName" data-i18n="pages.progressionWriter.songName">Song Name</label>
                 </div>
                 <div class="progression-writer-key-control">
                     <div class="progression-writer-meta-field progression-writer-key-field">
@@ -93,30 +94,30 @@
                             <option value="G">G</option>
                             <option value="Ab">Ab</option>
                         </select>
-                        <label class="progression-writer-meta-label" for="progressionKeyRoot">Key</label>
+                        <label class="progression-writer-meta-label" for="progressionKeyRoot" data-i18n="pages.progressionWriter.key">Key</label>
                     </div>
                     <div class="progression-key-mode-control">
-                        <input class="uiverse-toggle-input progression-writer-switch-input progression-key-mode-input" id="progressionKeyQualityToggle" type="checkbox" aria-label="Switch key between major and minor">
-                        <span class="progression-key-mode-label progression-key-mode-major">Major</span>
+                        <input class="uiverse-toggle-input progression-writer-switch-input progression-key-mode-input" id="progressionKeyQualityToggle" type="checkbox" aria-label="Switch key between major and minor" data-i18n-aria-label="pages.progressionWriter.switchKeyMode">
+                        <span class="progression-key-mode-label progression-key-mode-major" data-i18n="pages.progressionWriter.major">Major</span>
                         <label class="uiverse-toggle progression-writer-switch progression-key-mode-switch" for="progressionKeyQualityToggle"></label>
-                        <span class="progression-key-mode-label progression-key-mode-minor">Minor</span>
+                        <span class="progression-key-mode-label progression-key-mode-minor" data-i18n="pages.progressionWriter.minor">Minor</span>
                     </div>
                 </div>
                 <div class="progression-writer-meta-field progression-writer-meta-field-bpm">
-                    <input id="progressionBpm" class="progression-writer-meta-input" type="number" name="bpm" placeholder="BPM" min="20" max="320" inputmode="numeric">
-                    <label class="progression-writer-meta-label" for="progressionBpm">BPM</label>
+                    <input id="progressionBpm" class="progression-writer-meta-input" type="number" name="bpm" placeholder="BPM" min="20" max="320" inputmode="numeric" data-i18n-placeholder="pages.progressionWriter.bpm">
+                    <label class="progression-writer-meta-label" for="progressionBpm" data-i18n="pages.progressionWriter.bpm">BPM</label>
                 </div>
             </section>
 
             <section class="progression-writer-entry" data-progression-mode="single" aria-labelledby="singleProgressionTitle">
                 <div class="progression-writer-entry-heading">
                     <div>
-                        <span class="result-kicker">Custom chords</span>
-                        <h2 id="singleProgressionTitle" class="section-title">Progression</h2>
+                        <span class="result-kicker" data-i18n="pages.progressionWriter.customChords">Custom chords</span>
+                        <h2 id="singleProgressionTitle" class="section-title" data-i18n="pages.progressionWriter.progression">Progression</h2>
                     </div>
                     <div class="progression-writer-chord-actions">
-                        <button class="secondary-button progression-writer-add-button" type="button" data-add-chord="single">Add Chord</button>
-                        <button class="secondary-button progression-writer-delete-button" type="button" data-delete-chord="single">Delete Chord</button>
+                        <button class="secondary-button progression-writer-add-button" type="button" data-add-chord="single" data-i18n="pages.progressionWriter.addChord">Add Chord</button>
+                        <button class="secondary-button progression-writer-delete-button" type="button" data-delete-chord="single" data-i18n="pages.progressionWriter.deleteChord">Delete Chord</button>
                     </div>
                 </div>
 
@@ -144,12 +145,12 @@
                 <section class="progression-writer-entry" aria-labelledby="verseProgressionTitle">
                     <div class="progression-writer-entry-heading">
                         <div>
-                            <span class="result-kicker">Section one</span>
-                            <h2 id="verseProgressionTitle" class="section-title">Verse</h2>
+                            <span class="result-kicker" data-i18n="pages.progressionWriter.sectionOne">Section one</span>
+                            <h2 id="verseProgressionTitle" class="section-title" data-i18n="pages.progressionWriter.verse">Verse</h2>
                         </div>
                         <div class="progression-writer-chord-actions">
-                            <button class="secondary-button progression-writer-add-button" type="button" data-add-chord="verse">Add Chord</button>
-                            <button class="secondary-button progression-writer-delete-button" type="button" data-delete-chord="verse">Delete Chord</button>
+                            <button class="secondary-button progression-writer-add-button" type="button" data-add-chord="verse" data-i18n="pages.progressionWriter.addChord">Add Chord</button>
+                            <button class="secondary-button progression-writer-delete-button" type="button" data-delete-chord="verse" data-i18n="pages.progressionWriter.deleteChord">Delete Chord</button>
                         </div>
                     </div>
 
@@ -176,12 +177,12 @@
                 <section class="progression-writer-entry" aria-labelledby="chorusProgressionTitle">
                     <div class="progression-writer-entry-heading">
                         <div>
-                            <span class="result-kicker">Section two</span>
-                            <h2 id="chorusProgressionTitle" class="section-title">Chorus</h2>
+                            <span class="result-kicker" data-i18n="pages.progressionWriter.sectionTwo">Section two</span>
+                            <h2 id="chorusProgressionTitle" class="section-title" data-i18n="pages.progressionWriter.chorus">Chorus</h2>
                         </div>
                         <div class="progression-writer-chord-actions">
-                            <button class="secondary-button progression-writer-add-button" type="button" data-add-chord="chorus">Add Chord</button>
-                            <button class="secondary-button progression-writer-delete-button" type="button" data-delete-chord="chorus">Delete Chord</button>
+                            <button class="secondary-button progression-writer-add-button" type="button" data-add-chord="chorus" data-i18n="pages.progressionWriter.addChord">Add Chord</button>
+                            <button class="secondary-button progression-writer-delete-button" type="button" data-delete-chord="chorus" data-i18n="pages.progressionWriter.deleteChord">Delete Chord</button>
                         </div>
                     </div>
 
@@ -207,14 +208,14 @@
             </div>
 
             <div class="progression-writer-actions">
-                <button class="primary-button progression-writer-save-button" type="submit">Save Progression</button>
+                <button class="primary-button progression-writer-save-button" type="submit" data-i18n="pages.progressionWriter.saveProgression">Save Progression</button>
                 <div class="progression-download-layout-control">
-                    <input id="separateProgressionDownload" class="uiverse-toggle-input progression-download-layout-input" type="checkbox" aria-label="Show chord progression and shapes separately in downloaded image">
-                    <span class="progression-download-layout-label progression-download-layout-full">Full Shape Cards</span>
+                    <input id="separateProgressionDownload" class="uiverse-toggle-input progression-download-layout-input" type="checkbox" aria-label="Show chord progression and shapes separately in downloaded image" data-i18n-aria-label="pages.progressionWriter.downloadLayout">
+                    <span class="progression-download-layout-label progression-download-layout-full" data-i18n="pages.progressionWriter.fullShapeCards">Full Shape Cards</span>
                     <label class="uiverse-toggle progression-download-layout-switch" for="separateProgressionDownload"></label>
-                    <span class="progression-download-layout-label progression-download-layout-separated">Progression &amp; Shapes Separately</span>
+                    <span class="progression-download-layout-label progression-download-layout-separated" data-i18n="pages.progressionWriter.separateShapes">Progression &amp; Shapes Separately</span>
                 </div>
-                <button class="uiverse-download-button progression-download-button track-slides-download-link" id="downloadProgressionButton" type="button" aria-label="Download progression image">
+                <button class="uiverse-download-button progression-download-button track-slides-download-link" id="downloadProgressionButton" type="button" aria-label="Download progression image" data-i18n-aria-label="pages.progressionWriter.downloadImage">
                     <span class="uiverse-download-button-circle track-slides-download-circle" aria-hidden="true">
                         <svg class="uiverse-download-button-icon track-slides-download-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                             <path d="M12 5v11m0 0-4-4m4 4 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -232,32 +233,32 @@
             <section class="progression-writer-shape-picker-dialog" role="dialog" aria-modal="true" aria-labelledby="progressionShapePickerTitle">
                 <div class="progression-writer-shape-picker-header">
                     <div>
-                        <span class="result-kicker">Guitar voicings</span>
-                        <h2 id="progressionShapePickerTitle" class="section-title">Available guitar shapes</h2>
-                        <p>Standard tuning E A D G B E. X means mute; O means open.</p>
+                        <span class="result-kicker" data-i18n="pages.progressionWriter.guitarVoicings">Guitar voicings</span>
+                        <h2 id="progressionShapePickerTitle" class="section-title" data-i18n="pages.progressionWriter.availableShapes">Available guitar shapes</h2>
+                        <p data-i18n="pages.progressionWriter.shapeHelp">Standard tuning E A D G B E. X means mute; O means open.</p>
                     </div>
-                    <button class="secondary-button progression-writer-shape-picker-close" type="button" data-close-shape-picker>Close</button>
+                    <button class="secondary-button progression-writer-shape-picker-close" type="button" data-close-shape-picker data-i18n="common.close">Close</button>
                 </div>
 
                 <div class="progression-writer-shape-picker-summary">
-                    <strong id="progressionShapePickerChord">Chord</strong>
-                    <span id="progressionShapePickerCount">Finding shapes</span>
+                    <strong id="progressionShapePickerChord" data-i18n="pages.progressionWriter.chord">Chord</strong>
+                    <span id="progressionShapePickerCount" data-i18n="pages.progressionWriter.findingShapes">Finding shapes</span>
                 </div>
 
-                <div class="dictionary-position-filter progression-writer-shape-filter" id="progressionShapePositionFilter" aria-label="Filter chord shapes by fret area">
-                    <span>Position</span>
-                    <button type="button" class="is-selected" data-picker-position="all" aria-pressed="true">All</button>
-                    <button type="button" data-picker-position="0" aria-pressed="false">Near 0</button>
-                    <button type="button" data-picker-position="3" aria-pressed="false">Near 3</button>
-                    <button type="button" data-picker-position="5" aria-pressed="false">Near 5</button>
-                    <button type="button" data-picker-position="7" aria-pressed="false">Near 7</button>
-                    <button type="button" data-picker-position="9" aria-pressed="false">Near 9</button>
-                    <button type="button" data-picker-position="12" aria-pressed="false">Near 12</button>
+                <div class="dictionary-position-filter progression-writer-shape-filter" id="progressionShapePositionFilter" aria-label="Filter chord shapes by fret area" data-i18n-aria-label="pages.chordDictionary.position">
+                    <span data-i18n="pages.progressionWriter.position">Position</span>
+                    <button type="button" class="is-selected" data-picker-position="all" aria-pressed="true" data-i18n="common.all">All</button>
+                    <button type="button" data-picker-position="0" aria-pressed="false" data-i18n="pages.progressionWriter.near" data-i18n-var-fret="0">Near 0</button>
+                    <button type="button" data-picker-position="3" aria-pressed="false" data-i18n="pages.progressionWriter.near" data-i18n-var-fret="3">Near 3</button>
+                    <button type="button" data-picker-position="5" aria-pressed="false" data-i18n="pages.progressionWriter.near" data-i18n-var-fret="5">Near 5</button>
+                    <button type="button" data-picker-position="7" aria-pressed="false" data-i18n="pages.progressionWriter.near" data-i18n-var-fret="7">Near 7</button>
+                    <button type="button" data-picker-position="9" aria-pressed="false" data-i18n="pages.progressionWriter.near" data-i18n-var-fret="9">Near 9</button>
+                    <button type="button" data-picker-position="12" aria-pressed="false" data-i18n="pages.progressionWriter.near" data-i18n-var-fret="12">Near 12</button>
                 </div>
 
-                <div class="dictionary-position-filter progression-writer-shape-filter" id="progressionShapeRootFilter" aria-label="Filter chord shapes by root string">
-                    <span>Root string</span>
-                    <button type="button" class="is-selected" data-picker-root-string="all" aria-pressed="true">All</button>
+                <div class="dictionary-position-filter progression-writer-shape-filter" id="progressionShapeRootFilter" aria-label="Filter chord shapes by root string" data-i18n-aria-label="pages.chordDictionary.rootString">
+                    <span data-i18n="pages.progressionWriter.rootString">Root string</span>
+                    <button type="button" class="is-selected" data-picker-root-string="all" aria-pressed="true" data-i18n="common.all">All</button>
                     <button type="button" data-picker-root-string="6" aria-pressed="false">6th E</button>
                     <button type="button" data-picker-root-string="5" aria-pressed="false">5th A</button>
                     <button type="button" data-picker-root-string="4" aria-pressed="false">4th D</button>
@@ -273,26 +274,26 @@
         <section class="progression-writer-saved" aria-labelledby="savedWriterProgressionsTitle">
             <div class="progression-writer-saved-heading">
                 <div>
-                    <h2 id="savedWriterProgressionsTitle" class="section-title">Saved Progression</h2>
+                    <h2 id="savedWriterProgressionsTitle" class="section-title" data-i18n="pages.progressionWriter.savedProgression">Saved Progression</h2>
                 </div>
-                <span class="progression-writer-saved-count" id="writerSavedProgressionCount">No saved progressions</span>
+                <span class="progression-writer-saved-count" id="writerSavedProgressionCount" data-i18n="pages.progressionWriter.noSaved">No saved progressions</span>
             </div>
             <div class="progression-writer-saved-controls">
                 <label class="progression-writer-saved-picker" for="writerSavedProgressionPicker">
-                    <span>Saved progression</span>
+                    <span data-i18n="pages.progressionWriter.savedPicker">Saved progression</span>
                     <select id="writerSavedProgressionPicker" disabled>
-                        <option value="">No saved progressions yet</option>
+                        <option value="" data-i18n="pages.progressionWriter.noSavedOption">No saved progressions yet</option>
                     </select>
                 </label>
                 <div class="progression-writer-saved-actions">
-                    <button class="secondary-button" id="writerLoadProgressionButton" type="button" disabled><span>Load</span></button>
-                    <button class="secondary-button" id="writerDuplicateProgressionButton" type="button"><span>Duplicate</span></button>
-                    <button class="secondary-button" id="writerClearProgressionButton" type="button"><span>Clear All</span></button>
-                    <button class="secondary-button" id="writerExportJsonButton" type="button"><span>Export JSON</span></button>
+                    <button class="secondary-button" id="writerLoadProgressionButton" type="button" disabled><span data-i18n="common.load">Load</span></button>
+                    <button class="secondary-button" id="writerDuplicateProgressionButton" type="button"><span data-i18n="common.duplicate">Duplicate</span></button>
+                    <button class="secondary-button" id="writerClearProgressionButton" type="button"><span data-i18n="common.clearAll">Clear All</span></button>
+                    <button class="secondary-button" id="writerExportJsonButton" type="button"><span data-i18n="common.exportJson">Export JSON</span></button>
                 </div>
             </div>
             <div class="progression-writer-saved-list" id="writerSavedProgressions">
-                <p class="saved-progression-empty">No saved progressions yet.</p>
+                <p class="saved-progression-empty" data-i18n="pages.progressionWriter.noSavedOption">No saved progressions yet.</p>
             </div>
         </section>
     </main>
@@ -305,9 +306,10 @@
         </div>
     </footer>
 
-    <button id="backToTopBtn" type="button" aria-label="Back to top">&uarr;</button>
+    <button id="backToTopBtn" type="button" aria-label="Back to top" data-i18n-aria-label="common.backToTop">&uarr;</button>
 
-    <script src="scripts/site.js?v=20260730-tablet-logo"></script>
+    <script src="scripts/site.js?v=20260804-nav-controls"></script>
+    <script src="scripts/i18n.js?v=20260804-nav-controls"></script>
     <script src="scripts/progression-writer.js?v=20260726-save-upgrade"></script>
     <script src="assets/vendor/gsap/gsap.min.js"></script>
     <script src="assets/vendor/gsap/ScrollTrigger.min.js"></script>

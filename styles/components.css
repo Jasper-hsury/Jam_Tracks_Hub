@@ -2394,6 +2394,9 @@ audio {
 .progression-style {
     margin: 0;
     color: rgba(58, 50, 43, 0.76);
+    padding-inline-start: calc(100% / (var(--progression-column-count, 4) * 2));
+    text-align: left;
+    text-wrap: balance;
 }
 
 .progression-group-label {
@@ -2445,18 +2448,22 @@ audio {
 
 .progression-count-1 {
     grid-template-columns: repeat(1, minmax(0, 1fr));
+    --progression-column-count: 1;
 }
 
 .progression-count-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    --progression-column-count: 2;
 }
 
 .progression-count-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    --progression-column-count: 3;
 }
 
 .progression-count-4 {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+    --progression-column-count: 4;
 }
 
 .progression-voicing-card.has-four-voicings .progression-numeral-token,

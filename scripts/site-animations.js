@@ -893,9 +893,15 @@
             ".track-primary-action",
             ".track-secondary-action"
         ].join(", ");
+        const closestElement = eventTarget => {
+            if (eventTarget instanceof Element) {
+                return eventTarget.closest(selectors);
+            }
+            return eventTarget?.parentElement?.closest(selectors) || null;
+        };
 
         document.addEventListener("pointerenter", event => {
-            const target = event.target.closest(selectors);
+            const target = closestElement(event.target);
             if (target) {
                 animateInteractiveSurface(target, true);
                 animateHomeStepCardHover(target);
@@ -903,7 +909,7 @@
         }, true);
 
         document.addEventListener("pointerleave", event => {
-            const target = event.target.closest(selectors);
+            const target = closestElement(event.target);
             if (target) {
                 resetInteractiveSurface(target);
             }

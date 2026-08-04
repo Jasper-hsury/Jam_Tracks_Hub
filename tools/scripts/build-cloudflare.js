@@ -22,7 +22,7 @@ const rootFiles = [
   "tracks.html"
 ];
 
-const directories = ["assets", "data", "downloads", "scripts", "slides", "styles"];
+const directories = ["assets", "data", "downloads", "locales", "scripts", "slides", "styles"];
 
 function copyFile(relativePath) {
   const source = path.join(root, relativePath);

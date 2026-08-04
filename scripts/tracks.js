@@ -26,6 +26,31 @@ document.addEventListener("DOMContentLoaded", function() {
         { id: "bb-gm", label: "Bb/Gm", keys: ["Bb major", "A# major", "G minor"] },
         { id: "b-gsharpm", label: "B/G#m", keys: ["B major", "G# minor", "Ab minor"] }
     ];
+    const descriptorTranslationKeys = {
+        Reflective: "track.descriptor.01",
+        Aerial: "track.descriptor.02",
+        Hopeful: "track.descriptor.03",
+        Soulful: "track.descriptor.04",
+        Poignant: "track.descriptor.05",
+        Emotional: "track.descriptor.06",
+        Lonesome: "track.descriptor.07",
+        Rock: "track.descriptor.08",
+        Funk: "track.descriptor.09",
+        Energetic: "track.descriptor.10",
+        Warm: "track.descriptor.11",
+        Searching: "track.descriptor.12",
+        Soul: "track.descriptor.13",
+        Fusion: "track.descriptor.14",
+        Smooth: "track.descriptor.15",
+        Ballad: "track.descriptor.16",
+        Deep: "track.descriptor.17",
+        Groove: "track.descriptor.18",
+        Comfort: "track.descriptor.19",
+        Mellow: "track.descriptor.20",
+        Crush: "track.descriptor.21",
+        Amazing: "track.descriptor.22",
+        Pop: "track.descriptor.23"
+    };
 
     if (!grid) {
         return;
@@ -38,6 +63,10 @@ document.addEventListener("DOMContentLoaded", function() {
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
+    }
+
+    function t(key, fallback, variables) {
+        return window.JasperI18n?.translate?.(key, fallback, variables) ?? fallback;
     }
 
     function renderLoaderMarkup(extraClass) {
@@ -64,6 +93,35 @@ document.addEventListener("DOMContentLoaded", function() {
     function getTrackNumber(track) {
         const match = String(track.id || "").match(/[Ww](\d+)/);
         return match ? Number(match[1]) : 0;
+    }
+
+    function getTrackTitle(track) {
+        const key = String(track.id || "").trim().toUpperCase();
+        return key ? t(key, track.title) : track.title;
+    }
+
+    function getTrackTitleText(track) {
+        return window.JasperI18n?.trackTitleText?.(track) || `${track.id} ${getTrackTitle(track)}`.trim();
+    }
+
+    function getTrackTitleMarkup(track) {
+        return window.JasperI18n?.trackTitleMarkup?.(track) || escapeHtml(`${track.id} ${getTrackTitle(track)}`.trim());
+    }
+
+    function getTrackDescriptor(track) {
+        return track.descriptor;
+    }
+
+    function getTrackKeyLabel(track) {
+        const match = String(track.key || "").match(/^([A-G](?:#|b)?)\s+(major|minor)$/i);
+        if (!match) {
+            return track.key;
+        }
+
+        const modeKey = match[2].toLowerCase() === "minor"
+            ? "pages.chordProgressions.minor"
+            : "pages.chordProgressions.major";
+        return `${match[1]} ${t(modeKey, match[2].toLowerCase())}`;
     }
 
     function normalizeTrack(track) {
@@ -159,7 +217,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function getKeyFilterSummary() {
         if (selectedKeys.size === 0) {
-            return "All keys";
+            return t("pages.tracks.allKeys", "All keys");
         }
 
         const orderedGroups = relativeKeyGroups.filter(group => selectedKeyGroups.has(group.id));
@@ -178,7 +236,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const currentLabel = keyFilterPanel.querySelector("[data-filter-current]");
         const optionsContainer = keyFilterPanel.querySelector(".track-key-options");
         const optionRows = [
-            { value: "all", label: "All keys" },
+            { value: "all", label: t("pages.tracks.allKeys", "All keys") },
             ...relativeKeyGroups.map(function(group) {
                 return { value: group.id, label: group.label };
             })
@@ -258,6 +316,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function buildSlidesDownloadLink(track, extraClass = "") {
+        const title = getTrackTitleText(track);
         const className = [
             "track-link",
             "track-secondary-action",
@@ -268,7 +327,7 @@ document.addEventListener("DOMContentLoaded", function() {
         ].filter(Boolean).join(" ");
 
         return `
-            <a href="${escapeHtml(track.downloadUrl)}" class="${className}" data-card-action="slides" download aria-label="Download slides for ${escapeHtml(track.title)}">
+            <a href="${escapeHtml(track.downloadUrl)}" class="${className}" data-card-action="slides" download aria-label="${escapeHtml(t("pages.tracks.downloadSlidesFor", "Download slides for {{title}}", { title }))}">
                 <span class="uiverse-download-button-circle track-slides-download-circle" aria-hidden="true">
                     <svg class="uiverse-download-button-icon track-slides-download-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                         <path d="M12 5v11m0 0-4-4m4 4 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -281,6 +340,10 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function buildTrackCard(track) {
+        const title = getTrackTitleText(track);
+        const titleMarkup = getTrackTitleMarkup(track);
+        const keyLabel = getTrackKeyLabel(track);
+        const descriptor = getTrackDescriptor(track);
         const videoId = getYouTubeVideoId(track.youtubeUrl);
         const hasYouTubeLink = Boolean(videoId && track.youtubeUrl && track.youtubeUrl !== "#");
         const coverUrl = track.coverUrl || (videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : "");
@@ -288,13 +351,13 @@ document.addEventListener("DOMContentLoaded", function() {
             ? `<img class="track-cover-image" src="${escapeHtml(coverUrl)}" alt="" loading="lazy" decoding="async">`
             : "";
         const clickAttributes = hasYouTubeLink
-            ? ` role="link" tabindex="0" data-youtube-url="${escapeHtml(track.youtubeUrl)}" aria-label="Open ${escapeHtml(track.title)} on YouTube"`
+            ? ` role="link" tabindex="0" data-youtube-url="${escapeHtml(track.youtubeUrl)}" aria-label="${escapeHtml(t("pages.tracks.openOnYouTube", "Open {{title}} on YouTube", { title }))}"`
             : "";
 
         return `
             <article class="track-card${hasYouTubeLink ? " track-card-clickable" : ""}"${clickAttributes}
                 data-flip-id="track-${escapeHtml(track.id)}"
-                data-title="${escapeHtml(`${track.id} ${track.title}`)}"
+                data-title="${escapeHtml(title)}"
                 data-key="${escapeHtml(track.key)}"
                 data-style="${escapeHtml(track.style)}"
                 data-mood="${escapeHtml(track.mood)}"
@@ -305,11 +368,11 @@ document.addEventListener("DOMContentLoaded", function() {
                 </div>
                 <div class="track-card-main">
                     <div class="track-card-title-row">
-                        <h2>${escapeHtml(track.id)} ${escapeHtml(track.title)}</h2>
+                        <h2 class="track-title-display" data-track-heading data-track-id="${escapeHtml(track.id)}" data-track-title="${escapeHtml(track.title)}" data-track-key="${escapeHtml(track.key)}">${titleMarkup}</h2>
                     </div>
                     <p class="track-meta">
-                        <span>${escapeHtml(track.key)}</span>
-                        <span>${escapeHtml(track.descriptor)}</span>
+                        <span>${escapeHtml(keyLabel)}</span>
+                        <span>${escapeHtml(descriptor)}</span>
                     </p>
                 </div>
                 <div class="track-actions">
@@ -408,11 +471,12 @@ document.addEventListener("DOMContentLoaded", function() {
             grid.classList.add("is-flipping-tracks");
         }
 
-        grid.innerHTML = cardsHtml || `<p class="track-loading">No tracks match these filters.</p>`;
+        grid.innerHTML = cardsHtml || `<p class="track-loading">${escapeHtml(t("pages.tracks.noMatches", "No tracks match these filters."))}</p>`;
         grid.setAttribute("aria-busy", "false");
 
         if (resultCount) {
-            resultCount.textContent = `${visibleTracks.length} track${visibleTracks.length === 1 ? "" : "s"} shown`;
+            const countKey = visibleTracks.length === 1 ? "pages.tracks.resultCount_one" : "pages.tracks.resultCount_other";
+            resultCount.textContent = t(countKey, "{{count}} tracks shown", { count: visibleTracks.length });
         }
 
         if (flipState) {
@@ -423,7 +487,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function refreshFilterOptions() {
-        populateSelect(keyFilter, uniqueSorted(tracks.map(track => track.key)), "All keys");
+        populateSelect(keyFilter, uniqueSorted(tracks.map(track => track.key)), t("pages.tracks.allKeys", "All keys"));
         selectedKeyGroups = sanitizeSelectedKeyGroups(selectedKeyGroups);
         selectedKeys = getKeysFromSelectedGroups();
         updateKeySelectFromState();
@@ -436,7 +500,7 @@ document.addEventListener("DOMContentLoaded", function() {
         grid.innerHTML = `
             <p class="track-loading track-loading-status" role="status">
                 ${renderLoaderMarkup("track-loading-spinner")}
-                <span>Loading tracks...</span>
+                <span>${escapeHtml(t("pages.tracks.loading", "Loading tracks..."))}</span>
             </p>
         `;
 
@@ -591,4 +655,9 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     loadTracks();
+
+    window.addEventListener("jasper:language-change", function() {
+        refreshFilterOptions();
+        renderTracks();
+    });
 });
