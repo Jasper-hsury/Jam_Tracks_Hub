@@ -2394,7 +2394,7 @@ audio {
 .progression-style {
     margin: 0;
     color: rgba(58, 50, 43, 0.76);
-    padding-inline-start: calc(100% / (var(--progression-column-count, 4) * 2));
+    padding-inline-start: 0;
     text-align: left;
     text-wrap: balance;
 }

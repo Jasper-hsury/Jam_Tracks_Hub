@@ -112,6 +112,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const shapePageStatus = document.getElementById("shapePageStatus");
     const relatedActions = document.getElementById("dictionaryRelatedActions");
     const playButton = document.getElementById("playChordButton");
+    const playButtonLabel = playButton?.querySelector("[data-i18n='pages.chordDictionary.playChord']");
 
     let rootPitch = 0;
     let selectedChord = ALL_CHORDS[0];
@@ -1059,7 +1060,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
         isPlaying = true;
         playButton.disabled = true;
-        playButton.lastChild.textContent = ` ${t("pages.chordDictionary.playing", "Playing")}`;
+        if (playButtonLabel) {
+            playButtonLabel.textContent = t("pages.chordDictionary.playing", "Playing");
+        }
         const startTime = context.currentTime + 0.04;
         const frets = filteredVoicings[0].frets;
 
@@ -1087,7 +1090,9 @@ document.addEventListener("DOMContentLoaded", function() {
         window.setTimeout(() => {
             isPlaying = false;
             playButton.disabled = false;
-            playButton.lastChild.textContent = ` ${t("pages.chordDictionary.playChord", "Play chord")}`;
+            if (playButtonLabel) {
+                playButtonLabel.textContent = t("pages.chordDictionary.playChord", "Play chord");
+            }
         }, 1400);
     }
 

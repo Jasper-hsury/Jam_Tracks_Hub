@@ -901,6 +901,14 @@ html[data-theme="light"] .language-switch-button:hover {
     transform: none;
 }
 
+.key-finder-page .key-finder-panel:hover {
+    background: var(--panel-background);
+    border-color: var(--border-soft);
+    border-left-color: var(--teal);
+    box-shadow: var(--card-shadow);
+    transform: none;
+}
+
 .feedback-actions .primary-button,
 .feedback-actions .secondary-button {
     box-sizing: border-box;
