@@ -89,7 +89,7 @@
       "11": "Train",
       "12": "Answer random string-and-fret questions to build note-name fluency.",
       "13": "Featured practice audio",
-      "14": "The newest release: a C minor rock track for expressive phrasing, melodic tension, and verse-to-chorus lift.",
+      "14": "The newest release: a C major guitar track for spacious chords, melodic movement, and a reflective roaming mood.",
       "15": "Recent work",
       "16": "Latest Releases",
       "17": "View all tracks",
@@ -472,6 +472,7 @@
   "W16": "Mellow Comfort Backing Track in F",
   "W17": "Amazing Crush Backing Track in E",
   "W18": "Missing You Rock Backing Track in Cm",
+  "W19": "Roaming Alone Backing Track in C",
   "track": {
     "descriptor": {
       "01": "Reflective",
