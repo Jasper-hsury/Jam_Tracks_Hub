@@ -21,6 +21,10 @@
         editingAnchorId: null,
         shapePickerSymbol: null,
         shapePickerOptions: [],
+        shapePickerTrigger: null,
+        shapePickerScroll: null,
+        addMenuTrigger: null,
+        sectionInsertContext: null,
         scrollFrame: 0,
         scrolling: false,
         lastScrollTime: 0,
@@ -44,6 +48,7 @@
         anchorList: $("anchorList"), addAnchor: $("addAnchorButton"), lineError: $("lineDialogError"),
         chordHints: $("chordHintsButton"), shapePicker: $("shapePickerDialog"),
         shapePickerSymbol: $("shapePickerSymbol"), shapePickerGrid: $("shapePickerGrid"),
+        sectionDialog: $("sectionNameDialog"), sectionForm: $("sectionNameForm"), sectionName: $("sectionNameInput"),
         performance: $("performanceDialog"), performanceTitle: $("performanceTitle"),
         performanceMeta: $("performanceMeta"), performanceChart: $("performanceChart"),
         scrollToggle: $("scrollToggleButton"), scrollSpeed: $("scrollSpeedInput"),
@@ -216,7 +221,7 @@
         if (state.viewMode === "balanced" || state.viewMode === "beginner") {
             song = Core.transformSongChords(song, symbol => Core.simplifyChord(symbol, state.viewMode));
         } else if (state.viewMode === "roman" || state.viewMode === "nashville") {
-            song = Core.transformSongChords(concert, symbol => Core.chordNumber(symbol, state.song.targetKey, state.viewMode));
+            song = Core.transformSongChords(song, symbol => Core.chordNumber(symbol, capoResult.shapeKey, state.viewMode));
         }
         song.capo = state.song.capo;
         song.targetKey = state.song.targetKey;
@@ -252,6 +257,10 @@
 
     function renderChart(host, song, editable) {
         host.replaceChildren();
+        if (editable && !song.sections.length) {
+            host.appendChild(renderInsertControl(0, 0));
+            return;
+        }
         song.sections.forEach(function(section, sectionIndex) {
             const sectionElement = node("section", "workspace-section");
             const heading = node("div", "workspace-section-heading-row");
@@ -277,12 +286,93 @@
     }
 
     function renderInsertControl(sectionIndex, insertionIndex) {
-        const label = t("pages.songWorkspace.addLine", "Add Line");
-        const add = button(`+ ${label}`, "add-line", "workspace-add-line");
-        add.dataset.sectionIndex = String(sectionIndex);
-        add.dataset.insertionIndex = String(insertionIndex);
-        add.setAttribute("aria-label", label);
-        return add;
+        const wrapper = node("div", "workspace-add-control");
+        const trigger = button(`+ ${t("pages.songWorkspace.add", "Add")}`, "toggle-add-menu", "workspace-add-trigger");
+        const menu = node("div", "workspace-add-menu");
+        const menuId = `workspace-add-${sectionIndex}-${insertionIndex}`;
+        trigger.dataset.sectionIndex = String(sectionIndex);
+        trigger.dataset.insertionIndex = String(insertionIndex);
+        trigger.setAttribute("aria-haspopup", "menu");
+        trigger.setAttribute("aria-expanded", "false");
+        trigger.setAttribute("aria-controls", menuId);
+        menu.id = menuId;
+        menu.hidden = true;
+        menu.setAttribute("role", "menu");
+        [
+            [t("pages.songWorkspace.addLine", "Add Line"), "add-line"],
+            [t("pages.songWorkspace.addSection", "Add Section"), "add-section"]
+        ].forEach(function(entry) {
+            const option = button(entry[0], entry[1]);
+            option.dataset.sectionIndex = String(sectionIndex);
+            option.dataset.insertionIndex = String(insertionIndex);
+            option.setAttribute("role", "menuitem");
+            menu.appendChild(option);
+        });
+        wrapper.append(trigger, menu);
+        return wrapper;
+    }
+
+    function closeAddMenu(options) {
+        const settings = options || {};
+        const trigger = state.addMenuTrigger;
+        if (!trigger) return;
+        const menu = trigger.closest(".workspace-add-control")?.querySelector(".workspace-add-menu");
+        if (menu) menu.hidden = true;
+        trigger.setAttribute("aria-expanded", "false");
+        state.addMenuTrigger = null;
+        if (settings.restoreFocus !== false && trigger.isConnected) trigger.focus();
+    }
+
+    function toggleAddMenu(trigger) {
+        if (state.addMenuTrigger === trigger) {
+            closeAddMenu();
+            return;
+        }
+        closeAddMenu({ restoreFocus: false });
+        const menu = trigger.closest(".workspace-add-control")?.querySelector(".workspace-add-menu");
+        if (!menu) return;
+        state.addMenuTrigger = trigger;
+        trigger.setAttribute("aria-expanded", "true");
+        menu.hidden = false;
+        window.requestAnimationFrame(function() {
+            menu.querySelector('[role="menuitem"]')?.focus();
+        });
+    }
+
+    function sectionNamePlaceholder() {
+        return t(
+            "pages.songWorkspace.sectionNamePlaceholder",
+            "e.g. Intro, Verse, Pre-Chorus, Chorus, Interlude, Bridge, Solo, Outro"
+        );
+    }
+
+    function openSectionDialog(sectionIndex, insertionIndex, trigger) {
+        closeAddMenu({ restoreFocus: false });
+        state.sectionInsertContext = { sectionIndex, insertionIndex, trigger };
+        elements.sectionName.value = "";
+        elements.sectionName.placeholder = sectionNamePlaceholder();
+        elements.sectionDialog.showModal();
+        window.requestAnimationFrame(function() { elements.sectionName.focus(); });
+    }
+
+    function addSectionAtBoundary() {
+        const context = state.sectionInsertContext;
+        if (!context || !state.song) return;
+        const title = elements.sectionName.value.trim();
+        if (!title) {
+            elements.sectionName.reportValidity();
+            return;
+        }
+        const result = Core.insertSectionAtBoundary(
+            state.song,
+            context.sectionIndex,
+            context.insertionIndex,
+            title
+        );
+        state.song = result.song;
+        elements.sectionDialog.close("created");
+        scheduleSave();
+        renderEditor();
     }
 
     function renderLine(line, sectionIndex, lineIndex, editable) {
@@ -387,12 +477,78 @@
         });
     }
 
-    function openShapePicker(symbol) {
+    function lockShapePickerScroll() {
+        if (state.shapePickerScroll) return;
+        const body = document.body;
+        const root = document.documentElement;
+        const x = window.scrollX;
+        const y = window.scrollY;
+        const scrollbarWidth = Math.max(0, window.innerWidth - root.clientWidth);
+        state.shapePickerScroll = {
+            x,
+            y,
+            bodyStyles: {
+                position: body.style.position,
+                top: body.style.top,
+                left: body.style.left,
+                right: body.style.right,
+                overflow: body.style.overflow,
+                paddingRight: body.style.paddingRight
+            },
+            compensation: root.style.getPropertyValue("--workspace-scrollbar-compensation")
+        };
+        const currentPadding = Number.parseFloat(window.getComputedStyle(body).paddingRight) || 0;
+        root.style.setProperty("--workspace-scrollbar-compensation", `${scrollbarWidth}px`);
+        root.classList.add("workspace-shape-picker-open");
+        body.classList.add("workspace-shape-picker-open");
+        body.style.position = "fixed";
+        body.style.top = `${-y}px`;
+        body.style.left = `${-x}px`;
+        body.style.right = "0";
+        body.style.overflow = "hidden";
+        body.style.paddingRight = `${currentPadding + scrollbarWidth}px`;
+    }
+
+    function unlockShapePickerScroll() {
+        const locked = state.shapePickerScroll;
+        if (!locked) return null;
+        const body = document.body;
+        const root = document.documentElement;
+        Object.keys(locked.bodyStyles).forEach(function(property) {
+            body.style[property] = locked.bodyStyles[property];
+        });
+        root.classList.remove("workspace-shape-picker-open");
+        body.classList.remove("workspace-shape-picker-open");
+        if (locked.compensation) root.style.setProperty("--workspace-scrollbar-compensation", locked.compensation);
+        else root.style.removeProperty("--workspace-scrollbar-compensation");
+        state.shapePickerScroll = null;
+        window.scrollTo(locked.x, locked.y);
+        return { x: locked.x, y: locked.y };
+    }
+
+    function restoreShapePickerFocus(scrollPosition) {
+        const original = state.shapePickerTrigger;
+        const symbol = original?.dataset.chordSymbol || state.shapePickerSymbol;
+        state.shapePickerTrigger = null;
+        window.requestAnimationFrame(function() {
+            if (original?.isConnected) original.focus({ preventScroll: true });
+            else if (symbol) {
+                Array.from(elements.shapeCards.querySelectorAll('[data-action="choose-shape"]')).find(function(control) {
+                    return control.dataset.chordSymbol === symbol;
+                })?.focus({ preventScroll: true });
+            }
+            if (scrollPosition) window.scrollTo(scrollPosition.x, scrollPosition.y);
+        });
+    }
+
+    function openShapePicker(symbol, trigger) {
         const parsed = Shapes.parseChord(symbol);
         if (!parsed) return;
         state.shapePickerSymbol = symbol;
         state.shapePickerOptions = Shapes.generateVoicings(parsed).slice(0, 24);
+        state.shapePickerTrigger = trigger || document.activeElement;
         renderShapePicker();
+        lockShapePickerScroll();
         elements.shapePicker.showModal();
         window.requestAnimationFrame(function() {
             elements.shapePickerGrid.querySelector(".is-selected, button")?.focus();
@@ -405,8 +561,8 @@
         if (!symbol || !voicing) return;
         selectedShapeMap()[Shapes.normalizeChord(symbol) || symbol] = Shapes.voicingKey(voicing);
         Storage.writePreferences(state.preferences);
-        elements.shapePicker.close();
         renderShapeCards(currentPlayShapeSong());
+        elements.shapePicker.close();
     }
 
     function updateSongFromFields() {
@@ -577,14 +733,6 @@
         renderEditor();
     }
 
-    function addSection() {
-        const title = window.prompt(t("pages.songWorkspace.sectionNamePrompt", "Section name"), "Verse");
-        if (title === null) return;
-        state.song.sections.push(Core.createSection(title || "Section", "section", [Core.createLine("", [], "lyric")]));
-        scheduleSave();
-        renderEditor();
-    }
-
     function downloadSong(song, format) {
         const current = state.song && state.song.id === song.id ? currentShapeSong().song : song;
         if (format === "json") {
@@ -721,7 +869,6 @@
             renderEditor();
         });
         $("backToSongsButton").addEventListener("click", showHome);
-        $("addSectionButton").addEventListener("click", addSection);
         $("smartCapoButton").addEventListener("click", renderCapoOptions);
         $("performanceButton").addEventListener("click", openPerformance);
         $("closePerformanceButton").addEventListener("click", function() { stopAutoScroll(); elements.performance.close(); });
@@ -771,13 +918,31 @@
             if (!control) return;
             const sectionIndex = Number(control.dataset.sectionIndex);
             if (control.dataset.action === "edit-line") openLineEditor(sectionIndex, Number(control.dataset.lineIndex));
+            else if (control.dataset.action === "toggle-add-menu") toggleAddMenu(control);
             else if (control.dataset.action === "add-line") {
                 const insertionIndex = Number(control.dataset.insertionIndex);
-                const result = Core.insertLine(state.song, sectionIndex, insertionIndex, Core.createLine("", [], "lyric"));
-                state.song = result.song;
+                closeAddMenu({ restoreFocus: false });
+                let result;
+                let destinationSection = sectionIndex;
+                if (!state.song.sections.length) {
+                    const sectionResult = Core.insertSectionAtBoundary(
+                        state.song,
+                        0,
+                        0,
+                        t("pages.songWorkspace.defaultSectionName", "Song")
+                    );
+                    state.song = sectionResult.song;
+                    destinationSection = sectionResult.sectionIndex;
+                    result = { song: state.song, index: 0 };
+                } else {
+                    result = Core.insertLine(state.song, sectionIndex, insertionIndex, Core.createLine("", [], "lyric"));
+                    state.song = result.song;
+                }
                 scheduleSave();
                 renderEditor();
-                openLineEditor(sectionIndex, result.index);
+                openLineEditor(destinationSection, result.index);
+            } else if (control.dataset.action === "add-section") {
+                openSectionDialog(sectionIndex, Number(control.dataset.insertionIndex), control);
             } else if (control.dataset.action === "rename-section") {
                 const section = state.song.sections[sectionIndex];
                 const title = window.prompt(t("pages.songWorkspace.sectionNamePrompt", "Section name"), section.title);
@@ -788,13 +953,29 @@
         });
         elements.shapeCards.addEventListener("click", function(event) {
             const control = event.target.closest('[data-action="choose-shape"]');
-            if (control) openShapePicker(control.dataset.chordSymbol);
+            if (control) openShapePicker(control.dataset.chordSymbol, control);
         });
         elements.shapePickerGrid.addEventListener("click", function(event) {
             const control = event.target.closest('[data-action="select-shape"]');
             if (control) selectShape(Number(control.dataset.shapeIndex));
         });
         $("closeShapePickerButton").addEventListener("click", function() { elements.shapePicker.close(); });
+        elements.shapePicker.addEventListener("close", function() {
+            restoreShapePickerFocus(unlockShapePickerScroll());
+        });
+        elements.sectionForm.addEventListener("submit", function(event) {
+            if (event.submitter?.value !== "default") return;
+            event.preventDefault();
+            addSectionAtBoundary();
+        });
+        elements.sectionDialog.addEventListener("close", function() {
+            const context = state.sectionInsertContext;
+            state.sectionInsertContext = null;
+            if (elements.sectionDialog.returnValue === "created") return;
+            window.requestAnimationFrame(function() {
+                if (context?.trigger?.isConnected) context.trigger.focus();
+            });
+        });
         elements.capoResults.addEventListener("click", function(event) {
             const control = event.target.closest('[data-action="use-capo"]');
             if (!control) return;
@@ -845,6 +1026,7 @@
             try { await restoreSongs(elements.restoreInput.files[0]); } catch (error) { setStatus(error.message, true); } finally { elements.restoreInput.value = ""; }
         });
         document.addEventListener("click", function(event) {
+            if (!event.target.closest(".workspace-add-control")) closeAddMenu({ restoreFocus: false });
             if (!event.target.closest("#downloadMenuButton, #downloadMenu")) {
                 elements.downloadMenu.hidden = true;
                 $("downloadMenuButton").setAttribute("aria-expanded", "false");
@@ -857,6 +1039,16 @@
             }
         });
         document.addEventListener("keydown", function(event) {
+            if (event.key === "Escape" && elements.shapePicker.open) {
+                event.preventDefault();
+                elements.shapePicker.close();
+                return;
+            }
+            if (event.key === "Escape" && state.addMenuTrigger) {
+                event.preventDefault();
+                closeAddMenu();
+                return;
+            }
             if (!elements.performance.open || /^(INPUT|TEXTAREA|SELECT)$/.test(event.target.tagName)) return;
             if (event.key === " ") { event.preventDefault(); toggleAutoScroll(); }
             else if (event.key === "+" || event.key === "=") adjustFont(0.1);
@@ -871,6 +1063,7 @@
                 elements.createSourceLabel.textContent = copy[1];
             }
             if (elements.shapePicker.open) renderShapePicker();
+            if (elements.sectionDialog.open) elements.sectionName.placeholder = sectionNamePlaceholder();
         });
         elements.performance.addEventListener("cancel", stopAutoScroll);
         document.addEventListener("visibilitychange", function() {

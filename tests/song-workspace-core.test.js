@@ -170,6 +170,47 @@ test("inserts a stable empty lyric line without rebuilding existing IDs or ancho
     assert.equal(reloaded.sections[0].lines[1].text, "");
 });
 
+test("inserts sections at lyric boundaries without rebuilding existing IDs or anchors", () => {
+    const first = Core.createLine("First line", [Core.createChord("G", 0)], "lyric", "line-section-first");
+    const second = Core.createLine("Second line", [Core.createChord("D/F#", 7)], "lyric", "line-section-second");
+    const third = Core.createLine("Third line", [Core.createChord("Em", 3)], "lyric", "line-section-third");
+    const outro = Core.createSection("Outro", "outro", [
+        Core.createLine("Last line", [Core.createChord("C", 0)], "lyric", "line-outro")
+    ], "section-outro");
+    const song = Core.createSong({
+        id: "song-section-insert",
+        sections: [
+            Core.createSection("Verse", "verse", [first, second, third], "section-verse"),
+            outro
+        ]
+    });
+    const snapshot = JSON.stringify(song);
+    const result = Core.insertSectionAtBoundary(song, 0, 2, "Interlude");
+
+    assert.equal(result.sectionIndex, 1);
+    assert.equal(result.song.sections[0].id, "section-verse");
+    assert.deepEqual(result.song.sections[0].lines.map(line => line.id), ["line-section-first", "line-section-second"]);
+    assert.equal(result.song.sections[1].title, "Interlude");
+    assert.deepEqual(result.song.sections[1].lines.map(line => line.id), ["line-section-third"]);
+    assert.equal(result.song.sections[2].id, "section-outro");
+    assert.deepEqual(result.song.sections[1].lines[0].chords.map(chord => chord.anchor), [3]);
+    assert.equal(JSON.stringify(song), snapshot);
+
+    const atBeginning = Core.insertSectionAtBoundary(song, 0, 0, "Intro");
+    assert.equal(atBeginning.song.sections[1].id, "section-verse");
+    assert.equal(atBeginning.song.sections[1].lines[0].id, "line-section-first");
+    assert.equal(atBeginning.song.sections[0].lines.length, 1);
+
+    const atEnd = Core.insertSectionAtBoundary(song, 0, 3, "Pre-Chorus");
+    assert.equal(atEnd.song.sections[0].id, "section-verse");
+    assert.equal(atEnd.song.sections[1].title, "Pre-Chorus");
+    assert.equal(atEnd.song.sections[2].id, "section-outro");
+
+    const reloaded = Core.deserializeSong(Core.serializeSong(result.song));
+    assert.deepEqual(reloaded.sections.map(section => section.id), result.song.sections.map(section => section.id));
+    assert.deepEqual(reloaded.sections[1].lines.map(line => line.id), ["line-section-third"]);
+});
+
 test("imports chord lines, lyric lines, sections, and chord-only bars", () => {
     const chart = "[Intro]\n| G | D | Em | C |\n\n[Verse]\nG       D/F#\n測試中文歌詞 第一段";
     const song = Core.parseChordLyrics(chart, { title: "Test Song", originalKey: "G" });
@@ -233,9 +274,66 @@ test("computes concert, capo, and shape-key relationships", () => {
 test("renders Roman and Nashville numbers including non-diatonic roots", () => {
     assert.deepEqual(["G", "D", "Em", "C"].map(chord => Core.chordNumber(chord, "G", "roman")), ["I", "V", "vi", "IV"]);
     assert.deepEqual(["G", "D", "Em", "C"].map(chord => Core.chordNumber(chord, "G", "nashville")), ["1", "5", "6m", "4"]);
+    assert.deepEqual(["Am7", "Fadd9", "G/B"].map(chord => Core.chordNumber(chord, "G", "roman")), ["ii7", "bVIIadd9", "I/III"]);
+    assert.deepEqual(["Am7", "Fadd9", "G/B"].map(chord => Core.chordNumber(chord, "G", "nashville")), ["2m7", "b7add9", "1/3"]);
     assert.equal(Core.chordNumber("Bb", "C", "roman"), "bVII");
     assert.equal(Core.chordNumber("Fm", "C", "roman"), "iv");
     assert.equal(Core.chordNumber("F#", "C", "roman"), "#IV");
+});
+
+test("renders degree labels on the original lyric anchors without mutating canonical chords", () => {
+    const source = Core.createSong({
+        originalKey: "G",
+        targetKey: "G",
+        sections: [Core.createSection("Verse", "verse", [
+            Core.createLine("故事的小黃花 從出生那年就飄著", [
+                Core.createChord("Am7", 0),
+                Core.createChord("Fadd9", 7),
+                Core.createChord("G/B", 12)
+            ], "lyric", "line-degree-anchors")
+        ], "section-degree-anchors")]
+    });
+    const snapshot = JSON.stringify(source);
+    const roman = Core.transformSongChords(source, symbol => Core.chordNumber(symbol, "G", "roman"));
+    const nashville = Core.transformSongChords(source, symbol => Core.chordNumber(symbol, "G", "nashville"));
+    const romanLine = roman.sections[0].lines[0];
+    const nashvilleLine = nashville.sections[0].lines[0];
+
+    assert.deepEqual(romanLine.chords.map(chord => chord.symbol), ["ii7", "bVIIadd9", "I/III"]);
+    assert.deepEqual(nashvilleLine.chords.map(chord => chord.symbol), ["2m7", "b7add9", "1/3"]);
+    assert.deepEqual(romanLine.chords.map(chord => chord.anchor), [0, 7, 12]);
+    assert.deepEqual(nashvilleLine.chords.map(chord => chord.anchor), [0, 7, 12]);
+    assert.deepEqual(
+        Core.layoutLyricLine(romanLine).tokens.flatMap(token => token.chords.map(chord => chord.symbol)),
+        ["ii7", "bVIIadd9", "I/III"]
+    );
+    assert.deepEqual(
+        Core.layoutLyricLine(nashvilleLine).tokens.flatMap(token => token.chords.map(chord => chord.symbol)),
+        ["2m7", "b7add9", "1/3"]
+    );
+    assert.equal(JSON.stringify(source), snapshot);
+});
+
+test("keeps Roman and Nashville identities through transpose and capo shape-key views", () => {
+    const source = Core.createSong({
+        originalKey: "G",
+        targetKey: "G",
+        sections: [Core.createSection("Song", "section", [
+            Core.createLine("", ["G", "D", "Em", "C"].map((symbol, anchor) => Core.createChord(symbol, anchor)), "instrumental")
+        ])]
+    });
+    const transposed = Core.songForTarget(source, "A");
+    const transposedSymbols = transposed.sections[0].lines[0].chords.map(chord => chord.symbol);
+    assert.deepEqual(transposedSymbols, ["A", "E", "F#m", "D"]);
+    assert.deepEqual(transposedSymbols.map(chord => Core.chordNumber(chord, "A", "roman")), ["I", "V", "vi", "IV"]);
+    assert.deepEqual(transposedSymbols.map(chord => Core.chordNumber(chord, "A", "nashville")), ["1", "5", "6m", "4"]);
+
+    const capo = Core.songForCapo(transposed, 2);
+    const playSymbols = capo.song.sections[0].lines[0].chords.map(chord => chord.symbol);
+    assert.equal(capo.shapeKey, "G");
+    assert.deepEqual(playSymbols, ["G", "D", "Em", "C"]);
+    assert.deepEqual(playSymbols.map(chord => Core.chordNumber(chord, capo.shapeKey, "roman")), ["I", "V", "vi", "IV"]);
+    assert.deepEqual(playSymbols.map(chord => Core.chordNumber(chord, capo.shapeKey, "nashville")), ["1", "5", "6m", "4"]);
 });
 
 test("simplifies conservatively without mutating the canonical song", () => {

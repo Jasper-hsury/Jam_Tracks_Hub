@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="styles/pages.css?v=20260826-song-workspace">
     <link rel="stylesheet" href="styles/themes.css?v=20260826-song-workspace">
     <link rel="stylesheet" href="styles/chord-dictionary.css?v=20260826-workspace-hardening">
-    <link rel="stylesheet" href="styles/song-workspace.css?v=20260826-song-workspace">
+    <link rel="stylesheet" href="styles/song-workspace.css?v=20260826-acceptance-fixes">
 </head>
 <body data-i18n-title="titles.songWorkspace">
     <nav class="navbar">
@@ -119,7 +119,6 @@
                 <button class="workspace-button workspace-button-secondary" id="backToSongsButton" type="button" data-i18n="pages.songWorkspace.backToSongs">Back to My Songs</button>
                 <div class="workspace-save-state" id="autosaveState" role="status" aria-live="polite" data-i18n="pages.songWorkspace.savedOnDevice">Saved on this device</div>
                 <div class="workspace-editor-actions">
-                    <button class="workspace-button workspace-button-secondary" id="addSectionButton" type="button" data-i18n="pages.songWorkspace.addSection">Add Section</button>
                     <button class="workspace-button workspace-button-secondary" id="downloadMenuButton" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="downloadMenu" data-i18n="pages.songWorkspace.download">Download</button>
                     <button class="workspace-button workspace-button-primary" id="performanceButton" type="button" data-i18n="pages.songWorkspace.performance">Performance Mode</button>
                 </div>
@@ -253,6 +252,26 @@
         </div>
     </dialog>
 
+    <dialog class="workspace-dialog workspace-section-dialog" id="sectionNameDialog">
+        <form method="dialog" id="sectionNameForm">
+            <div class="workspace-dialog-heading">
+                <div>
+                    <span class="result-kicker" data-i18n="pages.songWorkspace.addSection">Add Section</span>
+                    <h2 data-i18n="pages.songWorkspace.sectionNamePrompt">Section name</h2>
+                </div>
+                <button class="workspace-icon-button" value="cancel" type="submit" formnovalidate aria-label="Close" data-i18n-aria-label="common.close">×</button>
+            </div>
+            <label class="workspace-field workspace-field-source">
+                <span data-i18n="pages.songWorkspace.sectionName">Section name</span>
+                <input id="sectionNameInput" type="text" maxlength="80" autocomplete="off" required>
+            </label>
+            <div class="workspace-dialog-actions">
+                <button class="workspace-button workspace-button-secondary" value="cancel" type="submit" formnovalidate data-i18n="common.cancel">Cancel</button>
+                <button class="workspace-button workspace-button-primary" value="default" type="submit" data-i18n="pages.songWorkspace.addSection">Add Section</button>
+            </div>
+        </form>
+    </dialog>
+
     <dialog class="workspace-dialog workspace-line-dialog" id="lineEditorDialog">
         <form method="dialog" id="lineEditorForm">
             <div class="workspace-dialog-heading">
@@ -323,8 +342,8 @@
     <script src="scripts/site.js?v=20260826-song-workspace"></script>
     <script src="scripts/i18n.js?v=20260826-song-workspace"></script>
     <script src="scripts/chord-shapes.js?v=20260826-workspace-hardening"></script>
-    <script src="scripts/song-workspace-core.js?v=20260826-song-workspace"></script>
+    <script src="scripts/song-workspace-core.js?v=20260826-acceptance-fixes"></script>
     <script src="scripts/song-workspace-storage.js?v=20260826-song-workspace"></script>
-    <script src="scripts/song-workspace.js?v=20260826-song-workspace"></script>
+    <script src="scripts/song-workspace.js?v=20260826-acceptance-fixes"></script>
 </body>
 </html>

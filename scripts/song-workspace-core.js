@@ -216,7 +216,21 @@
     }
 
     function layoutLyricLine(line) {
-        const normalized = normalizeLine(line || {});
+        const source = line || {};
+        const text = String(source.text || "").slice(0, MAX_LINE_LENGTH);
+        const lyricLength = codePoints(text).length;
+        const normalized = {
+            text,
+            chords: (Array.isArray(source.chords) ? source.chords : []).map(function(chord) {
+                return {
+                    id: chord.id || uid("chord"),
+                    symbol: String(chord.symbol || "").slice(0, 40),
+                    anchor: clamp(chord.anchor, 0, lyricLength)
+                };
+            }).filter(function(chord) {
+                return Boolean(chord.symbol);
+            })
+        };
         const tokens = tokenizeLyric(normalized.text).map(function(token) {
             return Object.assign({}, token, { chords: [] });
         });
@@ -240,6 +254,37 @@
         section.lines.splice(index, 0, inserted);
         copy.updatedAt = new Date().toISOString();
         return { song: copy, line: inserted, index };
+    }
+
+    function insertSectionAtBoundary(song, sectionIndex, insertionIndex, title) {
+        const copy = createSong(song);
+        const cleanTitle = String(title || "Section").trim().slice(0, 80) || "Section";
+        const inserted = createSection(cleanTitle, "section", []);
+
+        if (!copy.sections.length) {
+            inserted.lines.push(createLine("", [], "lyric"));
+            copy.sections.push(inserted);
+            copy.updatedAt = new Date().toISOString();
+            return { song: copy, section: inserted, sectionIndex: 0 };
+        }
+
+        const sourceSectionIndex = clamp(sectionIndex, 0, copy.sections.length - 1);
+        const sourceSection = copy.sections[sourceSectionIndex];
+        const boundary = clamp(insertionIndex, 0, sourceSection.lines.length);
+        let destinationIndex;
+
+        if (boundary === 0) {
+            inserted.lines.push(createLine("", [], "lyric"));
+            destinationIndex = sourceSectionIndex;
+        } else {
+            inserted.lines = sourceSection.lines.splice(boundary);
+            if (!inserted.lines.length) inserted.lines.push(createLine("", [], "lyric"));
+            destinationIndex = sourceSectionIndex + 1;
+        }
+
+        copy.sections.splice(destinationIndex, 0, inserted);
+        copy.updatedAt = new Date().toISOString();
+        return { song: copy, section: inserted, sectionIndex: destinationIndex };
     }
 
     function createSection(title, type, lines, id) {
@@ -707,6 +752,7 @@
         resolveAnchorToken,
         layoutLyricLine,
         insertLine,
+        insertSectionAtBoundary,
         createSection,
         createSong,
         validateSong,
