@@ -20,6 +20,7 @@ const rootFiles = [
   "progression-writer.html",
   "scale.html",
   "service-waking.html",
+  "song-workspace.html",
   "tracks.html"
 ];
 

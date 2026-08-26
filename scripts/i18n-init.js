@@ -13,6 +13,7 @@
         "scale.html": "titles.scaleExplorer",
         "key-finder.html": "titles.keyFinder",
         "chord-progressions.html": "titles.chordProgressions",
+        "song-workspace.html": "titles.songWorkspace",
         "feedback.html": "titles.feedback",
         "progression-writer.html": "titles.progressionWriter",
         "fretboard-trainer.html": "titles.fretboardTrainer",

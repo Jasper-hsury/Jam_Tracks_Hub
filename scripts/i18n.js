@@ -22,6 +22,7 @@
         "scale.html": "nav.scaleExplorer",
         "key-finder.html": "nav.keyFinder",
         "chord-progressions.html": "nav.chordProgressions",
+        "song-workspace.html": "nav.songWorkspace",
         "fretboard-trainer.html": "nav.fretboardTrainer",
         "index.html#about": "nav.about"
     };

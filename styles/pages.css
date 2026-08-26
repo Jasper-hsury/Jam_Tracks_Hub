@@ -558,7 +558,8 @@ iframe {
     }
 
     .nav-links > li:nth-child(5),
-    .nav-links > li:nth-child(7) {
+    .nav-links > li:nth-child(7),
+    .nav-links > li:nth-child(8) {
         display: none;
     }
 
@@ -5527,6 +5528,12 @@ html[data-language="zh-TW"] .home-release-card .release-number {
 }
 
 @media (max-width: 1180px) {
+    html,
+    body {
+        overflow-x: hidden;
+        overflow-x: clip;
+    }
+
     body.nav-drawer-open {
         overflow: hidden;
     }

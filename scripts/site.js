@@ -22,33 +22,65 @@ document.addEventListener("DOMContentLoaded", function() {
     if (navbar && navLinks) {
         navbar.setAttribute("aria-label", "Primary navigation");
         navLinks.id = navLinks.id || "primaryNavigation";
-        const navDropdowns = Array.from(navLinks.querySelectorAll(".nav-dropdown details"));
         const currentPage = window.location.pathname.split("/").pop() || "index.html";
+        let workspaceLink = navLinks.querySelector('a[href="song-workspace.html"]');
+        if (!workspaceLink) {
+            const workspaceItem = document.createElement("li");
+            workspaceLink = document.createElement("a");
+            workspaceLink.href = "song-workspace.html";
+            workspaceLink.dataset.i18n = "nav.songWorkspace";
+            workspaceLink.textContent = "Song Workspace";
+            workspaceItem.appendChild(workspaceLink);
+            const fretboardLink = navLinks.querySelector('a[href="fretboard-trainer.html"]');
+            navLinks.insertBefore(workspaceItem, fretboardLink?.closest("li") || null);
+        }
+        if (currentPage === "song-workspace.html") {
+            workspaceLink.classList.add("active");
+            workspaceLink.setAttribute("aria-current", "page");
+        }
+        const navDropdowns = Array.from(navLinks.querySelectorAll(".nav-dropdown details"));
         const compactToolLinks = [
             {
                 href: "key-finder.html",
-                label: "Key Finder"
+                label: "Key Finder",
+                i18nKey: "nav.keyFinder"
+            },
+            {
+                href: "song-workspace.html",
+                label: "Song Workspace",
+                i18nKey: "nav.songWorkspace"
             },
             {
                 href: "fretboard-trainer.html",
-                label: "Fretboard Trainer"
+                label: "Fretboard Trainer",
+                i18nKey: "nav.fretboardTrainer"
             }
         ];
         const isCompactToolActive = compactToolLinks.some(link => currentPage === link.href);
         const compactToolsItem = document.createElement("li");
         compactToolsItem.className = "nav-compact-tools-item";
-        compactToolsItem.innerHTML = `
-            <details class="nav-compact-tools${isCompactToolActive ? " is-active" : ""}">
-                <summary>
-                    <span>Tools</span>
-                </summary>
-                <div class="nav-compact-tools-menu">
-                    ${compactToolLinks.map(link => `
-                        <a href="${link.href}"${currentPage === link.href ? " class=\"active\" aria-current=\"page\"" : ""}>${link.label}</a>
-                    `).join("")}
-                </div>
-            </details>
-        `;
+        const compactDetails = document.createElement("details");
+        compactDetails.className = `nav-compact-tools${isCompactToolActive ? " is-active" : ""}`;
+        const compactSummary = document.createElement("summary");
+        const compactLabel = document.createElement("span");
+        compactLabel.dataset.i18n = "nav.tools";
+        compactLabel.textContent = "Tools";
+        compactSummary.appendChild(compactLabel);
+        const compactMenu = document.createElement("div");
+        compactMenu.className = "nav-compact-tools-menu";
+        compactToolLinks.forEach(function(link) {
+            const anchor = document.createElement("a");
+            anchor.href = link.href;
+            anchor.dataset.i18n = link.i18nKey;
+            anchor.textContent = link.label;
+            if (currentPage === link.href) {
+                anchor.className = "active";
+                anchor.setAttribute("aria-current", "page");
+            }
+            compactMenu.appendChild(anchor);
+        });
+        compactDetails.append(compactSummary, compactMenu);
+        compactToolsItem.appendChild(compactDetails);
         const compactToolsDetails = compactToolsItem.querySelector("details");
         if (compactToolsDetails) {
             navDropdowns.push(compactToolsDetails);
