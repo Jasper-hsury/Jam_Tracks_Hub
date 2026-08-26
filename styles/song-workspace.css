@@ -7,6 +7,22 @@
     --workspace-text: #302821;
     --workspace-muted: #71685f;
     --workspace-shadow: 0 16px 34px rgba(75, 57, 39, 0.1);
+    --diagram-tone-fill: var(--chord-control);
+    --diagram-tone-text: #fffaf2;
+    --diagram-root-fill: var(--gold-light);
+    --diagram-root-text: #2b211a;
+    --diagram-root-ring: color-mix(in srgb, var(--gold-light) 35%, transparent);
+    --diagram-third-fill: #9f6b45;
+    --diagram-third-text: #fffaf2;
+    --diagram-fifth-fill: #7f8970;
+    --diagram-fifth-text: #fffaf2;
+    --diagram-seventh-fill: #9a6472;
+    --diagram-seventh-text: #fffaf2;
+    --diagram-extension-fill: #6f7964;
+    --diagram-extension-text: #fffaf2;
+    --diagram-open-tone-background: color-mix(in srgb, var(--chord-control) 16%, transparent);
+    --diagram-open-tone-border: color-mix(in srgb, var(--chord-control) 38%, transparent);
+    --diagram-grid-line: color-mix(in srgb, var(--text-subtle) 62%, transparent);
 }
 
 html[data-theme="default"] {
@@ -131,7 +147,8 @@ html[data-theme="default"] {
 .workspace-entry-card:focus-visible,
 .workspace-song-card button:focus-visible,
 .workspace-line:focus-visible,
-.workspace-shape-link:focus-visible,
+.workspace-shape-change:focus-visible,
+.workspace-shape-option:focus-visible,
 .performance-toolbar button:focus-visible {
     outline: 3px solid color-mix(in srgb, var(--workspace-accent) 45%, transparent);
     outline-offset: 3px;
@@ -421,6 +438,19 @@ html[data-theme="default"] {
     margin: 18px 0;
 }
 
+.workspace-mode-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+#chordHintsButton[aria-pressed="true"] {
+    color: #fff;
+    border-color: var(--workspace-accent);
+    background: var(--workspace-accent);
+}
+
 .workspace-segmented {
     display: inline-flex;
     flex-wrap: wrap;
@@ -470,10 +500,13 @@ html[data-theme="default"] {
     grid-template-columns: minmax(0, 1fr) minmax(250px, 330px);
     gap: 18px;
     align-items: start;
+    min-width: 0;
 }
 
 .workspace-chart-panel,
 .workspace-shapes-panel {
+    box-sizing: border-box;
+    min-width: 0;
     border: 1px solid var(--workspace-line);
     border-radius: 6px;
     padding: 24px;
@@ -537,17 +570,16 @@ html[data-theme="default"] {
 
 .workspace-lines {
     display: grid;
-    gap: 8px;
+    gap: 0;
 }
 
 .workspace-line {
-    position: relative;
-    display: grid;
+    display: block;
     min-height: 68px;
     width: 100%;
     border: 0;
     border-radius: 4px;
-    padding: 34px 12px 10px;
+    padding: 9px 12px 11px;
     text-align: left;
     color: var(--workspace-text);
     background: transparent;
@@ -558,33 +590,62 @@ html[data-theme="default"] {
     background: var(--workspace-soft);
 }
 
-.workspace-lyric-text {
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
-    font-size: 1.05rem;
-    line-height: 1.75;
+.workspace-line-content {
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
 }
 
-.workspace-chord-layer {
-    position: absolute;
-    inset: 6px 12px auto;
-    height: 28px;
+.workspace-token-track {
+    display: inline-grid;
+    grid-auto-flow: column;
+    grid-auto-columns: max-content;
+    min-width: 100%;
+    white-space: pre;
+}
+
+.workspace-token-cell {
+    display: grid;
+    grid-template-rows: minmax(1.45rem, auto) minmax(1.8rem, auto);
+    align-items: end;
+    min-width: max-content;
+}
+
+.workspace-token-chords {
+    display: grid;
+    justify-items: start;
+    min-width: 100%;
+    line-height: 1.15;
 }
 
 .workspace-chord-chip {
-    position: absolute;
-    top: 0;
-    max-width: 120px;
-    overflow: hidden;
+    display: block;
+    padding-right: 0.55em;
     color: #8b5e39;
     font-weight: 800;
-    text-overflow: ellipsis;
     white-space: nowrap;
-    transform: translateX(-3px);
 }
 
 html[data-theme="default"] .workspace-chord-chip {
     color: #f0d5a9;
+}
+
+.workspace-lyric-token {
+    white-space: pre;
+    font-size: 1.05rem;
+    line-height: 1.75;
+}
+
+.workspace-token-cell.is-chord-hint .workspace-lyric-token {
+    font-weight: 800;
+}
+
+.workspace-unanchored-chords {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 5px;
 }
 
 .workspace-instrumental-line {
@@ -601,35 +662,106 @@ html[data-theme="default"] .workspace-chord-chip {
 }
 
 .workspace-add-line {
-    width: 100%;
-    min-height: 42px;
-    border: 1px dashed var(--workspace-line);
-    border-radius: 4px;
+    justify-self: center;
+    min-height: 22px;
+    border: 0;
+    border-radius: 999px;
+    padding: 1px 9px;
     color: var(--workspace-accent);
     background: transparent;
     cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.18s ease, background-color 0.18s ease;
 }
 
-.workspace-shape-links {
-    display: grid;
-    gap: 8px;
+.workspace-lines:hover .workspace-add-line,
+.workspace-add-line:focus-visible {
+    opacity: 1;
 }
 
-.workspace-shape-link {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    border: 1px solid var(--workspace-line);
-    border-radius: 5px;
-    padding: 12px;
-    color: var(--workspace-text);
-    text-decoration: none;
+.workspace-add-line:hover,
+.workspace-add-line:focus-visible {
     background: var(--workspace-soft);
 }
 
-.workspace-shape-link::after {
-    content: "↗";
-    color: var(--workspace-accent);
+@media (hover: none), (pointer: coarse) {
+    .workspace-add-line {
+        min-height: 44px;
+        opacity: 1;
+    }
+}
+
+.workspace-shape-cards {
+    display: grid;
+    gap: 12px;
+}
+
+.workspace-shape-card {
+    display: grid;
+    gap: 10px;
+    border: 1px solid var(--workspace-line);
+    border-radius: 5px;
+    padding: 14px;
+    color: var(--workspace-text);
+    background: var(--workspace-soft);
+}
+
+.workspace-shape-card h3 {
+    margin: 0;
+    color: var(--workspace-text);
+    font-size: 1rem;
+}
+
+.workspace-shape-card .chord-diagram {
+    max-width: 154px;
+}
+
+.workspace-shape-card .diagram-neck {
+    height: 132px;
+}
+
+.workspace-shape-change,
+.workspace-shape-option {
+    min-height: 40px;
+    border: 1px solid var(--workspace-line);
+    border-radius: 4px;
+    padding: 8px 10px;
+    color: var(--workspace-text);
+    background: var(--workspace-surface-strong);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.workspace-shape-dialog {
+    width: min(980px, calc(100% - 32px));
+}
+
+.workspace-shape-dialog-shell {
+    padding: 24px;
+}
+
+.workspace-shape-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.workspace-shape-option {
+    display: grid;
+    gap: 10px;
+    min-width: 0;
+    text-align: left;
+}
+
+.workspace-shape-option .chord-diagram {
+    max-width: 170px;
+}
+
+.workspace-shape-option.is-selected {
+    outline: 2px solid var(--workspace-accent);
+    outline-offset: 2px;
 }
 
 .workspace-dialog {
@@ -835,6 +967,11 @@ html[data-theme="default"] .workspace-chord-chip {
         flex-direction: column;
     }
 
+    .workspace-mode-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
     .workspace-file-actions,
     .workspace-editor-actions {
         display: grid;
@@ -880,12 +1017,13 @@ html[data-theme="default"] .workspace-chord-chip {
     }
 
     .workspace-line {
-        min-height: 76px;
+        min-height: 70px;
         padding-inline: 6px;
     }
 
-    .workspace-chord-layer {
-        inset-inline: 6px;
+    .workspace-add-line {
+        min-height: 44px;
+        opacity: 1;
     }
 
     .workspace-dialog-grid {
@@ -898,6 +1036,10 @@ html[data-theme="default"] .workspace-chord-chip {
 
     .performance-toolbar {
         border-radius: 8px;
+    }
+
+    .workspace-shape-picker-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
@@ -921,6 +1063,10 @@ html[data-theme="default"] .workspace-chord-chip {
     .workspace-panel-heading {
         align-items: flex-start;
         flex-direction: column;
+    }
+
+    .workspace-shape-picker-grid {
+        grid-template-columns: 1fr;
     }
 
     .performance-toolbar label {

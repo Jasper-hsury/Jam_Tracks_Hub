@@ -3,7 +3,8 @@
 
     const Core = window.JamSongCore;
     const Storage = window.JamSongStorage;
-    if (!Core || !Storage) return;
+    const Shapes = window.JamChordShapes;
+    if (!Core || !Storage || !Shapes) return;
 
     const MAX_IMPORT_BYTES = 1024 * 1024;
     const MAX_BACKUP_SONGS = 500;
@@ -18,6 +19,8 @@
         lineDraft: null,
         selectedAnchor: 0,
         editingAnchorId: null,
+        shapePickerSymbol: null,
+        shapePickerOptions: [],
         scrollFrame: 0,
         scrolling: false,
         lastScrollTime: 0,
@@ -32,13 +35,15 @@
         targetKey: $("targetKeySelect"), capo: $("capoSelect"), shapeKey: $("shapeKeyValue"),
         bpm: $("bpmInput"), timeSignature: $("timeSignatureInput"), autosave: $("autosaveState"),
         chartTitle: $("songChartTitle"), chartSummary: $("chartKeySummary"), chart: $("songChart"),
-        shapeLinks: $("shapeLinks"), capoResults: $("capoResults"), downloadMenu: $("downloadMenu"),
+        shapeCards: $("shapeCards"), capoResults: $("capoResults"), downloadMenu: $("downloadMenu"),
         createDialog: $("createSongDialog"), createForm: $("createSongForm"), createMode: $("createModeLabel"),
         createTitle: $("createTitleInput"), createArtist: $("createArtistInput"), createKey: $("createKeySelect"),
         createSource: $("createSourceInput"), createSourceLabel: $("createSourceLabel"), createError: $("createDialogError"),
         lineDialog: $("lineEditorDialog"), lineForm: $("lineEditorForm"), lineText: $("lineTextInput"),
         anchorPreview: $("anchorPreview"), anchorChord: $("anchorChordInput"), anchorPosition: $("anchorPositionInput"),
         anchorList: $("anchorList"), addAnchor: $("addAnchorButton"), lineError: $("lineDialogError"),
+        chordHints: $("chordHintsButton"), shapePicker: $("shapePickerDialog"),
+        shapePickerSymbol: $("shapePickerSymbol"), shapePickerGrid: $("shapePickerGrid"),
         performance: $("performanceDialog"), performanceTitle: $("performanceTitle"),
         performanceMeta: $("performanceMeta"), performanceChart: $("performanceChart"),
         scrollToggle: $("scrollToggleButton"), scrollSpeed: $("scrollSpeedInput"),
@@ -231,6 +236,7 @@
     function renderEditor() {
         if (!state.song) return;
         const current = currentShapeSong();
+        const hintsEnabled = Boolean(state.preferences.chordHints);
         elements.shapeKey.textContent = current.shapeKey;
         elements.chartTitle.textContent = state.song.title;
         elements.chartSummary.textContent = `${t("pages.songWorkspace.concertKey", "Concert")}: ${state.song.targetKey} · Capo ${state.song.capo} · ${current.shapeKey} ${t("pages.songWorkspace.shapes", "shapes")}`;
@@ -239,8 +245,9 @@
             control.classList.toggle("is-selected", selected);
             control.setAttribute("aria-pressed", String(selected));
         });
+        elements.chordHints.setAttribute("aria-pressed", String(hintsEnabled));
         renderChart(elements.chart, current.song, true);
-        renderShapeLinks(currentPlayShapeSong());
+        renderShapeCards(currentPlayShapeSong());
     }
 
     function renderChart(host, song, editable) {
@@ -260,16 +267,22 @@
             }
             const lines = node("div", "workspace-lines");
             section.lines.forEach(function(line, lineIndex) {
+                if (editable) lines.appendChild(renderInsertControl(sectionIndex, lineIndex));
                 lines.appendChild(renderLine(line, sectionIndex, lineIndex, editable));
             });
-            if (editable) {
-                const add = button(`+ ${t("pages.songWorkspace.addLine", "Add line")}`, "add-line", "workspace-add-line");
-                add.dataset.sectionIndex = String(sectionIndex);
-                lines.appendChild(add);
-            }
+            if (editable) lines.appendChild(renderInsertControl(sectionIndex, section.lines.length));
             sectionElement.append(heading, lines);
             host.appendChild(sectionElement);
         });
+    }
+
+    function renderInsertControl(sectionIndex, insertionIndex) {
+        const label = t("pages.songWorkspace.addLine", "Add Line");
+        const add = button(`+ ${label}`, "add-line", "workspace-add-line");
+        add.dataset.sectionIndex = String(sectionIndex);
+        add.dataset.insertionIndex = String(insertionIndex);
+        add.setAttribute("aria-label", label);
+        return add;
     }
 
     function renderLine(line, sectionIndex, lineIndex, editable) {
@@ -288,36 +301,112 @@
             host.appendChild(row);
             return host;
         }
-        const chordLayer = node("div", "workspace-chord-layer");
-        const length = Math.max(1, Core.codePoints(line.text).length);
-        line.chords.forEach(function(chord) {
-            const chip = node("span", "workspace-chord-chip", chord.symbol);
-            chip.style.left = `${Math.min(100, chord.anchor / length * 100)}%`;
-            chordLayer.appendChild(chip);
+        const layout = Core.layoutLyricLine(line);
+        const content = node("div", "workspace-line-content");
+        if (layout.unanchored.length) {
+            const unanchored = node("div", "workspace-unanchored-chords");
+            layout.unanchored.forEach(chord => unanchored.appendChild(node("span", "workspace-chord-chip", chord.symbol)));
+            content.appendChild(unanchored);
+        }
+        const track = node("span", "workspace-token-track");
+        layout.tokens.forEach(function(token) {
+            const cell = node("span", `workspace-token-cell${Boolean(state.preferences.chordHints) && token.chords.length && token.meaningful ? " is-chord-hint" : ""}`);
+            const chordRow = node("span", "workspace-token-chords");
+            token.chords.forEach(chord => chordRow.appendChild(node("span", "workspace-chord-chip", chord.symbol)));
+            cell.append(chordRow, node("span", "workspace-lyric-token", token.text));
+            track.appendChild(cell);
         });
-        host.append(chordLayer, node("span", "workspace-lyric-text", line.text));
+        content.appendChild(track);
+        host.appendChild(content);
         return host;
     }
 
-    function chordDictionaryHref(symbol) {
-        const parsed = Core.parseChordSymbol(symbol);
-        if (!parsed) return "chord-dictionary.html";
-        const suffixMap = { "": "major", m: "minor", maj7: "maj7", M7: "maj7", m7: "m7", 7: "7", m7b5: "m7b5", sus4: "sus4", sus2: "sus2" };
-        const chord = suffixMap[parsed.suffix] || parsed.suffix || "major";
-        return `chord-dictionary.html?root=${encodeURIComponent(parsed.root)}&chord=${encodeURIComponent(chord)}`;
+    function selectedShapeMap() {
+        if (!state.preferences.songShapeSelections || typeof state.preferences.songShapeSelections !== "object") {
+            state.preferences.songShapeSelections = {};
+        }
+        if (!state.preferences.songShapeSelections[state.song.id]) {
+            state.preferences.songShapeSelections[state.song.id] = {};
+        }
+        return state.preferences.songShapeSelections[state.song.id];
     }
 
-    function renderShapeLinks(current) {
-        elements.shapeLinks.replaceChildren();
+    function selectedVoicing(symbol, options) {
+        const key = Shapes.normalizeChord(symbol) || symbol;
+        const stored = selectedShapeMap()[key];
+        return options.find(voicing => Shapes.voicingKey(voicing) === stored) || options[0] || null;
+    }
+
+    function uniqueShapeSymbols(song) {
         const seen = new Set();
-        Core.allChordSymbols(current.song).forEach(function(symbol) {
-            if (seen.has(symbol) || !Core.parseChordSymbol(symbol)) return;
-            seen.add(symbol);
-            const link = node("a", "workspace-shape-link", symbol);
-            link.href = chordDictionaryHref(symbol);
-            elements.shapeLinks.appendChild(link);
+        return Core.allChordSymbols(song).filter(function(symbol) {
+            const normalized = Shapes.normalizeChord(symbol);
+            if (!normalized || seen.has(normalized)) return false;
+            seen.add(normalized);
+            return true;
         });
-        if (!seen.size) elements.shapeLinks.appendChild(node("p", "", t("pages.songWorkspace.noChords", "No chords in this view.")));
+    }
+
+    function renderShapeCards(current) {
+        elements.shapeCards.replaceChildren();
+        const symbols = uniqueShapeSymbols(current.song);
+        symbols.forEach(function(symbol) {
+            const parsed = Shapes.parseChord(symbol);
+            const options = Shapes.generateVoicings(parsed);
+            const voicing = selectedVoicing(symbol, options);
+            if (!parsed || !voicing) return;
+            const card = node("article", "workspace-shape-card");
+            card.appendChild(node("h3", "", symbol));
+            card.appendChild(Shapes.createDiagramElement(parsed, voicing, document));
+            const change = button(t("pages.songWorkspace.chooseOtherShape", "Choose Another Shape"), "choose-shape", "workspace-shape-change");
+            change.dataset.chordSymbol = symbol;
+            change.setAttribute("aria-label", t("pages.songWorkspace.chooseShapeFor", "Choose a guitar shape for {{chord}}", { chord: symbol }));
+            card.appendChild(change);
+            elements.shapeCards.appendChild(card);
+        });
+        if (!elements.shapeCards.children.length) {
+            elements.shapeCards.appendChild(node("p", "", t("pages.songWorkspace.noChords", "No chords in this view.")));
+        }
+    }
+
+    function renderShapePicker() {
+        const symbol = state.shapePickerSymbol;
+        const selected = symbol ? selectedVoicing(symbol, state.shapePickerOptions) : null;
+        elements.shapePickerSymbol.textContent = symbol || "";
+        elements.shapePickerGrid.replaceChildren();
+        const parsed = Shapes.parseChord(symbol);
+        if (!parsed) return;
+        state.shapePickerOptions.forEach(function(voicing, index) {
+            const option = button("", "select-shape", "workspace-shape-option");
+            option.dataset.shapeIndex = String(index);
+            option.classList.toggle("is-selected", Shapes.voicingKey(voicing) === Shapes.voicingKey(selected));
+            option.setAttribute("aria-pressed", String(Shapes.voicingKey(voicing) === Shapes.voicingKey(selected)));
+            option.setAttribute("aria-label", t("pages.songWorkspace.chooseShapeFor", "Choose a guitar shape for {{chord}}", { chord: symbol }));
+            option.appendChild(Shapes.createDiagramElement(parsed, voicing, document));
+            elements.shapePickerGrid.appendChild(option);
+        });
+    }
+
+    function openShapePicker(symbol) {
+        const parsed = Shapes.parseChord(symbol);
+        if (!parsed) return;
+        state.shapePickerSymbol = symbol;
+        state.shapePickerOptions = Shapes.generateVoicings(parsed).slice(0, 24);
+        renderShapePicker();
+        elements.shapePicker.showModal();
+        window.requestAnimationFrame(function() {
+            elements.shapePickerGrid.querySelector(".is-selected, button")?.focus();
+        });
+    }
+
+    function selectShape(index) {
+        const symbol = state.shapePickerSymbol;
+        const voicing = state.shapePickerOptions[index];
+        if (!symbol || !voicing) return;
+        selectedShapeMap()[Shapes.normalizeChord(symbol) || symbol] = Shapes.voicingKey(voicing);
+        Storage.writePreferences(state.preferences);
+        elements.shapePicker.close();
+        renderShapeCards(currentPlayShapeSong());
     }
 
     function updateSongFromFields() {
@@ -419,19 +508,23 @@
         elements.lineError.textContent = "";
         renderAnchorEditor();
         elements.lineDialog.showModal();
+        window.requestAnimationFrame(function() { elements.lineText.focus(); });
     }
 
     function renderAnchorEditor() {
         const chars = Core.codePoints(elements.lineText.value);
         elements.anchorPreview.replaceChildren();
-        const start = button("↤", "choose-anchor");
+        const start = button(t("pages.songWorkspace.lineStart", "Start"), "choose-anchor");
         start.dataset.anchor = "0";
         start.classList.toggle("is-selected", state.selectedAnchor === 0);
+        start.setAttribute("aria-label", t("pages.songWorkspace.lineStart", "Start"));
         elements.anchorPreview.appendChild(start);
         chars.forEach(function(char, index) {
-            const item = button(char === " " ? "·" : char, "choose-anchor");
+            const isSpace = /\s/u.test(char);
+            const item = button(isSpace ? "\u00a0" : char, "choose-anchor");
             item.dataset.anchor = String(index);
             item.classList.toggle("is-selected", state.selectedAnchor === index);
+            item.setAttribute("aria-label", `${index + 1}: ${isSpace ? t("pages.songWorkspace.space", "space") : char}`);
             elements.anchorPreview.appendChild(item);
         });
         elements.anchorPosition.max = String(chars.length);
@@ -622,6 +715,11 @@
             Storage.writePreferences(state.preferences);
             renderEditor();
         }));
+        elements.chordHints.addEventListener("click", function() {
+            state.preferences.chordHints = !Boolean(state.preferences.chordHints);
+            Storage.writePreferences(state.preferences);
+            renderEditor();
+        });
         $("backToSongsButton").addEventListener("click", showHome);
         $("addSectionButton").addEventListener("click", addSection);
         $("smartCapoButton").addEventListener("click", renderCapoOptions);
@@ -674,8 +772,12 @@
             const sectionIndex = Number(control.dataset.sectionIndex);
             if (control.dataset.action === "edit-line") openLineEditor(sectionIndex, Number(control.dataset.lineIndex));
             else if (control.dataset.action === "add-line") {
-                state.song.sections[sectionIndex].lines.push(Core.createLine("", [], "lyric"));
-                scheduleSave(); renderEditor();
+                const insertionIndex = Number(control.dataset.insertionIndex);
+                const result = Core.insertLine(state.song, sectionIndex, insertionIndex, Core.createLine("", [], "lyric"));
+                state.song = result.song;
+                scheduleSave();
+                renderEditor();
+                openLineEditor(sectionIndex, result.index);
             } else if (control.dataset.action === "rename-section") {
                 const section = state.song.sections[sectionIndex];
                 const title = window.prompt(t("pages.songWorkspace.sectionNamePrompt", "Section name"), section.title);
@@ -684,6 +786,15 @@
                 state.song.sections.splice(sectionIndex, 1); scheduleSave(); renderEditor();
             }
         });
+        elements.shapeCards.addEventListener("click", function(event) {
+            const control = event.target.closest('[data-action="choose-shape"]');
+            if (control) openShapePicker(control.dataset.chordSymbol);
+        });
+        elements.shapePickerGrid.addEventListener("click", function(event) {
+            const control = event.target.closest('[data-action="select-shape"]');
+            if (control) selectShape(Number(control.dataset.shapeIndex));
+        });
+        $("closeShapePickerButton").addEventListener("click", function() { elements.shapePicker.close(); });
         elements.capoResults.addEventListener("click", function(event) {
             const control = event.target.closest('[data-action="use-capo"]');
             if (!control) return;
@@ -759,6 +870,7 @@
                 elements.createMode.textContent = copy[0];
                 elements.createSourceLabel.textContent = copy[1];
             }
+            if (elements.shapePicker.open) renderShapePicker();
         });
         elements.performance.addEventListener("cancel", stopAutoScroll);
         document.addEventListener("visibilitychange", function() {
@@ -773,6 +885,7 @@
     async function initialize() {
         initializeSelects();
         state.viewMode = ["original", "balanced", "beginner", "roman", "nashville"].includes(state.preferences.viewMode) ? state.preferences.viewMode : "original";
+        state.preferences.chordHints = Boolean(state.preferences.chordHints);
         attachEvents();
         await loadSongs();
         const requestedId = new URLSearchParams(location.search).get("song");

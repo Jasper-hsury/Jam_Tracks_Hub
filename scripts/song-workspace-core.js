@@ -155,6 +155,93 @@
         };
     }
 
+    function tokenKind(character) {
+        if (/\s/u.test(character)) return "space";
+        if (/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u.test(character)) return "cjk";
+        if (/[\p{L}\p{N}\p{M}]/u.test(character)) return "word";
+        return "punctuation";
+    }
+
+    function tokenizeLyric(value) {
+        const characters = codePoints(value);
+        const tokens = [];
+        let index = 0;
+        while (index < characters.length) {
+            const start = index;
+            const kind = tokenKind(characters[index]);
+            if (kind === "word") {
+                index += 1;
+                while (index < characters.length) {
+                    const nextKind = tokenKind(characters[index]);
+                    const isJoiner = /['’\-]/u.test(characters[index])
+                        && tokenKind(characters[index - 1]) === "word"
+                        && tokenKind(characters[index + 1] || "") === "word";
+                    if (nextKind !== "word" && !isJoiner) break;
+                    index += 1;
+                }
+            } else if (kind === "space") {
+                while (index < characters.length && tokenKind(characters[index]) === "space") index += 1;
+            } else {
+                index += 1;
+            }
+            tokens.push({
+                id: `token-${start}`,
+                start,
+                end: index,
+                text: characters.slice(start, index).join(""),
+                kind,
+                meaningful: kind === "word" || kind === "cjk"
+            });
+        }
+        return tokens;
+    }
+
+    function resolveAnchorToken(value, anchor) {
+        const tokens = Array.isArray(value) ? value : tokenizeLyric(value);
+        const meaningful = tokens.filter(function(token) { return token.meaningful; });
+        if (!meaningful.length) return null;
+        const length = tokens.length ? tokens[tokens.length - 1].end : 0;
+        const position = clamp(anchor, 0, length);
+        const containing = meaningful.find(function(token) {
+            return position >= token.start && position < token.end;
+        });
+        if (containing) return containing;
+        return meaningful.reduce(function(nearest, token) {
+            const distance = position < token.start ? token.start - position : position - token.end;
+            const nearestDistance = position < nearest.start ? nearest.start - position : position - nearest.end;
+            if (distance < nearestDistance) return token;
+            if (distance === nearestDistance && token.start >= position && nearest.start < position) return token;
+            return nearest;
+        }, meaningful[0]);
+    }
+
+    function layoutLyricLine(line) {
+        const normalized = normalizeLine(line || {});
+        const tokens = tokenizeLyric(normalized.text).map(function(token) {
+            return Object.assign({}, token, { chords: [] });
+        });
+        const unanchored = [];
+        normalized.chords.slice().sort(function(a, b) {
+            return a.anchor - b.anchor;
+        }).forEach(function(chord) {
+            const target = resolveAnchorToken(tokens, chord.anchor);
+            if (target) target.chords.push(Object.assign({}, chord));
+            else unanchored.push(Object.assign({}, chord));
+        });
+        return { text: normalized.text, tokens, unanchored };
+    }
+
+    function insertLine(song, sectionIndex, insertionIndex, line) {
+        const copy = createSong(song);
+        const section = copy.sections[Number(sectionIndex)];
+        if (!section) throw new Error("Cannot insert a line outside the song sections.");
+        const index = clamp(insertionIndex, 0, section.lines.length);
+        const inserted = normalizeLine(line || createLine("", [], "lyric"));
+        section.lines.splice(index, 0, inserted);
+        copy.updatedAt = new Date().toISOString();
+        return { song: copy, line: inserted, index };
+    }
+
     function createSection(title, type, lines, id) {
         const sectionType = type || "section";
         return {
@@ -616,6 +703,10 @@
         intervalBetween,
         createChord,
         createLine,
+        tokenizeLyric,
+        resolveAnchorToken,
+        layoutLyricLine,
+        insertLine,
         createSection,
         createSong,
         validateSong,
