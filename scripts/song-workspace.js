@@ -25,6 +25,7 @@
         shapePickerScroll: null,
         addMenuTrigger: null,
         sectionInsertContext: null,
+        chordLayoutFrame: 0,
         scrollFrame: 0,
         scrolling: false,
         lastScrollTime: 0,
@@ -259,6 +260,7 @@
         host.replaceChildren();
         if (editable && !song.sections.length) {
             host.appendChild(renderInsertControl(0, 0));
+            scheduleChordLayouts();
             return;
         }
         song.sections.forEach(function(section, sectionIndex) {
@@ -283,6 +285,7 @@
             sectionElement.append(heading, lines);
             host.appendChild(sectionElement);
         });
+        scheduleChordLayouts();
     }
 
     function renderInsertControl(sectionIndex, insertionIndex) {
@@ -317,7 +320,11 @@
         const trigger = state.addMenuTrigger;
         if (!trigger) return;
         const menu = trigger.closest(".workspace-add-control")?.querySelector(".workspace-add-menu");
-        if (menu) menu.hidden = true;
+        if (menu) {
+            menu.hidden = true;
+            menu.classList.remove("is-left", "is-below", "is-above");
+            menu.style.removeProperty("top");
+        }
         trigger.setAttribute("aria-expanded", "false");
         state.addMenuTrigger = null;
         if (settings.restoreFocus !== false && trigger.isConnected) trigger.focus();
@@ -335,8 +342,35 @@
         trigger.setAttribute("aria-expanded", "true");
         menu.hidden = false;
         window.requestAnimationFrame(function() {
+            positionAddMenu(trigger, menu);
             menu.querySelector('[role="menuitem"]')?.focus();
         });
+    }
+
+    function positionAddMenu(trigger, menu) {
+        const wrapper = trigger.closest(".workspace-add-control");
+        if (!wrapper || menu.hidden) return;
+        const gap = 10;
+        const edge = 12;
+        menu.classList.remove("is-left", "is-below", "is-above");
+        menu.style.removeProperty("top");
+
+        const triggerRect = trigger.getBoundingClientRect();
+        const wrapperRect = wrapper.getBoundingClientRect();
+        const menuRect = menu.getBoundingClientRect();
+        const fitsRight = triggerRect.right + gap + menuRect.width <= window.innerWidth - edge;
+        const fitsLeft = triggerRect.left - gap - menuRect.width >= edge;
+
+        if (fitsRight || fitsLeft) {
+            if (!fitsRight) menu.classList.add("is-left");
+            const desiredTop = triggerRect.top + (triggerRect.height - menuRect.height) / 2;
+            const clampedTop = Math.max(edge, Math.min(desiredTop, window.innerHeight - edge - menuRect.height));
+            menu.style.top = `${clampedTop + (menuRect.height / 2) - wrapperRect.top}px`;
+            return;
+        }
+
+        const fitsBelow = triggerRect.bottom + gap + menuRect.height <= window.innerHeight - edge;
+        menu.classList.add(fitsBelow ? "is-below" : "is-above");
     }
 
     function sectionNamePlaceholder() {
@@ -399,16 +433,78 @@
             content.appendChild(unanchored);
         }
         const track = node("span", "workspace-token-track");
-        layout.tokens.forEach(function(token) {
-            const cell = node("span", `workspace-token-cell${Boolean(state.preferences.chordHints) && token.chords.length && token.meaningful ? " is-chord-hint" : ""}`);
-            const chordRow = node("span", "workspace-token-chords");
-            token.chords.forEach(chord => chordRow.appendChild(node("span", "workspace-chord-chip", chord.symbol)));
-            cell.append(chordRow, node("span", "workspace-lyric-token", token.text));
-            track.appendChild(cell);
+        const chordLayer = node("span", "workspace-chord-layer");
+        const lyricFlow = node("span", "workspace-lyric-flow");
+        layout.tokens.forEach(function(token, tokenIndex) {
+            const tokenId = `token-${tokenIndex}`;
+            const lyricToken = node(
+                "span",
+                `workspace-lyric-token${Boolean(state.preferences.chordHints) && token.chords.length && token.meaningful ? " is-chord-hint" : ""}`,
+                token.text
+            );
+            lyricToken.dataset.tokenId = tokenId;
+            lyricFlow.appendChild(lyricToken);
+            token.chords.forEach(function(chord) {
+                const annotation = node("span", "workspace-chord-annotation workspace-chord-chip", chord.symbol);
+                annotation.dataset.anchorToken = tokenId;
+                chordLayer.appendChild(annotation);
+            });
         });
+        track.append(chordLayer, lyricFlow);
         content.appendChild(track);
         host.appendChild(content);
         return host;
+    }
+
+    function layoutChordTracks(host) {
+        if (!host) return;
+        host.querySelectorAll(".workspace-token-track").forEach(function(track) {
+            const lyricFlow = track.querySelector(".workspace-lyric-flow");
+            const annotations = Array.from(track.querySelectorAll(".workspace-chord-annotation"));
+            if (!lyricFlow || !annotations.length) {
+                track.style.setProperty("--workspace-chord-stack-height", "1.45rem");
+                return;
+            }
+            track.style.width = "100%";
+            track.style.setProperty("--workspace-chord-stack-height", "1.45rem");
+            annotations.forEach(function(annotation) {
+                annotation.style.removeProperty("left");
+                annotation.style.removeProperty("top");
+            });
+            const trackRect = track.getBoundingClientRect();
+            const measured = annotations.map(function(annotation, index) {
+                const token = lyricFlow.querySelector(`[data-token-id="${annotation.dataset.anchorToken}"]`);
+                const tokenRect = token?.getBoundingClientRect();
+                return {
+                    index,
+                    left: tokenRect ? tokenRect.left - trackRect.left : 0,
+                    width: annotation.getBoundingClientRect().width
+                };
+            });
+            const placements = Core.packChordAnnotations(measured, 8);
+            const rowHeight = Math.max(20, ...annotations.map(annotation => annotation.getBoundingClientRect().height + 2));
+            const rowCount = Math.max(1, ...placements.map(item => item.row + 1));
+            const stackHeight = rowCount * rowHeight;
+            const requiredWidth = Math.max(
+                track.parentElement?.clientWidth || 0,
+                lyricFlow.scrollWidth,
+                ...placements.map(item => item.left + item.width)
+            );
+            track.style.width = `${Math.ceil(requiredWidth)}px`;
+            track.style.setProperty("--workspace-chord-stack-height", `${stackHeight}px`);
+            placements.forEach(function(item) {
+                annotations[item.index].style.left = `${item.left}px`;
+                annotations[item.index].style.top = `${item.row * rowHeight}px`;
+            });
+        });
+    }
+
+    function scheduleChordLayouts() {
+        window.cancelAnimationFrame(state.chordLayoutFrame);
+        state.chordLayoutFrame = window.requestAnimationFrame(function() {
+            layoutChordTracks(elements.chart);
+            layoutChordTracks(elements.performanceChart);
+        });
     }
 
     function selectedShapeMap() {
@@ -820,6 +916,7 @@
         elements.scrollSpeed.value = String(Number(state.preferences.scrollSpeed || 4));
         elements.performance.showModal();
         elements.performance.scrollTop = 0;
+        scheduleChordLayouts();
     }
 
     function autoScrollFrame(timestamp) {
@@ -851,6 +948,7 @@
         state.preferences.fontScale = Number(next.toFixed(1));
         Storage.writePreferences(state.preferences);
         elements.performanceChart.style.fontSize = `${state.preferences.fontScale}em`;
+        scheduleChordLayouts();
     }
 
     function attachEvents() {
@@ -1064,7 +1162,21 @@
             }
             if (elements.shapePicker.open) renderShapePicker();
             if (elements.sectionDialog.open) elements.sectionName.placeholder = sectionNamePlaceholder();
+            scheduleChordLayouts();
         });
+        window.addEventListener("jasper:theme-change", scheduleChordLayouts);
+        window.addEventListener("resize", function() {
+            scheduleChordLayouts();
+            if (state.addMenuTrigger) {
+                const menu = state.addMenuTrigger.closest(".workspace-add-control")?.querySelector(".workspace-add-menu");
+                if (menu) positionAddMenu(state.addMenuTrigger, menu);
+            }
+        });
+        window.addEventListener("scroll", function() {
+            if (!state.addMenuTrigger) return;
+            const menu = state.addMenuTrigger.closest(".workspace-add-control")?.querySelector(".workspace-add-menu");
+            if (menu) positionAddMenu(state.addMenuTrigger, menu);
+        }, { passive: true });
         elements.performance.addEventListener("cancel", stopAutoScroll);
         document.addEventListener("visibilitychange", function() {
             if (document.visibilityState === "hidden" && state.saveTimer) {
@@ -1084,6 +1196,7 @@
         const requestedId = new URLSearchParams(location.search).get("song");
         const initialSong = state.songs.find(song => song.id === requestedId);
         if (initialSong) showEditor(initialSong);
+        document.fonts?.ready?.then(scheduleChordLayouts);
     }
 
     document.addEventListener("DOMContentLoaded", initialize);

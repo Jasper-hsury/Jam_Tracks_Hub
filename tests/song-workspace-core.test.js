@@ -336,6 +336,20 @@ test("keeps Roman and Nashville identities through transpose and capo shape-key 
     assert.deepEqual(playSymbols.map(chord => Core.chordNumber(chord, capo.shapeKey, "nashville")), ["1", "5", "6m", "4"]);
 });
 
+test("packs long chord labels into rows without changing lyric anchor positions", () => {
+    const items = [
+        { id: "first", left: 0, width: 78 },
+        { id: "second", left: 42, width: 68 },
+        { id: "third", left: 124, width: 22 },
+        { id: "fourth", left: 170, width: 44 }
+    ];
+    const packed = Core.packChordAnnotations(items, 8);
+
+    assert.deepEqual(packed.map(item => item.left), [0, 42, 124, 170]);
+    assert.deepEqual(packed.map(item => item.row), [0, 1, 0, 0]);
+    assert.deepEqual(items.map(item => item.left), [0, 42, 124, 170]);
+});
+
 test("simplifies conservatively without mutating the canonical song", () => {
     const canonical = syntheticSong();
     const snapshot = JSON.stringify(canonical);

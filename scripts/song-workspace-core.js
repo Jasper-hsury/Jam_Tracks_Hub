@@ -245,6 +245,21 @@
         return { text: normalized.text, tokens, unanchored };
     }
 
+    function packChordAnnotations(items, minimumGap) {
+        const gap = Math.max(0, Number(minimumGap) || 0);
+        const rowEnds = [];
+        return (Array.isArray(items) ? items : []).map(function(item) {
+            const left = Math.max(0, Number(item.left) || 0);
+            const width = Math.max(0, Number(item.width) || 0);
+            let row = rowEnds.findIndex(function(end) {
+                return left >= end + gap;
+            });
+            if (row < 0) row = rowEnds.length;
+            rowEnds[row] = left + width;
+            return Object.assign({}, item, { left, width, row });
+        });
+    }
+
     function insertLine(song, sectionIndex, insertionIndex, line) {
         const copy = createSong(song);
         const section = copy.sections[Number(sectionIndex)];
@@ -751,6 +766,7 @@
         tokenizeLyric,
         resolveAnchorToken,
         layoutLyricLine,
+        packChordAnnotations,
         insertLine,
         insertSectionAtBoundary,
         createSection,
