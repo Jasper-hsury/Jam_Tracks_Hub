@@ -13,14 +13,23 @@ Song Workspace is a browser-local area for building reusable chord and lyric cha
 
 ## Creating And Importing Songs
 
-The creation dialog supports:
+The **Create Song** area keeps the three common starting points prominent:
 
 - **Chords + Lyrics**: paste alternating chord and lyric lines, section headings, chord-only lines, and common leading metadata.
 - **Lyrics Only**: paste lyrics, then add and position chords in the visual line editor.
 - **Chords Only**: create instrumental chord charts without requiring lyric text.
+
+The lower-weight **Other Import Options** area is for existing data rather than a fourth creation method:
+
 - **ChordPro**: import common metadata, inline chord anchors, and straightforward section directives.
-- **JSON import**: restore one validated Song Document V1 file.
+- **Jam Tracks Hub JSON**: restore one complete, validated Song Document V1 project previously exported from the workspace.
+
+ChordPro is a plain-text interchange format such as `[G]lyrics [D]lyrics`; it is not the complete Jam Tracks Hub project format. The optional “What is ChordPro?” disclosure explains the inline markers without blocking the primary creation flow.
+
+Library-level portability remains separate:
+
 - **Restore Backup**: add the validated songs from a Song Workspace backup without silently deleting existing songs.
+- **Backup All**: export the complete local library backup envelope.
 
 Recognized leading text metadata includes `Title`, `Artist`, `Key`, `Tempo` or `BPM`, and `Time Signature`. ChordPro import recognizes the corresponding common directives. The parsers are intentionally conservative and bounded; ambiguous content remains editable instead of being guessed as a chord.
 

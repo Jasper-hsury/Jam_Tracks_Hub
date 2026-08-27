@@ -58,40 +58,60 @@
         <div class="song-workspace-status" id="workspaceStatus" role="status" aria-live="polite"></div>
 
         <section id="workspaceHomeView" class="workspace-view">
-            <div class="workspace-section-heading">
-                <div>
-                    <span class="result-kicker" data-i18n="pages.songWorkspace.startHere">Start here</span>
-                    <h2 data-i18n="pages.songWorkspace.addSong">Add Song</h2>
+            <section class="workspace-create-area" aria-labelledby="createSongTitle">
+                <div class="workspace-section-heading">
+                    <div>
+                        <span class="result-kicker" data-i18n="pages.songWorkspace.startHere">Start here</span>
+                        <h2 id="createSongTitle" data-i18n="pages.songWorkspace.createSong">Create Song</h2>
+                    </div>
                 </div>
-                <div class="workspace-file-actions">
-                    <button class="workspace-button workspace-button-secondary" type="button" id="importSongButton" data-i18n="pages.songWorkspace.importJson">Import JSON</button>
-                    <button class="workspace-button workspace-button-secondary" type="button" id="backupSongsButton" data-i18n="pages.songWorkspace.backupAll">Backup All</button>
-                    <button class="workspace-button workspace-button-secondary" type="button" id="restoreSongsButton" data-i18n="pages.songWorkspace.restoreBackup">Restore Backup</button>
-                </div>
-            </div>
 
-            <div class="workspace-entry-grid">
-                <button class="workspace-entry-card" type="button" data-create-mode="chords-lyrics">
-                    <span class="workspace-entry-index">01</span>
-                    <strong data-i18n="pages.songWorkspace.chordsLyrics">Chords + Lyrics</strong>
-                    <span data-i18n="pages.songWorkspace.chordsLyricsCopy">Paste an existing chord chart</span>
-                </button>
-                <button class="workspace-entry-card" type="button" data-create-mode="lyrics">
-                    <span class="workspace-entry-index">02</span>
-                    <strong data-i18n="pages.songWorkspace.lyricsOnly">Lyrics Only</strong>
-                    <span data-i18n="pages.songWorkspace.lyricsOnlyCopy">Paste lyrics and add chords visually</span>
-                </button>
-                <button class="workspace-entry-card" type="button" data-create-mode="chords">
-                    <span class="workspace-entry-index">03</span>
-                    <strong data-i18n="pages.songWorkspace.chordsOnly">Chords Only</strong>
-                    <span data-i18n="pages.songWorkspace.chordsOnlyCopy">Create a chord-only progression or chart</span>
-                </button>
-                <button class="workspace-entry-card" type="button" data-create-mode="chordpro">
-                    <span class="workspace-entry-index">04</span>
-                    <strong>ChordPro</strong>
-                    <span data-i18n="pages.songWorkspace.chordProCopy">Import ChordPro formatted text</span>
-                </button>
-            </div>
+                <div class="workspace-entry-grid" data-primary-create-options>
+                    <button class="workspace-entry-card" type="button" data-create-mode="chords-lyrics">
+                        <span class="workspace-entry-index">01</span>
+                        <strong data-i18n="pages.songWorkspace.chordsLyrics">Chords + Lyrics</strong>
+                        <span data-i18n="pages.songWorkspace.chordsLyricsCopy">Paste a chord-and-lyric chart; the workspace will help align it.</span>
+                    </button>
+                    <button class="workspace-entry-card" type="button" data-create-mode="lyrics">
+                        <span class="workspace-entry-index">02</span>
+                        <strong data-i18n="pages.songWorkspace.lyricsOnly">Lyrics Only</strong>
+                        <span data-i18n="pages.songWorkspace.lyricsOnlyCopy">Paste lyrics, then add chords in the workspace.</span>
+                    </button>
+                    <button class="workspace-entry-card" type="button" data-create-mode="chords">
+                        <span class="workspace-entry-index">03</span>
+                        <strong data-i18n="pages.songWorkspace.chordsOnly">Chords Only</strong>
+                        <span data-i18n="pages.songWorkspace.chordsOnlyCopy">Create a chord progression or song structure without lyrics.</span>
+                    </button>
+                </div>
+            </section>
+
+            <section class="workspace-import-area" aria-labelledby="otherImportTitle">
+                <div class="workspace-section-heading">
+                    <div>
+                        <span class="result-kicker" data-i18n="pages.songWorkspace.importExistingData">Import existing data</span>
+                        <h2 id="otherImportTitle" data-i18n="pages.songWorkspace.otherImportOptions">Other Import Options</h2>
+                    </div>
+                </div>
+                <div class="workspace-import-grid">
+                    <article class="workspace-import-card" data-import-option="chordpro">
+                        <span class="workspace-import-type" data-i18n="pages.songWorkspace.plainTextFormat">Plain-text format</span>
+                        <h3>ChordPro</h3>
+                        <p data-i18n="pages.songWorkspace.chordProCopy">Import text with chords placed directly before lyrics.</p>
+                        <code class="workspace-chordpro-example" data-i18n="pages.songWorkspace.chordProExample">[G]lyrics [D]lyrics</code>
+                        <details class="workspace-import-help">
+                            <summary data-i18n="pages.songWorkspace.whatIsChordPro">What is ChordPro?</summary>
+                            <p data-i18n="pages.songWorkspace.chordProHelp">ChordPro uses markers such as [G] and [Am7] to place chords directly before lyric positions.</p>
+                        </details>
+                        <button class="workspace-button workspace-button-secondary workspace-import-button" type="button" data-create-mode="chordpro" data-import-kind="chordpro" data-i18n="pages.songWorkspace.importChordPro">Import ChordPro</button>
+                    </article>
+                    <article class="workspace-import-card" data-import-option="jth-json">
+                        <span class="workspace-import-type" data-i18n="pages.songWorkspace.projectFormat">Complete project format</span>
+                        <h3 data-i18n="pages.songWorkspace.jthJson">Jam Tracks Hub JSON</h3>
+                        <p data-i18n="pages.songWorkspace.jthJsonCopy">Restore a single song project previously exported from Jam Tracks Hub.</p>
+                        <button class="workspace-button workspace-button-secondary workspace-import-button" type="button" id="importSongButton" data-import-kind="jth-json" data-i18n="pages.songWorkspace.importJthJson">Import Jam Tracks Hub JSON</button>
+                    </article>
+                </div>
+            </section>
 
             <section class="workspace-library" aria-labelledby="mySongsTitle">
                 <div class="workspace-section-heading">
@@ -99,7 +119,13 @@
                         <span class="result-kicker" data-i18n="pages.songWorkspace.onThisDevice">On this device</span>
                         <h2 id="mySongsTitle" data-i18n="pages.songWorkspace.mySongs">My Songs</h2>
                     </div>
-                    <span class="workspace-count" id="songCount">0</span>
+                    <div class="workspace-library-actions">
+                        <span class="workspace-count" id="songCount">0</span>
+                        <div class="workspace-file-actions">
+                            <button class="workspace-button workspace-button-secondary" type="button" id="backupSongsButton" data-i18n="pages.songWorkspace.backupAll">Backup All</button>
+                            <button class="workspace-button workspace-button-secondary" type="button" id="restoreSongsButton" data-i18n="pages.songWorkspace.restoreBackup">Restore Backup</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="workspace-song-grid" id="songList"></div>
                 <div class="workspace-empty" id="songEmptyState">

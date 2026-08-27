@@ -33,27 +33,27 @@ The snapshot SHAs below describe the repository when this handoff was written. A
 | Frontend | Static multipage HTML/CSS/vanilla JavaScript | `*.html`, `styles/`, `scripts/` |
 | Current focus | Song Workspace V1 | `song-workspace.html`, `scripts/song-workspace*.js` |
 | Product position | Local-first guitar song workspace | Confirmed product decision and `docs/song-workspace.md` |
-| Release state | Not released to production | Feature branch is four commits ahead of `main` |
+| Release state | Not released to production | Feature branch remains ahead of `main`; verify the live count from Git before release work. |
 
 Song Workspace is a user-supplied-content practice and arrangement tool. It is not a 91PU clone, copyrighted lyrics catalog, public commercial-song library, scraper, account product, or cloud song-storage service.
 
 ## 3. Git Snapshot
 
-Repository truth before the current Shape Picker scroll hardening:
+Repository truth before the current Song Creation / Import information-architecture polish:
 
 ```text
 Branch: feat/song-workspace-v1
-HEAD: 6fb567a0f02a443c8219a6f7c208c7a257d00487
-origin/feat/song-workspace-v1: 6fb567a0f02a443c8219a6f7c208c7a257d00487
+HEAD: 6cc1187c3fa240e5a11ae5b21c5c80854b578490
+origin/feat/song-workspace-v1: 6cc1187c3fa240e5a11ae5b21c5c80854b578490
 main: 9b5ed9b
 origin/main: 9b5ed9b
-Feature branch vs origin/main: 6 ahead, 0 behind
+Feature branch vs origin/main: 7 ahead, 0 behind
 Origin fetch/push: git@github.com:Passerby-WB/Jam_Tracks_Hub.git
 ```
 
 The product history reports that GitHub has advertised a newer location, `git@github.com:Jasper-hsury/Jam_Tracks_Hub.git`. The current remote still uses the old URL, so remote URL normalization is **PENDING**. Do not change the remote during unrelated work; confirm the canonical owner and URL first.
 
-Before the current hardening, there were no tracked modifications and only the two approved untracked exceptions in section 4. There were no uncommitted Song Workspace production changes.
+Before the current information-architecture polish, there were no tracked modifications and only the two approved untracked exceptions in section 4. There were no uncommitted Song Workspace production changes.
 
 ## 4. Approved Working-Tree Exceptions
 
@@ -161,7 +161,7 @@ user brings their own content
 -> local export / backup
 ```
 
-Current entry methods are Chords + Lyrics, Lyrics Only, Chords Only, and ChordPro (`song-workspace.html:73-94`). ChordPro is currently displayed as a fourth equal card. The confirmed pre-release UX change is to keep ChordPro but demote it to an Advanced / Other Import area beside Jam Tracks Hub JSON import. That change is not implemented.
+The home view now separates creation from import. **Create Song** contains exactly three prominent entries: Chords + Lyrics, Lyrics Only, and Chords Only. **Other Import Options** is a lower-weight, still-visible area containing ChordPro and Jam Tracks Hub JSON. ChordPro includes a short inline example and an optional native disclosure; Jam Tracks Hub JSON is described as the complete single-song project format. Backup All and Restore Backup remain library-level actions under My Songs.
 
 Current editor capabilities include metadata, anchored chords, sections/lines, five chord views, transpose, capo/shape key, Smart Capo, chord-change hints, inline diagrams, per-song voicing selection, performance mode, auto-scroll, and local exports.
 
@@ -265,7 +265,7 @@ Parsers are intentionally conservative and bounded. Ambiguous text should remain
 
 **ChordPro (`.cho`)** is an interchange text format such as `[G]lyric [D]lyric`. It can represent useful metadata and inline anchors but is not guaranteed to preserve every JTH-specific identity or preference.
 
-Do not treat ChordPro as the complete backup format. The confirmed pre-release information-architecture change is to place ChordPro under Advanced / Other Import with a short example, while keeping the three common creation paths prominent. Status: not implemented.
+Do not treat ChordPro as the complete backup format. The confirmed information-architecture change is **RESOLVED** on 2026-08-27: `song-workspace.html` keeps exactly three primary create cards, while the secondary Other Import Options area contains ChordPro—with `[G]lyrics [D]lyrics` guidance and optional help—and Jam Tracks Hub JSON. `tests/song-workspace-import-ia.test.js` covers hierarchy, handler wiring, localization, responsive contracts, synthetic ChordPro, and valid/invalid JTH project validation.
 
 ## 15. Lyric / Chord Anchor Model
 
@@ -362,7 +362,7 @@ The Chord Shape Picker is a native dialog (`song-workspace.html:242-253`). Curre
 
 The main Song Chart and Chord Shapes columns are normal document-flow columns, top-aligned, without a sticky right panel or independent vertical scrollbar. Performance Mode is intentionally its own dialog/scroll context.
 
-The code-level transient-jump issue is **RESOLVED** in this snapshot. Root cause was a combination of replacing the entire shape-card subtree during selection, unlocking the body before focus restoration, global smooth-scroll behavior affecting `scrollTo`, and a second deferred restoration attempt. The new pipeline keeps the background locked through selection and focus restoration, then performs one instant restore. In-app browser acceptance at 1280×720, 1024×768, and 375×812 recorded zero final scroll delta for X and selection paths, including 10 consecutive desktop selections, preserved card/diagram geometry, internal modal scrolling, trigger focus, and reload persistence. Physical Safari/macOS and iPhone/iOS still have not verified the absence of any transient painted frame, so the separate hardware acceptance gate remains **PENDING RELEASE**; “eventually returns” is insufficient.
+The code-level transient-jump issue is **RESOLVED** in this snapshot. Root cause was a combination of replacing the entire shape-card subtree during selection, unlocking the body before focus restoration, global smooth-scroll behavior affecting `scrollTo`, and a second deferred restoration attempt. The new pipeline keeps the background locked through selection and focus restoration, then performs one instant restore. In-app browser acceptance at 1280×720, 1024×768, and 375×812 recorded zero final scroll delta for X and selection paths, including 10 consecutive desktop selections, preserved card/diagram geometry, internal modal scrolling, trigger focus, and reload persistence. The product owner subsequently reported macOS Safari user acceptance with no visible shape-selection jump: **PASS**. iPhone/iOS hardware acceptance remains **PENDING RELEASE** and must not be inferred from the macOS result.
 
 ## 23. Export / Backup
 
@@ -478,7 +478,7 @@ Physical Safari/macOS and iPhone/iOS manual validation is a confirmed pre-releas
 7. Light/dark theme and English/zh-TW.
 8. Tablet and phone stacking without nested or horizontal page scrolling.
 
-In-app browser/static checks do not substitute for hardware Safari acceptance. The bounded code fix and non-WebKit browser acceptance are complete, but current physical-device results are unverified for this snapshot. Safari/macOS and iPhone/iOS acceptance therefore remains **PENDING RELEASE**.
+In-app browser/static checks do not substitute for hardware acceptance. The bounded code fix and non-WebKit browser acceptance are complete, and macOS Safari user acceptance reports no visible shape-selection jump: **PASS**. iPhone/iOS is still unverified and remains **PENDING RELEASE**.
 
 ## 31. Tests / Build Commands
 
@@ -493,10 +493,10 @@ git diff --check
 
 There are no separate `lint`, `typecheck`, or `format` scripts. `npm run check` performs `node --check` over listed JavaScript/Worker/API/build files. `npm test` uses Node's built-in test runner on `tests/*.test.js`.
 
-Current Shape Picker hardening baseline on 2026-08-27:
+Current Song Creation / Import IA baseline on 2026-08-27:
 
 ```text
-npm test: PASS, 40/40
+npm test: PASS, 47/47
 npm run check: PASS
 npm run build:cloudflare: PASS
 git diff --check: PASS
@@ -505,6 +505,7 @@ git diff --check: PASS
 Test files:
 
 - `tests/song-workspace-core.test.js`
+- `tests/song-workspace-import-ia.test.js`
 - `tests/song-workspace-scroll.test.js`
 - `tests/song-workspace-storage.test.js`
 - `tests/song-workspace-style.test.js`
@@ -516,7 +517,8 @@ Important limitation: `.github/workflows/ci.yml` runs `npm run check` and `npm r
 
 | SHA | Message | Purpose |
 | --- | --- | --- |
-| Current change | `fix: stabilize song shape picker scroll restoration` | Unifies close/focus/restore ordering, updates one diagram without rebuilding its card, suppresses smooth restore, adds scroll-contract regressions, and records responsive in-app browser acceptance. |
+| Current change | `fix: clarify song creation and import options` | Separates three primary creation methods from ChordPro/JTH JSON imports, adds optional ChordPro help, responsive hierarchy, localization, tests, and status documentation. |
+| `6cc1187` | `fix: stabilize song shape picker scroll restoration` | Unifies close/focus/restore ordering, updates one diagram without rebuilding its card, suppresses smooth restore, adds scroll-contract regressions, and records responsive in-app browser acceptance. |
 | `6fb567a` | `fix: enforce single-row song chord annotations` | Removes row assignment/row-count rendering, adds bounded left-origin label fitting, tests, Chromium acceptance, and status documentation. |
 | `e053886` | `fix: harden song workspace visual alignment` | Separate chord layer, annotation packing, Add menu positioning, shared-style tests. Also introduced/codified the now-rejected multi-row behavior. |
 | `2ee6535` | `fix: refine song workspace scrolling and editing` | Modal/body scroll handling, unified Add Line/Section, section insertion, degree-mode hardening. |
@@ -556,13 +558,12 @@ Regression coverage includes Original, Balanced, Beginner, Roman, Nashville, `ii
 
 ### Issue B — Safari shape selection may visibly jump
 
-Status: **CODE FIX RESOLVED / HARDWARE ACCEPTANCE PENDING**. The picker now captures scroll once, keeps the body fixed while the selected diagram and trigger focus are restored, funnels every exit through one guarded close pipeline, suppresses global smooth scrolling during the single `scrollTo`, and has no deferred restoration retry. Automated source-contract tests and responsive in-app browser acceptance pass with zero final scroll delta and stable geometry. No WebKit runner or physical Safari/iPhone was available, so actual Safari/iOS must still prove there is no transient visible frame before release.
+Status: **CODE FIX RESOLVED / macOS SAFARI USER ACCEPTANCE PASS / iPHONE-iOS PENDING**. The picker captures scroll once, keeps the body fixed while the selected diagram and trigger focus are restored, funnels every exit through one guarded close pipeline, suppresses global smooth scrolling during the single `scrollTo`, and has no deferred restoration retry. Automated source-contract tests and responsive in-app browser acceptance pass with zero final scroll delta and stable geometry. The product owner reports no visible jump in macOS Safari. iPhone/iOS hardware must still prove there is no transient visible frame before release.
 
 ### Documentation and release issues
 
 - `docs/song-workspace.md` incorrectly says diagrams are not embedded.
 - README route table omits Song Workspace.
-- ChordPro remains an equal primary entry card instead of Advanced / Other Import.
 - CI omits `npm test`.
 - Copyright/user-content copy and analytics/error-payload review are pending release.
 - Anti-abuse review and physical Safari/iOS acceptance are pending release.
@@ -575,7 +576,7 @@ Status: **CODE FIX RESOLVED / HARDWARE ACCEPTANCE PENDING**. The picker now capt
 | Canonical Song Document v1 | DONE | `scripts/song-workspace-core.js:12-17,315-357` | Versioned, bounded local model. |
 | Chords + Lyrics / Lyrics / Chords creation | DONE | `song-workspace.html:73-88`, app/core parsers | Current primary creation paths. |
 | ChordPro import/export | DONE | `parseChordPro`, `toChordPro` | Functionality exists. |
-| ChordPro advanced/import demotion | PENDING RELEASE | `song-workspace.html:89-93` | Confirmed UX change, not implemented. |
+| ChordPro / JTH JSON import hierarchy | RESOLVED | `song-workspace.html`, `styles/song-workspace.css`, locale files, `tests/song-workspace-import-ia.test.js` | Exactly three primary create methods; both existing-data formats are secondary imports. |
 | IndexedDB song persistence | DONE | `scripts/song-workspace-storage.js` | Browser-local only. |
 | Preference persistence | DONE | storage/app preference helpers | Includes hints and selected voicings. |
 | Autosave and reload | DONE | `scripts/song-workspace.js:681-701` | 500 ms debounce plus visibility flush. |
@@ -595,7 +596,7 @@ Status: **CODE FIX RESOLVED / HARDWARE ACCEPTANCE PENDING**. The picker now capt
 | Inline Chord Shapes / picker | DONE | app render/picker code | Selection persists locally. |
 | Background modal scroll lock | DONE | `lockShapePickerScroll`, `finalizeShapePickerClose`, `restoreShapePickerScroll` | One captured position, one guarded close pipeline, focus-before-unlock, one instant restore. |
 | Shape Picker zero-jump code hardening | RESOLVED | `scripts/song-workspace.js`, `styles/song-workspace.css`, `tests/song-workspace-scroll.test.js` | Responsive in-app browser acceptance has zero final delta and stable geometry. |
-| Zero visible Safari picker jump | PENDING RELEASE | Physical hardware acceptance | Must still pass macOS Safari and iPhone/iOS without any transient painted movement. |
+| Zero visible Safari picker jump | macOS PASS / iOS PENDING | Product-owner macOS acceptance plus pending iPhone/iOS hardware acceptance | Do not infer iPhone/iOS from the macOS result. |
 | One document scroll / top-aligned columns | DONE | `styles/song-workspace.css` editor grid | Right panel is not sticky. |
 | Performance Mode / auto-scroll | DONE | app and performance dialog | Separate intentional dialog scroll. |
 | JTH JSON / TXT / Print / backup | DONE | app export/backup functions | Local exports. |
@@ -606,7 +607,8 @@ Status: **CODE FIX RESOLVED / HARDWARE ACCEPTANCE PENDING**. The picker now capt
 | Copyright/user-content release copy | PENDING RELEASE | Confirmed gate | Exact copy needs policy review. |
 | Analytics/error payload privacy audit | PENDING RELEASE | Confirmed gate | Must prove no content payload. |
 | Anti-abuse review | PENDING RELEASE | Confirmed gate | Cloudflare/CDN/API/WAF/rate limits. |
-| Safari/iOS hardware acceptance | PENDING RELEASE | No automated/hardware evidence | Required before production. |
+| macOS Safari shape-picker zero-jump acceptance | PASS | Product-owner manual acceptance | No visible jump reported. |
+| iPhone/iOS hardware acceptance | PENDING RELEASE | No iPhone/iOS evidence | Required before production. |
 | Browser E2E suite | NOT IMPLEMENTED | No Playwright/Cypress config | Static/unit/CSS tests only. |
 | CI running unit tests | NOT IMPLEMENTED | `.github/workflows/ci.yml` | CI currently omits `npm test`. |
 | V1 production release | NOT IMPLEMENTED | Feature branch only | No PR/merge/deploy/tag in this handoff. |
@@ -620,12 +622,13 @@ Bounded future work, clearly outside current implementation:
 - **PROPOSED**: Share Arrangement with an independent lyrics-free schema, server allowlist, unlisted/noindex defaults, expiry/revoke, and legal review.
 - **PROPOSED**: client-side fragment sharing if payload/security/usability analysis supports it.
 - **PROPOSED**: semantic version plan where current production baseline is `v1.0.0` and Song Workspace ships as `v1.1.0`; verify actual tags before adoption.
-- **PENDING RELEASE**: demote ChordPro into Advanced / Other Import.
+- **RESOLVED**: exactly three primary Create Song methods; ChordPro and Jam Tracks Hub JSON are grouped under Other Import Options.
 - **PENDING RELEASE**: add/review local-only and user-rights copy.
 - **PENDING RELEASE**: add `npm test` to remote CI after confirming runtime expectations.
 - **RESOLVED**: single-row annotation fitting, rendering, regressions, and Chromium responsive acceptance completed on 2026-08-27.
 - **RESOLVED**: bounded Shape Picker close/focus/instant-restore implementation and responsive in-app browser acceptance.
-- **PENDING RELEASE**: prove zero visible Shape Picker movement on physical Safari/macOS and iPhone/iOS hardware.
+- **PASS**: macOS Safari user acceptance found no visible Shape Picker movement.
+- **PENDING RELEASE**: prove zero visible Shape Picker movement and complete the browser checklist on iPhone/iOS hardware.
 
 Do not start V2, account/cloud sync, server storage, public discovery, or sharing merely because they are listed here.
 
@@ -654,12 +657,12 @@ All categories require explicit review before release:
 
 - Single chord-row invariant passes all modes and responsive layouts.
 - Safari shape selection has zero visible jump.
-- ChordPro hierarchy change is accepted/implemented.
+- ChordPro / JTH JSON hierarchy is implemented and regression-tested.
 - No known critical Song Workspace regressions.
 
 **Browser and accessibility**
 
-- Physical Safari/macOS and iPhone/iOS acceptance.
+- macOS Safari and iPhone/iOS acceptance; the macOS zero-jump check passes, while iPhone/iOS remains pending.
 - Chromium desktop, tablet, and mobile smoke.
 - Keyboard/focus/Escape paths, touch scrolling, light/dark, en/zh-TW.
 
@@ -715,4 +718,4 @@ A new Codex session must begin in this order:
 9. Run baseline `npm test`, `npm run check`, `npm run build:cloudflare`, and `git diff --check` when appropriate.
 10. Only then modify production code, and only for the explicitly requested bounded task.
 
-Highest-priority remaining work is physical Safari/iOS proof of zero visible Shape Picker selection movement. The bounded code fix and in-app browser acceptance are complete, and the one-row chord-annotation contract remains resolved. Physical Safari/iOS validation is still a release gate. Release work remains blocked by the remaining product, browser, privacy/copyright, anti-abuse, engineering, and explicit approval gates above.
+Highest-priority remaining release work includes iPhone/iOS hardware acceptance, copyright/local-only UI wording, analytics/error-log no-lyrics-egress proof, anti-abuse review, remote/CI/PR coordination, and explicit production approval. The Create Song / Other Import hierarchy, one-row chord-annotation contract, Shape Picker code fix, and macOS Safari zero-jump user acceptance are resolved. Do not begin a remaining gate without an explicit bounded request.

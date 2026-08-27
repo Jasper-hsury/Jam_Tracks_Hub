@@ -129,6 +129,7 @@ html[data-theme="default"] {
 .workspace-button:focus-visible,
 .workspace-icon-button:focus-visible,
 .workspace-entry-card:focus-visible,
+.workspace-import-help summary:focus-visible,
 .workspace-song-card button:focus-visible,
 .workspace-line:focus-visible,
 .workspace-shape-change:focus-visible,
@@ -161,9 +162,9 @@ html[data-theme="default"] {
 
 .workspace-entry-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 16px;
-    margin: 22px 0 74px;
+    margin-top: 22px;
 }
 
 .workspace-entry-card {
@@ -212,6 +213,104 @@ html[data-theme="default"] {
     color: var(--workspace-accent);
     font-size: 0.82rem;
     font-weight: 700;
+}
+
+.workspace-create-area {
+    margin-bottom: 34px;
+}
+
+.workspace-import-area {
+    margin-bottom: 64px;
+    border-top: 1px solid var(--workspace-line);
+    padding-top: 28px;
+}
+
+.workspace-import-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 18px;
+}
+
+.workspace-import-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    border: 1px solid var(--workspace-line);
+    border-radius: 6px;
+    padding: 22px;
+    background: var(--workspace-soft);
+}
+
+.workspace-import-card h3 {
+    margin: 7px 0 8px;
+    color: var(--workspace-text);
+    font-family: Georgia, "Noto Serif TC", serif;
+    font-size: 1.25rem;
+}
+
+.workspace-import-card > p,
+.workspace-import-help p {
+    margin: 0;
+    color: var(--workspace-muted);
+    line-height: 1.6;
+}
+
+.workspace-import-type {
+    color: var(--workspace-accent);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.workspace-chordpro-example {
+    display: block;
+    max-width: 100%;
+    margin-top: 14px;
+    overflow-wrap: anywhere;
+    border: 1px solid var(--workspace-line);
+    border-radius: 5px;
+    padding: 10px 12px;
+    color: var(--workspace-text);
+    background: var(--workspace-surface-strong);
+    font-size: 0.95rem;
+}
+
+.workspace-import-help {
+    margin-top: 12px;
+    margin-bottom: 18px;
+}
+
+.workspace-import-help summary {
+    min-height: 44px;
+    width: fit-content;
+    color: var(--workspace-accent);
+    font-weight: 700;
+    line-height: 44px;
+    cursor: pointer;
+}
+
+.workspace-import-help p {
+    padding: 2px 0 8px;
+}
+
+.workspace-import-button {
+    justify-self: start;
+    align-self: flex-start;
+    margin-top: auto;
+}
+
+.workspace-import-card[data-import-option="jth-json"] > p {
+    margin-bottom: 18px;
+}
+
+.workspace-library-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .workspace-library {
@@ -997,10 +1096,6 @@ html.workspace-shape-picker-restoring {
 }
 
 @media (max-width: 1050px) {
-    .workspace-entry-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
     .workspace-song-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -1052,6 +1147,7 @@ html.workspace-shape-picker-restoring {
     }
 
     .workspace-entry-grid,
+    .workspace-import-grid,
     .workspace-song-grid,
     .workspace-capo-results {
         grid-template-columns: 1fr;
@@ -1059,6 +1155,11 @@ html.workspace-shape-picker-restoring {
 
     .workspace-entry-card {
         min-height: 170px;
+    }
+
+    .workspace-library-actions {
+        align-items: stretch;
+        flex-direction: column;
     }
 
     .workspace-song-meta {
