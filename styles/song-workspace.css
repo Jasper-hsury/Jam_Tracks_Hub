@@ -586,20 +586,23 @@ html[data-theme="default"] {
     display: block;
     min-width: 100%;
     box-sizing: border-box;
-    padding-top: var(--workspace-chord-stack-height, 1.45rem);
+    padding-top: var(--workspace-chord-row-height, 1.45rem);
     white-space: pre;
 }
 
 .workspace-chord-layer {
     position: absolute;
     inset: 0 0 auto;
-    height: var(--workspace-chord-stack-height, 1.45rem);
+    height: var(--workspace-chord-row-height, 1.45rem);
     pointer-events: none;
 }
 
 .workspace-chord-annotation {
     position: absolute;
+    top: 0;
     line-height: 1.15;
+    transform: scaleX(var(--workspace-chord-scale, 1));
+    transform-origin: left center;
 }
 
 .workspace-lyric-flow {

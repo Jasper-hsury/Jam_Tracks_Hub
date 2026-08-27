@@ -245,18 +245,28 @@
         return { text: normalized.text, tokens, unanchored };
     }
 
-    function packChordAnnotations(items, minimumGap) {
+    function fitSingleRowChordAnnotations(items, minimumGap, minimumScale) {
         const gap = Math.max(0, Number(minimumGap) || 0);
-        const rowEnds = [];
-        return (Array.isArray(items) ? items : []).map(function(item) {
-            const left = Math.max(0, Number(item.left) || 0);
-            const width = Math.max(0, Number(item.width) || 0);
-            let row = rowEnds.findIndex(function(end) {
-                return left >= end + gap;
+        const scaleFloor = Math.min(1, Math.max(0.5, Number(minimumScale) || 0.6));
+        const normalized = (Array.isArray(items) ? items : []).map(function(item) {
+            return Object.assign({}, item, {
+                left: Math.max(0, Number(item.left) || 0),
+                width: Math.max(0, Number(item.width) || 0)
             });
-            if (row < 0) row = rowEnds.length;
-            rowEnds[row] = left + width;
-            return Object.assign({}, item, { left, width, row });
+        });
+
+        return normalized.map(function(item, index) {
+            const next = normalized.slice(index + 1).find(function(candidate) {
+                return candidate.left > item.left;
+            });
+            if (!next || !item.width) {
+                return Object.assign({}, item, { scale: 1 });
+            }
+            const availableWidth = Math.max(0, next.left - item.left - gap);
+            const scale = availableWidth >= item.width
+                ? 1
+                : Math.max(scaleFloor, availableWidth / item.width);
+            return Object.assign({}, item, { scale: Math.min(1, scale) });
         });
     }
 
@@ -766,7 +776,7 @@
         tokenizeLyric,
         resolveAnchorToken,
         layoutLyricLine,
-        packChordAnnotations,
+        fitSingleRowChordAnnotations,
         insertLine,
         insertSectionAtBoundary,
         createSection,

@@ -336,18 +336,67 @@ test("keeps Roman and Nashville identities through transpose and capo shape-key 
     assert.deepEqual(playSymbols.map(chord => Core.chordNumber(chord, capo.shapeKey, "nashville")), ["1", "5", "6m", "4"]);
 });
 
-test("packs long chord labels into rows without changing lyric anchor positions", () => {
+test("fits chord annotations on one row without changing lyric anchor positions", () => {
     const items = [
         { id: "first", left: 0, width: 78 },
         { id: "second", left: 42, width: 68 },
         { id: "third", left: 124, width: 22 },
         { id: "fourth", left: 170, width: 44 }
     ];
-    const packed = Core.packChordAnnotations(items, 8);
+    const fitted = Core.fitSingleRowChordAnnotations(items, 8, 0.6);
 
-    assert.deepEqual(packed.map(item => item.left), [0, 42, 124, 170]);
-    assert.deepEqual(packed.map(item => item.row), [0, 1, 0, 0]);
+    assert.deepEqual(fitted.map(item => item.left), [0, 42, 124, 170]);
+    assert.deepEqual(fitted.map(item => item.scale), [0.6, 1, 1, 1]);
+    assert.ok(fitted.every(item => !("row" in item)));
     assert.deepEqual(items.map(item => item.left), [0, 42, 124, 170]);
+});
+
+test("keeps the former Roman collision regression on one annotation row", () => {
+    const labels = [
+        { symbol: "ii7", left: 0, width: 28 },
+        { symbol: "bVIIadd9", left: 42, width: 78 },
+        { symbol: "IV", left: 100, width: 22 },
+        { symbol: "I/III", left: 170, width: 44 }
+    ];
+    const fitted = Core.fitSingleRowChordAnnotations(labels, 8, 0.6);
+
+    assert.deepEqual(fitted.map(item => item.symbol), ["ii7", "bVIIadd9", "IV", "I/III"]);
+    assert.deepEqual(fitted.map(item => item.left), [0, 42, 100, 170]);
+    assert.ok(fitted.every(item => !("row" in item)));
+    assert.ok(Math.abs(fitted[1].scale - (50 / 78)) < Number.EPSILON);
+    assert.equal(fitted[1].left + (fitted[1].width * fitted[1].scale) + 8, fitted[2].left);
+});
+
+test("keeps canonical lyrics, chords, and anchors immutable across display modes", () => {
+    const source = Core.createSong({
+        originalKey: "G",
+        targetKey: "G",
+        sections: [Core.createSection("Verse", "verse", [
+            Core.createLine("故事的小黃花 從出生那年就飄著", [
+                Core.createChord("Am7", 0),
+                Core.createChord("Fadd9", 7),
+                Core.createChord("C", 10),
+                Core.createChord("G/B", 12)
+            ], "lyric", "line-mode-layout")
+        ], "section-mode-layout")]
+    });
+    const snapshot = JSON.stringify(source);
+    const modes = [
+        source,
+        Core.transformSongChords(source, symbol => Core.simplifyChord(symbol, "balanced")),
+        Core.transformSongChords(source, symbol => Core.simplifyChord(symbol, "beginner")),
+        Core.transformSongChords(source, symbol => Core.chordNumber(symbol, "G", "roman")),
+        Core.transformSongChords(source, symbol => Core.chordNumber(symbol, "G", "nashville"))
+    ];
+
+    modes.forEach(function(song) {
+        const line = song.sections[0].lines[0];
+        assert.equal(line.text, source.sections[0].lines[0].text);
+        assert.deepEqual(line.chords.map(chord => chord.anchor), [0, 7, 10, 12]);
+    });
+    assert.deepEqual(modes[3].sections[0].lines[0].chords.map(chord => chord.symbol), ["ii7", "bVIIadd9", "IV", "I/III"]);
+    assert.deepEqual(modes[4].sections[0].lines[0].chords.map(chord => chord.symbol), ["2m7", "b7add9", "4", "1/3"]);
+    assert.equal(JSON.stringify(source), snapshot);
 });
 
 test("simplifies conservatively without mutating the canonical song", () => {

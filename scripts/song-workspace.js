@@ -462,14 +462,14 @@
             const lyricFlow = track.querySelector(".workspace-lyric-flow");
             const annotations = Array.from(track.querySelectorAll(".workspace-chord-annotation"));
             if (!lyricFlow || !annotations.length) {
-                track.style.setProperty("--workspace-chord-stack-height", "1.45rem");
+                track.style.setProperty("--workspace-chord-row-height", "1.45rem");
                 return;
             }
             track.style.width = "100%";
-            track.style.setProperty("--workspace-chord-stack-height", "1.45rem");
+            track.style.setProperty("--workspace-chord-row-height", "1.45rem");
             annotations.forEach(function(annotation) {
                 annotation.style.removeProperty("left");
-                annotation.style.removeProperty("top");
+                annotation.style.removeProperty("--workspace-chord-scale");
             });
             const trackRect = track.getBoundingClientRect();
             const measured = annotations.map(function(annotation, index) {
@@ -481,20 +481,18 @@
                     width: annotation.getBoundingClientRect().width
                 };
             });
-            const placements = Core.packChordAnnotations(measured, 8);
+            const placements = Core.fitSingleRowChordAnnotations(measured, 8, 0.6);
             const rowHeight = Math.max(20, ...annotations.map(annotation => annotation.getBoundingClientRect().height + 2));
-            const rowCount = Math.max(1, ...placements.map(item => item.row + 1));
-            const stackHeight = rowCount * rowHeight;
             const requiredWidth = Math.max(
                 track.parentElement?.clientWidth || 0,
                 lyricFlow.scrollWidth,
-                ...placements.map(item => item.left + item.width)
+                ...placements.map(item => item.left + (item.width * item.scale))
             );
             track.style.width = `${Math.ceil(requiredWidth)}px`;
-            track.style.setProperty("--workspace-chord-stack-height", `${stackHeight}px`);
+            track.style.setProperty("--workspace-chord-row-height", `${rowHeight}px`);
             placements.forEach(function(item) {
                 annotations[item.index].style.left = `${item.left}px`;
-                annotations[item.index].style.top = `${item.row * rowHeight}px`;
+                annotations[item.index].style.setProperty("--workspace-chord-scale", String(item.scale));
             });
         });
     }

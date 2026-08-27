@@ -289,7 +289,9 @@ Confirmed visual contract:
 - Long labels may require more horizontal space, but must not move the lyric anchor or mutate song data.
 - **Newest invariant: every lyric line has exactly one chord-annotation row.** Vertical staggering, a second row, wrapping to another chord row, or collision-to-next-row is forbidden.
 
-Repository conflict: `packChordAnnotations` (`scripts/song-workspace-core.js:248`) currently assigns row numbers, and `tests/song-workspace-core.test.js:339` explicitly expects long labels to be packed into multiple rows. The implementation and test therefore contradict the newest product invariant. This is an **OPEN** release-blocking issue; this handoff intentionally does not fix it.
+Status: **RESOLVED** on 2026-08-27 by the `fix: enforce single-row song chord annotations` change. `fitSingleRowChordAnnotations` (`scripts/song-workspace-core.js`) preserves anchor-left positions and returns bounded presentation scales without row metadata. `layoutChordTracks` (`scripts/song-workspace.js`) uses one measured row height and no `rowCount`, vertical offset, or collision-to-next-row fallback. CSS fixes every annotation at `top: 0` with a left transform origin. Core/style regressions cover the former Roman `ii7 / bVIIadd9 / IV / I/III` failure, long labels, canonical data immutability, and removal of production multi-row architecture.
+
+Browser acceptance passed in the in-app Chromium browser at 1280, 1024, 768, and 375 CSS pixels for Original, Balanced, Beginner, Roman, Nashville, Chord Change Hints, and Performance Mode. Physical Safari/iOS validation remains part of the separate hardware release gate. Presentation scaling has a 0.60 readability floor; pathological inputs with several very long labels on extremely close or identical anchors may overlap, but must never create a second row, move anchors, or mutate lyrics.
 
 ## 17. Song Editing Model
 
@@ -490,10 +492,10 @@ git diff --check
 
 There are no separate `lint`, `typecheck`, or `format` scripts. `npm run check` performs `node --check` over listed JavaScript/Worker/API/build files. `npm test` uses Node's built-in test runner on `tests/*.test.js`.
 
-Handoff baseline on 2026-08-27:
+Current single-row baseline on 2026-08-27:
 
 ```text
-npm test: PASS, 32/32
+npm test: PASS, 35/35
 npm run check: PASS
 npm run build:cloudflare: PASS
 git diff --check: PASS
@@ -506,12 +508,13 @@ Test files:
 - `tests/song-workspace-style.test.js`
 - `tests/chord-shapes.test.js`
 
-Important limitation: `.github/workflows/ci.yml` runs `npm run check` and `npm run build:cloudflare`, but not `npm test`. There is no Playwright/Cypress/browser E2E suite. The passing multi-row packing test reflects an outdated requirement and must be changed when the single-row fix is implemented.
+Important limitation: `.github/workflows/ci.yml` runs `npm run check` and `npm run build:cloudflare`, but not `npm test`. There is no Playwright/Cypress/browser E2E suite. The former multi-row packing expectation has been replaced by single-row geometry, Roman collision, canonical immutability, and production-architecture regressions.
 
 ## 32. Recent Relevant Commits
 
 | SHA | Message | Purpose |
 | --- | --- | --- |
+| Current change | `fix: enforce single-row song chord annotations` | Removes row assignment/row-count rendering, adds bounded left-origin label fitting, tests, Chromium acceptance, and status documentation. |
 | `e053886` | `fix: harden song workspace visual alignment` | Separate chord layer, annotation packing, Add menu positioning, shared-style tests. Also introduced/codified the now-rejected multi-row behavior. |
 | `2ee6535` | `fix: refine song workspace scrolling and editing` | Modal/body scroll handling, unified Add Line/Section, section insertion, degree-mode hardening. |
 | `b19b3ce` | `fix: harden song workspace editing and chord shapes` | Shared chord-shape integration, editing hardening, regression tests. |
@@ -544,9 +547,9 @@ Do not reintroduce these previously addressed failures:
 
 ### Issue A — chord annotations can occupy multiple rows
 
-Status: **OPEN** and release-blocking. `packChordAnnotations` and its test currently implement multi-row collision handling. Desired behavior is exactly one chord row per lyric line, with horizontal spacing that preserves anchors and natural lyric text.
+Status: **RESOLVED** on 2026-08-27. The old `packChordAnnotations` row allocator, renderer `rowCount`, per-annotation vertical offsets, and multi-row test expectation were removed. The replacement keeps all annotations at the exact logical anchor left edge on one layer and applies bounded left-origin horizontal condensation only when ordinary labels are tight.
 
-Next work must redesign the one-row layout and update the test rather than hide the second row with CSS. Verify Original, Balanced, Beginner, Roman, Nashville, long labels such as `bVIIadd9`, CJK, English words, mobile overflow, print, and performance mode.
+Regression coverage includes Original, Balanced, Beginner, Roman, Nashville, `ii7 / bVIIadd9 / IV / I/III`, Nashville equivalents, long chord symbols, CJK/English/mixed lyrics, canonical immutability, shared editor/performance rendering, responsive internal line overflow, and removal of production row metadata. Chromium acceptance passed at 1280/1024/768/375 without page-level horizontal overflow. Physical Safari/iOS acceptance remains pending under Issue B and the Safari release gate.
 
 ### Issue B — Safari shape selection may visibly jump
 
@@ -575,7 +578,7 @@ Status: **OPEN / hardware unverified**. Current code restores the final scroll p
 | Autosave and reload | DONE | `scripts/song-workspace.js:681-701` | 500 ms debounce plus visibility flush. |
 | Logical lyric/chord anchors | DONE | `tokenizeLyric`, `layoutLyricLine` | Unicode/code-point based. |
 | Natural lyric spacing / separate chord layer | DONE | core renderer, `styles/song-workspace.css`, style tests | No chord-width spacing in lyrics. |
-| Exactly one chord row per lyric line | OPEN | `packChordAnnotations`; core test at line 339 | Current code intentionally packs multiple rows. |
+| Exactly one chord row per lyric line | RESOLVED | `fitSingleRowChordAnnotations`, `layoutChordTracks`, core/style regressions | No production row metadata or collision-to-next-row path remains. |
 | No arrows/connectors | DONE | current renderer/styles | Preserve. |
 | Chord Change Hints | DONE | app preferences/rendering | Presentation-only anchored emphasis. |
 | Unified `+ Add` menu | DONE | app rendering/handlers, style test | Add Line and Add Section. |
@@ -616,7 +619,7 @@ Bounded future work, clearly outside current implementation:
 - **PENDING RELEASE**: demote ChordPro into Advanced / Other Import.
 - **PENDING RELEASE**: add/review local-only and user-rights copy.
 - **PENDING RELEASE**: add `npm test` to remote CI after confirming runtime expectations.
-- **OPEN**: replace multi-row packing with one-row annotation layout and matching regressions.
+- **RESOLVED**: single-row annotation fitting, rendering, regressions, and Chromium responsive acceptance completed on 2026-08-27.
 - **OPEN**: eliminate/prove zero visible Safari picker jump.
 
 Do not start V2, account/cloud sync, server storage, public discovery, or sharing merely because they are listed here.
@@ -707,4 +710,4 @@ A new Codex session must begin in this order:
 9. Run baseline `npm test`, `npm run check`, `npm run build:cloudflare`, and `git diff --check` when appropriate.
 10. Only then modify production code, and only for the explicitly requested bounded task.
 
-Highest-priority unresolved implementation work is the one-row chord-annotation contract, followed by physical Safari/iOS proof of zero visible Shape Picker selection movement. Release work remains blocked by the product, browser, privacy/copyright, anti-abuse, engineering, and explicit approval gates above.
+Highest-priority unresolved implementation work is physical Safari/iOS proof of zero visible Shape Picker selection movement. The one-row chord-annotation contract is resolved in production code and Chromium acceptance, while physical Safari/iOS validation remains part of the release gate. Release work remains blocked by the remaining product, browser, privacy/copyright, anti-abuse, engineering, and explicit approval gates above.

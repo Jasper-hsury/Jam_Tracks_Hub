@@ -33,6 +33,7 @@ Each song keeps one canonical Song Document. Transposed, capo, simplified, Roman
 - **Easy Chords** offers balanced and beginner simplifications while leaving unsupported or ambiguous harmony unchanged.
 - **Number Charts** show Roman numeral or Nashville Number views, including common non-diatonic roots.
 - **Visual chord editing** stores chord positions as logical Unicode character anchors, so Chinese and English lyric positions remain stable across responsive layouts.
+- **Single-row chord annotations** keep every lyric line on one chord row. Labels stay left-aligned to their logical lyric anchors, while bounded presentation-only condensation handles ordinary tight spacing without stretching or modifying lyrics.
 - **Chord Shapes** link unique computed chords to the existing Chord Dictionary instead of duplicating its guitar-shape database.
 - **Performance Mode** presents a focused chart with target key, capo, shape key, BPM, font controls, and adjustable auto-scroll.
 
