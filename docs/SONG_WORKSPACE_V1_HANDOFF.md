@@ -39,12 +39,12 @@ Song Workspace is a user-supplied-content practice and arrangement tool. It is n
 
 ## 3. Git Snapshot
 
-Repository truth before the current picker / modal-scrollbar / single-song JSON hardening round:
+Repository truth before the current modal-lock / spelling / Delete Line / meaningful-position round:
 
 ```text
 Branch: feat/song-workspace-v1
-HEAD: 85f6d7239c0d5024f64eed98562c9070b117efbf
-origin/feat/song-workspace-v1: 85f6d7239c0d5024f64eed98562c9070b117efbf
+HEAD: cbfc95666dee972e4656b582eb7266dbb51c9061
+origin/feat/song-workspace-v1: cbfc95666dee972e4656b582eb7266dbb51c9061
 main: 9b5ed9b
 origin/main: 9b5ed9b
 Feature branch vs origin/main: verify with Git before release work
@@ -53,7 +53,7 @@ Origin fetch/push: git@github.com:Passerby-WB/Jam_Tracks_Hub.git
 
 The product history reports that GitHub has advertised a newer location, `git@github.com:Jasper-hsury/Jam_Tracks_Hub.git`. The current remote still uses the old URL, so remote URL normalization is **PENDING**. Do not change the remote during unrelated work; confirm the canonical owner and URL first.
 
-Before the current bounded UI/import round, there were no tracked modifications and only the two approved untracked exceptions in section 4. There were no uncommitted Song Workspace production changes.
+Before the current bounded round, there were no tracked modifications and only the two approved untracked exceptions in section 4. There were no uncommitted Song Workspace production changes.
 
 ## 4. Approved Working-Tree Exceptions
 
@@ -204,17 +204,18 @@ Tests and examples must use synthetic, invented, or public-domain-safe text. Nev
 
 ## 11. Song Document Schema
 
-Canonical schema source: `scripts/song-workspace-core.js:12-17,315-357`.
+Canonical schema source: `scripts/song-workspace-core.js`.
 
 ```text
 Song
   schema: "jamtrackshub-song"
-  version: 1
+  version: 2
   id
   title
   artist
   originalKey
   targetKey
+  chordSpelling: "theory" | "preserve"
   capo
   bpm
   timeSignature
@@ -237,12 +238,12 @@ Line
 Chord
   id
   symbol
-  anchor
+  anchorPosition
 ```
 
-`shapeKey` is derived by `songForCapo`, not persisted in the Song Document. Selected voicings, mode, chord-hint setting, and performance preferences are presentation preferences, not canonical song fields.
+`shapeKey` is derived by `songForCapo`, not persisted in the Song Document. Chord spelling is a song-level presentation policy because it controls every derived chord/key label after reload. Selected voicings, mode, chord-hint setting, and performance preferences remain lightweight preferences rather than persisted chord copies.
 
-Validation requires matching schema/version and enforces bounded source/song/section/line sizes. There is no migration framework beyond exact version-1 validation; a future schema version must add an explicit migration path rather than weakening validation.
+Validation requires matching schema/version, direct non-negative integer `anchorPosition` values, and bounded source/song/section/line sizes. Version 2 intentionally rejects the pre-release version-1 character-offset schema; it does not preserve an `anchor` compatibility field or build a dual-model migration layer.
 
 One source of truth: canonical chords remain chord symbols. Target-key, capo, easy, Roman, and Nashville representations are derived runtime views; never persist separate song copies per key or mode.
 
@@ -260,6 +261,8 @@ localStorage preference key: jamTracksHubSongWorkspacePreferences
 
 IndexedDB stores canonical songs through list/get/put/remove/replace-all operations. localStorage stores lightweight preferences, including chord hints and per-song selected voicing keys. Storage unavailability degrades to an error/status path rather than a server fallback.
 
+The IndexedDB database version remains 1 because the object-store structure did not change. On load, the app validates each record against Song Document V2 and skips older incompatible pre-release records with a generic local notice. The records are not silently rewritten into a compatibility schema; development data can be recreated or re-imported as V2.
+
 `scripts/song-workspace.js:681-701` debounces autosave by 500 ms and flushes on visibility change. Backup/restore is the portability mechanism; clearing browser/site data can remove local songs. Storage tests currently cover unavailable IndexedDB and preference helpers, but do not run full CRUD against a fake/real IndexedDB implementation.
 
 ## 13. Import Formats
@@ -270,7 +273,7 @@ Current supported creation/import paths:
 - **Lyrics Only**: creates editable lyric content without inferred chords.
 - **Chords Only**: creates chord-only progression/chart content.
 - **ChordPro**: common metadata, inline chord anchors, and common section directives (`parseChordPro`, line 500).
-- **JTH JSON import**: accepts one canonical Song Document; app-side input is limited to 1 MB. The canonical deserializer validates the source, `prepareImportedSong` replaces the exported ID/timestamps with fresh local values, and `scripts/song-workspace-import.js` writes the result to IndexedDB before returning the updated collection and opening the song.
+- **JTH JSON import**: accepts one canonical Song Document V2; app-side input is limited to 1 MB. The canonical deserializer validates the source, direct meaningful positions, and spelling policy; `prepareImportedSong` replaces the exported ID/timestamps with fresh local values, and `scripts/song-workspace-import.js` writes the result to IndexedDB before returning the updated collection and opening the song.
 - **Backup restore**: validates `jamtrackshub-song-backup` version 1 and a maximum of 500 songs.
 
 Parsers are intentionally conservative and bounded. Ambiguous text should remain editable rather than being aggressively guessed. Imported user content must not be auto-translated or sent to a server.
@@ -285,14 +288,16 @@ Do not treat ChordPro as the complete backup format. The confirmed information-a
 
 ## 15. Lyric / Chord Anchor Model
 
-Anchors are logical Unicode code-point positions, not pixel coordinates. Relevant sources:
+Status: **MEANINGFUL POSITION MODEL RESOLVED**. Song Document V2 stores a direct zero-based `anchorPosition`, never a character offset or translated compatibility value.
 
-- `createChord` / `createLine`: `scripts/song-workspace-core.js:135-145`.
-- `tokenizeLyric`: line 165; complete English words are tokens, while CJK characters are independently addressable.
-- `layoutLyricLine`: line 218; resolves chord anchors onto lyric tokens without mutating canonical text.
-- Editor anchor preview and controls: `song-workspace.html:275-305` and app line-editor handlers.
+- Chinese: each CJK character is one meaningful position; standalone punctuation and whitespace are not positions.
+- English: each complete whitespace-separated unit is one position. Multiple spaces/tabs are separators only; `don't`, `burning-room`, and punctuation attached to a word remain one unit.
+- Mixed text composes those rules, so `你好 slow dancing` has four positions.
+- Lyric lines have no separate Start position. `This is the deep and dying breath of` has exactly eight positions, and index 5 is `dying`.
+- Sub-word English anchoring is intentionally unsupported unless the user inserts whitespace, for example `burn ing`.
+- Instrumental/chord-only lines retain their own ordered position semantics without reintroducing lyric character offsets.
 
-This preserves anchors through transposition and number-mode label changes. Chord Change Hints bold only the anchored CJK character or complete English word. They must not alter canonical lyrics, insert Markdown, move the anchor, or add arrows.
+`tokenizeLyric` produces runtime presentation tokens with position indexes; only `anchorPosition` persists. `layoutLyricLine` resolves that index directly to the meaningful runtime unit while preserving the original lyric string. Chord Change Hints bold the entire selected position, and the annotation label's left edge aligns to its first visible character. ChordPro and pasted-chart parsers convert their source marker/column locations directly into meaningful positions before creating canonical chords. JSON and IndexedDB round-trip `anchorPosition` without a legacy field.
 
 ## 16. Alignment Invariants
 
@@ -315,6 +320,7 @@ The editor renders insertion boundaries with a low-visual-weight `+ Add` control
 
 - `insertLine` (`scripts/song-workspace-core.js:263`) inserts at beginning, middle, or end while retaining all existing IDs and anchors.
 - `insertSectionAtBoundary` (line 274) inserts relative to the selected boundary. At a boundary inside a section, trailing lines move into the new section; existing line/chord IDs remain stable.
+- `deleteLine` removes only the selected line and its text/chords. Sibling line/section IDs remain stable, the Edit Line dialog closes, and autosave persists the result. Sections are allowed to contain zero lines, so deleting the final line preserves the empty section and its insertion control.
 - Section names are free-form user content, not an enum.
 - Autosave persists both operations and preserves ordering on reload.
 
@@ -335,6 +341,15 @@ The mode bar in `song-workspace.html:168-179` exposes:
 Roman/Nashville are derived from effective playable chords relative to the effective **shape key**, not the concert target key. Example: concert A + capo 2 + G shapes uses `G D Em C` diagrams and displays `I V vi IV` / `1 5 6m 4`. Transpose and capo must preserve degree identity and lyric anchors. Slash and non-diatonic roots are supported by `chordNumber` (`scripts/song-workspace-core.js:663-674`).
 
 The right panel always shows actual playable chord diagrams, never Roman/Nashville “diagrams.” Previous blank-number regressions are covered by core tests and must not be reintroduced.
+
+### Chord Spelling
+
+Status: **RESOLVED**. Canonical pitch arithmetic remains pitch-class based, while every derived chord/key label uses the song's `chordSpelling` policy:
+
+- **Music Theory / 依樂理** uses a bounded common-key policy and normalizes pre-release `Dbm` context to conventional `C#m`. The key selectors expose both useful sharp/flat major spellings and the agreed common minor spellings, including `C#m`.
+- **Preserve Input / 依使用者輸入** retains canonical input labels when the song remains in its entered key. An explicitly selected `C#` or `Db` target controls new transposed labels.
+- Slash roots and bass notes are spelled independently through the same context. `C#/G#` and `Db/Ab` share pitch/voicing identity; no duplicate shape database or per-chord sharp/flat copies exist.
+- Roman/Nashville analysis still derives harmonic degree from pitch class and effective shape key; spelling selection does not alter numeral semantics.
 
 ## 19. Smart Capo
 
@@ -364,7 +379,9 @@ Song Workspace reuses the Chord Dictionary interval variables and presentation r
 
 ## 22. Modal / Scroll Behavior
 
-The Chord Shape Picker is a native dialog. Current implementation in `scripts/song-workspace.js`:
+Status: **SHARED BACKGROUND LOCK RESOLVED**. Shape Picker, all four Create/Import modes, Edit Line, and Add Section reuse one fixed-body dialog background utility in `scripts/song-workspace.js`. It captures exact scroll X/Y once, measures scrollbar compensation, leaves the active dialog internally scrollable, restores focus with `preventScroll` where applicable, and performs one instant scroll restoration on every close/success path.
+
+The Chord Shape Picker is a native dialog. Current implementation:
 
 - captures exact scroll X/Y;
 - dynamically measures scrollbar width and compensates body padding;
@@ -379,6 +396,8 @@ The Chord Shape Picker is a native dialog. Current implementation in `scripts/so
 The main Song Chart and Chord Shapes columns are normal document-flow columns, top-aligned, without a sticky right panel or independent vertical scrollbar. Performance Mode is intentionally its own dialog/scroll context.
 
 The shared Chords + Lyrics, Lyrics Only, Chords Only, and ChordPro dialog uses `workspace-create-dialog`. Its outer container remains `overflow: auto`, while `scrollbar-width: none`, `-ms-overflow-style: none`, and a zero-size `::-webkit-scrollbar` hide the visible native scrollbar without clipping content. Responsive browser acceptance at 375 CSS pixels confirmed `scrollHeight > clientHeight`, computed `scrollbar-width: none`, and keyboard focus moving `scrollTop` to the footer actions.
+
+Create/Import now locks the document before `showModal()`. X, Cancel, Escape, successful Create, and successful ChordPro import all unlock through the shared close/restore contract; native required validation still runs only for the real commit action. Edit Line Save/Delete and Add Section success use the same utility without changing the Shape Picker's focus-before-unlock or zero-jump guarantees.
 
 The code-level transient-jump issue is **RESOLVED** in this snapshot. Root cause was a combination of replacing the entire shape-card subtree during selection, unlocking the body before focus restoration, global smooth-scroll behavior affecting `scrollTo`, and a second deferred restoration attempt. The new pipeline keeps the background locked through selection and focus restoration, then performs one instant restore. In-app browser acceptance at 1280×720, 1024×768, and 375×812 recorded zero final scroll delta for X and selection paths, including 10 consecutive desktop selections, preserved card/diagram geometry, internal modal scrolling, trigger focus, and reload persistence. The product owner subsequently reported macOS Safari user acceptance with no visible shape-selection jump: **PASS**. iPhone/iOS hardware acceptance remains **PENDING RELEASE** and must not be inferred from the macOS result.
 
@@ -520,10 +539,10 @@ git diff --check
 
 There are no separate `lint`, `typecheck`, or `format` scripts. `npm run check` performs `node --check` over listed JavaScript/Worker/API/build files. `npm test` uses Node's built-in test runner on `tests/*.test.js`.
 
-Current picker / modal-scrollbar / single-song JSON hardening baseline on 2026-08-27:
+Current modal-lock / spelling / Delete Line / meaningful-position automated baseline on 2026-08-27:
 
 ```text
-npm test: PASS, 75/75
+npm test: PASS, 82/82
 npm run check: PASS
 npm run build:cloudflare: PASS
 git diff --check: PASS
@@ -543,11 +562,14 @@ Test files:
 
 Important limitation: `.github/workflows/ci.yml` runs `npm run check` and `npm run build:cloudflare`, but not `npm test`. There is no Playwright/Cypress/browser E2E suite. The former multi-row packing expectation has been replaced by single-row geometry, Roman collision, canonical immutability, and production-architecture regressions.
 
+In-app Chromium acceptance for this round also passed with synthetic-only content. At 1280×720, 1024×768, and 375×812, Create/Import and Edit Line kept the page background fixed while their own content remained reachable, then restored focus and the captured scroll position without a final delta. Music Theory and Preserve Input covered `C#m`, an explicit `Db` target, derived shapes, all five display modes, and reload persistence; every annotation stayed on one row. The exact eight-position English example anchored the complete word `dying`, Delete Line removed only the middle line and survived reload, and ChordPro/JTH JSON imports preserved direct V2 positions. English/zh-TW, both themes, mobile wrapping, and horizontal overflow checks passed with 0 new console warnings and 0 new console errors. This is browser smoke evidence, not the still-pending iPhone/iOS hardware acceptance.
+
 ## 32. Recent Relevant Commits
 
 | SHA | Message | Purpose |
 | --- | --- | --- |
-| Current change | `fix: polish song workspace picker and restore json import` | Aligns the picker with Write Your Own Progression, hides Create/Import dialog scrollbars without disabling scrolling, and hardens/test-drives canonical single-song JSON persistence. |
+| Current change | `fix: refine song anchors and chord spelling` | Shares fixed-body modal locking, adds theory/preserve spelling, adds Delete Line, and replaces character offsets with direct Song Document V2 meaningful positions. |
+| `cbfc956` | `fix: polish song workspace picker and restore json import` | Aligns the picker with Write Your Own Progression, hides Create/Import dialog scrollbars without disabling scrolling, and hardens/test-drives canonical single-song JSON persistence. |
 | `85f6d72` | `fix: prevent song content from entering analytics and logs` | Isolates Song Workspace from analytics/error side channels and adds content-free title/URL/error/transport regressions. |
 | `4460aa2` | `fix: clarify local song content and copyright boundaries` | Adds accurate browser-local, import-rights, export-content, persistence-risk, and user-content wording across Song Workspace and the existing Privacy page. |
 | `08472d0` | `fix: refine song workspace interaction and performance controls` | Makes create/import cancellation independent of validation, links auto-scroll base speed to BPM while retaining the user multiplier, and aligns all workspace button semantics with shared site tokens. |
@@ -586,6 +608,11 @@ Do not reintroduce these previously addressed failures:
 - Independent workspace button styles drifting from shared primary/secondary/danger/focus/motion tokens.
 - Device-wide/permanent-storage wording overstating browser-local persistence.
 - Copyright copy implying that local processing alone makes a use lawful or advertising unimplemented sharing/cloud features.
+- Create/Import dialogs opening without the Shape Picker's fixed-body background lock.
+- C-sharp minor being unavailable in key selectors or rendered as `Dbm` by a single pitch-label table.
+- Edit Line exposing one button per English character plus a separate Start position.
+- Line deletion rebuilding sibling IDs, removing a section, or failing to persist.
+- Mixing version-1 character offsets with version-2 meaningful positions.
 
 ## 34. Current Known Issues
 
@@ -627,6 +654,22 @@ Status: **RESOLVED** on 2026-08-27. All four Create/ChordPro modes share `worksp
 
 Status: **RESOLVED** on 2026-08-27. The exact starting-SHA button → hidden input → file-change → parse → validate → ID regeneration → IndexedDB → editor path succeeded under synthetic browser reproduction, so no deterministic wiring failure was reproducible. The investigation did find that the route was coupled to a private callback, bypassed the canonical string deserializer, allowed a storage-unavailable session-only result, and surfaced non-localized schema errors. The hardened path now reads text locally, uses `prepareImportedSong`, regenerates the opaque ID/timestamps, persists through the testable `song-workspace-import.js` service, updates the collection, opens the song, and maps all invalid/empty/wrong-schema content to a generic localized message. Automated tests cover collection growth, persistence, ID regeneration, URL safety, and bounded errors; browser acceptance confirmed collection 6→7, auto-open, reload persistence, and no raw invalid-file canary in the UI.
 
+### Issue J — Create/Import background document can scroll
+
+Status: **RESOLVED** on 2026-08-27. Root cause was that Create/Import called `showModal()` directly while only Shape Picker used the fixed-body lock. One shared utility now owns scroll capture, scrollbar compensation, fixed-body styles, focus restoration, and one instant restoration for Shape Picker, all four Create/Import modes, Edit Line, and Add Section. The dialog's internal `overflow: auto` and hidden visible scrollbar remain intact.
+
+### Issue K — enharmonic labels can turn C-sharp minor into D-flat minor
+
+Status: **RESOLVED** on 2026-08-27. Root cause was a flat-oriented key-option list plus pitch-class-to-label output without a user-selectable spelling policy. Key selectors now include the bounded common major/minor spellings, and the song-level Music Theory / Preserve Input setting separates pitch arithmetic from display spelling. Theory maps the unsupported `Dbm` context to `C#m`; explicit C#/Db target context and slash bass spelling are tested.
+
+### Issue L — Edit Line cannot delete one line
+
+Status: **RESOLVED** on 2026-08-27. Delete Line is a danger action beside Cancel/Save. It removes only the selected line and its line-local chords/editor draft, retains sibling/section IDs, preserves an empty section, closes/unlocks the dialog, and enters the existing autosave path. Core JSON reload regression proves the deletion remains.
+
+### Issue M — English anchors use character offsets and an extra Start
+
+Status: **RESOLVED** on 2026-08-27 by Song Document V2. Canonical chords now contain only `anchorPosition`; English units split on whitespace, CJK characters are independent, standalone punctuation/whitespace do not create positions, and lyric lines have no separate Start. Runtime layout, hints, ChordPro, pasted chart, JSON, IndexedDB, exports, and Edit Line all use the same direct position semantics. Version-1 pre-release data is not given a permanent compatibility layer.
+
 ### Documentation and release issues
 
 - README route table omits Song Workspace.
@@ -639,7 +682,7 @@ Status: **RESOLVED** on 2026-08-27. The exact starting-SHA button → hidden inp
 
 | Item | Status | Source / Evidence | Notes |
 | --- | --- | --- | --- |
-| Canonical Song Document v1 | DONE | `scripts/song-workspace-core.js:12-17,315-357` | Versioned, bounded local model. |
+| Canonical Song Document v2 | RESOLVED | core schema/validation, parser/export tests | Direct meaningful `anchorPosition` plus song-level chord spelling; v1 offsets rejected. |
 | Chords + Lyrics / Lyrics / Chords creation | DONE | `song-workspace.html:73-88`, app/core parsers | Current primary creation paths. |
 | ChordPro import/export | DONE | `parseChordPro`, `toChordPro` | Functionality exists. |
 | ChordPro / JTH JSON import hierarchy | RESOLVED | `song-workspace.html`, `styles/song-workspace.css`, locale files, `tests/song-workspace-import-ia.test.js` | Exactly three primary create methods; both existing-data formats are secondary imports. |
@@ -649,7 +692,9 @@ Status: **RESOLVED** on 2026-08-27. The exact starting-SHA button → hidden inp
 | IndexedDB song persistence | DONE | `scripts/song-workspace-storage.js` | Browser-local only. |
 | Preference persistence | DONE | storage/app preference helpers | Includes hints and selected voicings. |
 | Autosave and reload | DONE | `scripts/song-workspace.js:681-701` | 500 ms debounce plus visibility flush. |
-| Logical lyric/chord anchors | DONE | `tokenizeLyric`, `layoutLyricLine` | Unicode/code-point based. |
+| Meaningful Position Anchor Model | RESOLVED | `tokenizeLyric`, `layoutLyricLine`, core/interaction tests | Chinese character + whitespace-separated English unit; no lyric Start or character-offset compatibility. |
+| Enharmonic Chord Spelling | RESOLVED | core spelling policy, key options, editor control, locale/interaction tests | Music Theory / Preserve Input, C#m regression, slash pitch identity, persisted per song. |
+| Edit Line Delete Line | RESOLVED | `deleteLine`, danger control, core/interaction tests | Selected line only, stable siblings/section, empty section allowed, autosave/reload. |
 | Natural lyric spacing / separate chord layer | DONE | core renderer, `styles/song-workspace.css`, style tests | No chord-width spacing in lyrics. |
 | Exactly one chord row per lyric line | RESOLVED | `fitSingleRowChordAnnotations`, `layoutChordTracks`, core/style regressions | No production row metadata or collision-to-next-row path remains. |
 | No arrows/connectors | DONE | current renderer/styles | Preserve. |
@@ -664,7 +709,7 @@ Status: **RESOLVED** on 2026-08-27. The exact starting-SHA button → hidden inp
 | Shared interval colors | DONE | `styles/chord-dictionary.css`, style test | Light/dark centralized. |
 | Inline Chord Shapes / picker | DONE | app render/picker code | Selection persists locally. |
 | Picker parity with Write Your Own Progression | RESOLVED | shared picker classes/card renderer, real voicing filters, locale files, picker/modal tests | Header, count, filters, cards, Use Shape, text Close, responsive layout aligned. |
-| Background modal scroll lock | DONE | `lockShapePickerScroll`, `finalizeShapePickerClose`, `restoreShapePickerScroll` | One captured position, one guarded close pipeline, focus-before-unlock, one instant restore. |
+| Shared background modal scroll lock | RESOLVED | `lockDialogBackground`, `restoreDialogBackground`, scroll/interaction tests | Shape Picker, Create/Import, Edit Line, Add Section share one capture/focus/instant-restore utility. |
 | Shape Picker zero-jump code hardening | RESOLVED | `scripts/song-workspace.js`, `styles/song-workspace.css`, `tests/song-workspace-scroll.test.js` | Responsive in-app browser acceptance has zero final delta and stable geometry. |
 | Zero visible Safari picker jump | macOS PASS / iOS PENDING | Product-owner macOS acceptance plus pending iPhone/iOS hardware acceptance | Do not infer iPhone/iOS from the macOS result. |
 | One document scroll / top-aligned columns | DONE | `styles/song-workspace.css` editor grid | Right panel is not sticky. |
@@ -702,13 +747,17 @@ Bounded future work, clearly outside current implementation:
 - **RESOLVED**: Song Workspace picker parity with Write Your Own Progression using shared styles/card rendering and real voicing filters.
 - **RESOLVED**: Create/ChordPro visible scrollbar removal while retaining bounded keyboard/wheel scrolling and footer reachability.
 - **RESOLVED**: canonical single-song JTH JSON import orchestration, fresh opaque IDs, IndexedDB persistence, collection refresh, generic errors, and reload acceptance.
+- **RESOLVED**: shared fixed-body background lock for Create/Import, Shape Picker, Edit Line, and Add Section.
+- **RESOLVED**: song-level Music Theory / Preserve Input chord spelling with C#m and slash-chord regressions.
+- **RESOLVED**: Edit Line Delete Line with stable IDs, empty-section preservation, autosave, and reload.
+- **RESOLVED**: Song Document V2 direct meaningful positions; no persistent character offset or legacy compatibility layer.
 - **PENDING RELEASE**: add `npm test` to remote CI after confirming runtime expectations.
 - **RESOLVED**: single-row annotation fitting, rendering, regressions, and Chromium responsive acceptance completed on 2026-08-27.
 - **RESOLVED**: bounded Shape Picker close/focus/instant-restore implementation and responsive in-app browser acceptance.
 - **PASS**: macOS Safari user acceptance found no visible Shape Picker movement.
 - **PENDING RELEASE**: prove zero visible Shape Picker movement and complete the browser checklist on iPhone/iOS hardware.
 
-Do not start V2, account/cloud sync, server storage, public discovery, or sharing merely because they are listed here.
+Do not start a Song Workspace product V2, account/cloud sync, server storage, public discovery, or sharing merely because they are listed here. Song Document schema version 2 is part of the current unreleased V1 product and is not a product-version expansion.
 
 ## 37. Release Management
 
@@ -733,6 +782,10 @@ All categories require explicit review before release:
 
 **Product**
 
+- Shared Create/Import dialog background lock passes X, Cancel, Escape, and successful commit with internal modal scrolling and zero final delta.
+- Music Theory / Preserve Input spelling passes C#m, explicit Db, slash chords, transpose/capo, shapes, and reload.
+- Delete Line removes only one line, preserves section/sibling IDs, and survives autosave/reload.
+- Song Document V2 meaningful positions pass exact English/Chinese/mixed examples, no lyric Start, ChordPro/pasted-chart mapping, hints, exports, and JSON round-trip.
 - Single chord-row invariant passes all modes and responsive layouts.
 - Safari shape selection has zero visible jump.
 - ChordPro / JTH JSON hierarchy is implemented and regression-tested.
@@ -802,4 +855,4 @@ A new Codex session must begin in this order:
 9. Run baseline `npm test`, `npm run check`, `npm run build:cloudflare`, and `git diff --check` when appropriate.
 10. Only then modify production code, and only for the explicitly requested bounded task.
 
-Highest-priority remaining release work includes iPhone/iOS hardware acceptance, anti-abuse review, remote/CI/PR coordination, and explicit production approval. Analytics/error-log no-song-content-egress, Copyright/local-only UI wording, the Create Song / Other Import hierarchy, cancellation-vs-validation contract, BPM-linked Performance Auto Scroll, button design-system hardening, one-row chord-annotation contract, Shape Picker parity/zero-jump code fix, Create/Import scrollbar polish, canonical single-song JSON import, and macOS Safari zero-jump user acceptance are resolved. Do not begin a remaining gate without an explicit bounded request.
+Highest-priority remaining release work includes iPhone/iOS hardware acceptance, anti-abuse review, remote/CI/PR coordination, and explicit production approval. Analytics/error-log no-song-content-egress, Copyright/local-only UI wording, the Create Song / Other Import hierarchy, cancellation-vs-validation contract, shared modal background lock, Music Theory / Preserve Input chord spelling, Delete Line, Song Document V2 meaningful positions, BPM-linked Performance Auto Scroll, button design-system hardening, one-row chord-annotation contract, Shape Picker parity/zero-jump code fix, Create/Import scrollbar polish, canonical single-song JSON import, and macOS Safari zero-jump user acceptance are resolved. Do not begin a remaining gate without an explicit bounded request.

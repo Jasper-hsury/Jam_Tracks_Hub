@@ -92,6 +92,7 @@ test("accepts a valid JTH project and rejects invalid JSON or schema", () => {
     const restored = Core.deserializeSong(Core.serializeSong(project));
 
     assert.equal(restored.schema, "jamtrackshub-song");
+    assert.equal(restored.version, 2);
     assert.equal(restored.title, "Synthetic JSON Project");
     assert.equal(restored.sections[0].lines[0].text, "測試內容");
     assert.throws(() => Core.deserializeSong("not-json"), /valid JSON/);

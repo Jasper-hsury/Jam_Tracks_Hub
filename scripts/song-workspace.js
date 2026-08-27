@@ -9,7 +9,7 @@
 
     const MAX_IMPORT_BYTES = 1024 * 1024;
     const MAX_BACKUP_SONGS = 500;
-    const KEYS = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
+    const KEYS = Core.KEY_OPTIONS.major.concat(Core.KEY_OPTIONS.minor);
     const state = {
         songs: [],
         song: null,
@@ -18,15 +18,15 @@
         saveTimer: 0,
         lineContext: null,
         lineDraft: null,
-        selectedAnchor: 0,
+        selectedAnchorPosition: 0,
         editingAnchorId: null,
         shapePickerSymbol: null,
         shapePickerOptions: [],
         shapePickerPosition: "all",
         shapePickerRootString: "all",
         shapePickerTrigger: null,
-        shapePickerScroll: null,
         shapePickerClosing: false,
+        dialogLock: null,
         addMenuTrigger: null,
         sectionInsertContext: null,
         chordLayoutFrame: 0,
@@ -43,6 +43,7 @@
         list: $("songList"), empty: $("songEmptyState"), count: $("songCount"),
         title: $("songTitleInput"), artist: $("songArtistInput"), originalKey: $("originalKeySelect"),
         targetKey: $("targetKeySelect"), capo: $("capoSelect"), shapeKey: $("shapeKeyValue"),
+        chordSpelling: $("chordSpellingSelect"),
         bpm: $("bpmInput"), timeSignature: $("timeSignatureInput"), autosave: $("autosaveState"),
         chartTitle: $("songChartTitle"), chartSummary: $("chartKeySummary"), chart: $("songChart"),
         shapeCards: $("shapeCards"), capoResults: $("capoResults"), downloadMenu: $("downloadMenu"),
@@ -54,6 +55,7 @@
         lineDialog: $("lineEditorDialog"), lineForm: $("lineEditorForm"), lineText: $("lineTextInput"),
         anchorPreview: $("anchorPreview"), anchorChord: $("anchorChordInput"), anchorPosition: $("anchorPositionInput"),
         anchorList: $("anchorList"), addAnchor: $("addAnchorButton"), lineError: $("lineDialogError"),
+        deleteLine: $("deleteLineButton"),
         chordHints: $("chordHintsButton"), shapePicker: $("shapePickerDialog"),
         shapePickerSymbol: $("shapePickerSymbol"), shapePickerCount: $("shapePickerCount"),
         shapePickerPosition: $("shapePositionFilter"), shapePickerRoot: $("shapeRootFilter"),
@@ -117,7 +119,7 @@
     function keyOptions(select) {
         if (!select) return;
         select.replaceChildren();
-        KEYS.concat(KEYS.map(key => `${key}m`)).forEach(function(key) {
+        KEYS.forEach(function(key) {
             const option = node("option", "", key);
             option.value = key;
             select.appendChild(option);
@@ -136,8 +138,21 @@
 
     async function loadSongs() {
         try {
-            state.songs = await Storage.list();
+            const storedSongs = await Storage.list();
+            state.songs = storedSongs.flatMap(function(song) {
+                try {
+                    return [Core.validateSong(song)];
+                } catch (error) {
+                    return [];
+                }
+            });
             state.storageAvailable = true;
+            if (state.songs.length !== storedSongs.length) {
+                setStatus(t(
+                    "pages.songWorkspace.preReleaseDataIncompatible",
+                    "Some older pre-release local songs use an unsupported format and were not opened. Recreate or re-import them with Song Document V2."
+                ), true);
+            }
         } catch (error) {
             state.storageAvailable = false;
             state.songs = [];
@@ -215,6 +230,7 @@
         elements.originalKey.value = state.song.originalKey;
         elements.targetKey.value = state.song.targetKey;
         elements.capo.value = String(state.song.capo);
+        elements.chordSpelling.value = state.song.chordSpelling;
         elements.bpm.value = state.song.bpm || "";
         elements.timeSignature.value = state.song.timeSignature;
         state.preferences.lastSongId = state.song.id;
@@ -397,8 +413,9 @@
         state.sectionInsertContext = { sectionIndex, insertionIndex, trigger };
         elements.sectionName.value = "";
         elements.sectionName.placeholder = sectionNamePlaceholder();
+        lockDialogBackground(elements.sectionDialog, trigger);
         elements.sectionDialog.showModal();
-        window.requestAnimationFrame(function() { elements.sectionName.focus(); });
+        window.requestAnimationFrame(function() { focusWithoutScroll(elements.sectionName); });
     }
 
     function addSectionAtBoundary() {
@@ -417,6 +434,7 @@
         );
         state.song = result.song;
         elements.sectionDialog.close("created");
+        restoreDialogBackground(elements.sectionDialog, null);
         scheduleSave();
         renderEditor();
     }
@@ -658,14 +676,16 @@
         });
     }
 
-    function lockShapePickerScroll() {
-        if (state.shapePickerScroll) return;
+    function lockDialogBackground(dialog, trigger) {
+        if (state.dialogLock) return;
         const body = document.body;
         const root = document.documentElement;
         const x = window.scrollX;
         const y = window.scrollY;
         const scrollbarWidth = Math.max(0, window.innerWidth - root.clientWidth);
-        state.shapePickerScroll = {
+        state.dialogLock = {
+            dialog,
+            trigger: trigger || document.activeElement,
             x,
             y,
             bodyStyles: {
@@ -680,8 +700,8 @@
         };
         const currentPadding = Number.parseFloat(window.getComputedStyle(body).paddingRight) || 0;
         root.style.setProperty("--workspace-scrollbar-compensation", `${scrollbarWidth}px`);
-        root.classList.add("workspace-shape-picker-open");
-        body.classList.add("workspace-shape-picker-open");
+        root.classList.add("workspace-dialog-open");
+        body.classList.add("workspace-dialog-open");
         body.style.position = "fixed";
         body.style.top = `${-y}px`;
         body.style.left = `${-x}px`;
@@ -690,34 +710,8 @@
         body.style.paddingRight = `${currentPadding + scrollbarWidth}px`;
     }
 
-    function restoreShapePickerScroll() {
-        const locked = state.shapePickerScroll;
-        if (!locked) return;
-        const body = document.body;
-        const root = document.documentElement;
-        root.classList.add("workspace-shape-picker-restoring");
-        Object.keys(locked.bodyStyles).forEach(function(property) {
-            body.style[property] = locked.bodyStyles[property];
-        });
-        root.classList.remove("workspace-shape-picker-open");
-        body.classList.remove("workspace-shape-picker-open");
-        if (locked.compensation) root.style.setProperty("--workspace-scrollbar-compensation", locked.compensation);
-        else root.style.removeProperty("--workspace-scrollbar-compensation");
-        state.shapePickerScroll = null;
-        window.scrollTo(locked.x, locked.y);
-        root.classList.remove("workspace-shape-picker-restoring");
-    }
-
-    function focusShapePickerTrigger() {
-        const original = state.shapePickerTrigger;
-        const symbol = original?.dataset.chordSymbol || state.shapePickerSymbol;
-        state.shapePickerTrigger = null;
-        const target = original?.isConnected
-            ? original
-            : Array.from(elements.shapeCards.querySelectorAll('[data-action="choose-shape"]')).find(function(control) {
-                return control.dataset.chordSymbol === symbol;
-            });
-        if (!target) return;
+    function focusWithoutScroll(target) {
+        if (!target?.isConnected) return;
         try {
             target.focus({ preventScroll: true });
         } catch (error) {
@@ -725,9 +719,38 @@
         }
     }
 
+    function restoreDialogBackground(dialog, focusTarget) {
+        const locked = state.dialogLock;
+        if (!locked || locked.dialog !== dialog) return;
+        const body = document.body;
+        const root = document.documentElement;
+        if (focusTarget !== null) focusWithoutScroll(focusTarget || locked.trigger);
+        root.classList.add("workspace-dialog-restoring");
+        Object.keys(locked.bodyStyles).forEach(function(property) {
+            body.style[property] = locked.bodyStyles[property];
+        });
+        root.classList.remove("workspace-dialog-open");
+        body.classList.remove("workspace-dialog-open");
+        if (locked.compensation) root.style.setProperty("--workspace-scrollbar-compensation", locked.compensation);
+        else root.style.removeProperty("--workspace-scrollbar-compensation");
+        state.dialogLock = null;
+        window.scrollTo(locked.x, locked.y);
+        root.classList.remove("workspace-dialog-restoring");
+    }
+
+    function shapePickerFocusTarget() {
+        const original = state.shapePickerTrigger;
+        const symbol = original?.dataset.chordSymbol || state.shapePickerSymbol;
+        state.shapePickerTrigger = null;
+        return original?.isConnected
+            ? original
+            : Array.from(elements.shapeCards.querySelectorAll('[data-action="choose-shape"]')).find(function(control) {
+                return control.dataset.chordSymbol === symbol;
+            });
+    }
+
     function finalizeShapePickerClose() {
-        focusShapePickerTrigger();
-        restoreShapePickerScroll();
+        restoreDialogBackground(elements.shapePicker, shapePickerFocusTarget());
         state.shapePickerSymbol = null;
         state.shapePickerOptions = [];
         state.shapePickerPosition = "all";
@@ -750,7 +773,7 @@
         state.shapePickerClosing = false;
         resetShapePickerFilters();
         renderShapePicker();
-        lockShapePickerScroll();
+        lockDialogBackground(elements.shapePicker, state.shapePickerTrigger);
         elements.shapePicker.showModal();
         window.requestAnimationFrame(function() {
             try {
@@ -777,6 +800,7 @@
         state.song.artist = elements.artist.value.slice(0, 160);
         state.song.originalKey = Core.normalizeKey(elements.originalKey.value);
         state.song.targetKey = Core.normalizeKey(elements.targetKey.value, state.song.originalKey);
+        state.song.chordSpelling = Core.normalizeChordSpelling(elements.chordSpelling.value);
         state.song.capo = Math.max(0, Math.min(11, Number(elements.capo.value) || 0));
         state.song.bpm = elements.bpm.value ? Math.max(20, Math.min(320, Number(elements.bpm.value) || 20)) : null;
         state.song.timeSignature = /^\d{1,2}\/\d{1,2}$/.test(elements.timeSignature.value) ? elements.timeSignature.value : "4/4";
@@ -851,8 +875,9 @@
         elements.createKey.value = "C";
         elements.createSource.value = "";
         elements.createError.textContent = "";
+        lockDialogBackground(elements.createDialog, document.activeElement);
         elements.createDialog.showModal();
-        elements.createTitle.focus();
+        focusWithoutScroll(elements.createTitle);
     }
 
     async function createSongFromDialog() {
@@ -869,7 +894,8 @@
         }
         if (state.storageAvailable) await Storage.put(song);
         state.songs.unshift(song);
-        elements.createDialog.close();
+        elements.createDialog.close("created");
+        restoreDialogBackground(elements.createDialog, null);
         showEditor(song);
     }
 
@@ -882,39 +908,45 @@
         if (!line) return;
         state.lineContext = { sectionIndex, lineIndex };
         state.lineDraft = Core.createLine(line.text, line.chords, line.type, line.id);
-        state.selectedAnchor = 0;
+        state.selectedAnchorPosition = 0;
         state.editingAnchorId = null;
         elements.lineText.value = state.lineDraft.text;
         elements.anchorChord.value = "";
         elements.addAnchor.textContent = t("pages.songWorkspace.addChord", "Add Chord");
         elements.lineError.textContent = "";
         renderAnchorEditor();
+        lockDialogBackground(elements.lineDialog, document.activeElement);
         elements.lineDialog.showModal();
-        window.requestAnimationFrame(function() { elements.lineText.focus(); });
+        window.requestAnimationFrame(function() { focusWithoutScroll(elements.lineText); });
     }
 
     function renderAnchorEditor() {
-        const chars = Core.codePoints(elements.lineText.value);
+        const positions = Core.tokenizeLyric(elements.lineText.value).filter(function(token) { return token.meaningful; });
         elements.anchorPreview.replaceChildren();
-        const start = button(t("pages.songWorkspace.lineStart", "Start"), "choose-anchor");
-        start.dataset.anchor = "0";
-        start.classList.toggle("is-selected", state.selectedAnchor === 0);
-        start.setAttribute("aria-label", t("pages.songWorkspace.lineStart", "Start"));
-        elements.anchorPreview.appendChild(start);
-        chars.forEach(function(char, index) {
-            const isSpace = /\s/u.test(char);
-            const item = button(isSpace ? "\u00a0" : char, "choose-anchor");
-            item.dataset.anchor = String(index);
-            item.classList.toggle("is-selected", state.selectedAnchor === index);
-            item.setAttribute("aria-label", `${index + 1}: ${isSpace ? t("pages.songWorkspace.space", "space") : char}`);
+        const instrumentalCount = Math.max(
+            1,
+            ...state.lineDraft.chords.map(function(chord) { return chord.anchorPosition + 2; })
+        );
+        const availablePositions = positions.length
+            ? positions.map(function(token) { return token.text; })
+            : Array.from({ length: instrumentalCount }, function(_, index) {
+                return t("pages.songWorkspace.instrumentalPosition", "Position {{position}}", { position: index + 1 });
+            });
+        state.selectedAnchorPosition = Math.min(state.selectedAnchorPosition, availablePositions.length - 1);
+        availablePositions.forEach(function(label, index) {
+            const item = button(label, "choose-anchor");
+            item.dataset.anchorPosition = String(index);
+            item.classList.toggle("is-selected", state.selectedAnchorPosition === index);
+            item.setAttribute("aria-label", `${index + 1}: ${label}`);
             elements.anchorPreview.appendChild(item);
         });
-        elements.anchorPosition.max = String(chars.length);
-        elements.anchorPosition.value = String(Math.min(state.selectedAnchor, chars.length));
+        elements.anchorPosition.max = String(availablePositions.length);
+        elements.anchorPosition.value = String(state.selectedAnchorPosition + 1);
         elements.anchorList.replaceChildren();
-        state.lineDraft.chords.slice().sort((a, b) => a.anchor - b.anchor).forEach(function(chord) {
+        state.lineDraft.chords.slice().sort((a, b) => a.anchorPosition - b.anchorPosition).forEach(function(chord) {
             const row = node("div", "workspace-anchor-item");
-            row.appendChild(node("strong", "", `${chord.symbol} · ${chord.anchor}`));
+            const positionLabel = availablePositions[chord.anchorPosition] || String(chord.anchorPosition + 1);
+            row.appendChild(node("strong", "", `${chord.symbol} · ${chord.anchorPosition + 1}: ${positionLabel}`));
             const edit = button(t("pages.songWorkspace.edit", "Edit"), "edit-anchor", "workspace-button workspace-button-subtle workspace-button-compact");
             const move = button(t("pages.songWorkspace.move", "Move"), "move-anchor", "workspace-button workspace-button-subtle workspace-button-compact");
             const remove = button(t("pages.songWorkspace.delete", "Delete"), "delete-anchor", "workspace-button workspace-button-danger workspace-button-compact");
@@ -932,14 +964,15 @@
             elements.lineError.textContent = t("pages.songWorkspace.invalidChord", "Enter a supported chord symbol.");
             return;
         }
-        const length = Core.codePoints(elements.lineText.value).length;
-        const anchor = Math.max(0, Math.min(length, Number(elements.anchorPosition.value) || 0));
+        const positionCount = Core.meaningfulPositionCount(elements.lineText.value);
+        const requestedPosition = Math.max(0, (Number(elements.anchorPosition.value) || 1) - 1);
+        const anchorPosition = positionCount ? Math.min(positionCount - 1, requestedPosition) : requestedPosition;
         const editing = state.lineDraft.chords.find(chord => chord.id === state.editingAnchorId);
         if (editing) {
             editing.symbol = parsed.raw;
-            editing.anchor = anchor;
+            editing.anchorPosition = anchorPosition;
         } else {
-            state.lineDraft.chords.push(Core.createChord(parsed.raw, anchor));
+            state.lineDraft.chords.push(Core.createChord(parsed.raw, anchorPosition));
         }
         state.editingAnchorId = null;
         elements.anchorChord.value = "";
@@ -954,7 +987,20 @@
         const text = elements.lineText.value.slice(0, Core.LIMITS.MAX_LINE_LENGTH);
         const type = text ? "lyric" : "instrumental";
         state.song.sections[context.sectionIndex].lines[context.lineIndex] = Core.createLine(text, state.lineDraft.chords, type, state.lineDraft.id);
-        elements.lineDialog.close();
+        elements.lineDialog.close("saved");
+        restoreDialogBackground(elements.lineDialog, null);
+        scheduleSave();
+        renderEditor();
+    }
+
+    function deleteLineDraft() {
+        const context = state.lineContext;
+        if (!context) return;
+        state.song = Core.deleteLine(state.song, context.sectionIndex, context.lineIndex).song;
+        elements.lineDialog.close("deleted");
+        restoreDialogBackground(elements.lineDialog, null);
+        state.lineContext = null;
+        state.lineDraft = null;
         scheduleSave();
         renderEditor();
     }
@@ -1139,7 +1185,7 @@
             });
         });
         [elements.title, elements.artist, elements.bpm, elements.timeSignature].forEach(control => control.addEventListener("input", updateSongFromFields));
-        [elements.originalKey, elements.targetKey, elements.capo].forEach(control => control.addEventListener("change", updateSongFromFields));
+        [elements.originalKey, elements.targetKey, elements.capo, elements.chordSpelling].forEach(control => control.addEventListener("change", updateSongFromFields));
         document.querySelectorAll("[data-view-mode]").forEach(control => control.addEventListener("click", function() {
             state.viewMode = control.dataset.viewMode;
             state.preferences.viewMode = state.viewMode;
@@ -1300,13 +1346,14 @@
             try { await createSongFromDialog(); } catch (error) { elements.createError.textContent = error.message || t("pages.songWorkspace.importError", "We could not recognize this chart."); }
         });
         elements.lineText.addEventListener("input", function() { state.lineDraft.text = elements.lineText.value; renderAnchorEditor(); });
-        elements.anchorPosition.addEventListener("input", function() { state.selectedAnchor = Number(elements.anchorPosition.value) || 0; renderAnchorEditor(); });
+        elements.anchorPosition.addEventListener("input", function() { state.selectedAnchorPosition = Math.max(0, (Number(elements.anchorPosition.value) || 1) - 1); renderAnchorEditor(); });
         elements.anchorPreview.addEventListener("click", function(event) {
             const control = event.target.closest('[data-action="choose-anchor"]');
             if (!control) return;
-            state.selectedAnchor = Number(control.dataset.anchor); renderAnchorEditor();
+            state.selectedAnchorPosition = Number(control.dataset.anchorPosition); renderAnchorEditor();
         });
         $("addAnchorButton").addEventListener("click", addAnchor);
+        elements.deleteLine.addEventListener("click", deleteLineDraft);
         elements.anchorList.addEventListener("click", function(event) {
             const control = event.target.closest("[data-anchor-id]");
             if (!control) return;
@@ -1317,17 +1364,22 @@
                 if (state.editingAnchorId === chord.id) state.editingAnchorId = null;
             } else if (control.dataset.action === "edit-anchor") {
                 state.editingAnchorId = chord.id;
-                state.selectedAnchor = chord.anchor;
+                state.selectedAnchorPosition = chord.anchorPosition;
                 elements.anchorChord.value = chord.symbol;
                 elements.addAnchor.textContent = t("pages.songWorkspace.updateChord", "Update Chord");
             } else {
-                chord.anchor = state.selectedAnchor;
+                chord.anchorPosition = state.selectedAnchorPosition;
             }
             renderAnchorEditor();
         });
         elements.lineForm.addEventListener("submit", function(event) {
             if (event.submitter?.value !== "default") return;
             event.preventDefault(); saveLineDraft();
+        });
+        [elements.createDialog, elements.sectionDialog, elements.lineDialog].forEach(function(dialog) {
+            dialog.addEventListener("close", function() {
+                restoreDialogBackground(dialog, dialog.returnValue === "cancel" ? undefined : null);
+            });
         });
         $("importSongButton").addEventListener("click", () => elements.importInput.click());
         $("restoreSongsButton").addEventListener("click", () => elements.restoreInput.click());

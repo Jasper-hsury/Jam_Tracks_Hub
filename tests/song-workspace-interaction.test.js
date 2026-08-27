@@ -41,6 +41,25 @@ test("all four create and ChordPro entry paths share the hardened dialog", () =>
     assert.match(workspaceJs, /mode === "chordpro"[\s\S]*?importChordPro/);
 });
 
+test("Chord Spelling exposes theory and preserve-input modes with persisted song-level updates", () => {
+    assert.match(workspaceHtml, /id="chordSpellingSelect"[\s\S]*?value="theory"[\s\S]*?value="preserve"/);
+    assert.match(workspaceJs, /const KEYS = Core\.KEY_OPTIONS\.major\.concat\(Core\.KEY_OPTIONS\.minor\)/);
+    assert.match(workspaceJs, /state\.song\.chordSpelling = Core\.normalizeChordSpelling\(elements\.chordSpelling\.value\)/);
+    assert.match(workspaceJs, /\[elements\.originalKey, elements\.targetKey, elements\.capo, elements\.chordSpelling\]/);
+    assert.match(workspaceJs, /scheduleSave\(\);[\s\S]*?renderEditor\(\)/);
+});
+
+test("Edit Line offers a danger Delete Line action and meaningful positions without a Start token", () => {
+    const lineDialog = region('<form method="dialog" id="lineEditorForm">', "</form>");
+    assert.match(lineDialog, /class="[^"]*workspace-button-danger[^"]*"[^>]*id="deleteLineButton"[^>]*type="button"/);
+    assert.match(lineDialog, /id="anchorPositionInput"[^>]*min="1"[^>]*value="1"/);
+    assert.match(workspaceJs, /Core\.tokenizeLyric\(elements\.lineText\.value\)\.filter/);
+    assert.match(workspaceJs, /Core\.deleteLine\(state\.song, context\.sectionIndex, context\.lineIndex\)/);
+    assert.match(workspaceJs, /lineDialog\.close\("deleted"\)[\s\S]*?scheduleSave\(\)[\s\S]*?renderEditor\(\)/);
+    assert.doesNotMatch(workspaceJs, /pages\.songWorkspace\.lineStart/);
+    assert.doesNotMatch(workspaceJs, /Core\.codePoints\(elements\.lineText\.value\)/);
+});
+
 test("Performance Mode exposes BPM-based speed as a retained multiplier", () => {
     assert.match(workspaceHtml, /id="scrollSpeedInput"[^>]*min="0\.5"[^>]*max="2"[^>]*step="0\.25"[^>]*value="1"/);
     assert.match(workspaceHtml, /<output id="scrollSpeedValue"[^>]*>1\.0×<\/output>/);

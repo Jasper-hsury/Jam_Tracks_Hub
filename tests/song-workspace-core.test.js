@@ -10,7 +10,7 @@ function syntheticSong() {
         sections: [Core.createSection("Verse", "verse", [
             Core.createLine("測試中文歌詞，with spaces.", [
                 Core.createChord("G", 0),
-                Core.createChord("D/F#", 8)
+                Core.createChord("D/F#", 7)
             ], "lyric")
         ])]
     });
@@ -21,13 +21,19 @@ test("creates and validates a versioned Song Document", () => {
     const serialized = Core.serializeSong(song);
     const restored = Core.deserializeSong(serialized);
     assert.equal(restored.schema, "jamtrackshub-song");
-    assert.equal(restored.version, 1);
+    assert.equal(restored.version, 2);
+    assert.equal(restored.chordSpelling, Core.CHORD_SPELLING.THEORY);
     assert.equal(restored.sections[0].id, song.sections[0].id);
     assert.equal(restored.sections[0].lines[0].id, song.sections[0].lines[0].id);
-    assert.throws(() => Core.validateSong({ schema: "wrong", version: 1, sections: [] }));
-    assert.throws(() => Core.validateSong({ schema: Core.SCHEMA, version: 2, sections: [] }));
+    assert.throws(() => Core.validateSong({ schema: "wrong", version: 2, sections: [] }));
+    assert.throws(() => Core.validateSong({ schema: Core.SCHEMA, version: 1, sections: [] }), /version 2/);
     assert.throws(() => Core.deserializeSong("not-json"), /valid JSON/);
-    assert.throws(() => Core.deserializeSong(JSON.stringify({ schema: Core.SCHEMA, version: 2, sections: [] })), /version 1/);
+    assert.throws(() => Core.deserializeSong(JSON.stringify({ schema: Core.SCHEMA, version: 1, sections: [] })), /version 2/);
+    assert.throws(() => Core.validateSong({
+        schema: Core.SCHEMA,
+        version: 2,
+        sections: [{ title: "Old", type: "section", lines: [{ text: "Old data", type: "lyric", chords: [{ symbol: "C", anchor: 0 }] }] }]
+    }), /invalid chord positions/);
 });
 
 test("parses supported chord symbols and rejects malformed input", () => {
@@ -58,29 +64,67 @@ test("transposes roots, slash bass notes, and alterations", () => {
     assert.equal(Core.transposeChord("Eb/G", 2, "F"), "F/A");
 });
 
-test("keeps Unicode logical anchors stable across computed views", () => {
+test("separates canonical pitch identity from theory and preserve-input spelling", () => {
+    assert.equal(Core.parseChordSymbol("C#m").rootPitch, Core.parseChordSymbol("Dbm").rootPitch);
+    assert.ok(Core.KEY_OPTIONS.minor.includes("C#m"));
+    assert.ok(!Core.KEY_OPTIONS.minor.includes("Dbm"));
+
+    const theory = Core.createSong({
+        originalKey: "Dbm",
+        targetKey: "Dbm",
+        chordSpelling: "theory",
+        sections: [Core.createSection("Song", "section", [
+            Core.createLine("Synthetic line", [Core.createChord("Dbm", 0), Core.createChord("Dbm7", 1)], "lyric")
+        ])]
+    });
+    const theoryView = Core.songForTarget(theory, theory.targetKey);
+    assert.equal(theory.originalKey, "C#m");
+    assert.equal(theoryView.targetKey, "C#m");
+    assert.deepEqual(theoryView.sections[0].lines[0].chords.map(chord => chord.symbol), ["C#m", "C#m7"]);
+
+    const preservedSharp = Core.createSong({
+        originalKey: "C#m",
+        targetKey: "C#m",
+        chordSpelling: "preserve",
+        sections: [Core.createSection("Song", "section", [Core.createLine("Test", [Core.createChord("C#m", 0)], "lyric")])]
+    });
+    const preservedFlat = Core.createSong({
+        originalKey: "Db",
+        targetKey: "Db",
+        chordSpelling: "preserve",
+        sections: [Core.createSection("Song", "section", [Core.createLine("Test", [Core.createChord("Db", 0)], "lyric")])]
+    });
+    assert.equal(Core.songForTarget(preservedSharp, "C#m").sections[0].lines[0].chords[0].symbol, "C#m");
+    assert.equal(Core.songForTarget(preservedFlat, "Db").sections[0].lines[0].chords[0].symbol, "Db");
+    assert.equal(Core.transposeChord("C#/G#", 0, "C#", "preserve", true), "C#/G#");
+    assert.equal(Core.transposeChord("Db/Ab", 0, "Db", "preserve", true), "Db/Ab");
+    assert.equal(Core.parseChordSymbol("C#/G#").rootPitch, Core.parseChordSymbol("Db/Ab").rootPitch);
+    assert.equal(Core.parseChordSymbol("C#/G#").bassPitch, Core.parseChordSymbol("Db/Ab").bassPitch);
+});
+
+test("keeps meaningful anchor positions stable across computed views", () => {
     const source = syntheticSong();
-    const anchor = source.sections[0].lines[0].chords[1].anchor;
+    const anchorPosition = source.sections[0].lines[0].chords[1].anchorPosition;
     const transposed = Core.songForTarget(source, "A");
     const easy = Core.transformSongChords(source, symbol => Core.simplifyChord(symbol, "beginner"));
     const numbers = Core.transformSongChords(source, symbol => Core.chordNumber(symbol, "G", "roman"));
-    assert.equal(transposed.sections[0].lines[0].chords[1].anchor, anchor);
-    assert.equal(easy.sections[0].lines[0].chords[1].anchor, anchor);
-    assert.equal(numbers.sections[0].lines[0].chords[1].anchor, anchor);
+    assert.equal(transposed.sections[0].lines[0].chords[1].anchorPosition, anchorPosition);
+    assert.equal(easy.sections[0].lines[0].chords[1].anchorPosition, anchorPosition);
+    assert.equal(numbers.sections[0].lines[0].chords[1].anchorPosition, anchorPosition);
     assert.equal(Core.codePoints("中 A，B").length, 5);
 });
 
-test("keeps English spaces and punctuation anchored by logical characters", () => {
+test("keeps English spaces and punctuation outside the meaningful position index", () => {
     const source = Core.createSong({
         originalKey: "C",
         sections: [Core.createSection("Verse", "verse", [
-            Core.createLine("Slow dancing, in a room.", [Core.createChord("C", 0), Core.createChord("G/B", 14)], "lyric")
+            Core.createLine("Slow dancing, in a room.", [Core.createChord("C", 0), Core.createChord("G/B", 3)], "lyric")
         ])]
     });
-    const anchor = source.sections[0].lines[0].chords[1].anchor;
-    assert.equal(Core.songForTarget(source, "D").sections[0].lines[0].chords[1].anchor, anchor);
-    assert.equal(Core.transformSongChords(source, chord => Core.simplifyChord(chord, "beginner")).sections[0].lines[0].chords[1].anchor, anchor);
-    assert.equal(Core.transformSongChords(source, chord => Core.chordNumber(chord, "C", "nashville")).sections[0].lines[0].chords[1].anchor, anchor);
+    const anchorPosition = source.sections[0].lines[0].chords[1].anchorPosition;
+    assert.equal(Core.songForTarget(source, "D").sections[0].lines[0].chords[1].anchorPosition, anchorPosition);
+    assert.equal(Core.transformSongChords(source, chord => Core.simplifyChord(chord, "beginner")).sections[0].lines[0].chords[1].anchorPosition, anchorPosition);
+    assert.equal(Core.transformSongChords(source, chord => Core.chordNumber(chord, "C", "nashville")).sections[0].lines[0].chords[1].anchorPosition, anchorPosition);
 });
 
 test("tokenizes Chinese characters, English words, mixed text, and punctuation", () => {
@@ -89,23 +133,48 @@ test("tokenizes Chinese characters, English words, mixed text, and punctuation",
         ["故", "cjk"],
         ["事", "cjk"],
         [" ", "space"],
-        ["Slow-dancing", "word"],
-        ["，", "punctuation"],
+        ["Slow-dancing，", "word"],
         [" ", "space"],
-        ["now", "word"],
-        ["!", "punctuation"]
+        ["now!", "word"]
     ]);
-    assert.equal(Core.resolveAnchorToken("故事 Slow-dancing， now!", 3).text, "Slow-dancing");
-    assert.equal(Core.resolveAnchorToken("故事 Slow-dancing， now!", 15).text, "Slow-dancing");
-    assert.equal(Core.resolveAnchorToken("故事 Slow-dancing， now!", 16).text, "now");
+    assert.equal(Core.resolveAnchorToken("故事 Slow-dancing， now!", 2).text, "Slow-dancing，");
+    assert.equal(Core.resolveAnchorToken("故事 Slow-dancing， now!", 3).text, "now!");
+});
+
+test("uses direct meaningful positions for required English, Chinese, and mixed examples", () => {
+    const examples = new Map([
+        ["slow", 1],
+        ["slow dancing", 2],
+        ["s l o w", 4],
+        ["This is the deep and dying breath of", 8],
+        ["slow     dancing", 2],
+        ["slow, dancing", 2],
+        ["don't stop", 2],
+        ["burning-room", 1],
+        ["burn ing", 2],
+        ["故事", 2],
+        ["故事，開始了", 5],
+        ["你好 slow dancing", 4]
+    ]);
+    examples.forEach((expected, source) => assert.equal(Core.meaningfulPositionCount(source), expected, source));
+
+    const exact = "This is the deep and dying breath of";
+    assert.deepEqual(
+        Core.tokenizeLyric(exact).filter(token => token.meaningful).map(token => token.text),
+        ["This", "is", "the", "deep", "and", "dying", "breath", "of"]
+    );
+    const line = Core.createLine(exact, [Core.createChord("C#m7", 5)], "lyric");
+    assert.equal(line.chords[0].anchorPosition, 5);
+    assert.equal(Object.prototype.hasOwnProperty.call(line.chords[0], "anchor"), false);
+    assert.equal(Core.layoutLyricLine(line).tokens.find(token => token.chords.length).text, "dying");
 });
 
 test("lays out long adjacent chords above meaningful tokens without changing song data", () => {
     const line = Core.createLine("我想 sing now", [
         Core.createChord("C#m7b5", 0),
         Core.createChord("Bbmaj9", 1),
-        Core.createChord("A7(b13)", 3),
-        Core.createChord("G/B", 8)
+        Core.createChord("A7(b13)", 2),
+        Core.createChord("G/B", 3)
     ], "lyric", "line-long-chords");
     const snapshot = JSON.stringify(line);
     const layout = Core.layoutLyricLine(line);
@@ -123,7 +192,7 @@ test("lays out long adjacent chords above meaningful tokens without changing son
 });
 
 test("keeps token identity stable when chord labels change through transpose", () => {
-    const line = Core.createLine("Go home", [Core.createChord("G/B", 3)], "lyric", "line-transpose");
+    const line = Core.createLine("Go home", [Core.createChord("G/B", 1)], "lyric", "line-transpose");
     const sourceToken = Core.layoutLyricLine(line).tokens.find(token => token.chords.length);
     const song = Core.createSong({
         originalKey: "G",
@@ -134,14 +203,14 @@ test("keeps token identity stable when chord labels change through transpose", (
     const transposedToken = Core.layoutLyricLine(transposedLine).tokens.find(token => token.chords.length);
 
     assert.equal(transposedLine.chords[0].symbol, "A/C#");
-    assert.equal(transposedLine.chords[0].anchor, line.chords[0].anchor);
+    assert.equal(transposedLine.chords[0].anchorPosition, line.chords[0].anchorPosition);
     assert.equal(transposedToken.id, sourceToken.id);
     assert.equal(transposedToken.text, "home");
 });
 
 test("inserts a stable empty lyric line without rebuilding existing IDs or anchors", () => {
     const first = Core.createLine("First line", [Core.createChord("C", 0)], "lyric", "line-first");
-    const second = Core.createLine("Second line", [Core.createChord("G/B", 7)], "lyric", "line-second");
+    const second = Core.createLine("Second line", [Core.createChord("G/B", 1)], "lyric", "line-second");
     const song = Core.createSong({
         id: "song-insert-test",
         sections: [Core.createSection("Verse", "verse", [first, second], "section-insert-test")]
@@ -156,8 +225,8 @@ test("inserts a stable empty lyric line without rebuilding existing IDs or ancho
     assert.equal(result.song.sections[0].lines[2].id, "line-second");
     assert.notEqual(result.line.id, "line-first");
     assert.notEqual(result.line.id, "line-second");
-    assert.deepEqual(result.song.sections[0].lines[0].chords.map(chord => chord.anchor), [0]);
-    assert.deepEqual(result.song.sections[0].lines[2].chords.map(chord => chord.anchor), [7]);
+    assert.deepEqual(result.song.sections[0].lines[0].chords.map(chord => chord.anchorPosition), [0]);
+    assert.deepEqual(result.song.sections[0].lines[2].chords.map(chord => chord.anchorPosition), [1]);
     assert.equal(JSON.stringify(song), canonicalSnapshot);
 
     const beforeFirst = Core.insertLine(song, 0, 0);
@@ -170,10 +239,37 @@ test("inserts a stable empty lyric line without rebuilding existing IDs or ancho
     assert.equal(reloaded.sections[0].lines[1].text, "");
 });
 
+test("deletes only the selected line while preserving its section and stable sibling ids", () => {
+    const song = Core.createSong({
+        sections: [Core.createSection("Verse", "verse", [
+            Core.createLine("Line A", [Core.createChord("C", 0)], "lyric", "line-A"),
+            Core.createLine("Line B", [Core.createChord("G", 1)], "lyric", "line-B"),
+            Core.createLine("Line C", [Core.createChord("Am", 0)], "lyric", "line-C")
+        ], "section-stable")]
+    });
+    const result = Core.deleteLine(song, 0, 1);
+
+    assert.equal(result.line.id, "line-B");
+    assert.equal(result.line.chords.length, 1);
+    assert.equal(result.song.sections[0].id, "section-stable");
+    assert.deepEqual(result.song.sections[0].lines.map(line => line.id), ["line-A", "line-C"]);
+    assert.deepEqual(song.sections[0].lines.map(line => line.id), ["line-A", "line-B", "line-C"]);
+
+    const withoutLastLine = Core.deleteLine(Core.createSong({
+        sections: [Core.createSection("Empty stays", "section", [Core.createLine("Only", [], "lyric", "line-only")], "section-empty")]
+    }), 0, 0).song;
+    assert.equal(withoutLastLine.sections.length, 1);
+    assert.equal(withoutLastLine.sections[0].id, "section-empty");
+    assert.equal(withoutLastLine.sections[0].lines.length, 0);
+
+    const reloaded = Core.deserializeSong(Core.serializeSong(result.song));
+    assert.deepEqual(reloaded.sections[0].lines.map(line => line.id), ["line-A", "line-C"]);
+});
+
 test("inserts sections at lyric boundaries without rebuilding existing IDs or anchors", () => {
     const first = Core.createLine("First line", [Core.createChord("G", 0)], "lyric", "line-section-first");
-    const second = Core.createLine("Second line", [Core.createChord("D/F#", 7)], "lyric", "line-section-second");
-    const third = Core.createLine("Third line", [Core.createChord("Em", 3)], "lyric", "line-section-third");
+    const second = Core.createLine("Second line", [Core.createChord("D/F#", 1)], "lyric", "line-section-second");
+    const third = Core.createLine("Third line", [Core.createChord("Em", 1)], "lyric", "line-section-third");
     const outro = Core.createSection("Outro", "outro", [
         Core.createLine("Last line", [Core.createChord("C", 0)], "lyric", "line-outro")
     ], "section-outro");
@@ -193,7 +289,7 @@ test("inserts sections at lyric boundaries without rebuilding existing IDs or an
     assert.equal(result.song.sections[1].title, "Interlude");
     assert.deepEqual(result.song.sections[1].lines.map(line => line.id), ["line-section-third"]);
     assert.equal(result.song.sections[2].id, "section-outro");
-    assert.deepEqual(result.song.sections[1].lines[0].chords.map(chord => chord.anchor), [3]);
+    assert.deepEqual(result.song.sections[1].lines[0].chords.map(chord => chord.anchorPosition), [1]);
     assert.equal(JSON.stringify(song), snapshot);
 
     const atBeginning = Core.insertSectionAtBoundary(song, 0, 0, "Intro");
@@ -222,6 +318,9 @@ test("imports chord lines, lyric lines, sections, and chord-only bars", () => {
     const prose = Core.parseChordLyrics("Green apples grow here", { title: "Plain text" });
     assert.equal(prose.sections[0].lines[0].text, "Green apples grow here");
     assert.equal(prose.sections[0].lines[0].chords.length, 0);
+
+    const aligned = Core.parseChordLyrics("G       D\nThis is a test", { title: "Position mapping" });
+    assert.deepEqual(aligned.sections[0].lines[0].chords.map(chord => chord.anchorPosition), [0, 2]);
 });
 
 test("recognizes bounded leading metadata in pasted chord charts", () => {
@@ -256,6 +355,20 @@ test("roundtrips common ChordPro metadata and inline anchors", () => {
     const roundtrip = Core.parseChordPro(Core.toChordPro(imported));
     assert.equal(roundtrip.sections.at(-1).lines[0].text, "Synthetic line");
     assert.deepEqual(roundtrip.sections.at(-1).lines[0].chords.map(chord => chord.symbol), ["G", "D"]);
+});
+
+test("maps ChordPro inline markers directly to meaningful position indexes", () => {
+    const imported = Core.parseChordPro("[G]This is [D]a test");
+    const line = imported.sections[0].lines[0];
+    assert.equal(line.text, "This is a test");
+    assert.deepEqual(line.chords.map(chord => chord.anchorPosition), [0, 2]);
+    assert.deepEqual(
+        Core.layoutLyricLine(line).tokens.filter(token => token.chords.length).map(token => token.text),
+        ["This", "a"]
+    );
+    const roundtrip = Core.parseChordPro(Core.toChordPro(imported));
+    const roundtripLine = roundtrip.sections.flatMap(section => section.lines).find(item => item.text === "This is a test");
+    assert.deepEqual(roundtripLine.chords.map(chord => chord.anchorPosition), [0, 2]);
 });
 
 test("computes concert, capo, and shape-key relationships", () => {
@@ -301,8 +414,8 @@ test("renders degree labels on the original lyric anchors without mutating canon
 
     assert.deepEqual(romanLine.chords.map(chord => chord.symbol), ["ii7", "bVIIadd9", "I/III"]);
     assert.deepEqual(nashvilleLine.chords.map(chord => chord.symbol), ["2m7", "b7add9", "1/3"]);
-    assert.deepEqual(romanLine.chords.map(chord => chord.anchor), [0, 7, 12]);
-    assert.deepEqual(nashvilleLine.chords.map(chord => chord.anchor), [0, 7, 12]);
+    assert.deepEqual(romanLine.chords.map(chord => chord.anchorPosition), [0, 7, 12]);
+    assert.deepEqual(nashvilleLine.chords.map(chord => chord.anchorPosition), [0, 7, 12]);
     assert.deepEqual(
         Core.layoutLyricLine(romanLine).tokens.flatMap(token => token.chords.map(chord => chord.symbol)),
         ["ii7", "bVIIadd9", "I/III"]
@@ -392,7 +505,7 @@ test("keeps canonical lyrics, chords, and anchors immutable across display modes
     modes.forEach(function(song) {
         const line = song.sections[0].lines[0];
         assert.equal(line.text, source.sections[0].lines[0].text);
-        assert.deepEqual(line.chords.map(chord => chord.anchor), [0, 7, 10, 12]);
+        assert.deepEqual(line.chords.map(chord => chord.anchorPosition), [0, 7, 10, 12]);
     });
     assert.deepEqual(modes[3].sections[0].lines[0].chords.map(chord => chord.symbol), ["ii7", "bVIIadd9", "IV", "I/III"]);
     assert.deepEqual(modes[4].sections[0].lines[0].chords.map(chord => chord.symbol), ["2m7", "b7add9", "4", "1/3"]);

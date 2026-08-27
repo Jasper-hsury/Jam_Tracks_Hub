@@ -190,6 +190,13 @@
                     <strong id="shapeKeyValue">C</strong>
                 </div>
                 <label class="workspace-field">
+                    <span data-i18n="pages.songWorkspace.chordSpelling">Chord Spelling</span>
+                    <select id="chordSpellingSelect">
+                        <option value="theory" data-i18n="pages.songWorkspace.spellingTheory">Music Theory</option>
+                        <option value="preserve" data-i18n="pages.songWorkspace.spellingPreserve">Preserve Input</option>
+                    </select>
+                </label>
+                <label class="workspace-field">
                     <span>BPM</span>
                     <input id="bpmInput" type="number" min="20" max="320" inputmode="numeric">
                 </label>
@@ -360,13 +367,14 @@
                 </label>
                 <label class="workspace-field">
                     <span data-i18n="pages.songWorkspace.anchorPosition">Anchor position</span>
-                    <input id="anchorPositionInput" type="number" min="0" value="0" inputmode="numeric">
+                    <input id="anchorPositionInput" type="number" min="1" value="1" inputmode="numeric">
                 </label>
                 <button class="workspace-button workspace-button-secondary" id="addAnchorButton" type="button" data-i18n="pages.songWorkspace.addChord">Add Chord</button>
             </div>
             <div class="workspace-anchor-list" id="anchorList"></div>
             <p class="workspace-dialog-error" id="lineDialogError" role="alert"></p>
-            <div class="workspace-dialog-actions">
+            <div class="workspace-dialog-actions workspace-line-dialog-actions">
+                <button class="workspace-button workspace-button-danger" id="deleteLineButton" type="button" data-i18n="pages.songWorkspace.deleteLine">Delete Line</button>
                 <button class="workspace-button workspace-button-secondary" type="button" data-dialog-close data-i18n="common.cancel">Cancel</button>
                 <button class="workspace-button workspace-button-primary" value="default" type="submit" data-i18n="pages.songWorkspace.saveLine">Save Line</button>
             </div>

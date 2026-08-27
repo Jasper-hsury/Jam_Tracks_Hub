@@ -1034,12 +1034,12 @@ html[data-theme="default"] .workspace-chord-chip {
     -webkit-overflow-scrolling: touch;
 }
 
-html.workspace-shape-picker-open,
-body.workspace-shape-picker-open {
+html.workspace-dialog-open,
+body.workspace-dialog-open {
     overflow: hidden;
 }
 
-html.workspace-shape-picker-restoring {
+html.workspace-dialog-restoring {
     scroll-behavior: auto !important;
 }
 
@@ -1120,6 +1120,10 @@ html.workspace-shape-picker-restoring {
     margin-top: 20px;
 }
 
+.workspace-line-dialog-actions #deleteLineButton {
+    margin-right: auto;
+}
+
 .workspace-dialog-error {
     min-height: 20px;
     color: #c45f68;
@@ -1138,12 +1142,15 @@ html.workspace-shape-picker-restoring {
 }
 
 .workspace-anchor-preview button {
+    max-width: 100%;
     min-width: 30px;
     min-height: 34px;
     border: 0;
     border-radius: 3px;
     color: var(--workspace-text);
     background: var(--workspace-soft);
+    overflow-wrap: anywhere;
+    text-align: left;
     cursor: pointer;
 }
 
@@ -1396,6 +1403,11 @@ html.workspace-shape-picker-restoring {
     .performance-toolbar label {
         width: 100%;
         justify-content: center;
+    }
+
+    .workspace-line-dialog-actions #deleteLineButton {
+        width: 100%;
+        margin-right: 0;
     }
 }
 
