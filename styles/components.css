@@ -2829,6 +2829,27 @@ html:not([data-theme="light"]) .progression-group-label {
     margin: 0 0 15px;
 }
 
+.footer-legal-link {
+    color: var(--teal);
+    font-weight: 700;
+    text-underline-offset: 4px;
+}
+
+.footer-legal-link:hover {
+    color: var(--gold-light);
+}
+
+.footer-legal-link:focus-visible {
+    border-radius: 3px;
+    outline: 3px solid color-mix(in srgb, var(--teal) 60%, transparent);
+    outline-offset: 4px;
+}
+
+.footer-legal-separator {
+    padding-inline: 0.35em;
+    color: var(--muted);
+}
+
 .track-primary-action {
     min-height: 42px;
     padding-inline: 18px;

@@ -48,6 +48,7 @@
     "fretboardTrainer": "指板練習｜Jam Tracks Hub",
     "feedback": "意見回饋｜Jam Tracks Hub",
     "privacy": "隱私與使用者內容｜Jam Tracks Hub",
+    "legal": "法律與使用規範｜Jam Tracks Hub",
     "notFound": "找不到頁面｜Jam Tracks Hub"
   },
   "home": {
@@ -537,6 +538,7 @@
       "anchorPosition": "位置",
       "instrumentalPosition": "位置 {{position}}",
       "barNumber": "第 {{bar}} 小節",
+      "chordInputPlaceholder": "G、D/F#、Em7、Cmaj9……",
       "addChord": "新增和弦",
       "updateChord": "更新和弦",
       "edit": "編輯",
@@ -616,8 +618,29 @@
       "25": "特定使用方式是否受到允許，取決於內容與適用法律；僅在本機處理並不會使某項使用方式當然合法。"
     }
   },
+  "legal": {
+    "title": "法律與使用規範",
+    "effectiveDate": "生效日期：2026 年 8 月 27 日",
+    "intro": "本規範說明 Jam Tracks Hub 工具的預期使用方式，以及你提供內容時應注意的責任。",
+    "termsTitle": "使用條款",
+    "termsCopy": "請合法使用 Jam Tracks Hub，並避免干擾網站、服務或其他使用者。隨著專案發展，功能可能調整、受限或暫時無法使用。",
+    "workspaceTitle": "歌曲工作區與本機儲存",
+    "workspaceCopy": "歌曲工作區會在你的瀏覽器中處理歌曲名稱、演出者、歌詞、段落名稱、和弦、位置錨點、ChordPro 文字及 Jam Tracks Hub JSON。這些歌曲內容不會上傳至 Jam Tracks Hub。",
+    "storageCopy": "歌曲工作區不提供雲端備份或跨瀏覽器同步。清除瀏覽器或網站資料可能會移除本機歌曲；需要可攜式副本時，請使用「備份全部」或匯出功能。",
+    "copyrightTitle": "著作權與使用者提供的內容",
+    "copyrightCopy": "Jam Tracks Hub 提供工具，讓你處理自行提供的內容；歌曲工作區並非用來建立由 Jam Tracks Hub 託管的公開歌曲或歌詞資料庫。請只在具有必要權利或法律允許時匯入或使用內容。",
+    "lawCopy": "本機處理並不會使某項使用方式當然合法。特定使用是否受到允許，取決於內容、你取得的授權及適用法律。",
+    "exportTitle": "匯出與分享",
+    "exportCopy": "JSON、ChordPro、TXT、列印或 PDF 匯出可能保留你輸入的歌詞與其他內容。使用、再散布或分享匯出內容前，請確認自己具有該行為所需的權利或法律允許。",
+    "privacyTitle": "隱私與外部服務",
+    "privacyCopy": "歌曲工作區採本機優先，不代表整個網站完全不處理任何資料。調性分析等其他功能可能使用網路服務，網站也可能使用有限的營運分析與主機基礎設施。",
+    "privacyLink": "閱讀隱私與使用者內容",
+    "disclaimerTitle": "工具限制",
+    "disclaimerCopy": "樂理建議、移調、和弦與移調夾結果及調性分析均為實用輔助。結果可能不完整、並非完全無誤，也可能暫時無法使用；請自行判斷並核對重要成果。"
+  },
   "footer": {
-    "rights": "© 2026 Jam Tracks Hub。保留所有權利。"
+    "rights": "© 2026 Jam Tracks Hub。保留所有權利。",
+    "legal": "法律與使用規範"
   },
   "term": {
     "backingTracks": "即興伴奏",

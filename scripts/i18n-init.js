@@ -18,6 +18,7 @@
         "progression-writer.html": "titles.progressionWriter",
         "fretboard-trainer.html": "titles.fretboardTrainer",
         "privacy-policy.html": "titles.privacy",
+        "legal.html": "titles.legal",
         "404.html": "titles.notFound",
         "service-waking.html": "service.wakingAnalyzer"
     };

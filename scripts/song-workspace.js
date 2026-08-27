@@ -15,6 +15,7 @@
         song: null,
         viewMode: "original",
         storageAvailable: true,
+        saveState: "neutral",
         saveTimer: 0,
         lineContext: null,
         lineDraft: null,
@@ -158,6 +159,7 @@
             state.songs = [];
             setStatus(t("pages.songWorkspace.storageUnavailable", "Local saving is unavailable. Download a backup to keep your work."), true);
         }
+        setSaveState(state.storageAvailable ? "neutral" : "unavailable");
         renderLibrary();
     }
 
@@ -218,6 +220,7 @@
         elements.editor.hidden = true;
         elements.home.hidden = false;
         history.replaceState(null, "", "song-workspace.html");
+        setSaveState(state.storageAvailable ? "neutral" : "unavailable");
         renderLibrary();
     }
 
@@ -236,6 +239,7 @@
         state.preferences.lastSongId = state.song.id;
         Storage.writePreferences(state.preferences);
         history.replaceState(null, "", Core.songWorkspaceUrl(state.song.id));
+        setSaveState(state.storageAvailable ? "saved" : "unavailable");
         renderEditor();
     }
 
@@ -304,9 +308,10 @@
                 actions.append(rename, remove);
                 heading.appendChild(actions);
             }
-            const lines = node("div", "workspace-lines");
+            const instrumental = section.type === "instrumental";
+            const lines = node("div", `workspace-lines${instrumental ? " is-instrumental-grid" : ""}`);
             section.lines.forEach(function(line, lineIndex) {
-                if (editable) lines.appendChild(renderInsertControl(sectionIndex, lineIndex, section.type));
+                if (editable && !instrumental) lines.appendChild(renderInsertControl(sectionIndex, lineIndex, section.type));
                 lines.appendChild(renderLine(line, sectionIndex, lineIndex, editable));
             });
             if (editable) lines.appendChild(renderInsertControl(sectionIndex, section.lines.length, section.type));
@@ -491,14 +496,25 @@
                 ? t("pages.songWorkspace.editBarNumber", "Edit bar {{bar}}", { bar: lineIndex + 1 })
                 : t("pages.songWorkspace.editLine", "Edit line"));
         }
-        if (line.type === "instrumental" || !line.text) {
+        if (line.type === "instrumental") {
+            host.dataset.barNumber = String(lineIndex + 1);
             const row = node("div", "workspace-instrumental-line");
-            if (line.type === "instrumental") {
-                row.appendChild(node("span", "workspace-bar-label", t("pages.songWorkspace.barNumber", "Bar {{bar}}", { bar: lineIndex + 1 })));
+            const chords = node("div", "workspace-instrumental-chords");
+            line.chords.forEach(chord => chords.appendChild(node("span", "workspace-instrumental-chord", chord.symbol)));
+            if (!line.chords.length) {
+                const empty = node("span", "workspace-empty-bar", "—");
+                empty.setAttribute("aria-hidden", "true");
+                chords.appendChild(empty);
             }
-            line.chords.forEach(chord => row.appendChild(node("span", "", chord.symbol)));
-            if (!line.chords.length) row.appendChild(node("span", "", t("pages.songWorkspace.emptyLine", "Empty line")));
+            row.append(
+                chords,
+                node("span", "workspace-bar-label", t("pages.songWorkspace.barNumber", "Bar {{bar}}", { bar: lineIndex + 1 }))
+            );
             host.appendChild(row);
+            return host;
+        }
+        if (!line.text) {
+            host.appendChild(node("div", "workspace-empty-line", t("pages.songWorkspace.emptyLine", "Empty line")));
             return host;
         }
         const layout = Core.layoutLyricLine(line);
@@ -857,15 +873,27 @@
 
     function scheduleSave() {
         window.clearTimeout(state.saveTimer);
-        elements.autosave.textContent = t("pages.songWorkspace.saving", "Saving…");
+        setSaveState("saving");
         state.saveTimer = window.setTimeout(saveCurrentSong, 500);
+    }
+
+    function setSaveState(nextState) {
+        state.saveState = nextState;
+        elements.autosave.dataset.state = nextState;
+        const labels = {
+            neutral: t("pages.songWorkspace.savedLocally", "Saved locally"),
+            saving: t("pages.songWorkspace.saving", "Saving…"),
+            saved: `✓ ${t("pages.songWorkspace.savedOnDevice", "Saved in this browser")}`,
+            unavailable: t("pages.songWorkspace.storageUnavailableShort", "Local saving unavailable")
+        };
+        elements.autosave.textContent = labels[nextState] || labels.neutral;
     }
 
     async function saveCurrentSong() {
         if (!state.song) return;
         state.song.updatedAt = new Date().toISOString();
         if (!state.storageAvailable) {
-            elements.autosave.textContent = t("pages.songWorkspace.storageUnavailableShort", "Local saving unavailable");
+            setSaveState("unavailable");
             return;
         }
         try {
@@ -873,10 +901,10 @@
             const index = state.songs.findIndex(song => song.id === state.song.id);
             if (index >= 0) state.songs[index] = Core.createSong(state.song);
             else state.songs.unshift(Core.createSong(state.song));
-            elements.autosave.textContent = `✓ ${t("pages.songWorkspace.savedOnDevice", "Saved in this browser")}`;
+            setSaveState("saved");
         } catch (error) {
             state.storageAvailable = false;
-            elements.autosave.textContent = t("pages.songWorkspace.storageUnavailableShort", "Local saving unavailable");
+            setSaveState("unavailable");
             setStatus(t("pages.songWorkspace.storageUnavailable", "Local saving is unavailable. Download a backup to keep your work."), true);
         }
     }
@@ -1517,6 +1545,7 @@
             else if (event.key === "-") adjustFont(-0.1);
         });
         window.addEventListener("jasper:language-change", function() {
+            setSaveState(state.saveState);
             renderLibrary();
             if (state.song) renderEditor();
             if (elements.createDialog.open) {

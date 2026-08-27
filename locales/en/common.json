@@ -48,6 +48,7 @@
     "fretboardTrainer": "Fretboard Trainer | Jam Tracks Hub",
     "feedback": "Feedback | Jam Tracks Hub",
     "privacy": "Privacy & User Content | Jam Tracks Hub",
+    "legal": "Legal & Usage Policy | Jam Tracks Hub",
     "notFound": "Page Not Found | Jam Tracks Hub"
   },
   "home": {
@@ -537,6 +538,7 @@
       "anchorPosition": "Anchor position",
       "instrumentalPosition": "Position {{position}}",
       "barNumber": "Bar {{bar}}",
+      "chordInputPlaceholder": "G, D/F#, Em7, Cmaj9...",
       "addChord": "Add Chord",
       "updateChord": "Update Chord",
       "edit": "Edit",
@@ -616,8 +618,29 @@
       "25": "Whether a particular use is permitted depends on the content and applicable law; local processing alone does not make a use lawful."
     }
   },
+  "legal": {
+    "title": "Legal & Usage Policy",
+    "effectiveDate": "Effective date: August 27, 2026",
+    "intro": "These guidelines explain the intended use of Jam Tracks Hub tools and the responsibilities that come with content you provide.",
+    "termsTitle": "Terms of use",
+    "termsCopy": "Use Jam Tracks Hub lawfully and in a way that does not interfere with the site, its services, or other people. Features may change, be limited, or become unavailable as the project evolves.",
+    "workspaceTitle": "Song Workspace and local storage",
+    "workspaceCopy": "Song Workspace processes song titles, artists, lyrics, section names, chords, anchors, ChordPro text, and Jam Tracks Hub JSON locally in your browser. This song content is not uploaded to Jam Tracks Hub.",
+    "storageCopy": "Song Workspace does not provide cloud backup or browser-to-browser synchronization. Clearing browser or site data may remove locally stored songs; use Backup All or export when you need a portable copy.",
+    "copyrightTitle": "Copyright and user-provided content",
+    "copyrightCopy": "Jam Tracks Hub provides tools for working with content you provide; it is not intended to create a Jam Tracks Hub-hosted public song or lyrics library. Only import or use content when you have the necessary rights or legal permission.",
+    "lawCopy": "Local processing does not automatically make a use lawful. Whether a particular use is allowed depends on the content, your permissions, and applicable law.",
+    "exportTitle": "Exports and sharing",
+    "exportCopy": "JSON, ChordPro, TXT, Print, or PDF exports may preserve lyrics and other content you entered. Before using, redistributing, or sharing an export, make sure you have the rights or legal permission required for that action.",
+    "privacyTitle": "Privacy and external services",
+    "privacyCopy": "The local-first Song Workspace boundary does not mean the entire website collects no data. Other features, including Key Finder, may use network services, and the site may use limited operational analytics and hosting infrastructure.",
+    "privacyLink": "Read Privacy & User Content",
+    "disclaimerTitle": "Tool limitations",
+    "disclaimerCopy": "Music-theory suggestions, transpositions, chord and capo results, and key analysis are provided as practical aids. Results may not be complete, error-free, or available at all times; use your judgment and verify important work."
+  },
   "footer": {
-    "rights": "© 2026 Jam Tracks Hub. All rights reserved."
+    "rights": "© 2026 Jam Tracks Hub. All rights reserved.",
+    "legal": "Legal & Usage Policy"
   },
   "term": {
     "backingTracks": "Backing Tracks",

@@ -37,7 +37,7 @@ test("creates and validates a versioned Song Document", () => {
 });
 
 test("parses supported chord symbols and rejects malformed input", () => {
-    ["G", "Am", "Bb", "F#m7", "Cmaj7", "Bm7b5", "A7(b13)", "G/B", "C#sus4", "Ebadd9"].forEach(symbol => {
+    ["G", "Am", "Bb", "F#m7", "Cmaj7", "Cmaj9", "Bm7b5", "A7(b13)", "G/B", "C#sus4", "Ebadd9"].forEach(symbol => {
         assert.ok(Core.parseChordSymbol(symbol), symbol);
     });
     assert.deepEqual(Core.parseChordSymbol("A7(b13)").alterations, ["b13"]);
@@ -54,6 +54,7 @@ test("transposes roots, slash bass notes, and alterations", () => {
         ["G/B", 2, "A", "A/C#"],
         ["F#m7b5", 2, "G#", "G#m7b5"],
         ["Bbmaj7", 2, "C", "Cmaj7"],
+        ["Cmaj9", 2, "D", "Dmaj9"],
         ["A7(b13)", 2, "B", "B7(b13)"]
     ];
     examples.forEach(([symbol, amount, key, expected]) => {

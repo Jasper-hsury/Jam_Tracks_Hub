@@ -39,12 +39,12 @@ Song Workspace is a user-supplied-content practice and arrangement tool. It is n
 
 ## 3. Git Snapshot
 
-Repository truth before the Instrumental Section & Editor Cleanup round:
+Repository truth before the Final Song Workspace Layout, Legal & Integration Hardening round:
 
 ```text
 Branch: feat/song-workspace-v1
-HEAD: 868aa90d70d1b660260b1dcd71d294948afd9636
-origin/feat/song-workspace-v1: 868aa90d70d1b660260b1dcd71d294948afd9636
+HEAD: 171ce9c
+origin/feat/song-workspace-v1: 446a39b167b3b298eae7b22d3ddaa54cd7d7c52e
 main: 9b5ed9b
 origin/main: 9b5ed9b
 Feature branch vs origin/main: verify with Git before release work
@@ -317,7 +317,7 @@ Browser acceptance passed in the in-app Chromium browser at 1280, 1024, 768, and
 
 ## 17. Song Editing Model
 
-The editor renders insertion boundaries with a low-visual-weight `+ Add` control. It opens a non-modal menu with Add Line (contextually Add Bar inside an instrumental section), Add Section, and Add Instrumental Section. The menu prefers the trigger's right side, vertically centered, and falls back within the viewport; outside click, Escape, and selection dismiss it.
+The editor renders lyric insertion boundaries with a low-visual-weight `+ Add` control. Instrumental grids keep one full-width contextual `+ Add` control after the current bars so Add Bar appends in musical order without becoming an extra grid cell. The menu offers Add Line or contextual Add Bar, Add Section, and Add Instrumental Section. It prefers the trigger's right side, vertically centered, and falls back within the viewport; outside click, Escape, and selection dismiss it.
 
 - `insertLine` (`scripts/song-workspace-core.js:263`) inserts at beginning, middle, or end while retaining all existing IDs and anchors.
 - `insertSectionAtBoundary` (line 274) inserts relative to the selected boundary. At a boundary inside a section, trailing lines move into the new section; existing line/chord IDs remain stable.
@@ -569,6 +569,8 @@ In-app Chromium acceptance for this round also passed with synthetic-only conten
 
 Instrumental Section browser acceptance on 2026-08-27 passed at 1280×800, 1024×768, and 375×812 in English/zh-TW and light/dark themes. A synthetic Verse → Instrumental → Chorus workflow confirmed exact boundary insertion, the localized optional-name/default-4-bar modal, fixed-body lock, chord-only Edit Bar UI with no lyric/anchor/Move controls, multiple chord editing, contextual Add Bar, direct existing lyric-chord repositioning, Original/Balanced/Beginner/Roman/Nashville, transpose, Smart Capo, Chord Shapes, Performance Mode, four-format Download menu, autosave, and reload persistence. The local server observed only static GET/304 requests, while browser console inspection reported 0 new warnings and 0 new errors. Delete Bar/Delete Section behavior is covered by core/interaction regressions; the browser smoke verified the correctly localized destructive controls without deleting the synthetic browser fixture.
 
+Final layout/legal browser acceptance on 2026-08-27 reused only synthetic local content. A persisted 12-bar section rendered as 8+4 at 1280×800 and 1024×768 because its content container exceeded 760 px, and as 4+4+4 at 375×812; every viewport had zero page-level horizontal overflow, chord content remained above sequential localized Bar labels, and empty cells displayed `—`. Roman and Nashville retained the grid, Performance Mode used the same 4-column mobile layout, contextual Add Bar and Edit/Cancel remained usable, and autosave visibly changed Saving → saved in the sole Hero live region. `legal.html` passed English ↔ zh-TW switching, light/dark, semantic headings, one generated skip link, footer navigation, and zero horizontal overflow at all three viewport widths. A bounded shared i18n fix prevents an empty English preload object from leaving zh-TW text behind when switching back to English. Both inspected pages reported 0 new console warnings and 0 new console errors; the local server observed static GET/304 requests only.
+
 ## 32. Recent Relevant Commits
 
 | SHA | Message | Purpose |
@@ -687,6 +689,13 @@ Status: **RESOLVED** on 2026-08-27. All anchor Move/移動 controls, handler fal
 
 Status: **RESOLVED** on 2026-08-27. `+ Add` now includes Add Instrumental Section / 新增純和弦段落. Its shared-lock modal accepts an optional localized-default section name and 1–64 bars (default 4). It creates the existing section plus `instrumental` line model, inserts at the selected boundary with stable existing line/chord IDs, and exposes contextual Add/Edit/Save/Delete Bar flows without lyric fields or lyric anchors. Existing autosave, JSON/ChordPro/TXT/Print, transpose, Easy, Roman/Nashville, capo, shapes, hints bypass, and Performance rendering paths are reused.
 
+### Issue R — instrumental sections consume one full row per bar
+
+Status: **RESOLVED** on 2026-08-27. Instrumental sections now use a content-container grid with exactly four columns in narrow/medium layouts and eight in wide layouts. Each cell keeps one or multiple ordered chords above its localized presentation-only Bar number, empty bars use a subtle em dash, and middle-bar deletion preserves all sibling IDs while numbering closes the gap. Editable, Performance, and Print/PDF rendering share the grid contract; all chord-derived modes continue using the same canonical lines.
+
+### Issue S — duplicated autosave status and missing site-wide legal access
+
+Status: **RESOLVED** on 2026-08-27. The fourth Hero promise badge is now the sole polite live region for neutral, saving, saved, and unavailable states; the editor-topbar status and its spacing were removed. Standard page footers receive one shared localized link to bookmarkable `legal.html`, which contains bounded English/zh-TW terms, Song Workspace storage, copyright/user-content, export, external-service privacy, and tool-limitation sections. The copy contains no blanket liability or local-means-legal guarantee. Human legal review remains recommended before commercial-scale release.
 ### Documentation and release issues
 
 - README route table omits Song Workspace.
@@ -708,13 +717,14 @@ Status: **RESOLVED** on 2026-08-27. `+ Add` now includes Add Instrumental Sectio
 | Create/Import visible scrollbar | RESOLVED | `workspace-create-dialog`, CSS contract test, responsive browser acceptance | Scrollbar hidden across Firefox/WebKit rules while overflow, keyboard scrolling, and footer reachability remain. |
 | IndexedDB song persistence | DONE | `scripts/song-workspace-storage.js` | Browser-local only. |
 | Preference persistence | DONE | storage/app preference helpers | Includes hints and selected voicings. |
-| Autosave and reload | DONE | `scripts/song-workspace.js:681-701` | 500 ms debounce plus visibility flush. |
+| Autosave and reload / Hero status | RESOLVED | `setSaveState`, Hero promise badge, app persistence path, final-layout tests | One neutral/saving/saved/unavailable live region; former toolbar duplicate removed; 500 ms debounce plus visibility flush retained. |
 | Meaningful Position Anchor Model | RESOLVED | `tokenizeLyric`, `layoutLyricLine`, core/interaction tests | Chinese character + whitespace-separated English unit; no lyric Start or character-offset compatibility. |
 | Enharmonic Chord Spelling | RESOLVED | core spelling policy, key options, editor control, locale/interaction tests | Music Theory / Preserve Input, C#m regression, slash pitch identity, persisted per song. |
 | Edit Line Delete Line | RESOLVED | `deleteLine`, danger control, core/interaction tests | Selected line only, stable siblings/section, empty section allowed, autosave/reload. |
 | Old-format user notice removal | RESOLVED | `loadSongs`, locale cleanup, interaction regression | Unsupported records are skipped without warning, deletion, migration, or rewrite. |
 | Edit Line Move controls removal | RESOLVED | line editor/app/locales, interaction regression | Edit → Position → Update remains the direct lyric-chord reposition path. |
-| Instrumental / chord-only sections | RESOLVED | core insertion helper, app modal/editor, locales, core/interaction/export tests | Optional name, default 4 and bounded 1–64 bars, contextual Add/Edit/Delete Bar, no lyric anchors, stable IDs and existing derived/export paths. |
+| Instrumental / chord-only sections | RESOLVED | core insertion helper, app grid renderer/CSS, locales, core/interaction/final-layout/export tests | Optional name, bounded 1–64 bars, 4/8-column content-first grid, subtle empty cells, contextual Add/Edit/Delete Bar, stable IDs and existing derived/export paths. |
+| Cmaj9 chord input hint and support | RESOLVED | localized placeholder, core/chord-shape/final-layout tests | Parser, transpose, Roman/Nashville, renderer, and voicing lookup remain valid. |
 | Natural lyric spacing / separate chord layer | DONE | core renderer, `styles/song-workspace.css`, style tests | No chord-width spacing in lyrics. |
 | Exactly one chord row per lyric line | RESOLVED | `fitSingleRowChordAnnotations`, `layoutChordTracks`, core/style regressions | No production row metadata or collision-to-next-row path remains. |
 | No arrows/connectors | DONE | current renderer/styles | Preserve. |
@@ -741,6 +751,7 @@ Status: **RESOLVED** on 2026-08-27. `+ Add` now includes Add Instrumental Sectio
 | Share Arrangement | NOT IMPLEMENTED | No share schema/route/API | Future-only boundary. |
 | Public searchable song library | N/A | Product boundary | Must not be built without new review. |
 | Copyright/local-only user-facing wording | RESOLVED | Workspace UI, locale files, `privacy-policy.html`, disclosure tests, responsive browser acceptance | Browser-local scope, import rights, storage-loss, export content, and no false legal guarantee are covered. |
+| Footer Legal & Usage Policy | RESOLVED | shared i18n footer annotation, `legal.html`, locale files, build/final-layout tests | Terms, local storage, copyright/user content, export, external services, and bounded disclaimer; human legal review recommended before commercial-scale release. |
 | Analytics/error payload privacy audit | RESOLVED | `song-workspace.html`, core/app URL and import hardening, `tests/song-workspace-observability.test.js`, static inventory, synthetic browser canaries | Workspace has no analytics/third-party executable script, custom event, remote logger, raw-input console path, or song transport; site-wide Umami remains elsewhere. |
 | Anti-abuse review | PENDING RELEASE | Confirmed gate | Cloudflare/CDN/API/WAF/rate limits. |
 | macOS Safari shape-picker zero-jump acceptance | PASS | Product-owner manual acceptance | No visible jump reported. |
@@ -773,6 +784,9 @@ Bounded future work, clearly outside current implementation:
 - **RESOLVED**: remove the development-only old-format warning while retaining non-destructive unsupported-record skipping.
 - **RESOLVED**: remove redundant Edit Line Move controls while retaining direct existing-chord position editing.
 - **RESOLVED**: bounded Add Instrumental Section with the existing chord-only line model, contextual bar editing/deletion, stable insertion, autosave, derived modes, performance, and exports.
+- **RESOLVED**: instrumental sections use a responsive four/eight-column horizontal bar grid in editor, Performance, and Print, while retaining ordered chords and stable persistent IDs.
+- **RESOLVED**: localized `Cmaj9` chord-input hint is backed by parser, transpose, numeral, renderer, and shared voicing regression evidence.
+- **RESOLVED**: the sole autosave live region occupies the Hero promise row, and a shared localized footer link exposes the bookmarkable bounded Legal & Usage Policy.
 - **RESOLVED**: Song Document V2 direct meaningful positions; no persistent character offset or legacy compatibility layer.
 - **PENDING RELEASE**: add `npm test` to remote CI after confirming runtime expectations.
 - **RESOLVED**: single-row annotation fitting, rendering, regressions, and Chromium responsive acceptance completed on 2026-08-27.
@@ -834,6 +848,7 @@ All categories require explicit review before release:
 - Prove lyrics and raw song content remain local.
 - Preserve the resolved analytics/error-log no-song-content-egress contract and its canary regressions.
 - Local-storage, rights-to-import, export, and user-content wording is implemented and regression-tested.
+- Footer Legal & Usage Policy access and both localized copies pass accessibility/responsive review; obtain appropriate human legal review before commercial-scale publication.
 - Confirm no 91PU or third-party copyrighted content acquisition/fixtures.
 
 **Security and abuse**

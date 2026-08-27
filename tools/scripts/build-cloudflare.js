@@ -16,6 +16,7 @@ const rootFiles = [
   "googlec8a4768d207b3044.html",
   "index.html",
   "key-finder.html",
+  "legal.html",
   "privacy-policy.html",
   "progression-writer.html",
   "scale.html",

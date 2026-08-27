@@ -65,6 +65,14 @@ html[data-theme="default"] {
     font-weight: 700;
 }
 
+.workspace-save-state[data-state="saving"] {
+    color: var(--workspace-muted);
+}
+
+.workspace-save-state[data-state="unavailable"] {
+    border-style: dashed;
+}
+
 .song-workspace-status {
     min-height: 24px;
     margin-bottom: 10px;
@@ -782,6 +790,10 @@ html[data-theme="default"] {
     padding-top: 18px;
 }
 
+.workspace-section.is-instrumental {
+    container-type: inline-size;
+}
+
 .workspace-section:first-child {
     border-top: 0;
     padding-top: 0;
@@ -813,6 +825,21 @@ html[data-theme="default"] {
     display: grid;
     min-width: 0;
     gap: 0;
+}
+
+.workspace-lines.is-instrumental-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.workspace-lines.is-instrumental-grid > .workspace-add-control {
+    grid-column: 1 / -1;
+}
+
+@container (min-width: 760px) {
+    .workspace-lines.is-instrumental-grid {
+        grid-template-columns: repeat(8, minmax(0, 1fr));
+    }
 }
 
 .workspace-line {
@@ -901,24 +928,58 @@ html[data-theme="default"] .workspace-chord-chip {
     margin-bottom: 5px;
 }
 
-.workspace-instrumental-line {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+.workspace-line.is-instrumental {
+    min-height: 92px;
+    border: 1px solid var(--workspace-line);
+    padding: 0;
+    overflow: hidden;
+    background: color-mix(in srgb, var(--workspace-soft) 48%, transparent);
 }
 
-.workspace-instrumental-line span {
-    min-width: 52px;
-    border-left: 2px solid var(--workspace-line);
-    padding: 5px 12px;
-    font-weight: 800;
+.workspace-instrumental-line {
+    display: grid;
+    grid-template-rows: minmax(52px, 1fr) auto;
+    min-width: 0;
+    min-height: 90px;
+}
+
+.workspace-instrumental-chords {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    flex-wrap: wrap;
+    min-width: 0;
+    gap: 4px 7px;
+    padding: 10px 5px 7px;
+}
+
+.workspace-instrumental-chord {
+    max-width: 100%;
+    color: #8b5e39;
+    font-weight: 850;
+    overflow-wrap: anywhere;
+}
+
+html[data-theme="default"] .workspace-instrumental-chord {
+    color: #f0d5a9;
+}
+
+.workspace-empty-bar {
+    color: var(--workspace-muted);
+    font-weight: 700;
 }
 
 .workspace-instrumental-line .workspace-bar-label {
-    min-width: 68px;
+    display: block;
+    min-width: 0;
+    border-top: 1px solid var(--workspace-line);
+    padding: 5px 3px 6px;
     color: var(--workspace-muted);
     font-size: 0.78rem;
     font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
     text-transform: uppercase;
 }
 
@@ -1458,6 +1519,17 @@ html.workspace-dialog-restoring {
 
     .workspace-line {
         color: #111;
+    }
+
+    .workspace-lines.is-instrumental-grid {
+        grid-template-columns: repeat(8, minmax(0, 1fr));
+        gap: 5px;
+    }
+
+    .workspace-line.is-instrumental {
+        min-height: 78px;
+        break-inside: avoid;
+        background: #fff;
     }
 }
 

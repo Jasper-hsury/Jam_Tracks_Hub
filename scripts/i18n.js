@@ -68,7 +68,12 @@
     async function loadResources(language) {
         if (preload.language === language && preload.resources) {
             const resources = preload.resources;
-            if (language === DEFAULT_LANGUAGE || resources.selected || resources.fallback) {
+            const hasPreloadedResources = Boolean(
+                resources.selected ||
+                resources.fallback ||
+                Object.keys(resources).length
+            );
+            if (hasPreloadedResources) {
                 return resources.selected || resources.fallback ? resources : resources;
             }
         }
@@ -267,8 +272,25 @@
         }
 
         document.querySelectorAll(".footer > p").forEach(function(paragraph) {
-            if (paragraph.textContent.includes("Jam Tracks Hub") && paragraph.textContent.includes("All rights reserved")) {
-                paragraph.dataset.i18n = "footer.rights";
+            if (
+                paragraph.textContent.includes("Jam Tracks Hub") &&
+                paragraph.textContent.includes("All rights reserved") &&
+                !paragraph.querySelector(".footer-legal-link")
+            ) {
+                paragraph.removeAttribute("data-i18n");
+                const rights = document.createElement("span");
+                rights.dataset.i18n = "footer.rights";
+                rights.textContent = paragraph.textContent.trim();
+                const separator = document.createElement("span");
+                separator.className = "footer-legal-separator";
+                separator.setAttribute("aria-hidden", "true");
+                separator.textContent = " · ";
+                const legalLink = document.createElement("a");
+                legalLink.className = "footer-legal-link";
+                legalLink.href = "legal.html";
+                legalLink.dataset.i18n = "footer.legal";
+                legalLink.textContent = "Legal & Usage Policy";
+                paragraph.replaceChildren(rights, separator, legalLink);
             }
         });
     }

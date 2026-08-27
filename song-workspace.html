@@ -19,7 +19,7 @@
     <script src="scripts/i18n-init.js?v=20260826-song-workspace"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles/base.css?v=20260826-song-workspace">
-    <link rel="stylesheet" href="styles/components.css?v=20260826-song-workspace">
+    <link rel="stylesheet" href="styles/components.css?v=20260827-legal-footer">
     <link rel="stylesheet" href="styles/pages.css?v=20260826-song-workspace">
     <link rel="stylesheet" href="styles/themes.css?v=20260826-song-workspace">
     <link rel="stylesheet" href="styles/chord-dictionary.css?v=20260826-workspace-hardening">
@@ -51,7 +51,7 @@
                 <span data-i18n="pages.songWorkspace.free">Free</span>
                 <span data-i18n="pages.songWorkspace.unlimited">Unlimited</span>
                 <span data-i18n="pages.songWorkspace.noLogin">No login required</span>
-                <span data-i18n="pages.songWorkspace.savedLocally">Saved locally</span>
+                <span class="workspace-save-state" id="autosaveState" role="status" aria-live="polite" aria-atomic="true" data-state="neutral" data-i18n="pages.songWorkspace.savedLocally">Saved locally</span>
             </div>
         </header>
 
@@ -150,7 +150,6 @@
         <section id="workspaceEditorView" class="workspace-view workspace-editor" hidden>
             <div class="workspace-editor-topbar">
                 <button class="workspace-button workspace-button-secondary" id="backToSongsButton" type="button" data-i18n="pages.songWorkspace.backToSongs">Back to My Songs</button>
-                <div class="workspace-save-state" id="autosaveState" role="status" aria-live="polite" data-i18n="pages.songWorkspace.savedOnDevice">Saved in this browser</div>
                 <div class="workspace-editor-actions">
                     <button class="workspace-button workspace-button-secondary" id="downloadMenuButton" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="downloadMenu" aria-describedby="exportDisclosure" data-i18n="pages.songWorkspace.download">Download</button>
                     <button class="workspace-button workspace-button-primary" id="performanceButton" type="button" data-i18n="pages.songWorkspace.performance">Performance Mode</button>
@@ -391,7 +390,7 @@
             <div class="workspace-anchor-controls">
                 <label class="workspace-field">
                     <span data-i18n="pages.songWorkspace.chordSymbol">Chord symbol</span>
-                    <input id="anchorChordInput" type="text" maxlength="40" placeholder="G, D/F#, Em7...">
+                    <input id="anchorChordInput" type="text" maxlength="40" placeholder="G, D/F#, Em7, Cmaj9..." data-i18n-placeholder="pages.songWorkspace.chordInputPlaceholder">
                 </label>
                 <label class="workspace-field" id="anchorPositionField">
                     <span data-i18n="pages.songWorkspace.anchorPosition">Anchor position</span>
@@ -443,7 +442,7 @@
     <button id="backToTopBtn" type="button" aria-label="Back to top" data-i18n-aria-label="common.backToTop">&uarr;</button>
 
     <script src="scripts/site.js?v=20260826-song-workspace"></script>
-    <script src="scripts/i18n.js?v=20260826-song-workspace"></script>
+    <script src="scripts/i18n.js?v=20260827-legal-footer"></script>
     <script src="scripts/chord-shapes.js?v=20260827-picker-json-fix"></script>
     <script src="scripts/song-workspace-core.js?v=20260827-picker-json-fix"></script>
     <script src="scripts/song-workspace-storage.js?v=20260826-song-workspace"></script>
