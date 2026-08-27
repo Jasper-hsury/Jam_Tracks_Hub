@@ -46,6 +46,7 @@
         createDialog: $("createSongDialog"), createForm: $("createSongForm"), createMode: $("createModeLabel"),
         createTitle: $("createTitleInput"), createArtist: $("createArtistInput"), createKey: $("createKeySelect"),
         createSource: $("createSourceInput"), createSourceLabel: $("createSourceLabel"), createError: $("createDialogError"),
+        createLocalDisclosure: $("createLocalDisclosure"),
         confirmCreate: $("confirmCreateButton"),
         lineDialog: $("lineEditorDialog"), lineForm: $("lineEditorForm"), lineText: $("lineTextInput"),
         anchorPreview: $("anchorPreview"), anchorChord: $("anchorChordInput"), anchorPosition: $("anchorPositionInput"),
@@ -731,7 +732,7 @@
             const index = state.songs.findIndex(song => song.id === state.song.id);
             if (index >= 0) state.songs[index] = Core.createSong(state.song);
             else state.songs.unshift(Core.createSong(state.song));
-            elements.autosave.textContent = `✓ ${t("pages.songWorkspace.savedOnDevice", "Saved on this device")}`;
+            elements.autosave.textContent = `✓ ${t("pages.songWorkspace.savedOnDevice", "Saved in this browser")}`;
         } catch (error) {
             state.storageAvailable = false;
             elements.autosave.textContent = t("pages.songWorkspace.storageUnavailableShort", "Local saving unavailable");
@@ -749,11 +750,28 @@
         return copies[mode] || copies["chords-lyrics"];
     }
 
+    function creationDisclosure(mode) {
+        if (mode === "chordpro") {
+            return t(
+                "pages.songWorkspace.chordProLocalDisclosure",
+                "ChordPro content is parsed in this browser and is not uploaded to Jam Tracks Hub."
+            );
+        }
+        if (mode === "chords") {
+            return t("pages.songWorkspace.songDataLocalDisclosure", "This song data is stored in this browser.");
+        }
+        return t(
+            "pages.songWorkspace.pastedContentLocalDisclosure",
+            "The song content you paste is processed and stored locally in this browser."
+        );
+    }
+
     function openCreateDialog(mode) {
         const copy = creationCopy(mode);
         elements.createForm.dataset.mode = mode;
         elements.createMode.textContent = copy[0];
         elements.createSourceLabel.textContent = copy[1];
+        elements.createLocalDisclosure.textContent = creationDisclosure(mode);
         elements.confirmCreate.textContent = mode === "chordpro"
             ? t("pages.songWorkspace.importChordPro", "Import ChordPro")
             : t("pages.songWorkspace.create", "Create");
@@ -1255,6 +1273,7 @@
                 const copy = creationCopy(elements.createForm.dataset.mode);
                 elements.createMode.textContent = copy[0];
                 elements.createSourceLabel.textContent = copy[1];
+                elements.createLocalDisclosure.textContent = creationDisclosure(elements.createForm.dataset.mode);
                 elements.confirmCreate.textContent = elements.createForm.dataset.mode === "chordpro"
                     ? t("pages.songWorkspace.importChordPro", "Import ChordPro")
                     : t("pages.songWorkspace.create", "Create");

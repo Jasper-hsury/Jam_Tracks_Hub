@@ -47,7 +47,7 @@
     "progressionWriter": "Write Your Own Progression | Jam Tracks Hub",
     "fretboardTrainer": "Fretboard Trainer | Jam Tracks Hub",
     "feedback": "Feedback | Jam Tracks Hub",
-    "privacy": "Privacy Policy | Jam Tracks Hub",
+    "privacy": "Privacy & User Content | Jam Tracks Hub",
     "notFound": "Page Not Found | Jam Tracks Hub"
   },
   "home": {
@@ -417,7 +417,7 @@
       "title": "Song Workspace",
       "eyebrow": "Local-first songbook • no login • private by design",
       "tagline": "Shape the chart. Keep the song yours.",
-      "intro": "Create chord and lyric charts, transpose them, find comfortable capo positions, and keep every song on this device.",
+      "intro": "Create chord and lyric charts, transpose them, find comfortable capo positions, and keep every song in this browser.",
       "benefitsLabel": "Workspace benefits",
       "free": "Free",
       "unlimited": "Unlimited",
@@ -445,15 +445,24 @@
       "chordProHelp": "ChordPro uses markers such as [G] and [Am7] to place chords directly before lyric positions.",
       "jthJson": "Jam Tracks Hub JSON",
       "jthJsonCopy": "Restore a single song project previously exported from Jam Tracks Hub.",
+      "jthJsonLocalDisclosure": "Imported projects are stored in this browser.",
       "importJthJson": "Import Jam Tracks Hub JSON",
-      "onThisDevice": "On this device",
+      "onThisDevice": "In this browser",
       "mySongs": "My Songs",
       "emptyTitle": "Your local songbook is ready.",
       "emptyCopy": "Choose one of the three creation methods above. Imported and saved songs stay in this browser.",
-      "localPrivacy": "Your songs are stored locally in this browser and are not uploaded to Jam Tracks Hub.",
+      "localDisclosureTitle": "Stored locally in this browser",
+      "localPrivacy": "Your song content is stored locally in this browser and is not uploaded to Jam Tracks Hub.",
+      "rightsImport": "Only import content you have the right or legal permission to use.",
+      "pastedContentLocalDisclosure": "The song content you paste is processed and stored locally in this browser.",
+      "songDataLocalDisclosure": "This song data is stored in this browser.",
+      "chordProLocalDisclosure": "ChordPro content is parsed in this browser and is not uploaded to Jam Tracks Hub.",
+      "exportDisclosure": "Exported files may contain lyrics or other content you entered. Use or share them only where you have the necessary rights or legal permission.",
+      "privacyUserContentLink": "Privacy & user content",
+      "localStorageReminder": "Local storage reminder",
       "localWarning": "Clearing browser/site data may remove locally saved songs. Use Backup All to keep a portable copy.",
       "backToSongs": "Back to My Songs",
-      "savedOnDevice": "Saved on this device",
+      "savedOnDevice": "Saved in this browser",
       "saving": "Saving…",
       "storageUnavailable": "Local saving is unavailable. Download a backup to keep your work.",
       "storageUnavailableShort": "Local saving unavailable",
@@ -542,8 +551,8 @@
     "openKeyFinder": "Open Key Finder"
   },
   "privacy": {
-    "title": "Jam Tracks Hub Song Key Finder Privacy Policy",
-    "effectiveDate": "Effective date: June 23, 2026",
+    "title": "Jam Tracks Hub Privacy & User Content",
+    "effectiveDate": "Effective date: August 27, 2026",
     "body": {
       "01": "What the extension does",
       "02": "Jam Tracks Hub Song Key Finder estimates the musical key of an audio file or a YouTube video selected by the user.",
@@ -561,7 +570,15 @@
       "14": "Your choices",
       "15": "You may use file upload or YouTube analysis only when you choose to do so. You can clear locally stored analysis history at any time or uninstall the extension to remove its local data.",
       "16": "Contact",
-      "17": "For privacy questions, contact the developer through the support contact shown on the Chrome Web Store listing."
+      "17": "For privacy questions, contact the developer through the support contact shown on the Chrome Web Store listing.",
+      "18": "Song Workspace and local storage",
+      "19": "Song Workspace processes song titles, lyrics, chords, ChordPro text, and Jam Tracks Hub Song Documents locally in your browser. This song content is not uploaded to Jam Tracks Hub.",
+      "20": "Song Workspace does not provide cloud song storage or browser-to-browser synchronization. Clearing browser or site data may remove locally stored songs, so use Backup All or export files when you need a portable copy.",
+      "21": "Exported files may contain lyrics or other content you entered. Use or share them only where you have the necessary rights or legal permission.",
+      "22": "User-provided content and copyright",
+      "23": "Jam Tracks Hub provides tools for users to work with content they provide. Song Workspace is not intended to create a Jam Tracks Hub-hosted lyrics library.",
+      "24": "Users are responsible for ensuring they have the rights or legal permission necessary for content they import, use, export, or share.",
+      "25": "Whether a particular use is permitted depends on the content and applicable law; local processing alone does not make a use lawful."
     }
   },
   "footer": {

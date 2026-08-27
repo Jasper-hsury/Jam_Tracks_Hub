@@ -64,5 +64,5 @@ test("button semantics reuse shared site tokens and cover interaction states", (
 
 test("local-first song modules contain no song-content network transport", () => {
     const source = [workspaceJs, workspaceCore, workspaceStorage].join("\n");
-    assert.doesNotMatch(source, /\bfetch\s*\(|XMLHttpRequest|sendBeacon|new\s+WebSocket/);
+    assert.doesNotMatch(source, /\bfetch\s*\(|XMLHttpRequest|sendBeacon|new\s+WebSocket|FormData|\.post\s*\(/);
 });

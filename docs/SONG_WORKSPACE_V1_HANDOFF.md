@@ -39,21 +39,21 @@ Song Workspace is a user-supplied-content practice and arrangement tool. It is n
 
 ## 3. Git Snapshot
 
-Repository truth before the current Interaction, Performance, and Button Style hardening:
+Repository truth before the current Copyright / Local-First Disclosure hardening:
 
 ```text
 Branch: feat/song-workspace-v1
-HEAD: e02140e935da28d9ee9bdf98ea97c0c4754d8d31
-origin/feat/song-workspace-v1: e02140e935da28d9ee9bdf98ea97c0c4754d8d31
+HEAD: 08472d0711f43b3f7702d92a3bfb47b1fb7eccbf
+origin/feat/song-workspace-v1: 08472d0711f43b3f7702d92a3bfb47b1fb7eccbf
 main: 9b5ed9b
 origin/main: 9b5ed9b
-Feature branch vs origin/main: 8 ahead, 0 behind
+Feature branch vs origin/main: 9 ahead, 0 behind
 Origin fetch/push: git@github.com:Passerby-WB/Jam_Tracks_Hub.git
 ```
 
 The product history reports that GitHub has advertised a newer location, `git@github.com:Jasper-hsury/Jam_Tracks_Hub.git`. The current remote still uses the old URL, so remote URL normalization is **PENDING**. Do not change the remote during unrelated work; confirm the canonical owner and URL first.
 
-Before the current interaction/performance/style hardening, there were no tracked modifications and only the two approved untracked exceptions in section 4. There were no uncommitted Song Workspace production changes.
+Before the current disclosure hardening, there were no tracked modifications and only the two approved untracked exceptions in section 4. There were no uncommitted Song Workspace production changes.
 
 ## 4. Approved Working-Tree Exceptions
 
@@ -179,10 +179,12 @@ Repository evidence:
 
 - `scripts/song-workspace-storage.js:12-14` defines the IndexedDB database/store.
 - Song CRUD runs against IndexedDB; lightweight presentation preferences use localStorage.
-- `song-workspace.html:109-113` tells users that songs stay in the browser and can be lost if site data is cleared.
-- `scripts/song-workspace.js` contains no `fetch`, `sendBeacon`, XHR, or Worker API call for song content.
+- `song-workspace.html` tells users that song content stays in the current browser, is not uploaded to Jam Tracks Hub, and can be lost if browser/site data is cleared.
+- `scripts/song-workspace.js` and `scripts/song-workspace-storage.js` contain no `fetch`, `sendBeacon`, XHR, WebSocket, FormData, POST, or Worker API path for song content.
 
 V1 has no user-song database, account requirement, or cloud synchronization. Analytics and error reporting must never receive lyrics, raw pasted content, raw ChordPro, Song JSON, or user notes. Any future telemetry must be event-only (for example `song_workspace_opened`, `transpose_used`, or `capo_used`) with content-free metadata.
+
+The 2026-08-27 disclosure audit traced Create, ChordPro, JTH JSON, autosave, backup, restore, and export data through in-memory parsing, browser File APIs, IndexedDB/localStorage, and local Blob/Object URL downloads. Shared i18n code fetches locale JSON, shared site code contains an inactive homepage-subscribe handler, and the page loads the general Umami script, but no Song Workspace code passes song content into those paths. This evidence supports the bounded statement that **Song Workspace song content** is not uploaded; it does not claim that the website collects no analytics or operational data. The full analytics/error-log no-lyrics-egress proof remains a separate **PENDING RELEASE** gate.
 
 ## 10. 91PU Boundary
 
@@ -381,6 +383,8 @@ Current export paths in `scripts/song-workspace.js:832-891`:
 
 Full local exports may contain the user's local lyrics because they remain on the user's device. They must not be confused with future public/share-safe payloads. Object URLs are revoked after download.
 
+The Download menu now provides one non-blocking, screen-reader-readable reminder that exported JSON, ChordPro, TXT, and Print/PDF output may contain lyrics or other user-entered content and should be used or shared only where the user has the necessary rights or legal permission. No export format was removed and no repetitive confirmation modal was added.
+
 ## 24. Localization
 
 Tracked locales are `locales/en/common.json` and `locales/zh-TW/common.json`, with early locale initialization through `scripts/i18n-init.js` and runtime application through `scripts/i18n.js`.
@@ -433,21 +437,24 @@ Automated CSS contract tests exist, but there is no browser E2E suite. Physical 
 
 Interaction/performance/button acceptance on 2026-08-27 passed in the in-app Chromium browser at 1280×720, 1024×768, and 375×812 in light/dark and en/zh-TW. Create and ChordPro X/Cancel/Escape closed with empty or partial required fields while real submit stayed open as invalid. Actual 1.0× measurements for 60/90/120/180 BPM were approximately 23/35/48/71px/s; 120 BPM at 0.75×/1.25×/1.5× measured approximately 36/60/71px/s. Pause held position, resume continued without a jump, end-of-content stopped, all tested button groups had no page-level horizontal overflow, and browser console logs were empty.
 
+Copyright/local-first disclosure acceptance on 2026-08-27 covered the home/create area, all four Create/ChordPro modal modes, both import cards, Download menu, local-save/reload state, and the existing Privacy page at 1280×720, 1024×768, and 375×812 in light/dark and en/zh-TW. Notices wrapped without horizontal page overflow; the 375px main notice remained compact, the modal retained internal scrolling and accessible descriptions, and all four export formats remained present. The Song Workspace console remained empty. The Privacy page retained two pre-existing GSAP “target not found” warnings from shared animation code; this disclosure change introduced no new console warning or error.
+
 ## 27. Privacy / Copyright Boundary
 
 Product position: Jam Tracks Hub is a tool provider, not a copyrighted lyrics library.
 
-Users are responsible for having rights to imported, exported, or eventually shared material. Before release, user-facing copy must be reviewed or added for these concepts:
+Users are responsible for ensuring they have the rights or legal permission necessary for material they import, use, export, or share. User-facing wording is **RESOLVED** on 2026-08-27 and now covers:
 
 ```text
-Song content is stored only on this device.
-Only import content you have the right to use.
-Future sharing does not include lyrics.
+Song Workspace song content is stored locally in the current browser and is not uploaded to Jam Tracks Hub.
+Only import content the user has the right or legal permission to use.
+Clearing browser/site data may remove local songs.
+Exports may contain lyrics or other user-entered content and require the same rights/legal-permission care.
 ```
 
-The exact legal copy is **PENDING RELEASE** policy review. The implementation must continue to keep lyrics local and must not place third-party commercial lyrics/charts in fixtures, analytics, error logs, documentation examples, or the repository.
+The copy deliberately does not promise that local processing makes content use legal, that copyright does not apply, or that all liability belongs to the user. It distinguishes browser-local Song Workspace content from general site analytics/operations and makes no claim about an unimplemented Share Arrangement. The implementation must continue to keep lyrics local and must not place third-party commercial lyrics/charts in fixtures, analytics, error logs, documentation examples, or the repository.
 
-Privacy policy content currently focuses heavily on Key Finder; it should be reviewed for whether Song Workspace local-only behavior and storage-loss caveats are adequately disclosed before release.
+The existing `privacy-policy.html` architecture now includes localized Song Workspace/local-storage and User-provided content/copyright sections alongside the existing Key Finder disclosures. The home/create note links directly to that section. The full analytics and error-logging payload audit remains pending and is not implied by this wording resolution.
 
 ## 28. Future Share Arrangement Boundary
 
@@ -501,10 +508,10 @@ git diff --check
 
 There are no separate `lint`, `typecheck`, or `format` scripts. `npm run check` performs `node --check` over listed JavaScript/Worker/API/build files. `npm test` uses Node's built-in test runner on `tests/*.test.js`.
 
-Current Interaction, Performance, and Button Style hardening baseline on 2026-08-27:
+Current Copyright / Local-First Disclosure hardening baseline on 2026-08-27:
 
 ```text
-npm test: PASS, 55/55
+npm test: PASS, 62/62
 npm run check: PASS
 npm run build:cloudflare: PASS
 git diff --check: PASS
@@ -513,6 +520,7 @@ git diff --check: PASS
 Test files:
 
 - `tests/song-workspace-core.test.js`
+- `tests/song-workspace-disclosure.test.js`
 - `tests/song-workspace-import-ia.test.js`
 - `tests/song-workspace-interaction.test.js`
 - `tests/song-workspace-scroll.test.js`
@@ -526,7 +534,8 @@ Important limitation: `.github/workflows/ci.yml` runs `npm run check` and `npm r
 
 | SHA | Message | Purpose |
 | --- | --- | --- |
-| Current change | `fix: refine song workspace interaction and performance controls` | Makes create/import cancellation independent of validation, links auto-scroll base speed to BPM while retaining the user multiplier, and aligns all workspace button semantics with shared site tokens. |
+| Current change | `fix: clarify local song content and copyright boundaries` | Adds accurate browser-local, import-rights, export-content, persistence-risk, and user-content wording across Song Workspace and the existing Privacy page without changing feature behavior. |
+| `08472d0` | `fix: refine song workspace interaction and performance controls` | Makes create/import cancellation independent of validation, links auto-scroll base speed to BPM while retaining the user multiplier, and aligns all workspace button semantics with shared site tokens. |
 | `e02140e` | `fix: clarify song creation and import options` | Separates three primary creation methods from ChordPro/JTH JSON imports, adds optional ChordPro help, responsive hierarchy, localization, tests, and status documentation. |
 | `6cc1187` | `fix: stabilize song shape picker scroll restoration` | Unifies close/focus/restore ordering, updates one diagram without rebuilding its card, suppresses smooth restore, adds scroll-contract regressions, and records responsive in-app browser acceptance. |
 | `6fb567a` | `fix: enforce single-row song chord annotations` | Removes row assignment/row-count rendering, adds bounded left-origin label fitting, tests, Chromium acceptance, and status documentation. |
@@ -560,6 +569,8 @@ Do not reintroduce these previously addressed failures:
 - X or Cancel buttons inside a required form becoming unintended submit controls and being blocked before the submit handler runs.
 - Auto-scroll speed ignoring BPM, losing fractional per-frame distance, or changing with display refresh rate.
 - Independent workspace button styles drifting from shared primary/secondary/danger/focus/motion tokens.
+- Device-wide/permanent-storage wording overstating browser-local persistence.
+- Copyright copy implying that local processing alone makes a use lawful or advertising unimplemented sharing/cloud features.
 
 ## 34. Current Known Issues
 
@@ -585,12 +596,16 @@ Status: **RESOLVED** on 2026-08-27. The old manual slider produced 12–120px/s 
 
 Status: **RESOLVED** on 2026-08-27. Static and dynamic controls now use explicit primary, secondary, danger, subtle, icon, segmented/toggle, interactive-card, and menu semantics. Colors, depth shadows, radii, transitions, focus rings, disabled states, theme values, and reduced-motion behavior reuse the existing site tokens and Write Your Own Progression interaction language. Responsive browser acceptance covers home, modals, editor, mode selector, menus, shape picker, line editor, and Performance Mode.
 
+### Issue F — local-first and user-content boundaries are not sufficiently disclosed
+
+Status: **RESOLVED** on 2026-08-27. A production-code audit found no Song Workspace content transport and traced song content through browser-local parsing, IndexedDB/localStorage, File APIs, and local export Blob URLs. The home/create area, mode-specific Create/ChordPro dialog, JTH JSON card, local-storage warning, and Download menu now provide short English/zh-TW wording. `privacy-policy.html` extends the existing legal-information architecture with Song Workspace storage and bounded user-provided-content/copyright sections. The copy neither equates local storage with legality nor advertises cloud sync, server backup, public sharing, or Share Arrangement. `tests/song-workspace-disclosure.test.js` covers locations, localization, export preservation, false-feature copy, policy wiring, and transport primitives.
+
 ### Documentation and release issues
 
 - `docs/song-workspace.md` incorrectly says diagrams are not embedded.
 - README route table omits Song Workspace.
 - CI omits `npm test`.
-- Copyright/user-content copy and analytics/error-payload review are pending release.
+- Analytics/error-payload review remains pending release; Copyright/local-only UI wording is resolved.
 - Anti-abuse review and physical Safari/iOS acceptance are pending release.
 - Origin URL normalization is pending confirmation.
 
@@ -631,7 +646,7 @@ Status: **RESOLVED** on 2026-08-27. Static and dynamic controls now use explicit
 | Song content server storage | N/A | No workspace network calls | Explicitly outside V1. |
 | Share Arrangement | NOT IMPLEMENTED | No share schema/route/API | Future-only boundary. |
 | Public searchable song library | N/A | Product boundary | Must not be built without new review. |
-| Copyright/user-content release copy | PENDING RELEASE | Confirmed gate | Exact copy needs policy review. |
+| Copyright/local-only user-facing wording | RESOLVED | Workspace UI, locale files, `privacy-policy.html`, disclosure tests, responsive browser acceptance | Browser-local scope, import rights, storage-loss, export content, and no false legal guarantee are covered. |
 | Analytics/error payload privacy audit | PENDING RELEASE | Confirmed gate | Must prove no content payload. |
 | Anti-abuse review | PENDING RELEASE | Confirmed gate | Cloudflare/CDN/API/WAF/rate limits. |
 | macOS Safari shape-picker zero-jump acceptance | PASS | Product-owner manual acceptance | No visible jump reported. |
@@ -653,7 +668,7 @@ Bounded future work, clearly outside current implementation:
 - **RESOLVED**: Create/ChordPro X, Cancel, and Escape bypass submit validation while real commit actions retain it.
 - **RESOLVED**: BPM-linked, bounded, refresh-rate-independent Performance Auto Scroll with a retained user multiplier.
 - **RESOLVED**: Song Workspace button semantics and interaction states aligned with shared Jam Tracks Hub theme tokens.
-- **PENDING RELEASE**: add/review local-only and user-rights copy.
+- **RESOLVED**: add/review browser-local, import-rights, storage-loss, export-content, and bounded user-content/copyright wording.
 - **PENDING RELEASE**: add `npm test` to remote CI after confirming runtime expectations.
 - **RESOLVED**: single-row annotation fitting, rendering, regressions, and Chromium responsive acceptance completed on 2026-08-27.
 - **RESOLVED**: bounded Shape Picker close/focus/instant-restore implementation and responsive in-app browser acceptance.
@@ -703,7 +718,7 @@ All categories require explicit review before release:
 
 - Prove lyrics and raw song content remain local.
 - Audit analytics and error logs for content-free payloads.
-- Approve local-storage, rights-to-import, and export wording.
+- Local-storage, rights-to-import, export, and user-content wording is implemented and regression-tested.
 - Confirm no 91PU or third-party copyrighted content acquisition/fixtures.
 
 **Security and abuse**
@@ -751,4 +766,4 @@ A new Codex session must begin in this order:
 9. Run baseline `npm test`, `npm run check`, `npm run build:cloudflare`, and `git diff --check` when appropriate.
 10. Only then modify production code, and only for the explicitly requested bounded task.
 
-Highest-priority remaining release work includes iPhone/iOS hardware acceptance, copyright/local-only UI wording, analytics/error-log no-lyrics-egress proof, anti-abuse review, remote/CI/PR coordination, and explicit production approval. The Create Song / Other Import hierarchy, cancellation-vs-validation contract, BPM-linked Performance Auto Scroll, button design-system hardening, one-row chord-annotation contract, Shape Picker code fix, and macOS Safari zero-jump user acceptance are resolved. Do not begin a remaining gate without an explicit bounded request.
+Highest-priority remaining release work includes the analytics/error-log no-lyrics-egress proof, iPhone/iOS hardware acceptance, anti-abuse review, remote/CI/PR coordination, and explicit production approval. Copyright/local-only UI wording, the Create Song / Other Import hierarchy, cancellation-vs-validation contract, BPM-linked Performance Auto Scroll, button design-system hardening, one-row chord-annotation contract, Shape Picker code fix, and macOS Safari zero-jump user acceptance are resolved. Do not begin a remaining gate without an explicit bounded request.

@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="styles/pages.css?v=20260826-song-workspace">
     <link rel="stylesheet" href="styles/themes.css?v=20260826-song-workspace">
     <link rel="stylesheet" href="styles/chord-dictionary.css?v=20260826-workspace-hardening">
-    <link rel="stylesheet" href="styles/song-workspace.css?v=20260826-acceptance-fixes">
+    <link rel="stylesheet" href="styles/song-workspace.css?v=20260827-disclosure">
 </head>
 <body data-i18n-title="titles.songWorkspace">
     <nav class="navbar">
@@ -46,7 +46,7 @@
             <p class="result-kicker" data-i18n="pages.songWorkspace.eyebrow">Local-first songbook • no login • private by design</p>
             <h1 data-i18n="pages.songWorkspace.title">Song Workspace</h1>
             <p class="hero-tagline signature-slogan" data-i18n="pages.songWorkspace.tagline">Shape the chart. Keep the song yours.</p>
-            <p class="song-workspace-lead" data-i18n="pages.songWorkspace.intro">Create chord and lyric charts, transpose them, find comfortable capo positions, and keep every song on this device.</p>
+            <p class="song-workspace-lead" data-i18n="pages.songWorkspace.intro">Create chord and lyric charts, transpose them, find comfortable capo positions, and keep every song in this browser.</p>
             <div class="song-workspace-promises" aria-label="Workspace benefits" data-i18n-aria-label="pages.songWorkspace.benefitsLabel">
                 <span data-i18n="pages.songWorkspace.free">Free</span>
                 <span data-i18n="pages.songWorkspace.unlimited">Unlimited</span>
@@ -83,6 +83,12 @@
                         <span data-i18n="pages.songWorkspace.chordsOnlyCopy">Create a chord progression or song structure without lyrics.</span>
                     </button>
                 </div>
+                <aside class="workspace-disclosure workspace-main-disclosure" data-disclosure="local-first" role="note" aria-labelledby="localDisclosureTitle">
+                    <strong id="localDisclosureTitle" data-i18n="pages.songWorkspace.localDisclosureTitle">Stored locally in this browser</strong>
+                    <p data-i18n="pages.songWorkspace.localPrivacy">Your song content is stored locally in this browser and is not uploaded to Jam Tracks Hub.</p>
+                    <p data-i18n="pages.songWorkspace.rightsImport">Only import content you have the right or legal permission to use.</p>
+                    <a class="workspace-disclosure-link" href="privacy-policy.html#user-content" data-i18n="pages.songWorkspace.privacyUserContentLink">Privacy &amp; user content</a>
+                </aside>
             </section>
 
             <section class="workspace-import-area" aria-labelledby="otherImportTitle">
@@ -102,12 +108,14 @@
                             <summary data-i18n="pages.songWorkspace.whatIsChordPro">What is ChordPro?</summary>
                             <p data-i18n="pages.songWorkspace.chordProHelp">ChordPro uses markers such as [G] and [Am7] to place chords directly before lyric positions.</p>
                         </details>
+                        <p class="workspace-import-note" data-i18n="pages.songWorkspace.chordProLocalDisclosure">ChordPro content is parsed in this browser and is not uploaded to Jam Tracks Hub.</p>
                         <button class="workspace-button workspace-button-secondary workspace-import-button" type="button" data-create-mode="chordpro" data-import-kind="chordpro" data-i18n="pages.songWorkspace.importChordPro">Import ChordPro</button>
                     </article>
                     <article class="workspace-import-card" data-import-option="jth-json">
                         <span class="workspace-import-type" data-i18n="pages.songWorkspace.projectFormat">Complete project format</span>
                         <h3 data-i18n="pages.songWorkspace.jthJson">Jam Tracks Hub JSON</h3>
                         <p data-i18n="pages.songWorkspace.jthJsonCopy">Restore a single song project previously exported from Jam Tracks Hub.</p>
+                        <p class="workspace-import-note" data-i18n="pages.songWorkspace.jthJsonLocalDisclosure">Imported projects are stored in this browser.</p>
                         <button class="workspace-button workspace-button-secondary workspace-import-button" type="button" id="importSongButton" data-import-kind="jth-json" data-i18n="pages.songWorkspace.importJthJson">Import Jam Tracks Hub JSON</button>
                     </article>
                 </div>
@@ -116,7 +124,7 @@
             <section class="workspace-library" aria-labelledby="mySongsTitle">
                 <div class="workspace-section-heading">
                     <div>
-                        <span class="result-kicker" data-i18n="pages.songWorkspace.onThisDevice">On this device</span>
+                        <span class="result-kicker" data-i18n="pages.songWorkspace.onThisDevice">In this browser</span>
                         <h2 id="mySongsTitle" data-i18n="pages.songWorkspace.mySongs">My Songs</h2>
                     </div>
                     <div class="workspace-library-actions">
@@ -133,8 +141,7 @@
                     <p data-i18n="pages.songWorkspace.emptyCopy">Choose a starting format above. Songs you save will stay in this browser.</p>
                 </div>
                 <div class="workspace-local-note" role="note">
-                    <strong data-i18n="pages.songWorkspace.savedOnDevice">Saved on this device</strong>
-                    <p data-i18n="pages.songWorkspace.localPrivacy">Your songs are stored locally in this browser and are not uploaded to Jam Tracks Hub.</p>
+                    <strong data-i18n="pages.songWorkspace.localStorageReminder">Local storage reminder</strong>
                     <p data-i18n="pages.songWorkspace.localWarning">Clearing browser/site data may remove locally saved songs. Use Backup All to keep a portable copy.</p>
                 </div>
             </section>
@@ -143,9 +150,9 @@
         <section id="workspaceEditorView" class="workspace-view workspace-editor" hidden>
             <div class="workspace-editor-topbar">
                 <button class="workspace-button workspace-button-secondary" id="backToSongsButton" type="button" data-i18n="pages.songWorkspace.backToSongs">Back to My Songs</button>
-                <div class="workspace-save-state" id="autosaveState" role="status" aria-live="polite" data-i18n="pages.songWorkspace.savedOnDevice">Saved on this device</div>
+                <div class="workspace-save-state" id="autosaveState" role="status" aria-live="polite" data-i18n="pages.songWorkspace.savedOnDevice">Saved in this browser</div>
                 <div class="workspace-editor-actions">
-                    <button class="workspace-button workspace-button-secondary" id="downloadMenuButton" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="downloadMenu" data-i18n="pages.songWorkspace.download">Download</button>
+                    <button class="workspace-button workspace-button-secondary" id="downloadMenuButton" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="downloadMenu" aria-describedby="exportDisclosure" data-i18n="pages.songWorkspace.download">Download</button>
                     <button class="workspace-button workspace-button-primary" id="performanceButton" type="button" data-i18n="pages.songWorkspace.performance">Performance Mode</button>
                 </div>
                 <div class="workspace-download-menu" id="downloadMenu" role="menu" hidden>
@@ -153,6 +160,7 @@
                     <button class="workspace-menu-action" type="button" role="menuitem" data-download="chordpro">ChordPro</button>
                     <button class="workspace-menu-action" type="button" role="menuitem" data-download="txt">TXT</button>
                     <button class="workspace-menu-action" type="button" role="menuitem" data-download="print" data-i18n="pages.songWorkspace.printPdf">Print / PDF</button>
+                    <p class="workspace-download-disclosure" id="exportDisclosure" role="note" data-i18n="pages.songWorkspace.exportDisclosure">Exported files may contain lyrics or other content you entered. Use or share them only where you have the necessary rights or legal permission.</p>
                 </div>
             </div>
 
@@ -254,8 +262,12 @@
                 </label>
                 <label class="workspace-field workspace-field-source">
                     <span id="createSourceLabel" data-i18n="pages.songWorkspace.pasteChart">Paste chart</span>
-                    <textarea id="createSourceInput" rows="14" maxlength="200000" required></textarea>
+                    <textarea id="createSourceInput" rows="14" maxlength="200000" required aria-describedby="createLocalDisclosure createRightsDisclosure"></textarea>
                 </label>
+            </div>
+            <div class="workspace-dialog-disclosure" data-create-disclosure role="note">
+                <p id="createLocalDisclosure">The song content you paste is processed and stored locally in this browser.</p>
+                <p id="createRightsDisclosure" data-i18n="pages.songWorkspace.rightsImport">Only import content you have the right or legal permission to use.</p>
             </div>
             <p class="workspace-dialog-error" id="createDialogError" role="alert"></p>
             <div class="workspace-dialog-actions">
@@ -370,6 +382,6 @@
     <script src="scripts/chord-shapes.js?v=20260826-workspace-hardening"></script>
     <script src="scripts/song-workspace-core.js?v=20260826-acceptance-fixes"></script>
     <script src="scripts/song-workspace-storage.js?v=20260826-song-workspace"></script>
-    <script src="scripts/song-workspace.js?v=20260826-acceptance-fixes"></script>
+    <script src="scripts/song-workspace.js?v=20260827-disclosure"></script>
 </body>
 </html>

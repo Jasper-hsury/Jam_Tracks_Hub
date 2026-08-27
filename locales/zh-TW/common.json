@@ -47,7 +47,7 @@
     "progressionWriter": "自訂你的和弦進行｜Jam Tracks Hub",
     "fretboardTrainer": "指板練習｜Jam Tracks Hub",
     "feedback": "意見回饋｜Jam Tracks Hub",
-    "privacy": "隱私權政策｜Jam Tracks Hub",
+    "privacy": "隱私與使用者內容｜Jam Tracks Hub",
     "notFound": "找不到頁面｜Jam Tracks Hub"
   },
   "home": {
@@ -417,7 +417,7 @@
       "title": "歌曲工作區",
       "eyebrow": "本機優先歌曲本 • 無需登入 • 為隱私而設計",
       "tagline": "整理樂譜，讓歌曲留在你手中。",
-      "intro": "建立和弦與歌詞譜、移調、尋找舒適的移調夾位置，並把每首歌曲保存在這台裝置上。",
+      "intro": "建立和弦與歌詞譜、移調、尋找舒適的移調夾位置，並把每首歌曲保存在這個瀏覽器中。",
       "benefitsLabel": "工作區特色",
       "free": "免費",
       "unlimited": "不限歌曲數量",
@@ -445,15 +445,24 @@
       "chordProHelp": "ChordPro 使用 [G]、[Am7] 等標記，把和弦直接放在對應歌詞位置前方。",
       "jthJson": "Jam Tracks Hub JSON",
       "jthJsonCopy": "恢復先前從 Jam Tracks Hub 匯出的單首歌曲專案。",
+      "jthJsonLocalDisclosure": "匯入的專案會儲存在這個瀏覽器中。",
       "importJthJson": "匯入 Jam Tracks Hub JSON",
-      "onThisDevice": "這台裝置",
+      "onThisDevice": "這個瀏覽器",
       "mySongs": "我的歌曲",
       "emptyTitle": "你的本機歌曲本已準備完成。",
       "emptyCopy": "從上方三種建立方式中選擇一種開始。匯入及儲存的歌曲都會留在這個瀏覽器中。",
-      "localPrivacy": "歌曲只會儲存在這個瀏覽器，不會上傳至 Jam Tracks Hub。",
+      "localDisclosureTitle": "儲存在這個瀏覽器中",
+      "localPrivacy": "你的歌曲內容會儲存在這個瀏覽器中，不會上傳至 Jam Tracks Hub。",
+      "rightsImport": "請只匯入你有權使用或法律允許使用的內容。",
+      "pastedContentLocalDisclosure": "你貼上的歌曲內容會在這個瀏覽器中處理並儲存在本機。",
+      "songDataLocalDisclosure": "這份歌曲資料會儲存在你的瀏覽器中。",
+      "chordProLocalDisclosure": "ChordPro 內容會在你的瀏覽器中解析，不會上傳至 Jam Tracks Hub。",
+      "exportDisclosure": "匯出的檔案可能包含你輸入的歌詞或其他內容。請僅在你具有相關權利或法律允許的範圍內使用或分享。",
+      "privacyUserContentLink": "隱私與使用者內容",
+      "localStorageReminder": "本機儲存提醒",
       "localWarning": "清除瀏覽器或網站資料可能會移除本機歌曲。請使用「備份全部」保留可攜式副本。",
       "backToSongs": "回到我的歌曲",
-      "savedOnDevice": "已儲存在這台裝置",
+      "savedOnDevice": "已儲存在這個瀏覽器",
       "saving": "儲存中……",
       "storageUnavailable": "目前無法使用本機儲存。請下載備份以保留你的內容。",
       "storageUnavailableShort": "無法使用本機儲存",
@@ -542,8 +551,8 @@
     "openKeyFinder": "開啟調性分析"
   },
   "privacy": {
-    "title": "Jam Tracks Hub 調性分析隱私權政策",
-    "effectiveDate": "生效日期：2026 年 6 月 23 日",
+    "title": "Jam Tracks Hub 隱私與使用者內容",
+    "effectiveDate": "生效日期：2026 年 8 月 27 日",
     "body": {
       "01": "擴充功能用途",
       "02": "Jam Tracks Hub 調性分析會估算使用者所選音訊檔案或 YouTube 影片的音樂調性。",
@@ -561,7 +570,15 @@
       "14": "你的選擇",
       "15": "只有在你主動選擇時，才會使用檔案上傳或 YouTube 分析功能。你可以隨時清除儲存在本機的分析紀錄，或解除安裝擴充功能以移除其本機資料。",
       "16": "聯絡方式",
-      "17": "如有隱私權相關問題，請透過 Chrome 線上應用程式商店頁面所列的支援聯絡方式與開發者聯繫。"
+      "17": "如有隱私權相關問題，請透過 Chrome 線上應用程式商店頁面所列的支援聯絡方式與開發者聯繫。",
+      "18": "歌曲工作區與本機儲存",
+      "19": "歌曲工作區會在你的瀏覽器中處理歌曲名稱、歌詞、和弦、ChordPro 文字及 Jam Tracks Hub 歌曲文件。這些歌曲內容不會上傳至 Jam Tracks Hub。",
+      "20": "歌曲工作區不提供雲端歌曲儲存或跨瀏覽器同步。清除瀏覽器或網站資料可能會移除本機歌曲；需要可攜式副本時，請使用「備份全部」或匯出檔案。",
+      "21": "匯出的檔案可能包含你輸入的歌詞或其他內容。請僅在你具有相關權利或法律允許的範圍內使用或分享。",
+      "22": "使用者提供的內容與著作權",
+      "23": "Jam Tracks Hub 提供工具，讓使用者處理其自行提供的內容。歌曲工作區並非用來建立由 Jam Tracks Hub 託管的歌詞資料庫。",
+      "24": "使用者應確認自己對所匯入、使用、匯出或分享的內容具有必要權利，或已取得法律允許。",
+      "25": "特定使用方式是否受到允許，取決於內容與適用法律；僅在本機處理並不會使某項使用方式當然合法。"
     }
   },
   "footer": {

@@ -11,6 +11,20 @@ Song Workspace is a browser-local area for building reusable chord and lyric cha
 - Use **Backup All** before clearing browser data or moving to another device.
 - If local storage is unavailable, the editor remains usable for the current session and shows an explicit warning. Download the current song or a backup before leaving.
 
+The local-first claim is limited to Song Workspace song content. The page still loads ordinary site assets, localization files, and general site analytics; it does not claim that Jam Tracks Hub collects no operational or website data. A separate release gate remains responsible for the full analytics and error-logging no-lyrics-egress audit.
+
+## User-Facing Disclosure And Content Rights
+
+The create area gives one short, non-blocking explanation that song content is stored in the current browser and is not uploaded to Jam Tracks Hub. It also asks users to import only material they have the right or legal permission to use. The wording intentionally refers to the browser rather than promising device-wide or permanent storage.
+
+The shared Create/Import dialog adapts its local-processing sentence to the selected mode:
+
+- **Chords + Lyrics / Lyrics Only**: pasted song content is processed and stored locally in the browser.
+- **Chords Only**: the song data is stored in the browser without unnecessary lyric-specific wording.
+- **ChordPro**: ChordPro text is parsed in the browser and is not uploaded to Jam Tracks Hub.
+
+The Jam Tracks Hub JSON card explains that imported projects remain in the browser. The local library separately warns that clearing browser or site data may remove songs. The existing `privacy-policy.html` legal-information page now distinguishes Song Workspace local content from Key Finder processing and records a bounded user-provided-content responsibility: local processing does not itself determine whether a use is legally permitted.
+
 ## Creating And Importing Songs
 
 The **Create Song** area keeps the three common starting points prominent:
@@ -61,6 +75,8 @@ The current song can be downloaded as:
 - A browser print view for PDF output
 
 **Backup All** exports all locally saved songs. Import and restore files are size-limited, version-checked, and normalized before they are stored. Downloaded files never contain browser credentials, cookies, preferences, or unrelated site storage.
+
+The Download menu provides one accessible, non-blocking reminder that JSON, ChordPro, TXT, and Print/PDF output may contain lyrics or other user-entered content and should be used or shared only where the user has the necessary rights or legal permission. Export features are unchanged and do not add confirmation dialogs.
 
 ## Keyboard And Accessibility
 
