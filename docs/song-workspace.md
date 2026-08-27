@@ -11,7 +11,20 @@ Song Workspace is a browser-local area for building reusable chord and lyric cha
 - Use **Backup All** before clearing browser data or moving to another device.
 - If local storage is unavailable, the editor remains usable for the current session and shows an explicit warning. Download the current song or a backup before leaving.
 
-The local-first claim is limited to Song Workspace song content. The page still loads ordinary site assets, localization files, and general site analytics; it does not claim that Jam Tracks Hub collects no operational or website data. A separate release gate remains responsible for the full analytics and error-logging no-lyrics-egress audit.
+The local-first claim is limited to Song Workspace song content. The page still loads ordinary site assets and localization files; it does not claim that Jam Tracks Hub collects no operational or website data elsewhere on the site. General Umami analytics remains enabled on other Jam Tracks Hub pages, but the tracker is deliberately not loaded on Song Workspace.
+
+## No Song Content Egress
+
+Song Workspace has a content-free observability boundary:
+
+- Its production app, core, and storage modules contain no `fetch`, XHR, `sendBeacon`, WebSocket, EventSource, FormData upload, remote persistence, telemetry, console forwarding, global error forwarding, or custom analytics event path.
+- The page has no third-party executable script. In particular, Umami is not loaded on Song Workspace, so automatic pageviews, path-change tracking, future session-replay configuration, and analytics-side DOM access cannot observe the workspace editor. Site-wide Umami remains present on other pages.
+- The remaining Google Fonts stylesheet is presentation-only. The page uses `Referrer-Policy: no-referrer` through its HTML metadata, and neither its URL nor the stylesheet request contains song content.
+- `document.title` is always the fixed localized product title. User-entered title, artist, lyrics, section names, chord anchors, ChordPro, and JSON never become the page title.
+- Editor navigation accepts only internally generated opaque song IDs. JTH JSON import and Backup Restore assign fresh internal IDs before storage/navigation, while unsafe or legacy IDs fall back to the fixed `song-workspace.html` URL.
+- JSON, pasted-chart, and ChordPro parser failures use generic bounded messages. Production Song Workspace code does not log raw input or Song Documents to the console.
+
+Shared i18n code performs GET requests for fixed locale JSON files, and shared site code contains a homepage subscription handler that is inactive because Song Workspace has no subscription form. Neither path receives a Song Document or any user song field. Synthetic canary regression tests and browser inspection cover URL, title, error, console, and transport boundaries without committing third-party lyrics.
 
 ## User-Facing Disclosure And Content Rights
 

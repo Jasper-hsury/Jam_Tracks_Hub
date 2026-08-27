@@ -39,21 +39,21 @@ Song Workspace is a user-supplied-content practice and arrangement tool. It is n
 
 ## 3. Git Snapshot
 
-Repository truth before the current Copyright / Local-First Disclosure hardening:
+Repository truth before the current Analytics / Error-Logging No-Lyrics-Egress audit:
 
 ```text
 Branch: feat/song-workspace-v1
-HEAD: 08472d0711f43b3f7702d92a3bfb47b1fb7eccbf
-origin/feat/song-workspace-v1: 08472d0711f43b3f7702d92a3bfb47b1fb7eccbf
+HEAD: 4460aa2b1119f5ae0c46d423baac769677ee13b4
+origin/feat/song-workspace-v1: 4460aa2b1119f5ae0c46d423baac769677ee13b4
 main: 9b5ed9b
 origin/main: 9b5ed9b
-Feature branch vs origin/main: 9 ahead, 0 behind
+Feature branch vs origin/main: 10 ahead, 0 behind
 Origin fetch/push: git@github.com:Passerby-WB/Jam_Tracks_Hub.git
 ```
 
 The product history reports that GitHub has advertised a newer location, `git@github.com:Jasper-hsury/Jam_Tracks_Hub.git`. The current remote still uses the old URL, so remote URL normalization is **PENDING**. Do not change the remote during unrelated work; confirm the canonical owner and URL first.
 
-Before the current disclosure hardening, there were no tracked modifications and only the two approved untracked exceptions in section 4. There were no uncommitted Song Workspace production changes.
+Before the current no-lyrics-egress audit, there were no tracked modifications and only the two approved untracked exceptions in section 4. There were no uncommitted Song Workspace production changes.
 
 ## 4. Approved Working-Tree Exceptions
 
@@ -184,7 +184,17 @@ Repository evidence:
 
 V1 has no user-song database, account requirement, or cloud synchronization. Analytics and error reporting must never receive lyrics, raw pasted content, raw ChordPro, Song JSON, or user notes. Any future telemetry must be event-only (for example `song_workspace_opened`, `transpose_used`, or `capo_used`) with content-free metadata.
 
-The 2026-08-27 disclosure audit traced Create, ChordPro, JTH JSON, autosave, backup, restore, and export data through in-memory parsing, browser File APIs, IndexedDB/localStorage, and local Blob/Object URL downloads. Shared i18n code fetches locale JSON, shared site code contains an inactive homepage-subscribe handler, and the page loads the general Umami script, but no Song Workspace code passes song content into those paths. This evidence supports the bounded statement that **Song Workspace song content** is not uploaded; it does not claim that the website collects no analytics or operational data. The full analytics/error-log no-lyrics-egress proof remains a separate **PENDING RELEASE** gate.
+The 2026-08-27 disclosure audit traced Create, ChordPro, JTH JSON, autosave, backup, restore, and export data through in-memory parsing, browser File APIs, IndexedDB/localStorage, and local Blob/Object URL downloads. The bounded analytics/error-log follow-up is now **RESOLVED**:
+
+- repository-wide inventory found Umami as the only browser analytics service and found no Sentry, LogRocket, PostHog, Mixpanel, Segment, remote console collector, global error forwarder, or custom Song Workspace event tracking;
+- Umami's tracker automatically collects URL, fixed page title, and referrer and observes `history.replaceState`, so it was removed from `song-workspace.html` only; other site pages retain ordinary Umami analytics;
+- Song Workspace now has no third-party executable script and therefore no session replay or DOM-capture path. The Google Fonts stylesheet remains presentation-only, and the page sets `no-referrer`;
+- the localized browser title remains fixed. Imported JTH JSON and backup songs receive new internal opaque IDs before storage/navigation, and unsafe URL IDs are discarded;
+- production parser/import errors are generic and contain no raw Song Document, ChordPro, lyrics, or metadata; Song Workspace modules have no console or remote error forwarding;
+- `tests/song-workspace-observability.test.js` exercises synthetic canaries across analytics, title, URL, imported IDs, parser errors, console/telemetry primitives, and transport boundaries;
+- in-app browser canary acceptance covered Create with lyrics, Lyrics Only, ChordPro, JTH JSON with an arbitrary imported ID, metadata edits, transpose, Smart Capo, Roman/Nashville, Performance Mode, and JSON export. Requests observed by the local server were static GETs only; no canary appeared in a request URL and the console remained empty.
+
+Shared i18n code still fetches fixed locale JSON files, and shared site code still contains an inactive homepage-subscribe handler. Neither receives song content. This proof supports the bounded statement that **Song Workspace song content** is not uploaded; it does not claim that the rest of Jam Tracks Hub collects no analytics or operational data.
 
 ## 10. 91PU Boundary
 
@@ -454,7 +464,7 @@ Exports may contain lyrics or other user-entered content and require the same ri
 
 The copy deliberately does not promise that local processing makes content use legal, that copyright does not apply, or that all liability belongs to the user. It distinguishes browser-local Song Workspace content from general site analytics/operations and makes no claim about an unimplemented Share Arrangement. The implementation must continue to keep lyrics local and must not place third-party commercial lyrics/charts in fixtures, analytics, error logs, documentation examples, or the repository.
 
-The existing `privacy-policy.html` architecture now includes localized Song Workspace/local-storage and User-provided content/copyright sections alongside the existing Key Finder disclosures. The home/create note links directly to that section. The full analytics and error-logging payload audit remains pending and is not implied by this wording resolution.
+The existing `privacy-policy.html` architecture now includes localized Song Workspace/local-storage and User-provided content/copyright sections alongside the existing Key Finder disclosures. The home/create note links directly to that section. The subsequent analytics and error-logging no-song-content-egress audit is resolved as recorded in section 9; general site analytics and operational-data disclosures remain distinct.
 
 ## 28. Future Share Arrangement Boundary
 
@@ -605,7 +615,7 @@ Status: **RESOLVED** on 2026-08-27. A production-code audit found no Song Worksp
 - `docs/song-workspace.md` incorrectly says diagrams are not embedded.
 - README route table omits Song Workspace.
 - CI omits `npm test`.
-- Analytics/error-payload review remains pending release; Copyright/local-only UI wording is resolved.
+- Analytics/error-payload review and Copyright/local-only UI wording are resolved.
 - Anti-abuse review and physical Safari/iOS acceptance are pending release.
 - Origin URL normalization is pending confirmation.
 
@@ -647,7 +657,7 @@ Status: **RESOLVED** on 2026-08-27. A production-code audit found no Song Worksp
 | Share Arrangement | NOT IMPLEMENTED | No share schema/route/API | Future-only boundary. |
 | Public searchable song library | N/A | Product boundary | Must not be built without new review. |
 | Copyright/local-only user-facing wording | RESOLVED | Workspace UI, locale files, `privacy-policy.html`, disclosure tests, responsive browser acceptance | Browser-local scope, import rights, storage-loss, export content, and no false legal guarantee are covered. |
-| Analytics/error payload privacy audit | PENDING RELEASE | Confirmed gate | Must prove no content payload. |
+| Analytics/error payload privacy audit | RESOLVED | `song-workspace.html`, core/app URL and import hardening, `tests/song-workspace-observability.test.js`, static inventory, synthetic browser canaries | Workspace has no analytics/third-party executable script, custom event, remote logger, raw-input console path, or song transport; site-wide Umami remains elsewhere. |
 | Anti-abuse review | PENDING RELEASE | Confirmed gate | Cloudflare/CDN/API/WAF/rate limits. |
 | macOS Safari shape-picker zero-jump acceptance | PASS | Product-owner manual acceptance | No visible jump reported. |
 | iPhone/iOS hardware acceptance | PENDING RELEASE | No iPhone/iOS evidence | Required before production. |
@@ -669,6 +679,7 @@ Bounded future work, clearly outside current implementation:
 - **RESOLVED**: BPM-linked, bounded, refresh-rate-independent Performance Auto Scroll with a retained user multiplier.
 - **RESOLVED**: Song Workspace button semantics and interaction states aligned with shared Jam Tracks Hub theme tokens.
 - **RESOLVED**: add/review browser-local, import-rights, storage-loss, export-content, and bounded user-content/copyright wording.
+- **RESOLVED**: analytics/error-log no-song-content-egress inventory, Umami isolation, URL/title/import-ID hardening, generic import errors, automated canaries, and browser network/console acceptance.
 - **PENDING RELEASE**: add `npm test` to remote CI after confirming runtime expectations.
 - **RESOLVED**: single-row annotation fitting, rendering, regressions, and Chromium responsive acceptance completed on 2026-08-27.
 - **RESOLVED**: bounded Shape Picker close/focus/instant-restore implementation and responsive in-app browser acceptance.
@@ -717,7 +728,7 @@ All categories require explicit review before release:
 **Privacy and copyright**
 
 - Prove lyrics and raw song content remain local.
-- Audit analytics and error logs for content-free payloads.
+- Preserve the resolved analytics/error-log no-song-content-egress contract and its canary regressions.
 - Local-storage, rights-to-import, export, and user-content wording is implemented and regression-tested.
 - Confirm no 91PU or third-party copyrighted content acquisition/fixtures.
 
@@ -766,4 +777,4 @@ A new Codex session must begin in this order:
 9. Run baseline `npm test`, `npm run check`, `npm run build:cloudflare`, and `git diff --check` when appropriate.
 10. Only then modify production code, and only for the explicitly requested bounded task.
 
-Highest-priority remaining release work includes the analytics/error-log no-lyrics-egress proof, iPhone/iOS hardware acceptance, anti-abuse review, remote/CI/PR coordination, and explicit production approval. Copyright/local-only UI wording, the Create Song / Other Import hierarchy, cancellation-vs-validation contract, BPM-linked Performance Auto Scroll, button design-system hardening, one-row chord-annotation contract, Shape Picker code fix, and macOS Safari zero-jump user acceptance are resolved. Do not begin a remaining gate without an explicit bounded request.
+Highest-priority remaining release work includes iPhone/iOS hardware acceptance, anti-abuse review, remote/CI/PR coordination, and explicit production approval. Analytics/error-log no-song-content-egress, Copyright/local-only UI wording, the Create Song / Other Import hierarchy, cancellation-vs-validation contract, BPM-linked Performance Auto Scroll, button design-system hardening, one-row chord-annotation contract, Shape Picker code fix, and macOS Safari zero-jump user acceptance are resolved. Do not begin a remaining gate without an explicit bounded request.

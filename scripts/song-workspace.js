@@ -214,7 +214,7 @@
         elements.timeSignature.value = state.song.timeSignature;
         state.preferences.lastSongId = state.song.id;
         Storage.writePreferences(state.preferences);
-        history.replaceState(null, "", `song-workspace.html?song=${encodeURIComponent(state.song.id)}`);
+        history.replaceState(null, "", Core.songWorkspaceUrl(state.song.id));
         renderEditor();
     }
 
@@ -904,13 +904,17 @@
 
     async function readJsonFile(file) {
         if (!file || file.size > MAX_IMPORT_BYTES) throw new Error(t("pages.songWorkspace.fileTooLarge", "Choose a JSON file under 1 MB."));
-        return JSON.parse(await file.text());
+        try {
+            return JSON.parse(await file.text());
+        } catch (error) {
+            throw new Error(t("pages.songWorkspace.importError", "We could not recognize this chart."));
+        }
     }
 
     async function importSong(file) {
         const value = await readJsonFile(file);
         const song = Core.validateSong(value);
-        if (state.songs.some(item => item.id === song.id)) song.id = Core.createSong({}).id;
+        song.id = Core.createSong({}).id;
         song.createdAt = new Date().toISOString();
         song.updatedAt = song.createdAt;
         if (state.storageAvailable) await Storage.put(song);
@@ -938,10 +942,8 @@
         if (!value || value.schema !== "jamtrackshub-song-backup" || Number(value.version) !== 1 || !Array.isArray(value.songs) || value.songs.length > MAX_BACKUP_SONGS) {
             throw new Error(t("pages.songWorkspace.invalidBackup", "This is not a supported Jam Tracks Hub backup."));
         }
-        const ids = new Set(state.songs.map(song => song.id));
         const restored = value.songs.map(Core.validateSong).map(function(song) {
-            if (ids.has(song.id)) song.id = Core.createSong({}).id;
-            ids.add(song.id);
+            song.id = Core.createSong({}).id;
             return song;
         });
         for (const song of restored) await Storage.put(song);
@@ -1312,6 +1314,9 @@
         attachEvents();
         await loadSongs();
         const requestedId = new URLSearchParams(location.search).get("song");
+        if (requestedId && !Core.isOpaqueSongId(requestedId)) {
+            history.replaceState(null, "", "song-workspace.html");
+        }
         const initialSong = state.songs.find(song => song.id === requestedId);
         if (initialSong) showEditor(initialSong);
         document.fonts?.ready?.then(scheduleChordLayouts);

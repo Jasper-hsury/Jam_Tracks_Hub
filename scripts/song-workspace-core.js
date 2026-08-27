@@ -15,6 +15,7 @@
     const MAX_SECTIONS = 200;
     const MAX_LINES = 2000;
     const MAX_LINE_LENGTH = 1000;
+    const OPAQUE_SONG_ID = /^song-(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|[a-z0-9]{8,}-[a-z0-9]{6,})$/i;
     const AUTO_SCROLL = Object.freeze({
         pixelsPerBeat: 24,
         defaultPixelsPerSecond: 48,
@@ -50,6 +51,16 @@
             ? crypto.randomUUID()
             : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
         return `${prefix || "id"}-${random}`;
+    }
+
+    function isOpaqueSongId(value) {
+        return OPAQUE_SONG_ID.test(String(value || ""));
+    }
+
+    function songWorkspaceUrl(songId) {
+        return isOpaqueSongId(songId)
+            ? `song-workspace.html?song=${encodeURIComponent(String(songId))}`
+            : "song-workspace.html";
     }
 
     function codePoints(value) {
@@ -800,6 +811,8 @@
         VERSION,
         LIMITS: { MAX_SOURCE_LENGTH, MAX_SECTIONS, MAX_LINES, MAX_LINE_LENGTH },
         AUTO_SCROLL,
+        isOpaqueSongId,
+        songWorkspaceUrl,
         codePoints,
         baseScrollSpeedForBpm,
         normalizeScrollSpeedMultiplier,
