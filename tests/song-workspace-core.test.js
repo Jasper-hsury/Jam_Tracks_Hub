@@ -307,6 +307,102 @@ test("inserts sections at lyric boundaries without rebuilding existing IDs or an
     assert.deepEqual(reloaded.sections[1].lines.map(line => line.id), ["line-section-third"]);
 });
 
+test("inserts a bounded instrumental section at the selected section boundary", () => {
+    const verse = Core.createSection("Verse", "verse", [
+        Core.createLine("Synthetic verse", [Core.createChord("C", 0)], "lyric", "line-verse")
+    ], "section-verse");
+    const chorus = Core.createSection("Chorus", "chorus", [
+        Core.createLine("Synthetic chorus", [Core.createChord("G", 0)], "lyric", "line-chorus")
+    ], "section-chorus");
+    const song = Core.createSong({ sections: [verse, chorus] });
+    const result = Core.insertInstrumentalSectionAtBoundary(song, 0, 1, "Intro", 4);
+
+    assert.equal(result.sectionIndex, 1);
+    assert.deepEqual(result.song.sections.map(section => section.title), ["Verse", "Intro", "Chorus"]);
+    assert.equal(result.section.type, "instrumental");
+    assert.equal(result.section.lines.length, 4);
+    result.section.lines.forEach(function(line) {
+        assert.equal(line.type, "instrumental");
+        assert.equal(line.text, "");
+        assert.deepEqual(line.chords, []);
+    });
+    assert.equal(result.song.sections[0].id, "section-verse");
+    assert.equal(result.song.sections[2].id, "section-chorus");
+    assert.equal(result.song.sections[0].lines[0].id, "line-verse");
+    assert.equal(result.song.sections[2].lines[0].id, "line-chorus");
+});
+
+test("splits an internal boundary without rebuilding existing line or chord ids", () => {
+    const lines = [
+        Core.createLine("One", [Core.createChord("C", 0)], "lyric", "line-one"),
+        Core.createLine("Two", [Core.createChord("G/B", 0)], "lyric", "line-two"),
+        Core.createLine("Three", [Core.createChord("Am7", 0)], "lyric", "line-three")
+    ];
+    const song = Core.createSong({
+        sections: [Core.createSection("Verse", "verse", lines, "section-verse-split")]
+    });
+    const result = Core.insertInstrumentalSectionAtBoundary(song, 0, 1, "Solo", 1);
+
+    assert.deepEqual(result.song.sections.map(section => section.title), ["Verse", "Solo", "Verse"]);
+    assert.equal(result.song.sections[0].id, "section-verse-split");
+    assert.deepEqual(result.song.sections[0].lines.map(line => line.id), ["line-one"]);
+    assert.deepEqual(result.song.sections[2].lines.map(line => line.id), ["line-two", "line-three"]);
+    assert.equal(result.song.sections[2].lines[0].chords[0].id, lines[1].chords[0].id);
+});
+
+test("enforces instrumental bar bounds and preserves the chord-only model through export", () => {
+    const empty = Core.createSong({ sections: [] });
+    [1, 4, 64].forEach(function(count) {
+        const result = Core.insertInstrumentalSectionAtBoundary(empty, 0, 0, "Instrumental", count);
+        assert.equal(result.section.lines.length, count);
+    });
+    [0, -1, 1.5, 65, "many"].forEach(function(count) {
+        assert.throws(
+            () => Core.insertInstrumentalSectionAtBoundary(empty, 0, 0, "Instrumental", count),
+            /1 to 64 bars/
+        );
+    });
+
+    const created = Core.insertInstrumentalSectionAtBoundary(empty, 0, 0, "Interlude", 2).song;
+    created.sections[0].lines[0] = Core.createLine("", [Core.createChord("Am7", 0), Core.createChord("Fadd9", 1)], "instrumental", created.sections[0].lines[0].id);
+    created.sections[0].lines[1] = Core.createLine("", [Core.createChord("C", 0), Core.createChord("G/B", 1)], "instrumental", created.sections[0].lines[1].id);
+    const jsonRoundtrip = Core.deserializeSong(Core.serializeSong(created));
+    assert.deepEqual(jsonRoundtrip.sections[0].lines.map(line => line.type), ["instrumental", "instrumental"]);
+    assert.deepEqual(jsonRoundtrip.sections[0].lines.map(line => line.chords.map(chord => chord.symbol)), [["Am7", "Fadd9"], ["C", "G/B"]]);
+    assert.match(Core.toChordPro(created), /\[Am7\]\[Fadd9\]/);
+    assert.match(Core.toPlainText(created), /Am7  Fadd9/);
+    assert.doesNotMatch(Core.toChordPro(created), /placeholder|fake lyric/i);
+});
+
+test("applies all derived chord views to instrumental bars without lyric anchors", () => {
+    const song = Core.createSong({
+        originalKey: "C",
+        targetKey: "C",
+        sections: [Core.createSection("Solo", "instrumental", [
+            Core.createLine("", [Core.createChord("Cmaj9", 0), Core.createChord("G/B", 1)], "instrumental", "bar-derived")
+        ], "section-derived")]
+    });
+    const transposed = Core.songForTarget(song, "D");
+    const balanced = Core.transformSongChords(song, chord => Core.simplifyChord(chord, "balanced"));
+    const beginner = Core.transformSongChords(song, chord => Core.simplifyChord(chord, "beginner"));
+    const roman = Core.transformSongChords(song, chord => Core.chordNumber(chord, "C", "roman"));
+    const nashville = Core.transformSongChords(song, chord => Core.chordNumber(chord, "C", "nashville"));
+
+    assert.deepEqual(transposed.sections[0].lines[0].chords.map(chord => chord.symbol), ["Dmaj9", "A/C#"]);
+    assert.deepEqual(balanced.sections[0].lines[0].chords.map(chord => chord.symbol), ["Cmaj7", "G/B"]);
+    assert.deepEqual(beginner.sections[0].lines[0].chords.map(chord => chord.symbol), ["C", "G"]);
+    assert.deepEqual(roman.sections[0].lines[0].chords.map(chord => chord.symbol), ["Imaj9", "V/VII"]);
+    assert.deepEqual(nashville.sections[0].lines[0].chords.map(chord => chord.symbol), ["1maj9", "5/7"]);
+    [transposed, balanced, beginner, roman, nashville].forEach(function(view) {
+        const line = view.sections[0].lines[0];
+        assert.equal(line.id, "bar-derived");
+        assert.equal(line.type, "instrumental");
+        assert.equal(line.text, "");
+        assert.deepEqual(line.chords.map(chord => chord.anchorPosition), [0, 1]);
+    });
+    assert.ok(Core.smartCapo(song, 2).length >= 2);
+});
+
 test("imports chord lines, lyric lines, sections, and chord-only bars", () => {
     const chart = "[Intro]\n| G | D | Em | C |\n\n[Verse]\nG       D/F#\n測試中文歌詞 第一段";
     const song = Core.parseChordLyrics(chart, { title: "Test Song", originalKey: "G" });

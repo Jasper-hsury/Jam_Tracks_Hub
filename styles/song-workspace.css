@@ -914,6 +914,14 @@ html[data-theme="default"] .workspace-chord-chip {
     font-weight: 800;
 }
 
+.workspace-instrumental-line .workspace-bar-label {
+    min-width: 68px;
+    color: var(--workspace-muted);
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
 .workspace-add-control {
     position: relative;
     z-index: 2;
@@ -1111,6 +1119,16 @@ html.workspace-dialog-restoring {
     font-size: 0.84rem;
 }
 
+.workspace-dialog-helper {
+    margin: 16px 0 0;
+    color: var(--workspace-muted);
+    line-height: 1.55;
+}
+
+.workspace-instrumental-section-fields {
+    margin-top: 16px;
+}
+
 .workspace-field-source {
     grid-column: 1 / -1;
 }
@@ -1175,7 +1193,7 @@ html.workspace-dialog-restoring {
 
 .workspace-anchor-item {
     display: grid;
-    grid-template-columns: minmax(80px, 1fr) auto auto auto;
+    grid-template-columns: minmax(80px, 1fr) auto auto;
     align-items: center;
     gap: 8px;
     border-top: 1px solid var(--workspace-line);

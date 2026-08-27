@@ -9,6 +9,8 @@ const workspaceJs = fs.readFileSync(path.join(root, "scripts/song-workspace.js")
 const workspaceCore = fs.readFileSync(path.join(root, "scripts/song-workspace-core.js"), "utf8");
 const workspaceStorage = fs.readFileSync(path.join(root, "scripts/song-workspace-storage.js"), "utf8");
 const workspaceCss = fs.readFileSync(path.join(root, "styles/song-workspace.css"), "utf8");
+const englishLocale = fs.readFileSync(path.join(root, "locales/en/common.json"), "utf8");
+const chineseLocale = fs.readFileSync(path.join(root, "locales/zh-TW/common.json"), "utf8");
 
 function region(start, end) {
     const startIndex = workspaceHtml.indexOf(start);
@@ -58,6 +60,43 @@ test("Edit Line offers a danger Delete Line action and meaningful positions with
     assert.match(workspaceJs, /lineDialog\.close\("deleted"\)[\s\S]*?scheduleSave\(\)[\s\S]*?renderEditor\(\)/);
     assert.doesNotMatch(workspaceJs, /pages\.songWorkspace\.lineStart/);
     assert.doesNotMatch(workspaceJs, /Core\.codePoints\(elements\.lineText\.value\)/);
+    assert.doesNotMatch(workspaceJs, /move-anchor|pages\.songWorkspace\.move/);
+    assert.doesNotMatch(englishLocale, /"move"\s*:\s*"Move"/);
+    assert.doesNotMatch(chineseLocale, /"move"\s*:\s*"移動"/);
+    assert.match(workspaceJs, /editing\.anchorPosition = anchorPosition/);
+    assert.match(workspaceJs, /state\.editingAnchorId = chord\.id;[\s\S]*?state\.selectedAnchorPosition = chord\.anchorPosition/);
+});
+
+test("unsupported pre-release records remain skipped without a user warning or destructive cleanup", () => {
+    const loadSongs = workspaceJs.slice(
+        workspaceJs.indexOf("async function loadSongs()"),
+        workspaceJs.indexOf("function renderLibrary()")
+    );
+    assert.match(loadSongs, /Core\.validateSong\(song\)[\s\S]*?catch \(error\) \{[\s\S]*?return \[\];/);
+    assert.doesNotMatch(loadSongs, /Storage\.remove|replaceAll/);
+    assert.doesNotMatch(workspaceJs, /preReleaseDataIncompatible/);
+    assert.doesNotMatch(englishLocale, /older pre-release local songs/i);
+    assert.doesNotMatch(chineseLocale, /較舊開發版本的本機歌曲/);
+});
+
+test("+ Add provides a bounded instrumental-section modal and contextual bar editing", () => {
+    const instrumentalForm = region('<form method="dialog" id="instrumentalSectionForm">', "</form>");
+    assert.match(instrumentalForm, /id="instrumentalSectionNameInput"[^>]*maxlength="80"/);
+    assert.doesNotMatch(instrumentalForm, /instrumentalSectionNameInput[^>]*required/);
+    assert.match(instrumentalForm, /id="instrumentalBarCountInput"[^>]*type="number"[^>]*min="1"[^>]*max="64"[^>]*step="1"[^>]*value="4"[^>]*required/);
+    assert.match(workspaceHtml, /id="anchorPositionField"[\s\S]*?data-i18n="pages\.songWorkspace\.anchorPosition"[\s\S]*?id="anchorPositionInput"/);
+    assert.match(workspaceJs, /pages\.songWorkspace\.addInstrumentalSection[\s\S]*?"add-instrumental-section"/);
+    assert.match(workspaceJs, /Core\.insertInstrumentalSectionAtBoundary\(/);
+    assert.match(workspaceJs, /sectionType === "instrumental"[\s\S]*?pages\.songWorkspace\.addBar[\s\S]*?"add-bar"/);
+    assert.match(workspaceJs, /Core\.createLine\("", \[\], instrumental \? "instrumental" : "lyric"\)/);
+    assert.match(workspaceJs, /line\.type === "instrumental"[\s\S]*?pages\.songWorkspace\.editBarNumber/);
+    assert.match(workspaceJs, /elements\.lineTextField\.hidden = instrumental/);
+    assert.match(workspaceJs, /elements\.anchorPreview\.hidden = instrumental/);
+    assert.match(workspaceJs, /elements\.anchorPositionField\.hidden = instrumental/);
+    assert.match(workspaceJs, /pages\.songWorkspace\.deleteBar/);
+    assert.match(workspaceJs, /pages\.songWorkspace\.saveBar/);
+    assert.match(englishLocale, /"addInstrumentalSection"\s*:\s*"Add Instrumental Section"/);
+    assert.match(chineseLocale, /"addInstrumentalSection"\s*:\s*"新增純和弦段落"/);
 });
 
 test("Performance Mode exposes BPM-based speed as a retained multiplier", () => {

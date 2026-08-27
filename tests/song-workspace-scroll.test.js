@@ -76,6 +76,6 @@ test("Create and ChordPro use the same background lock and restore contract", ()
 
     assert.ok(openCreate.indexOf("lockDialogBackground(elements.createDialog") < openCreate.indexOf("elements.createDialog.showModal()"));
     assert.match(create, /createDialog\.close\("created"\)[\s\S]*?restoreDialogBackground\(elements\.createDialog, null\)/);
-    assert.match(events, /\[elements\.createDialog, elements\.sectionDialog, elements\.lineDialog\][\s\S]*?addEventListener\("close"[\s\S]*?restoreDialogBackground/);
+    assert.match(events, /\[elements\.createDialog, elements\.sectionDialog, elements\.instrumentalDialog, elements\.lineDialog\][\s\S]*?addEventListener\("close"[\s\S]*?restoreDialogBackground/);
     assert.match(workspaceCss, /html\.workspace-dialog-open,[\s\S]*?body\.workspace-dialog-open\s*\{[^}]*overflow:\s*hidden/s);
 });

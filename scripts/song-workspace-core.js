@@ -15,6 +15,7 @@
     const MAX_SECTIONS = 200;
     const MAX_LINES = 2000;
     const MAX_LINE_LENGTH = 1000;
+    const INSTRUMENTAL_BARS = Object.freeze({ default: 4, min: 1, max: 64 });
     const OPAQUE_SONG_ID = /^song-(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|[a-z0-9]{8,}-[a-z0-9]{6,})$/i;
     const AUTO_SCROLL = Object.freeze({
         pixelsPerBeat: 24,
@@ -400,6 +401,59 @@
         }
 
         copy.sections.splice(destinationIndex, 0, inserted);
+        copy.updatedAt = new Date().toISOString();
+        return { song: copy, section: inserted, sectionIndex: destinationIndex };
+    }
+
+    function instrumentalBarCount(value) {
+        const count = Number(value);
+        if (!Number.isInteger(count) || count < INSTRUMENTAL_BARS.min || count > INSTRUMENTAL_BARS.max) {
+            throw new Error(`Instrumental sections require ${INSTRUMENTAL_BARS.min} to ${INSTRUMENTAL_BARS.max} bars.`);
+        }
+        return count;
+    }
+
+    function insertInstrumentalSectionAtBoundary(song, sectionIndex, insertionIndex, title, barCount) {
+        const copy = createSong(song);
+        const count = instrumentalBarCount(barCount);
+        const totalLines = copy.sections.reduce(function(total, section) { return total + section.lines.length; }, 0);
+        if (totalLines + count > MAX_LINES) throw new Error("Song Document has too many lines.");
+
+        const cleanTitle = String(title || "Instrumental").trim().slice(0, 80) || "Instrumental";
+        const inserted = createSection(cleanTitle, "instrumental", Array.from({ length: count }, function() {
+            return createLine("", [], "instrumental");
+        }));
+
+        if (!copy.sections.length) {
+            copy.sections.push(inserted);
+            copy.updatedAt = new Date().toISOString();
+            return { song: copy, section: inserted, sectionIndex: 0 };
+        }
+
+        const sourceSectionIndex = clamp(sectionIndex, 0, copy.sections.length - 1);
+        const sourceSection = copy.sections[sourceSectionIndex];
+        const boundary = clamp(insertionIndex, 0, sourceSection.lines.length);
+        let destinationIndex;
+
+        if (boundary === 0) {
+            if (copy.sections.length >= MAX_SECTIONS) throw new Error("Song Document has too many sections.");
+            destinationIndex = sourceSectionIndex;
+            copy.sections.splice(destinationIndex, 0, inserted);
+        } else if (boundary === sourceSection.lines.length) {
+            if (copy.sections.length >= MAX_SECTIONS) throw new Error("Song Document has too many sections.");
+            destinationIndex = sourceSectionIndex + 1;
+            copy.sections.splice(destinationIndex, 0, inserted);
+        } else {
+            if (copy.sections.length + 2 > MAX_SECTIONS) throw new Error("Song Document has too many sections.");
+            const continuation = createSection(
+                sourceSection.title,
+                sourceSection.type,
+                sourceSection.lines.splice(boundary)
+            );
+            destinationIndex = sourceSectionIndex + 1;
+            copy.sections.splice(destinationIndex, 0, inserted, continuation);
+        }
+
         copy.updatedAt = new Date().toISOString();
         return { song: copy, section: inserted, sectionIndex: destinationIndex };
     }
@@ -888,7 +942,7 @@
         VERSION,
         KEY_OPTIONS: { major: MAJOR_KEY_OPTIONS.slice(), minor: MINOR_KEY_OPTIONS.slice() },
         CHORD_SPELLING,
-        LIMITS: { MAX_SOURCE_LENGTH, MAX_SECTIONS, MAX_LINES, MAX_LINE_LENGTH },
+        LIMITS: { MAX_SOURCE_LENGTH, MAX_SECTIONS, MAX_LINES, MAX_LINE_LENGTH, INSTRUMENTAL_BARS },
         AUTO_SCROLL,
         isOpaqueSongId,
         songWorkspaceUrl,
@@ -914,6 +968,7 @@
         insertLine,
         deleteLine,
         insertSectionAtBoundary,
+        insertInstrumentalSectionAtBoundary,
         createSection,
         createSong,
         validateSong,

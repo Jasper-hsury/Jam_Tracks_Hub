@@ -346,16 +346,44 @@
         </form>
     </dialog>
 
+    <dialog class="workspace-dialog workspace-section-dialog" id="instrumentalSectionDialog">
+        <form method="dialog" id="instrumentalSectionForm">
+            <div class="workspace-dialog-heading">
+                <div>
+                    <span class="result-kicker" data-i18n="pages.songWorkspace.addInstrumentalSection">Add Instrumental Section</span>
+                    <h2 data-i18n="pages.songWorkspace.instrumentalSectionPrompt">Create a chord-only section</h2>
+                </div>
+                <button class="workspace-icon-button" type="button" data-dialog-close aria-label="Close" data-i18n-aria-label="common.close">×</button>
+            </div>
+            <p class="workspace-dialog-helper" data-i18n="pages.songWorkspace.instrumentalSectionHelp">For intros, interludes, outros, and other sections without lyrics.</p>
+            <div class="workspace-dialog-grid workspace-instrumental-section-fields">
+                <label class="workspace-field">
+                    <span data-i18n="pages.songWorkspace.sectionNameOptional">Section name (optional)</span>
+                    <input id="instrumentalSectionNameInput" type="text" maxlength="80" autocomplete="off" data-i18n-placeholder="pages.songWorkspace.instrumentalSectionPlaceholder" placeholder="e.g. Intro, Interlude, Solo, Outro">
+                </label>
+                <label class="workspace-field">
+                    <span data-i18n="pages.songWorkspace.numberOfBars">Number of Bars</span>
+                    <input id="instrumentalBarCountInput" type="number" min="1" max="64" step="1" value="4" inputmode="numeric" required>
+                </label>
+            </div>
+            <p class="workspace-dialog-error" id="instrumentalSectionDialogError" role="alert"></p>
+            <div class="workspace-dialog-actions">
+                <button class="workspace-button workspace-button-secondary" type="button" data-dialog-close data-i18n="common.cancel">Cancel</button>
+                <button class="workspace-button workspace-button-primary" value="default" type="submit" data-i18n="pages.songWorkspace.addInstrumentalSection">Add Instrumental Section</button>
+            </div>
+        </form>
+    </dialog>
+
     <dialog class="workspace-dialog workspace-line-dialog" id="lineEditorDialog">
         <form method="dialog" id="lineEditorForm">
             <div class="workspace-dialog-heading">
                 <div>
                     <span class="result-kicker" data-i18n="pages.songWorkspace.visualEditor">Visual chord editor</span>
-                    <h2 data-i18n="pages.songWorkspace.editLine">Edit Line</h2>
+                    <h2 id="lineDialogTitle" data-i18n="pages.songWorkspace.editLine">Edit Line</h2>
                 </div>
                 <button class="workspace-icon-button" type="button" data-dialog-close aria-label="Close" data-i18n-aria-label="common.close">×</button>
             </div>
-            <label class="workspace-field workspace-field-source">
+            <label class="workspace-field workspace-field-source" id="lineTextField">
                 <span data-i18n="pages.songWorkspace.lyricText">Lyric or section text</span>
                 <textarea id="lineTextInput" rows="3" maxlength="1000"></textarea>
             </label>
@@ -365,7 +393,7 @@
                     <span data-i18n="pages.songWorkspace.chordSymbol">Chord symbol</span>
                     <input id="anchorChordInput" type="text" maxlength="40" placeholder="G, D/F#, Em7...">
                 </label>
-                <label class="workspace-field">
+                <label class="workspace-field" id="anchorPositionField">
                     <span data-i18n="pages.songWorkspace.anchorPosition">Anchor position</span>
                     <input id="anchorPositionInput" type="number" min="1" value="1" inputmode="numeric">
                 </label>
@@ -376,7 +404,7 @@
             <div class="workspace-dialog-actions workspace-line-dialog-actions">
                 <button class="workspace-button workspace-button-danger" id="deleteLineButton" type="button" data-i18n="pages.songWorkspace.deleteLine">Delete Line</button>
                 <button class="workspace-button workspace-button-secondary" type="button" data-dialog-close data-i18n="common.cancel">Cancel</button>
-                <button class="workspace-button workspace-button-primary" value="default" type="submit" data-i18n="pages.songWorkspace.saveLine">Save Line</button>
+                <button class="workspace-button workspace-button-primary" id="saveLineButton" value="default" type="submit" data-i18n="pages.songWorkspace.saveLine">Save Line</button>
             </div>
         </form>
     </dialog>

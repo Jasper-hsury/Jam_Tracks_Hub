@@ -29,6 +29,7 @@
         dialogLock: null,
         addMenuTrigger: null,
         sectionInsertContext: null,
+        instrumentalInsertContext: null,
         chordLayoutFrame: 0,
         scrollFrame: 0,
         scrolling: false,
@@ -53,14 +54,19 @@
         createLocalDisclosure: $("createLocalDisclosure"),
         confirmCreate: $("confirmCreateButton"),
         lineDialog: $("lineEditorDialog"), lineForm: $("lineEditorForm"), lineText: $("lineTextInput"),
+        lineTitle: $("lineDialogTitle"), lineTextField: $("lineTextField"),
         anchorPreview: $("anchorPreview"), anchorChord: $("anchorChordInput"), anchorPosition: $("anchorPositionInput"),
+        anchorPositionField: $("anchorPositionField"),
         anchorList: $("anchorList"), addAnchor: $("addAnchorButton"), lineError: $("lineDialogError"),
-        deleteLine: $("deleteLineButton"),
+        deleteLine: $("deleteLineButton"), saveLine: $("saveLineButton"),
         chordHints: $("chordHintsButton"), shapePicker: $("shapePickerDialog"),
         shapePickerSymbol: $("shapePickerSymbol"), shapePickerCount: $("shapePickerCount"),
         shapePickerPosition: $("shapePositionFilter"), shapePickerRoot: $("shapeRootFilter"),
         shapePickerGrid: $("shapePickerGrid"),
         sectionDialog: $("sectionNameDialog"), sectionForm: $("sectionNameForm"), sectionName: $("sectionNameInput"),
+        instrumentalDialog: $("instrumentalSectionDialog"), instrumentalForm: $("instrumentalSectionForm"),
+        instrumentalName: $("instrumentalSectionNameInput"), instrumentalBars: $("instrumentalBarCountInput"),
+        instrumentalError: $("instrumentalSectionDialogError"),
         performance: $("performanceDialog"), performanceTitle: $("performanceTitle"),
         performanceMeta: $("performanceMeta"), performanceChart: $("performanceChart"),
         scrollToggle: $("scrollToggleButton"), scrollSpeed: $("scrollSpeedInput"), scrollSpeedValue: $("scrollSpeedValue"),
@@ -147,12 +153,6 @@
                 }
             });
             state.storageAvailable = true;
-            if (state.songs.length !== storedSongs.length) {
-                setStatus(t(
-                    "pages.songWorkspace.preReleaseDataIncompatible",
-                    "Some older pre-release local songs use an unsupported format and were not opened. Recreate or re-import them with Song Document V2."
-                ), true);
-            }
         } catch (error) {
             state.storageAvailable = false;
             state.songs = [];
@@ -292,7 +292,7 @@
             return;
         }
         song.sections.forEach(function(section, sectionIndex) {
-            const sectionElement = node("section", "workspace-section");
+            const sectionElement = node("section", `workspace-section${section.type === "instrumental" ? " is-instrumental" : ""}`);
             const heading = node("div", "workspace-section-heading-row");
             heading.appendChild(node("h3", "", section.title));
             if (editable) {
@@ -306,17 +306,17 @@
             }
             const lines = node("div", "workspace-lines");
             section.lines.forEach(function(line, lineIndex) {
-                if (editable) lines.appendChild(renderInsertControl(sectionIndex, lineIndex));
+                if (editable) lines.appendChild(renderInsertControl(sectionIndex, lineIndex, section.type));
                 lines.appendChild(renderLine(line, sectionIndex, lineIndex, editable));
             });
-            if (editable) lines.appendChild(renderInsertControl(sectionIndex, section.lines.length));
+            if (editable) lines.appendChild(renderInsertControl(sectionIndex, section.lines.length, section.type));
             sectionElement.append(heading, lines);
             host.appendChild(sectionElement);
         });
         scheduleChordLayouts();
     }
 
-    function renderInsertControl(sectionIndex, insertionIndex) {
+    function renderInsertControl(sectionIndex, insertionIndex, sectionType) {
         const wrapper = node("div", "workspace-add-control");
         const trigger = button(`+ ${t("pages.songWorkspace.add", "Add")}`, "toggle-add-menu", "workspace-add-trigger");
         const menu = node("div", "workspace-add-menu");
@@ -330,8 +330,11 @@
         menu.hidden = true;
         menu.setAttribute("role", "menu");
         [
-            [t("pages.songWorkspace.addLine", "Add Line"), "add-line"],
-            [t("pages.songWorkspace.addSection", "Add Section"), "add-section"]
+            [sectionType === "instrumental"
+                ? t("pages.songWorkspace.addBar", "Add Bar")
+                : t("pages.songWorkspace.addLine", "Add Line"), sectionType === "instrumental" ? "add-bar" : "add-line"],
+            [t("pages.songWorkspace.addSection", "Add Section"), "add-section"],
+            [t("pages.songWorkspace.addInstrumentalSection", "Add Instrumental Section"), "add-instrumental-section"]
         ].forEach(function(entry) {
             const option = button(entry[0], entry[1], "workspace-menu-action");
             option.dataset.sectionIndex = String(sectionIndex);
@@ -439,6 +442,44 @@
         renderEditor();
     }
 
+    function openInstrumentalSectionDialog(sectionIndex, insertionIndex, trigger) {
+        closeAddMenu({ restoreFocus: false });
+        state.instrumentalInsertContext = { sectionIndex, insertionIndex, trigger };
+        elements.instrumentalName.value = "";
+        elements.instrumentalBars.value = String(Core.LIMITS.INSTRUMENTAL_BARS.default);
+        elements.instrumentalError.textContent = "";
+        lockDialogBackground(elements.instrumentalDialog, trigger);
+        elements.instrumentalDialog.showModal();
+        window.requestAnimationFrame(function() { focusWithoutScroll(elements.instrumentalName); });
+    }
+
+    function addInstrumentalSectionAtBoundary() {
+        const context = state.instrumentalInsertContext;
+        if (!context || !state.song) return;
+        const title = elements.instrumentalName.value.trim()
+            || t("pages.songWorkspace.defaultInstrumentalSectionName", "Instrumental");
+        try {
+            const result = Core.insertInstrumentalSectionAtBoundary(
+                state.song,
+                context.sectionIndex,
+                context.insertionIndex,
+                title,
+                Number(elements.instrumentalBars.value)
+            );
+            state.song = result.song;
+            elements.instrumentalDialog.close("created");
+            restoreDialogBackground(elements.instrumentalDialog, null);
+            scheduleSave();
+            renderEditor();
+        } catch (error) {
+            const count = Number(elements.instrumentalBars.value);
+            const limits = Core.LIMITS.INSTRUMENTAL_BARS;
+            elements.instrumentalError.textContent = !Number.isInteger(count) || count < limits.min || count > limits.max
+                ? t("pages.songWorkspace.invalidBarCount", "Enter a whole number from 1 to 64.")
+                : t("pages.songWorkspace.instrumentalSectionError", "This instrumental section could not be added.");
+        }
+    }
+
     function renderLine(line, sectionIndex, lineIndex, editable) {
         const host = node(editable ? "button" : "div", `workspace-line${line.type === "instrumental" ? " is-instrumental" : ""}`);
         if (editable) {
@@ -446,10 +487,15 @@
             host.dataset.action = "edit-line";
             host.dataset.sectionIndex = String(sectionIndex);
             host.dataset.lineIndex = String(lineIndex);
-            host.setAttribute("aria-label", t("pages.songWorkspace.editLine", "Edit line"));
+            host.setAttribute("aria-label", line.type === "instrumental"
+                ? t("pages.songWorkspace.editBarNumber", "Edit bar {{bar}}", { bar: lineIndex + 1 })
+                : t("pages.songWorkspace.editLine", "Edit line"));
         }
         if (line.type === "instrumental" || !line.text) {
             const row = node("div", "workspace-instrumental-line");
+            if (line.type === "instrumental") {
+                row.appendChild(node("span", "workspace-bar-label", t("pages.songWorkspace.barNumber", "Bar {{bar}}", { bar: lineIndex + 1 })));
+            }
             line.chords.forEach(chord => row.appendChild(node("span", "", chord.symbol)));
             if (!line.chords.length) row.appendChild(node("span", "", t("pages.songWorkspace.emptyLine", "Empty line")));
             host.appendChild(row);
@@ -906,6 +952,7 @@
     function openLineEditor(sectionIndex, lineIndex) {
         const line = findCanonicalLine(sectionIndex, lineIndex);
         if (!line) return;
+        const instrumental = line.type === "instrumental";
         state.lineContext = { sectionIndex, lineIndex };
         state.lineDraft = Core.createLine(line.text, line.chords, line.type, line.id);
         state.selectedAnchorPosition = 0;
@@ -913,14 +960,30 @@
         elements.lineText.value = state.lineDraft.text;
         elements.anchorChord.value = "";
         elements.addAnchor.textContent = t("pages.songWorkspace.addChord", "Add Chord");
+        elements.lineForm.classList.toggle("is-instrumental", instrumental);
+        elements.lineTitle.textContent = instrumental
+            ? t("pages.songWorkspace.editBar", "Edit Bar")
+            : t("pages.songWorkspace.editLine", "Edit Line");
+        elements.lineTextField.hidden = instrumental;
+        elements.anchorPreview.hidden = instrumental;
+        elements.anchorPositionField.hidden = instrumental;
+        elements.deleteLine.textContent = instrumental
+            ? t("pages.songWorkspace.deleteBar", "Delete Bar")
+            : t("pages.songWorkspace.deleteLine", "Delete Line");
+        elements.saveLine.textContent = instrumental
+            ? t("pages.songWorkspace.saveBar", "Save Bar")
+            : t("pages.songWorkspace.saveLine", "Save Line");
         elements.lineError.textContent = "";
         renderAnchorEditor();
         lockDialogBackground(elements.lineDialog, document.activeElement);
         elements.lineDialog.showModal();
-        window.requestAnimationFrame(function() { focusWithoutScroll(elements.lineText); });
+        window.requestAnimationFrame(function() {
+            focusWithoutScroll(instrumental ? elements.anchorChord : elements.lineText);
+        });
     }
 
     function renderAnchorEditor() {
+        const instrumental = state.lineDraft.type === "instrumental";
         const positions = Core.tokenizeLyric(elements.lineText.value).filter(function(token) { return token.meaningful; });
         elements.anchorPreview.replaceChildren();
         const instrumentalCount = Math.max(
@@ -933,27 +996,29 @@
                 return t("pages.songWorkspace.instrumentalPosition", "Position {{position}}", { position: index + 1 });
             });
         state.selectedAnchorPosition = Math.min(state.selectedAnchorPosition, availablePositions.length - 1);
-        availablePositions.forEach(function(label, index) {
-            const item = button(label, "choose-anchor");
-            item.dataset.anchorPosition = String(index);
-            item.classList.toggle("is-selected", state.selectedAnchorPosition === index);
-            item.setAttribute("aria-label", `${index + 1}: ${label}`);
-            elements.anchorPreview.appendChild(item);
-        });
+        if (!instrumental) {
+            availablePositions.forEach(function(label, index) {
+                const item = button(label, "choose-anchor");
+                item.dataset.anchorPosition = String(index);
+                item.classList.toggle("is-selected", state.selectedAnchorPosition === index);
+                item.setAttribute("aria-label", `${index + 1}: ${label}`);
+                elements.anchorPreview.appendChild(item);
+            });
+        }
         elements.anchorPosition.max = String(availablePositions.length);
         elements.anchorPosition.value = String(state.selectedAnchorPosition + 1);
         elements.anchorList.replaceChildren();
         state.lineDraft.chords.slice().sort((a, b) => a.anchorPosition - b.anchorPosition).forEach(function(chord) {
             const row = node("div", "workspace-anchor-item");
             const positionLabel = availablePositions[chord.anchorPosition] || String(chord.anchorPosition + 1);
-            row.appendChild(node("strong", "", `${chord.symbol} · ${chord.anchorPosition + 1}: ${positionLabel}`));
+            row.appendChild(node("strong", "", instrumental
+                ? chord.symbol
+                : `${chord.symbol} · ${chord.anchorPosition + 1}: ${positionLabel}`));
             const edit = button(t("pages.songWorkspace.edit", "Edit"), "edit-anchor", "workspace-button workspace-button-subtle workspace-button-compact");
-            const move = button(t("pages.songWorkspace.move", "Move"), "move-anchor", "workspace-button workspace-button-subtle workspace-button-compact");
             const remove = button(t("pages.songWorkspace.delete", "Delete"), "delete-anchor", "workspace-button workspace-button-danger workspace-button-compact");
             edit.dataset.anchorId = chord.id;
-            move.dataset.anchorId = chord.id;
             remove.dataset.anchorId = chord.id;
-            row.append(edit, move, remove);
+            row.append(edit, remove);
             elements.anchorList.appendChild(row);
         });
     }
@@ -964,10 +1029,15 @@
             elements.lineError.textContent = t("pages.songWorkspace.invalidChord", "Enter a supported chord symbol.");
             return;
         }
+        const editing = state.lineDraft.chords.find(chord => chord.id === state.editingAnchorId);
+        const instrumental = state.lineDraft.type === "instrumental";
         const positionCount = Core.meaningfulPositionCount(elements.lineText.value);
         const requestedPosition = Math.max(0, (Number(elements.anchorPosition.value) || 1) - 1);
-        const anchorPosition = positionCount ? Math.min(positionCount - 1, requestedPosition) : requestedPosition;
-        const editing = state.lineDraft.chords.find(chord => chord.id === state.editingAnchorId);
+        const anchorPosition = instrumental
+            ? (editing ? editing.anchorPosition : state.lineDraft.chords.reduce(function(maximum, chord) {
+                return Math.max(maximum, chord.anchorPosition + 1);
+            }, 0))
+            : (positionCount ? Math.min(positionCount - 1, requestedPosition) : requestedPosition);
         if (editing) {
             editing.symbol = parsed.raw;
             editing.anchorPosition = anchorPosition;
@@ -984,8 +1054,9 @@
     function saveLineDraft() {
         const context = state.lineContext;
         if (!context) return;
-        const text = elements.lineText.value.slice(0, Core.LIMITS.MAX_LINE_LENGTH);
-        const type = text ? "lyric" : "instrumental";
+        const instrumental = state.lineDraft.type === "instrumental";
+        const text = instrumental ? "" : elements.lineText.value.slice(0, Core.LIMITS.MAX_LINE_LENGTH);
+        const type = instrumental ? "instrumental" : (text ? "lyric" : "instrumental");
         state.song.sections[context.sectionIndex].lines[context.lineIndex] = Core.createLine(text, state.lineDraft.chords, type, state.lineDraft.id);
         elements.lineDialog.close("saved");
         restoreDialogBackground(elements.lineDialog, null);
@@ -1254,8 +1325,9 @@
             const sectionIndex = Number(control.dataset.sectionIndex);
             if (control.dataset.action === "edit-line") openLineEditor(sectionIndex, Number(control.dataset.lineIndex));
             else if (control.dataset.action === "toggle-add-menu") toggleAddMenu(control);
-            else if (control.dataset.action === "add-line") {
+            else if (control.dataset.action === "add-line" || control.dataset.action === "add-bar") {
                 const insertionIndex = Number(control.dataset.insertionIndex);
+                const instrumental = control.dataset.action === "add-bar";
                 closeAddMenu({ restoreFocus: false });
                 let result;
                 let destinationSection = sectionIndex;
@@ -1270,7 +1342,12 @@
                     destinationSection = sectionResult.sectionIndex;
                     result = { song: state.song, index: 0 };
                 } else {
-                    result = Core.insertLine(state.song, sectionIndex, insertionIndex, Core.createLine("", [], "lyric"));
+                    result = Core.insertLine(
+                        state.song,
+                        sectionIndex,
+                        insertionIndex,
+                        Core.createLine("", [], instrumental ? "instrumental" : "lyric")
+                    );
                     state.song = result.song;
                 }
                 scheduleSave();
@@ -1278,6 +1355,8 @@
                 openLineEditor(destinationSection, result.index);
             } else if (control.dataset.action === "add-section") {
                 openSectionDialog(sectionIndex, Number(control.dataset.insertionIndex), control);
+            } else if (control.dataset.action === "add-instrumental-section") {
+                openInstrumentalSectionDialog(sectionIndex, Number(control.dataset.insertionIndex), control);
             } else if (control.dataset.action === "rename-section") {
                 const section = state.song.sections[sectionIndex];
                 const title = window.prompt(t("pages.songWorkspace.sectionNamePrompt", "Section name"), section.title);
@@ -1335,6 +1414,19 @@
                 if (context?.trigger?.isConnected) context.trigger.focus();
             });
         });
+        elements.instrumentalForm.addEventListener("submit", function(event) {
+            if (event.submitter?.value !== "default") return;
+            event.preventDefault();
+            addInstrumentalSectionAtBoundary();
+        });
+        elements.instrumentalDialog.addEventListener("close", function() {
+            const context = state.instrumentalInsertContext;
+            state.instrumentalInsertContext = null;
+            if (elements.instrumentalDialog.returnValue === "created") return;
+            window.requestAnimationFrame(function() {
+                if (context?.trigger?.isConnected) context.trigger.focus();
+            });
+        });
         elements.capoResults.addEventListener("click", function(event) {
             const control = event.target.closest('[data-action="use-capo"]');
             if (!control) return;
@@ -1367,8 +1459,6 @@
                 state.selectedAnchorPosition = chord.anchorPosition;
                 elements.anchorChord.value = chord.symbol;
                 elements.addAnchor.textContent = t("pages.songWorkspace.updateChord", "Update Chord");
-            } else {
-                chord.anchorPosition = state.selectedAnchorPosition;
             }
             renderAnchorEditor();
         });
@@ -1376,7 +1466,7 @@
             if (event.submitter?.value !== "default") return;
             event.preventDefault(); saveLineDraft();
         });
-        [elements.createDialog, elements.sectionDialog, elements.lineDialog].forEach(function(dialog) {
+        [elements.createDialog, elements.sectionDialog, elements.instrumentalDialog, elements.lineDialog].forEach(function(dialog) {
             dialog.addEventListener("close", function() {
                 restoreDialogBackground(dialog, dialog.returnValue === "cancel" ? undefined : null);
             });
@@ -1409,7 +1499,7 @@
                 closeShapePicker();
                 return;
             }
-            const dismissibleDialog = [elements.createDialog, elements.sectionDialog, elements.lineDialog]
+            const dismissibleDialog = [elements.createDialog, elements.sectionDialog, elements.instrumentalDialog, elements.lineDialog]
                 .find(dialog => dialog.open);
             if (event.key === "Escape" && dismissibleDialog) {
                 event.preventDefault();
@@ -1440,6 +1530,26 @@
             }
             if (elements.shapePicker.open) renderShapePicker();
             if (elements.sectionDialog.open) elements.sectionName.placeholder = sectionNamePlaceholder();
+            if (elements.instrumentalDialog.open) {
+                elements.instrumentalName.placeholder = t(
+                    "pages.songWorkspace.instrumentalSectionPlaceholder",
+                    "e.g. Intro, Interlude, Solo, Outro"
+                );
+            }
+            if (elements.lineDialog.open && state.lineContext) {
+                const line = findCanonicalLine(state.lineContext.sectionIndex, state.lineContext.lineIndex);
+                const instrumental = line?.type === "instrumental";
+                elements.lineTitle.textContent = instrumental
+                    ? t("pages.songWorkspace.editBar", "Edit Bar")
+                    : t("pages.songWorkspace.editLine", "Edit Line");
+                elements.deleteLine.textContent = instrumental
+                    ? t("pages.songWorkspace.deleteBar", "Delete Bar")
+                    : t("pages.songWorkspace.deleteLine", "Delete Line");
+                elements.saveLine.textContent = instrumental
+                    ? t("pages.songWorkspace.saveBar", "Save Bar")
+                    : t("pages.songWorkspace.saveLine", "Save Line");
+                renderAnchorEditor();
+            }
             scheduleChordLayouts();
         });
         window.addEventListener("jasper:theme-change", scheduleChordLayouts);
