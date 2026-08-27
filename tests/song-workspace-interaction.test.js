@@ -95,6 +95,7 @@ test("+ Add provides a bounded instrumental-section modal and contextual bar edi
     assert.match(workspaceJs, /elements\.anchorPositionField\.hidden = instrumental/);
     assert.match(workspaceJs, /pages\.songWorkspace\.deleteBar/);
     assert.match(workspaceJs, /pages\.songWorkspace\.saveBar/);
+    assert.match(workspaceJs, /delete-section" && window\.confirm[\s\S]*?state\.song\.sections\.splice\(sectionIndex, 1\); scheduleSave\(\); renderEditor\(\)/);
     assert.match(englishLocale, /"addInstrumentalSection"\s*:\s*"Add Instrumental Section"/);
     assert.match(chineseLocale, /"addInstrumentalSection"\s*:\s*"新增純和弦段落"/);
 });

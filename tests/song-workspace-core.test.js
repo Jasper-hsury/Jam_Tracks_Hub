@@ -372,6 +372,14 @@ test("enforces instrumental bar bounds and preserves the chord-only model throug
     assert.match(Core.toChordPro(created), /\[Am7\]\[Fadd9\]/);
     assert.match(Core.toPlainText(created), /Am7  Fadd9/);
     assert.doesNotMatch(Core.toChordPro(created), /placeholder|fake lyric/i);
+
+    const sectionId = created.sections[0].id;
+    const remainingBarId = created.sections[0].lines[1].id;
+    const deleted = Core.deleteLine(created, 0, 0);
+    assert.equal(deleted.line.type, "instrumental");
+    assert.equal(deleted.song.sections[0].id, sectionId);
+    assert.equal(deleted.song.sections[0].lines.length, 1);
+    assert.equal(deleted.song.sections[0].lines[0].id, remainingBarId);
 });
 
 test("applies all derived chord views to instrumental bars without lyric anchors", () => {
