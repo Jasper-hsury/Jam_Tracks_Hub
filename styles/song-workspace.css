@@ -809,6 +809,10 @@ body.workspace-shape-picker-open {
     overflow: hidden;
 }
 
+html.workspace-shape-picker-restoring {
+    scroll-behavior: auto !important;
+}
+
 .workspace-shape-picker-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));

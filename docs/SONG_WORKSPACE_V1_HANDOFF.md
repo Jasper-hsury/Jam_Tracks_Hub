@@ -39,21 +39,21 @@ Song Workspace is a user-supplied-content practice and arrangement tool. It is n
 
 ## 3. Git Snapshot
 
-Repository truth before adding this handoff:
+Repository truth before the current Shape Picker scroll hardening:
 
 ```text
 Branch: feat/song-workspace-v1
-HEAD: e0538862efd77adb3924cc86ca1923215e39cfa3
-origin/feat/song-workspace-v1: e0538862efd77adb3924cc86ca1923215e39cfa3
+HEAD: 6fb567a0f02a443c8219a6f7c208c7a257d00487
+origin/feat/song-workspace-v1: 6fb567a0f02a443c8219a6f7c208c7a257d00487
 main: 9b5ed9b
 origin/main: 9b5ed9b
-Feature branch vs origin/main: 4 ahead, 0 behind
+Feature branch vs origin/main: 6 ahead, 0 behind
 Origin fetch/push: git@github.com:Passerby-WB/Jam_Tracks_Hub.git
 ```
 
 The product history reports that GitHub has advertised a newer location, `git@github.com:Jasper-hsury/Jam_Tracks_Hub.git`. The current remote still uses the old URL, so remote URL normalization is **PENDING**. Do not change the remote during unrelated work; confirm the canonical owner and URL first.
 
-Before this handoff, there were no tracked modifications and only the two approved untracked exceptions in section 4. There were no uncommitted Song Workspace production changes.
+Before the current hardening, there were no tracked modifications and only the two approved untracked exceptions in section 4. There were no uncommitted Song Workspace production changes.
 
 ## 4. Approved Working-Tree Exceptions
 
@@ -348,20 +348,21 @@ Song Workspace reuses the Chord Dictionary interval variables and presentation r
 
 ## 22. Modal / Scroll Behavior
 
-The Chord Shape Picker is a native dialog (`song-workspace.html:242-253`). Current implementation in `scripts/song-workspace.js:576-662`:
+The Chord Shape Picker is a native dialog (`song-workspace.html:242-253`). Current implementation in `scripts/song-workspace.js`:
 
 - captures exact scroll X/Y;
 - dynamically measures scrollbar width and compensates body padding;
 - fixes/locks the background body;
 - allows internal dialog scrolling with a bounded max height;
 - supports iOS momentum and overscroll containment in CSS;
-- closes via X, Escape/native dialog cancel, or voicing selection;
-- restores focus to the originating Choose Another Shape button with `preventScroll` where supported;
-- restores the captured page position.
+- routes X, Escape/native dialog cancel, and voicing selection through one guarded `closeShapePicker` path;
+- updates only the selected card's diagram while the background remains locked instead of rebuilding the card subtree;
+- restores focus to the originating Choose Another Shape button, using `preventScroll` where supported, while the body is still fixed;
+- restores body styles and the captured page position exactly once, with smooth scrolling temporarily disabled and no animation-frame or timeout retry.
 
 The main Song Chart and Chord Shapes columns are normal document-flow columns, top-aligned, without a sticky right panel or independent vertical scrollbar. Performance Mode is intentionally its own dialog/scroll context.
 
-Known Safari concern: selecting a new shape has previously shown a brief visible page jump before returning to the original position. Source order around re-render, dialog close, body unlock, `scrollTo`, and focus restoration has been hardened, but zero visible movement has not been proven on physical Safari/iOS hardware. Status remains **OPEN** until hardware acceptance passes; “eventually returns” is insufficient.
+The code-level transient-jump issue is **RESOLVED** in this snapshot. Root cause was a combination of replacing the entire shape-card subtree during selection, unlocking the body before focus restoration, global smooth-scroll behavior affecting `scrollTo`, and a second deferred restoration attempt. The new pipeline keeps the background locked through selection and focus restoration, then performs one instant restore. In-app browser acceptance at 1280×720, 1024×768, and 375×812 recorded zero final scroll delta for X and selection paths, including 10 consecutive desktop selections, preserved card/diagram geometry, internal modal scrolling, trigger focus, and reload persistence. Physical Safari/macOS and iPhone/iOS still have not verified the absence of any transient painted frame, so the separate hardware acceptance gate remains **PENDING RELEASE**; “eventually returns” is insufficient.
 
 ## 23. Export / Backup
 
@@ -477,7 +478,7 @@ Physical Safari/macOS and iPhone/iOS manual validation is a confirmed pre-releas
 7. Light/dark theme and English/zh-TW.
 8. Tablet and phone stacking without nested or horizontal page scrolling.
 
-Chromium/static checks do not substitute for hardware Safari acceptance. Current physical-device result is unverified for this snapshot, and the transient shape-selection jump remains **OPEN**.
+In-app browser/static checks do not substitute for hardware Safari acceptance. The bounded code fix and non-WebKit browser acceptance are complete, but current physical-device results are unverified for this snapshot. Safari/macOS and iPhone/iOS acceptance therefore remains **PENDING RELEASE**.
 
 ## 31. Tests / Build Commands
 
@@ -492,10 +493,10 @@ git diff --check
 
 There are no separate `lint`, `typecheck`, or `format` scripts. `npm run check` performs `node --check` over listed JavaScript/Worker/API/build files. `npm test` uses Node's built-in test runner on `tests/*.test.js`.
 
-Current single-row baseline on 2026-08-27:
+Current Shape Picker hardening baseline on 2026-08-27:
 
 ```text
-npm test: PASS, 35/35
+npm test: PASS, 40/40
 npm run check: PASS
 npm run build:cloudflare: PASS
 git diff --check: PASS
@@ -504,6 +505,7 @@ git diff --check: PASS
 Test files:
 
 - `tests/song-workspace-core.test.js`
+- `tests/song-workspace-scroll.test.js`
 - `tests/song-workspace-storage.test.js`
 - `tests/song-workspace-style.test.js`
 - `tests/chord-shapes.test.js`
@@ -514,7 +516,8 @@ Important limitation: `.github/workflows/ci.yml` runs `npm run check` and `npm r
 
 | SHA | Message | Purpose |
 | --- | --- | --- |
-| Current change | `fix: enforce single-row song chord annotations` | Removes row assignment/row-count rendering, adds bounded left-origin label fitting, tests, Chromium acceptance, and status documentation. |
+| Current change | `fix: stabilize song shape picker scroll restoration` | Unifies close/focus/restore ordering, updates one diagram without rebuilding its card, suppresses smooth restore, adds scroll-contract regressions, and records responsive in-app browser acceptance. |
+| `6fb567a` | `fix: enforce single-row song chord annotations` | Removes row assignment/row-count rendering, adds bounded left-origin label fitting, tests, Chromium acceptance, and status documentation. |
 | `e053886` | `fix: harden song workspace visual alignment` | Separate chord layer, annotation packing, Add menu positioning, shared-style tests. Also introduced/codified the now-rejected multi-row behavior. |
 | `2ee6535` | `fix: refine song workspace scrolling and editing` | Modal/body scroll handling, unified Add Line/Section, section insertion, degree-mode hardening. |
 | `b19b3ce` | `fix: harden song workspace editing and chord shapes` | Shared chord-shape integration, editing hardening, regression tests. |
@@ -553,7 +556,7 @@ Regression coverage includes Original, Balanced, Beginner, Roman, Nashville, `ii
 
 ### Issue B — Safari shape selection may visibly jump
 
-Status: **OPEN / hardware unverified**. Current code restores the final scroll position and focus, but previous Safari acceptance observed a transient jump during shape selection. Desired behavior is zero visible movement. Audit dialog close, render timing, body unlock, `scrollTo`, `focus({preventScroll:true})`, requestAnimationFrame ordering, and any smooth-scroll CSS on actual Safari/iOS.
+Status: **CODE FIX RESOLVED / HARDWARE ACCEPTANCE PENDING**. The picker now captures scroll once, keeps the body fixed while the selected diagram and trigger focus are restored, funnels every exit through one guarded close pipeline, suppresses global smooth scrolling during the single `scrollTo`, and has no deferred restoration retry. Automated source-contract tests and responsive in-app browser acceptance pass with zero final scroll delta and stable geometry. No WebKit runner or physical Safari/iPhone was available, so actual Safari/iOS must still prove there is no transient visible frame before release.
 
 ### Documentation and release issues
 
@@ -590,8 +593,9 @@ Status: **OPEN / hardware unverified**. Current code restores the final scroll p
 | Shared chord-shape data | DONE | `scripts/chord-shapes.js` | Used across three tools. |
 | Shared interval colors | DONE | `styles/chord-dictionary.css`, style test | Light/dark centralized. |
 | Inline Chord Shapes / picker | DONE | app render/picker code | Selection persists locally. |
-| Background modal scroll lock | DONE | `scripts/song-workspace.js:576-623` | Final-position restore implemented. |
-| Zero visible Safari picker jump | OPEN | Manual acceptance history | Must pass hardware test. |
+| Background modal scroll lock | DONE | `lockShapePickerScroll`, `finalizeShapePickerClose`, `restoreShapePickerScroll` | One captured position, one guarded close pipeline, focus-before-unlock, one instant restore. |
+| Shape Picker zero-jump code hardening | RESOLVED | `scripts/song-workspace.js`, `styles/song-workspace.css`, `tests/song-workspace-scroll.test.js` | Responsive in-app browser acceptance has zero final delta and stable geometry. |
+| Zero visible Safari picker jump | PENDING RELEASE | Physical hardware acceptance | Must still pass macOS Safari and iPhone/iOS without any transient painted movement. |
 | One document scroll / top-aligned columns | DONE | `styles/song-workspace.css` editor grid | Right panel is not sticky. |
 | Performance Mode / auto-scroll | DONE | app and performance dialog | Separate intentional dialog scroll. |
 | JTH JSON / TXT / Print / backup | DONE | app export/backup functions | Local exports. |
@@ -620,7 +624,8 @@ Bounded future work, clearly outside current implementation:
 - **PENDING RELEASE**: add/review local-only and user-rights copy.
 - **PENDING RELEASE**: add `npm test` to remote CI after confirming runtime expectations.
 - **RESOLVED**: single-row annotation fitting, rendering, regressions, and Chromium responsive acceptance completed on 2026-08-27.
-- **OPEN**: eliminate/prove zero visible Safari picker jump.
+- **RESOLVED**: bounded Shape Picker close/focus/instant-restore implementation and responsive in-app browser acceptance.
+- **PENDING RELEASE**: prove zero visible Shape Picker movement on physical Safari/macOS and iPhone/iOS hardware.
 
 Do not start V2, account/cloud sync, server storage, public discovery, or sharing merely because they are listed here.
 
@@ -710,4 +715,4 @@ A new Codex session must begin in this order:
 9. Run baseline `npm test`, `npm run check`, `npm run build:cloudflare`, and `git diff --check` when appropriate.
 10. Only then modify production code, and only for the explicitly requested bounded task.
 
-Highest-priority unresolved implementation work is physical Safari/iOS proof of zero visible Shape Picker selection movement. The one-row chord-annotation contract is resolved in production code and Chromium acceptance, while physical Safari/iOS validation remains part of the release gate. Release work remains blocked by the remaining product, browser, privacy/copyright, anti-abuse, engineering, and explicit approval gates above.
+Highest-priority remaining work is physical Safari/iOS proof of zero visible Shape Picker selection movement. The bounded code fix and in-app browser acceptance are complete, and the one-row chord-annotation contract remains resolved. Physical Safari/iOS validation is still a release gate. Release work remains blocked by the remaining product, browser, privacy/copyright, anti-abuse, engineering, and explicit approval gates above.

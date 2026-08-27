@@ -23,6 +23,7 @@
         shapePickerOptions: [],
         shapePickerTrigger: null,
         shapePickerScroll: null,
+        shapePickerClosing: false,
         addMenuTrigger: null,
         sectionInsertContext: null,
         chordLayoutFrame: 0,
@@ -540,6 +541,7 @@
             const voicing = selectedVoicing(symbol, options);
             if (!parsed || !voicing) return;
             const card = node("article", "workspace-shape-card");
+            card.dataset.chordSymbol = Shapes.normalizeChord(symbol) || symbol;
             card.appendChild(node("h3", "", symbol));
             card.appendChild(Shapes.createDiagramElement(parsed, voicing, document));
             const change = button(t("pages.songWorkspace.chooseOtherShape", "Choose Another Shape"), "choose-shape", "workspace-shape-change");
@@ -551,6 +553,21 @@
         if (!elements.shapeCards.children.length) {
             elements.shapeCards.appendChild(node("p", "", t("pages.songWorkspace.noChords", "No chords in this view.")));
         }
+    }
+
+    function updateShapeCard(symbol) {
+        const key = Shapes.normalizeChord(symbol) || symbol;
+        const card = Array.from(elements.shapeCards.querySelectorAll(".workspace-shape-card")).find(function(candidate) {
+            return candidate.dataset.chordSymbol === key;
+        });
+        const parsed = Shapes.parseChord(symbol);
+        const currentDiagram = card?.querySelector(".chord-diagram");
+        if (!card || !parsed || !currentDiagram) return false;
+        const options = Shapes.generateVoicings(parsed);
+        const voicing = selectedVoicing(symbol, options);
+        if (!voicing) return false;
+        currentDiagram.replaceWith(Shapes.createDiagramElement(parsed, voicing, document));
+        return true;
     }
 
     function renderShapePicker() {
@@ -603,11 +620,12 @@
         body.style.paddingRight = `${currentPadding + scrollbarWidth}px`;
     }
 
-    function unlockShapePickerScroll() {
+    function restoreShapePickerScroll() {
         const locked = state.shapePickerScroll;
-        if (!locked) return null;
+        if (!locked) return;
         const body = document.body;
         const root = document.documentElement;
+        root.classList.add("workspace-shape-picker-restoring");
         Object.keys(locked.bodyStyles).forEach(function(property) {
             body.style[property] = locked.bodyStyles[property];
         });
@@ -617,22 +635,38 @@
         else root.style.removeProperty("--workspace-scrollbar-compensation");
         state.shapePickerScroll = null;
         window.scrollTo(locked.x, locked.y);
-        return { x: locked.x, y: locked.y };
+        root.classList.remove("workspace-shape-picker-restoring");
     }
 
-    function restoreShapePickerFocus(scrollPosition) {
+    function focusShapePickerTrigger() {
         const original = state.shapePickerTrigger;
         const symbol = original?.dataset.chordSymbol || state.shapePickerSymbol;
         state.shapePickerTrigger = null;
-        window.requestAnimationFrame(function() {
-            if (original?.isConnected) original.focus({ preventScroll: true });
-            else if (symbol) {
-                Array.from(elements.shapeCards.querySelectorAll('[data-action="choose-shape"]')).find(function(control) {
-                    return control.dataset.chordSymbol === symbol;
-                })?.focus({ preventScroll: true });
-            }
-            if (scrollPosition) window.scrollTo(scrollPosition.x, scrollPosition.y);
-        });
+        const target = original?.isConnected
+            ? original
+            : Array.from(elements.shapeCards.querySelectorAll('[data-action="choose-shape"]')).find(function(control) {
+                return control.dataset.chordSymbol === symbol;
+            });
+        if (!target) return;
+        try {
+            target.focus({ preventScroll: true });
+        } catch (error) {
+            target.focus();
+        }
+    }
+
+    function finalizeShapePickerClose() {
+        focusShapePickerTrigger();
+        restoreShapePickerScroll();
+        state.shapePickerSymbol = null;
+        state.shapePickerOptions = [];
+        state.shapePickerClosing = false;
+    }
+
+    function closeShapePicker() {
+        if (!elements.shapePicker.open || state.shapePickerClosing) return;
+        state.shapePickerClosing = true;
+        elements.shapePicker.close();
     }
 
     function openShapePicker(symbol, trigger) {
@@ -641,6 +675,7 @@
         state.shapePickerSymbol = symbol;
         state.shapePickerOptions = Shapes.generateVoicings(parsed).slice(0, 24);
         state.shapePickerTrigger = trigger || document.activeElement;
+        state.shapePickerClosing = false;
         renderShapePicker();
         lockShapePickerScroll();
         elements.shapePicker.showModal();
@@ -655,8 +690,8 @@
         if (!symbol || !voicing) return;
         selectedShapeMap()[Shapes.normalizeChord(symbol) || symbol] = Shapes.voicingKey(voicing);
         Storage.writePreferences(state.preferences);
-        renderShapeCards(currentPlayShapeSong());
-        elements.shapePicker.close();
+        updateShapeCard(symbol);
+        closeShapePicker();
     }
 
     function updateSongFromFields() {
@@ -1055,10 +1090,12 @@
             const control = event.target.closest('[data-action="select-shape"]');
             if (control) selectShape(Number(control.dataset.shapeIndex));
         });
-        $("closeShapePickerButton").addEventListener("click", function() { elements.shapePicker.close(); });
-        elements.shapePicker.addEventListener("close", function() {
-            restoreShapePickerFocus(unlockShapePickerScroll());
+        $("closeShapePickerButton").addEventListener("click", closeShapePicker);
+        elements.shapePicker.addEventListener("cancel", function(event) {
+            event.preventDefault();
+            closeShapePicker();
         });
+        elements.shapePicker.addEventListener("close", finalizeShapePickerClose);
         elements.sectionForm.addEventListener("submit", function(event) {
             if (event.submitter?.value !== "default") return;
             event.preventDefault();
@@ -1137,7 +1174,7 @@
         document.addEventListener("keydown", function(event) {
             if (event.key === "Escape" && elements.shapePicker.open) {
                 event.preventDefault();
-                elements.shapePicker.close();
+                closeShapePicker();
                 return;
             }
             if (event.key === "Escape" && state.addMenuTrigger) {

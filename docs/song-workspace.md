@@ -35,6 +35,7 @@ Each song keeps one canonical Song Document. Transposed, capo, simplified, Roman
 - **Visual chord editing** stores chord positions as logical Unicode character anchors, so Chinese and English lyric positions remain stable across responsive layouts.
 - **Single-row chord annotations** keep every lyric line on one chord row. Labels stay left-aligned to their logical lyric anchors, while bounded presentation-only condensation handles ordinary tight spacing without stretching or modifying lyrics.
 - **Chord Shapes** link unique computed chords to the existing Chord Dictionary instead of duplicating its guitar-shape database.
+- **Shape Picker scroll contract** keeps the document body fixed while the native dialog is open. X, Escape, and voicing selection share one close path; selection replaces only the affected diagram, focus returns to the originating button while the body is still locked, and the captured page position is restored once with instant scroll behavior before unlock completes. The dialog retains its own bounded vertical scrolling.
 - **Performance Mode** presents a focused chart with target key, capo, shape key, BPM, font controls, and adjustable auto-scroll.
 
 Autosave runs after a short editing pause. Song metadata, sections, lyric lines, and chord anchors are saved together in IndexedDB.
