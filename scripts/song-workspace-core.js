@@ -15,6 +15,14 @@
     const MAX_SECTIONS = 200;
     const MAX_LINES = 2000;
     const MAX_LINE_LENGTH = 1000;
+    const AUTO_SCROLL = Object.freeze({
+        pixelsPerBeat: 24,
+        defaultPixelsPerSecond: 48,
+        minPixelsPerSecond: 18,
+        maxPixelsPerSecond: 96,
+        minMultiplier: 0.5,
+        maxMultiplier: 2
+    });
     const SHARP_NOTES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
     const FLAT_NOTES = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
     const NOTE_PITCH = {
@@ -50,6 +58,31 @@
 
     function clamp(value, minimum, maximum) {
         return Math.min(maximum, Math.max(minimum, Number(value) || 0));
+    }
+
+    function baseScrollSpeedForBpm(value) {
+        const bpm = Number(value);
+        if (!Number.isFinite(bpm) || bpm <= 0) return AUTO_SCROLL.defaultPixelsPerSecond;
+        return Math.min(
+            AUTO_SCROLL.maxPixelsPerSecond,
+            Math.max(AUTO_SCROLL.minPixelsPerSecond, (bpm / 60) * AUTO_SCROLL.pixelsPerBeat)
+        );
+    }
+
+    function normalizeScrollSpeedMultiplier(value) {
+        const multiplier = Number(value);
+        if (!Number.isFinite(multiplier) || multiplier <= 0) return 1;
+        return Math.min(AUTO_SCROLL.maxMultiplier, Math.max(AUTO_SCROLL.minMultiplier, multiplier));
+    }
+
+    function effectiveScrollSpeed(value, multiplier) {
+        return baseScrollSpeedForBpm(value) * normalizeScrollSpeedMultiplier(multiplier);
+    }
+
+    function scrollDistanceForElapsed(value, multiplier, elapsedMilliseconds) {
+        const elapsed = Number(elapsedMilliseconds);
+        if (!Number.isFinite(elapsed) || elapsed <= 0) return 0;
+        return effectiveScrollSpeed(value, multiplier) * elapsed / 1000;
     }
 
     function normalizeAccidentals(value) {
@@ -766,7 +799,12 @@
         SCHEMA,
         VERSION,
         LIMITS: { MAX_SOURCE_LENGTH, MAX_SECTIONS, MAX_LINES, MAX_LINE_LENGTH },
+        AUTO_SCROLL,
         codePoints,
+        baseScrollSpeedForBpm,
+        normalizeScrollSpeedMultiplier,
+        effectiveScrollSpeed,
+        scrollDistanceForElapsed,
         normalizeKey,
         parseChordSymbol,
         transposeChord,

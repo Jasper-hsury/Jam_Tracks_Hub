@@ -412,3 +412,36 @@ test("simplifies conservatively without mutating the canonical song", () => {
     assert.equal(Core.simplifyChord("Bm7b5", "beginner"), "Bm7b5");
     assert.equal(JSON.stringify(canonical), snapshot);
 });
+
+test("derives a finite bounded monotonic auto-scroll base from BPM", () => {
+    const speeds = [60, 90, 120, 180].map(Core.baseScrollSpeedForBpm);
+
+    assert.deepEqual(speeds, [24, 36, 48, 72]);
+    assert.ok(speeds.every(Number.isFinite));
+    assert.ok(speeds.every((speed, index) => index === 0 || speed > speeds[index - 1]));
+    assert.equal(Core.baseScrollSpeedForBpm(30), Core.AUTO_SCROLL.minPixelsPerSecond);
+    assert.equal(Core.baseScrollSpeedForBpm(300), Core.AUTO_SCROLL.maxPixelsPerSecond);
+});
+
+test("uses the existing default speed when BPM is empty or invalid", () => {
+    [null, undefined, 0, Number.NaN, ""].forEach(value => {
+        assert.equal(Core.baseScrollSpeedForBpm(value), Core.AUTO_SCROLL.defaultPixelsPerSecond);
+    });
+});
+
+test("applies a retained user multiplier with frame-rate-independent elapsed time", () => {
+    assert.equal(Core.normalizeScrollSpeedMultiplier(0.25), 0.5);
+    assert.equal(Core.normalizeScrollSpeedMultiplier(3), 2);
+    assert.equal(Core.normalizeScrollSpeedMultiplier(""), 1);
+    assert.equal(Core.effectiveScrollSpeed(120, 1.25), 60);
+
+    const at60Hz = Array.from({ length: 60 }, () => Core.scrollDistanceForElapsed(120, 1.25, 1000 / 60))
+        .reduce((total, distance) => total + distance, 0);
+    const at120Hz = Array.from({ length: 120 }, () => Core.scrollDistanceForElapsed(120, 1.25, 1000 / 120))
+        .reduce((total, distance) => total + distance, 0);
+
+    assert.ok(Math.abs(at60Hz - 60) < 1e-9);
+    assert.ok(Math.abs(at120Hz - 60) < 1e-9);
+    assert.ok(Math.abs(at60Hz - at120Hz) < 1e-9);
+    assert.equal(Core.scrollDistanceForElapsed(120, 1, Number.NaN), 0);
+});

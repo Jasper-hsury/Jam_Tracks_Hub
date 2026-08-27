@@ -39,21 +39,21 @@ Song Workspace is a user-supplied-content practice and arrangement tool. It is n
 
 ## 3. Git Snapshot
 
-Repository truth before the current Song Creation / Import information-architecture polish:
+Repository truth before the current Interaction, Performance, and Button Style hardening:
 
 ```text
 Branch: feat/song-workspace-v1
-HEAD: 6cc1187c3fa240e5a11ae5b21c5c80854b578490
-origin/feat/song-workspace-v1: 6cc1187c3fa240e5a11ae5b21c5c80854b578490
+HEAD: e02140e935da28d9ee9bdf98ea97c0c4754d8d31
+origin/feat/song-workspace-v1: e02140e935da28d9ee9bdf98ea97c0c4754d8d31
 main: 9b5ed9b
 origin/main: 9b5ed9b
-Feature branch vs origin/main: 7 ahead, 0 behind
+Feature branch vs origin/main: 8 ahead, 0 behind
 Origin fetch/push: git@github.com:Passerby-WB/Jam_Tracks_Hub.git
 ```
 
 The product history reports that GitHub has advertised a newer location, `git@github.com:Jasper-hsury/Jam_Tracks_Hub.git`. The current remote still uses the old URL, so remote URL normalization is **PENDING**. Do not change the remote during unrelated work; confirm the canonical owner and URL first.
 
-Before the current information-architecture polish, there were no tracked modifications and only the two approved untracked exceptions in section 4. There were no uncommitted Song Workspace production changes.
+Before the current interaction/performance/style hardening, there were no tracked modifications and only the two approved untracked exceptions in section 4. There were no uncommitted Song Workspace production changes.
 
 ## 4. Approved Working-Tree Exceptions
 
@@ -164,6 +164,10 @@ user brings their own content
 The home view now separates creation from import. **Create Song** contains exactly three prominent entries: Chords + Lyrics, Lyrics Only, and Chords Only. **Other Import Options** is a lower-weight, still-visible area containing ChordPro and Jam Tracks Hub JSON. ChordPro includes a short inline example and an optional native disclosure; Jam Tracks Hub JSON is described as the complete single-song project format. Backup All and Restore Backup remain library-level actions under My Songs.
 
 Current editor capabilities include metadata, anchored chords, sections/lines, five chord views, transpose, capo/shape key, Smart Capo, chord-change hints, inline diagrams, per-song voicing selection, performance mode, auto-scroll, and local exports.
+
+Create and ChordPro dialogs follow an explicit cancellation contract: X, Cancel, and Escape close without entering the submit path or triggering required-field validation. Only the real Create / Import action remains a submit control and therefore runs native required validation plus the bounded parser/format checks.
+
+Performance Mode derives its 1.0× base auto-scroll speed from BPM using `BPM / 60 × 24px per beat`. This preserves the former 48px/s default at 120 BPM and approximates one current four-beat chart-line visual interval. Base speed is bounded to 18–96px/s; missing, invalid, or zero BPM uses 48px/s. The user's separate 0.5×–2.0× multiplier is a presentation preference and is not reset by BPM changes. A fractional distance accumulator prevents low-speed subpixel loss, while elapsed-time movement remains refresh-rate independent.
 
 Do not add accounts, server song storage, public sharing, copyrighted fixtures, or release operations without a separate explicit request and gate review.
 
@@ -398,6 +402,8 @@ Primary source: `styles/song-workspace.css`; shared foundations: `styles/base.cs
 
 Song Workspace uses existing Jam Tracks Hub variables, restrained cards, compact buttons, borders, shadows, focus-visible states, light/dark theme values, and responsive conventions. Page-specific variables at the top of `styles/song-workspace.css` map into the established palette rather than introducing a separate visual language.
 
+Button semantics are now hardened around the shared site tokens used by Write Your Own Progression and the other music tools. Primary, secondary, danger, subtle, icon, segmented, toggle, card, and menu actions share control height/radius, typography, depth-shadow language, restrained hover/active feedback, `--focus-ring`, disabled behavior, theme tokens, and reduced-motion handling. Component hierarchy remains intentional: creation cards and shape/capo choices remain interactive cards, `+ Add` remains a low-weight inline action, menu items remain compact, and destructive actions use the existing danger palette.
+
 Important CSS contracts include:
 
 - two-column editor grid with `align-items: start`;
@@ -424,6 +430,8 @@ Confirmed responsive contract:
 - `+ Add` remains available without relying on hover.
 
 Automated CSS contract tests exist, but there is no browser E2E suite. Physical Safari/iOS behavior remains a release gate.
+
+Interaction/performance/button acceptance on 2026-08-27 passed in the in-app Chromium browser at 1280×720, 1024×768, and 375×812 in light/dark and en/zh-TW. Create and ChordPro X/Cancel/Escape closed with empty or partial required fields while real submit stayed open as invalid. Actual 1.0× measurements for 60/90/120/180 BPM were approximately 23/35/48/71px/s; 120 BPM at 0.75×/1.25×/1.5× measured approximately 36/60/71px/s. Pause held position, resume continued without a jump, end-of-content stopped, all tested button groups had no page-level horizontal overflow, and browser console logs were empty.
 
 ## 27. Privacy / Copyright Boundary
 
@@ -493,10 +501,10 @@ git diff --check
 
 There are no separate `lint`, `typecheck`, or `format` scripts. `npm run check` performs `node --check` over listed JavaScript/Worker/API/build files. `npm test` uses Node's built-in test runner on `tests/*.test.js`.
 
-Current Song Creation / Import IA baseline on 2026-08-27:
+Current Interaction, Performance, and Button Style hardening baseline on 2026-08-27:
 
 ```text
-npm test: PASS, 47/47
+npm test: PASS, 55/55
 npm run check: PASS
 npm run build:cloudflare: PASS
 git diff --check: PASS
@@ -506,6 +514,7 @@ Test files:
 
 - `tests/song-workspace-core.test.js`
 - `tests/song-workspace-import-ia.test.js`
+- `tests/song-workspace-interaction.test.js`
 - `tests/song-workspace-scroll.test.js`
 - `tests/song-workspace-storage.test.js`
 - `tests/song-workspace-style.test.js`
@@ -517,7 +526,8 @@ Important limitation: `.github/workflows/ci.yml` runs `npm run check` and `npm r
 
 | SHA | Message | Purpose |
 | --- | --- | --- |
-| Current change | `fix: clarify song creation and import options` | Separates three primary creation methods from ChordPro/JTH JSON imports, adds optional ChordPro help, responsive hierarchy, localization, tests, and status documentation. |
+| Current change | `fix: refine song workspace interaction and performance controls` | Makes create/import cancellation independent of validation, links auto-scroll base speed to BPM while retaining the user multiplier, and aligns all workspace button semantics with shared site tokens. |
+| `e02140e` | `fix: clarify song creation and import options` | Separates three primary creation methods from ChordPro/JTH JSON imports, adds optional ChordPro help, responsive hierarchy, localization, tests, and status documentation. |
 | `6cc1187` | `fix: stabilize song shape picker scroll restoration` | Unifies close/focus/restore ordering, updates one diagram without rebuilding its card, suppresses smooth restore, adds scroll-contract regressions, and records responsive in-app browser acceptance. |
 | `6fb567a` | `fix: enforce single-row song chord annotations` | Removes row assignment/row-count rendering, adds bounded left-origin label fitting, tests, Chromium acceptance, and status documentation. |
 | `e053886` | `fix: harden song workspace visual alignment` | Separate chord layer, annotation packing, Add menu positioning, shared-style tests. Also introduced/codified the now-rejected multi-row behavior. |
@@ -547,6 +557,9 @@ Do not reintroduce these previously addressed failures:
 - Workspace-specific chord interval colors diverging from Chord Dictionary.
 - Chord Change Hints changing lyric content instead of presentation.
 - Right-panel diagrams changing to numeral labels in Roman/Nashville mode.
+- X or Cancel buttons inside a required form becoming unintended submit controls and being blocked before the submit handler runs.
+- Auto-scroll speed ignoring BPM, losing fractional per-frame distance, or changing with display refresh rate.
+- Independent workspace button styles drifting from shared primary/secondary/danger/focus/motion tokens.
 
 ## 34. Current Known Issues
 
@@ -559,6 +572,18 @@ Regression coverage includes Original, Balanced, Beginner, Roman, Nashville, `ii
 ### Issue B — Safari shape selection may visibly jump
 
 Status: **CODE FIX RESOLVED / macOS SAFARI USER ACCEPTANCE PASS / iPHONE-iOS PENDING**. The picker captures scroll once, keeps the body fixed while the selected diagram and trigger focus are restored, funnels every exit through one guarded close pipeline, suppresses global smooth scrolling during the single `scrollTo`, and has no deferred restoration retry. Automated source-contract tests and responsive in-app browser acceptance pass with zero final scroll delta and stable geometry. The product owner reports no visible jump in macOS Safari. iPhone/iOS hardware must still prove there is no transient visible frame before release.
+
+### Issue C — create/import cancellation can trigger required validation
+
+Status: **RESOLVED** on 2026-08-27. Root cause was X and Cancel being `type="submit"` controls inside the required native-dialog form; browser constraint validation runs before the submit handler can inspect `event.submitter`. Create, ChordPro, section, and line-editor dismissal controls are now explicit non-submit buttons routed to `dialog.close("cancel")`, with a shared Escape path. The genuine Create / Import / Add / Save controls remain submit buttons, and Create/ChordPro require both title and source content.
+
+### Issue D — Performance Auto Scroll ignores BPM
+
+Status: **RESOLVED** on 2026-08-27. The old manual slider produced 12–120px/s directly and defaulted to 48px/s without consulting song BPM. The new base is `BPM / 60 × 24px per beat`, bounded to 18–96px/s and falling back to 48px/s when BPM is absent or invalid. A retained 0.5×–2.0× user multiplier is applied afterward. Elapsed-time scrolling uses a fractional accumulator so 60Hz/120Hz and subpixel rounding do not change musical progression speed; pause/resume preserves position and the loop stops at the content end.
+
+### Issue E — workspace button styles drift across components
+
+Status: **RESOLVED** on 2026-08-27. Static and dynamic controls now use explicit primary, secondary, danger, subtle, icon, segmented/toggle, interactive-card, and menu semantics. Colors, depth shadows, radii, transitions, focus rings, disabled states, theme values, and reduced-motion behavior reuse the existing site tokens and Write Your Own Progression interaction language. Responsive browser acceptance covers home, modals, editor, mode selector, menus, shape picker, line editor, and Performance Mode.
 
 ### Documentation and release issues
 
@@ -577,6 +602,7 @@ Status: **CODE FIX RESOLVED / macOS SAFARI USER ACCEPTANCE PASS / iPHONE-iOS PEN
 | Chords + Lyrics / Lyrics / Chords creation | DONE | `song-workspace.html:73-88`, app/core parsers | Current primary creation paths. |
 | ChordPro import/export | DONE | `parseChordPro`, `toChordPro` | Functionality exists. |
 | ChordPro / JTH JSON import hierarchy | RESOLVED | `song-workspace.html`, `styles/song-workspace.css`, locale files, `tests/song-workspace-import-ia.test.js` | Exactly three primary create methods; both existing-data formats are secondary imports. |
+| Create/import cancellation vs validation | RESOLVED | dialog markup, shared close/Escape handlers, `tests/song-workspace-interaction.test.js`, responsive browser acceptance | X, Cancel, and Escape bypass validation; only real Create/Import submits validate. |
 | IndexedDB song persistence | DONE | `scripts/song-workspace-storage.js` | Browser-local only. |
 | Preference persistence | DONE | storage/app preference helpers | Includes hints and selected voicings. |
 | Autosave and reload | DONE | `scripts/song-workspace.js:681-701` | 500 ms debounce plus visibility flush. |
@@ -598,7 +624,8 @@ Status: **CODE FIX RESOLVED / macOS SAFARI USER ACCEPTANCE PASS / iPHONE-iOS PEN
 | Shape Picker zero-jump code hardening | RESOLVED | `scripts/song-workspace.js`, `styles/song-workspace.css`, `tests/song-workspace-scroll.test.js` | Responsive in-app browser acceptance has zero final delta and stable geometry. |
 | Zero visible Safari picker jump | macOS PASS / iOS PENDING | Product-owner macOS acceptance plus pending iPhone/iOS hardware acceptance | Do not infer iPhone/iOS from the macOS result. |
 | One document scroll / top-aligned columns | DONE | `styles/song-workspace.css` editor grid | Right panel is not sticky. |
-| Performance Mode / auto-scroll | DONE | app and performance dialog | Separate intentional dialog scroll. |
+| Performance Mode / auto-scroll | RESOLVED | `AUTO_SCROLL` core helpers, performance dialog/app loop, core/interaction tests, browser speed measurements | BPM-linked bounded base, 48px/s fallback, retained 0.5×–2.0× preference, time/subpixel-safe scrolling. |
+| Song Workspace button design system | RESOLVED | workspace markup/app/CSS, shared theme tokens, interaction/style tests, 1280/1024/375 light/dark acceptance | Primary, secondary, danger, icon, segmented, toggle, subtle, menu, modal, and performance controls aligned. |
 | JTH JSON / TXT / Print / backup | DONE | app export/backup functions | Local exports. |
 | English and zh-TW UI | DONE | locale JSON + i18n scripts | User content not translated. |
 | Song content server storage | N/A | No workspace network calls | Explicitly outside V1. |
@@ -623,6 +650,9 @@ Bounded future work, clearly outside current implementation:
 - **PROPOSED**: client-side fragment sharing if payload/security/usability analysis supports it.
 - **PROPOSED**: semantic version plan where current production baseline is `v1.0.0` and Song Workspace ships as `v1.1.0`; verify actual tags before adoption.
 - **RESOLVED**: exactly three primary Create Song methods; ChordPro and Jam Tracks Hub JSON are grouped under Other Import Options.
+- **RESOLVED**: Create/ChordPro X, Cancel, and Escape bypass submit validation while real commit actions retain it.
+- **RESOLVED**: BPM-linked, bounded, refresh-rate-independent Performance Auto Scroll with a retained user multiplier.
+- **RESOLVED**: Song Workspace button semantics and interaction states aligned with shared Jam Tracks Hub theme tokens.
 - **PENDING RELEASE**: add/review local-only and user-rights copy.
 - **PENDING RELEASE**: add `npm test` to remote CI after confirming runtime expectations.
 - **RESOLVED**: single-row annotation fitting, rendering, regressions, and Chromium responsive acceptance completed on 2026-08-27.
@@ -658,6 +688,9 @@ All categories require explicit review before release:
 - Single chord-row invariant passes all modes and responsive layouts.
 - Safari shape selection has zero visible jump.
 - ChordPro / JTH JSON hierarchy is implemented and regression-tested.
+- Create/import cancellation bypasses validation while actual submissions remain validated.
+- BPM-linked auto-scroll and user multiplier pass monotonic, pause/resume, end-stop, and responsive checks.
+- Button semantics pass light/dark, keyboard focus, reduced-motion, and responsive review.
 - No known critical Song Workspace regressions.
 
 **Browser and accessibility**
@@ -718,4 +751,4 @@ A new Codex session must begin in this order:
 9. Run baseline `npm test`, `npm run check`, `npm run build:cloudflare`, and `git diff --check` when appropriate.
 10. Only then modify production code, and only for the explicitly requested bounded task.
 
-Highest-priority remaining release work includes iPhone/iOS hardware acceptance, copyright/local-only UI wording, analytics/error-log no-lyrics-egress proof, anti-abuse review, remote/CI/PR coordination, and explicit production approval. The Create Song / Other Import hierarchy, one-row chord-annotation contract, Shape Picker code fix, and macOS Safari zero-jump user acceptance are resolved. Do not begin a remaining gate without an explicit bounded request.
+Highest-priority remaining release work includes iPhone/iOS hardware acceptance, copyright/local-only UI wording, analytics/error-log no-lyrics-egress proof, anti-abuse review, remote/CI/PR coordination, and explicit production approval. The Create Song / Other Import hierarchy, cancellation-vs-validation contract, BPM-linked Performance Auto Scroll, button design-system hardening, one-row chord-annotation contract, Shape Picker code fix, and macOS Safari zero-jump user acceptance are resolved. Do not begin a remaining gate without an explicit bounded request.

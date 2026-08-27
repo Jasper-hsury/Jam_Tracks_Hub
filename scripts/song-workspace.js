@@ -30,6 +30,7 @@
         scrollFrame: 0,
         scrolling: false,
         lastScrollTime: 0,
+        scrollPosition: 0,
         preferences: Storage.readPreferences()
     };
 
@@ -45,6 +46,7 @@
         createDialog: $("createSongDialog"), createForm: $("createSongForm"), createMode: $("createModeLabel"),
         createTitle: $("createTitleInput"), createArtist: $("createArtistInput"), createKey: $("createKeySelect"),
         createSource: $("createSourceInput"), createSourceLabel: $("createSourceLabel"), createError: $("createDialogError"),
+        confirmCreate: $("confirmCreateButton"),
         lineDialog: $("lineEditorDialog"), lineForm: $("lineEditorForm"), lineText: $("lineTextInput"),
         anchorPreview: $("anchorPreview"), anchorChord: $("anchorChordInput"), anchorPosition: $("anchorPositionInput"),
         anchorList: $("anchorList"), addAnchor: $("addAnchorButton"), lineError: $("lineDialogError"),
@@ -53,7 +55,7 @@
         sectionDialog: $("sectionNameDialog"), sectionForm: $("sectionNameForm"), sectionName: $("sectionNameInput"),
         performance: $("performanceDialog"), performanceTitle: $("performanceTitle"),
         performanceMeta: $("performanceMeta"), performanceChart: $("performanceChart"),
-        scrollToggle: $("scrollToggleButton"), scrollSpeed: $("scrollSpeedInput"),
+        scrollToggle: $("scrollToggleButton"), scrollSpeed: $("scrollSpeedInput"), scrollSpeedValue: $("scrollSpeedValue"),
         importInput: $("songImportInput"), restoreInput: $("songRestoreInput")
     };
 
@@ -160,7 +162,10 @@
                 [t("pages.songWorkspace.download", "Download"), "download"],
                 [t("pages.songWorkspace.delete", "Delete"), "delete"]
             ].forEach(function(entry) {
-                const control = button(entry[0], entry[1]);
+                const variant = entry[1] === "open"
+                    ? "workspace-button-primary"
+                    : entry[1] === "delete" ? "workspace-button-danger" : "workspace-button-secondary";
+                const control = button(entry[0], entry[1], `workspace-button ${variant} workspace-button-compact`);
                 control.dataset.songId = song.id;
                 if (entry[1] === "download") {
                     control.setAttribute("aria-haspopup", "menu");
@@ -175,7 +180,7 @@
             downloadMenu.hidden = true;
             downloadMenu.dataset.downloadMenuFor = song.id;
             [["JSON", "json"], ["ChordPro", "chordpro"], ["TXT", "txt"], [t("pages.songWorkspace.printPdf", "Print / PDF"), "print"]].forEach(function(entry) {
-                const control = button(entry[0], "library-download");
+                const control = button(entry[0], "library-download", "workspace-menu-action");
                 control.setAttribute("role", "menuitem");
                 control.dataset.songId = song.id;
                 control.dataset.format = entry[1];
@@ -270,8 +275,8 @@
             heading.appendChild(node("h3", "", section.title));
             if (editable) {
                 const actions = node("div", "workspace-section-actions");
-                const rename = button(t("pages.songWorkspace.rename", "Rename"), "rename-section");
-                const remove = button(t("pages.songWorkspace.delete", "Delete"), "delete-section");
+                const rename = button(t("pages.songWorkspace.rename", "Rename"), "rename-section", "workspace-button workspace-button-subtle workspace-button-compact");
+                const remove = button(t("pages.songWorkspace.delete", "Delete"), "delete-section", "workspace-button workspace-button-danger workspace-button-compact");
                 rename.dataset.sectionIndex = String(sectionIndex);
                 remove.dataset.sectionIndex = String(sectionIndex);
                 actions.append(rename, remove);
@@ -306,7 +311,7 @@
             [t("pages.songWorkspace.addLine", "Add Line"), "add-line"],
             [t("pages.songWorkspace.addSection", "Add Section"), "add-section"]
         ].forEach(function(entry) {
-            const option = button(entry[0], entry[1]);
+            const option = button(entry[0], entry[1], "workspace-menu-action");
             option.dataset.sectionIndex = String(sectionIndex);
             option.dataset.insertionIndex = String(insertionIndex);
             option.setAttribute("role", "menuitem");
@@ -544,7 +549,7 @@
             card.dataset.chordSymbol = Shapes.normalizeChord(symbol) || symbol;
             card.appendChild(node("h3", "", symbol));
             card.appendChild(Shapes.createDiagramElement(parsed, voicing, document));
-            const change = button(t("pages.songWorkspace.chooseOtherShape", "Choose Another Shape"), "choose-shape", "workspace-shape-change");
+            const change = button(t("pages.songWorkspace.chooseOtherShape", "Choose Another Shape"), "choose-shape", "workspace-button workspace-button-secondary workspace-button-compact workspace-shape-change");
             change.dataset.chordSymbol = symbol;
             change.setAttribute("aria-label", t("pages.songWorkspace.chooseShapeFor", "Choose a guitar shape for {{chord}}", { chord: symbol }));
             card.appendChild(change);
@@ -749,6 +754,9 @@
         elements.createForm.dataset.mode = mode;
         elements.createMode.textContent = copy[0];
         elements.createSourceLabel.textContent = copy[1];
+        elements.confirmCreate.textContent = mode === "chordpro"
+            ? t("pages.songWorkspace.importChordPro", "Import ChordPro")
+            : t("pages.songWorkspace.create", "Create");
         elements.createTitle.value = "";
         elements.createArtist.value = "";
         elements.createKey.value = "C";
@@ -818,9 +826,9 @@
         state.lineDraft.chords.slice().sort((a, b) => a.anchor - b.anchor).forEach(function(chord) {
             const row = node("div", "workspace-anchor-item");
             row.appendChild(node("strong", "", `${chord.symbol} · ${chord.anchor}`));
-            const edit = button(t("pages.songWorkspace.edit", "Edit"), "edit-anchor");
-            const move = button(t("pages.songWorkspace.move", "Move"), "move-anchor");
-            const remove = button(t("pages.songWorkspace.delete", "Delete"), "delete-anchor");
+            const edit = button(t("pages.songWorkspace.edit", "Edit"), "edit-anchor", "workspace-button workspace-button-subtle workspace-button-compact");
+            const move = button(t("pages.songWorkspace.move", "Move"), "move-anchor", "workspace-button workspace-button-subtle workspace-button-compact");
+            const remove = button(t("pages.songWorkspace.delete", "Delete"), "delete-anchor", "workspace-button workspace-button-danger workspace-button-compact");
             edit.dataset.anchorId = chord.id;
             move.dataset.anchorId = chord.id;
             remove.dataset.anchorId = chord.id;
@@ -940,15 +948,37 @@
         elements.capoResults.hidden = false;
     }
 
+    function performanceSpeedMultiplier() {
+        if (state.preferences.scrollSpeedMultiplier !== undefined) {
+            return Core.normalizeScrollSpeedMultiplier(state.preferences.scrollSpeedMultiplier);
+        }
+        const legacySpeed = Number(state.preferences.scrollSpeed);
+        const migrated = Number.isFinite(legacySpeed) && legacySpeed > 0
+            ? Core.normalizeScrollSpeedMultiplier(legacySpeed / 4)
+            : 1;
+        state.preferences.scrollSpeedMultiplier = migrated;
+        delete state.preferences.scrollSpeed;
+        Storage.writePreferences(state.preferences);
+        return migrated;
+    }
+
+    function updateScrollSpeedControl(value) {
+        const multiplier = Core.normalizeScrollSpeedMultiplier(value);
+        elements.scrollSpeed.value = String(multiplier);
+        elements.scrollSpeedValue.value = `${multiplier.toFixed(2).replace(/0$/, "")}×`;
+        return multiplier;
+    }
+
     function openPerformance() {
         const current = currentShapeSong();
         elements.performanceTitle.textContent = state.song.title;
         elements.performanceMeta.textContent = `${state.song.targetKey} · Capo ${state.song.capo} · ${current.shapeKey} ${t("pages.songWorkspace.shapes", "shapes")}${state.song.bpm ? ` · ${state.song.bpm} BPM` : ""}`;
         renderChart(elements.performanceChart, current.song, false);
         elements.performanceChart.style.fontSize = `${Number(state.preferences.fontScale || 1)}em`;
-        elements.scrollSpeed.value = String(Number(state.preferences.scrollSpeed || 4));
+        updateScrollSpeedControl(performanceSpeedMultiplier());
         elements.performance.showModal();
         elements.performance.scrollTop = 0;
+        state.scrollPosition = 0;
         scheduleChordLayouts();
     }
 
@@ -956,9 +986,20 @@
         if (!state.scrolling || !elements.performance.open) return;
         if (!state.lastScrollTime) state.lastScrollTime = timestamp;
         const elapsed = Math.min(50, timestamp - state.lastScrollTime);
-        const speed = Number(elements.scrollSpeed.value) || 4;
-        elements.performance.scrollTop += elapsed * speed * 0.012;
+        const multiplier = Core.normalizeScrollSpeedMultiplier(elements.scrollSpeed.value);
+        const distance = Core.scrollDistanceForElapsed(state.song?.bpm, multiplier, elapsed);
+        const maximum = Math.max(0, elements.performance.scrollHeight - elements.performance.clientHeight);
+        if (Math.abs(elements.performance.scrollTop - state.scrollPosition) > 2) {
+            state.scrollPosition = elements.performance.scrollTop;
+        }
+        const next = Math.min(maximum, state.scrollPosition + distance);
+        state.scrollPosition = next;
+        elements.performance.scrollTop = next;
         state.lastScrollTime = timestamp;
+        if (next >= maximum) {
+            stopAutoScroll();
+            return;
+        }
         state.scrollFrame = requestAnimationFrame(autoScrollFrame);
     }
 
@@ -967,12 +1008,14 @@
         elements.scrollToggle.textContent = state.scrolling ? t("pages.songWorkspace.pauseScroll", "Pause") : t("pages.songWorkspace.startScroll", "Start");
         cancelAnimationFrame(state.scrollFrame);
         state.lastScrollTime = 0;
+        if (state.scrolling) state.scrollPosition = elements.performance.scrollTop;
         if (state.scrolling) state.scrollFrame = requestAnimationFrame(autoScrollFrame);
     }
 
     function stopAutoScroll() {
         state.scrolling = false;
         cancelAnimationFrame(state.scrollFrame);
+        state.lastScrollTime = 0;
         if (elements.scrollToggle) elements.scrollToggle.textContent = t("pages.songWorkspace.startScroll", "Start");
     }
 
@@ -986,6 +1029,11 @@
 
     function attachEvents() {
         document.querySelectorAll("[data-create-mode]").forEach(control => control.addEventListener("click", () => openCreateDialog(control.dataset.createMode)));
+        document.querySelectorAll("[data-dialog-close]").forEach(function(control) {
+            control.addEventListener("click", function() {
+                control.closest("dialog")?.close("cancel");
+            });
+        });
         [elements.title, elements.artist, elements.bpm, elements.timeSignature].forEach(control => control.addEventListener("input", updateSongFromFields));
         [elements.originalKey, elements.targetKey, elements.capo].forEach(control => control.addEventListener("change", updateSongFromFields));
         document.querySelectorAll("[data-view-mode]").forEach(control => control.addEventListener("click", function() {
@@ -1004,10 +1052,16 @@
         $("performanceButton").addEventListener("click", openPerformance);
         $("closePerformanceButton").addEventListener("click", function() { stopAutoScroll(); elements.performance.close(); });
         elements.scrollToggle.addEventListener("click", toggleAutoScroll);
-        $("scrollResetButton").addEventListener("click", function() { elements.performance.scrollTo({ top: 0, behavior: "smooth" }); });
+        $("scrollResetButton").addEventListener("click", function() {
+            state.scrollPosition = 0;
+            elements.performance.scrollTo({ top: 0, behavior: "smooth" });
+        });
         $("fontDecreaseButton").addEventListener("click", () => adjustFont(-0.1));
         $("fontIncreaseButton").addEventListener("click", () => adjustFont(0.1));
-        elements.scrollSpeed.addEventListener("change", function() { state.preferences.scrollSpeed = Number(elements.scrollSpeed.value); Storage.writePreferences(state.preferences); });
+        elements.scrollSpeed.addEventListener("input", function() {
+            state.preferences.scrollSpeedMultiplier = updateScrollSpeedControl(elements.scrollSpeed.value);
+            Storage.writePreferences(state.preferences);
+        });
         $("downloadMenuButton").addEventListener("click", function() {
             elements.downloadMenu.hidden = !elements.downloadMenu.hidden;
             $("downloadMenuButton").setAttribute("aria-expanded", String(!elements.downloadMenu.hidden));
@@ -1177,6 +1231,13 @@
                 closeShapePicker();
                 return;
             }
+            const dismissibleDialog = [elements.createDialog, elements.sectionDialog, elements.lineDialog]
+                .find(dialog => dialog.open);
+            if (event.key === "Escape" && dismissibleDialog) {
+                event.preventDefault();
+                dismissibleDialog.close("cancel");
+                return;
+            }
             if (event.key === "Escape" && state.addMenuTrigger) {
                 event.preventDefault();
                 closeAddMenu();
@@ -1194,6 +1255,9 @@
                 const copy = creationCopy(elements.createForm.dataset.mode);
                 elements.createMode.textContent = copy[0];
                 elements.createSourceLabel.textContent = copy[1];
+                elements.confirmCreate.textContent = elements.createForm.dataset.mode === "chordpro"
+                    ? t("pages.songWorkspace.importChordPro", "Import ChordPro")
+                    : t("pages.songWorkspace.create", "Create");
             }
             if (elements.shapePicker.open) renderShapePicker();
             if (elements.sectionDialog.open) elements.sectionName.placeholder = sectionNamePlaceholder();

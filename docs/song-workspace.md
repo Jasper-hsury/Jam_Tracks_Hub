@@ -24,6 +24,8 @@ The lower-weight **Other Import Options** area is for existing data rather than 
 - **ChordPro**: import common metadata, inline chord anchors, and straightforward section directives.
 - **Jam Tracks Hub JSON**: restore one complete, validated Song Document V1 project previously exported from the workspace.
 
+Create and ChordPro dialogs keep validation attached only to the real **Create** or **Import ChordPro** submission. X, Cancel, and Escape always close immediately—even when required fields are empty or only partly filled—and do not disable submit-time validation.
+
 ChordPro is a plain-text interchange format such as `[G]lyrics [D]lyrics`; it is not the complete Jam Tracks Hub project format. The optional “What is ChordPro?” disclosure explains the inline markers without blocking the primary creation flow.
 
 Library-level portability remains separate:
@@ -45,7 +47,7 @@ Each song keeps one canonical Song Document. Transposed, capo, simplified, Roman
 - **Single-row chord annotations** keep every lyric line on one chord row. Labels stay left-aligned to their logical lyric anchors, while bounded presentation-only condensation handles ordinary tight spacing without stretching or modifying lyrics.
 - **Chord Shapes** link unique computed chords to the existing Chord Dictionary instead of duplicating its guitar-shape database.
 - **Shape Picker scroll contract** keeps the document body fixed while the native dialog is open. X, Escape, and voicing selection share one close path; selection replaces only the affected diagram, focus returns to the originating button while the body is still locked, and the captured page position is restored once with instant scroll behavior before unlock completes. The dialog retains its own bounded vertical scrolling.
-- **Performance Mode** presents a focused chart with target key, capo, shape key, BPM, font controls, and adjustable auto-scroll.
+- **Performance Mode** presents a focused chart with target key, capo, shape key, BPM, font controls, and adjustable auto-scroll. Auto-scroll derives its 1.0× base from `BPM / 60 × 24px per beat`, calibrated so 120 BPM retains the previous 48px/s default and a typical four-beat chart line advances at roughly the current visual line rhythm. The base is bounded to 18–96px/s, missing or invalid BPM falls back to 48px/s, and the user's independent 0.5×–2.0× multiplier remains unchanged when BPM changes. Scrolling accumulates fractional distance from elapsed time, so 60Hz and 120Hz displays progress at the same rate, and stops at the content end.
 
 Autosave runs after a short editing pause. Song metadata, sections, lyric lines, and chord anchors are saved together in IndexedDB.
 
@@ -69,6 +71,10 @@ All primary controls use native buttons, inputs, selects, or dialogs. Download m
 - `Esc` closes the performance dialog.
 
 Reduced-motion preferences disable nonessential transitions and smooth scrolling.
+
+## Button And Interaction Language
+
+Song Workspace controls reuse the site's established primary, secondary, danger, subtle, icon, segmented, toggle, and menu-action semantics. They share the Jam Tracks Hub theme tokens for color, depth shadow, border, radius, active feedback, disabled presentation, and focus ring while retaining component-specific hierarchy: `+ Add` remains subtle, mode selectors remain segmented, destructive actions remain clearly marked, and modal/performance controls keep touch-friendly targets. Light/dark and reduced-motion behavior follow the same system used by Write Your Own Progression and the other music tools.
 
 ## Known V1 Limits
 

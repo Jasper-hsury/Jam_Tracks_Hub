@@ -7,6 +7,8 @@
     --workspace-text: #302821;
     --workspace-muted: #71685f;
     --workspace-shadow: 0 16px 34px rgba(75, 57, 39, 0.1);
+    --workspace-control-radius: 999px;
+    --workspace-control-height: 44px;
 }
 
 html[data-theme="default"] {
@@ -102,61 +104,153 @@ html[data-theme="default"] {
 
 .workspace-button,
 .workspace-icon-button,
-.workspace-segmented button,
-.workspace-download-menu button,
-.performance-toolbar button {
-    min-height: 44px;
+.workspace-segmented button {
+    display: inline-flex;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--workspace-control-height);
+    appearance: none;
+    -webkit-appearance: none;
     border: 1px solid var(--workspace-line);
-    border-radius: 999px;
+    border-radius: var(--workspace-control-radius);
     padding: 10px 18px;
     color: var(--workspace-text);
     background: var(--workspace-surface-strong);
     font: inherit;
     font-weight: 700;
+    line-height: 1.15;
+    text-align: center;
+    text-decoration: none;
     cursor: pointer;
-    transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease;
+    transition: background-color 220ms ease, border-color 220ms ease, box-shadow 220ms ease, color 220ms ease, transform 180ms ease;
 }
 
-.workspace-button:hover,
-.workspace-icon-button:hover,
-.workspace-segmented button:hover,
-.workspace-download-menu button:hover,
-.performance-toolbar button:hover {
+.workspace-button-primary {
+    color: var(--primary-button-text);
+    border-color: var(--primary-button-background);
+    background: var(--primary-button-background);
+    box-shadow: var(--button-depth-shadow);
+}
+
+.workspace-button-primary:hover {
+    color: var(--primary-button-hover-text);
+    border-color: var(--primary-button-hover-background);
+    background: var(--primary-button-hover-background);
+    box-shadow: var(--button-depth-shadow-hover);
+    transform: translateY(-2px) scale(1.015);
+}
+
+.workspace-button-secondary {
+    color: var(--secondary-button-text);
+    border-color: var(--secondary-button-border);
+    background: var(--secondary-button-background);
+    box-shadow: var(--button-depth-shadow);
+}
+
+.workspace-button-secondary:hover {
+    color: var(--secondary-hover-text);
+    border-color: var(--hover-border);
+    background: var(--secondary-hover-background);
+    box-shadow: var(--button-depth-shadow-hover);
+    transform: translateY(-2px) scale(1.015);
+}
+
+.workspace-button-danger {
+    color: var(--danger-text);
+    border-color: var(--danger-border);
+    background: var(--danger-background);
+    box-shadow: var(--button-depth-shadow);
+}
+
+.workspace-button-danger:hover {
+    color: var(--danger-text);
+    border-color: color-mix(in srgb, var(--danger-border) 78%, white);
+    background: color-mix(in srgb, var(--danger-background) 84%, black);
+    box-shadow: var(--button-depth-shadow-hover);
+    transform: translateY(-2px) scale(1.015);
+}
+
+.workspace-button-subtle {
+    color: var(--workspace-muted);
+    border-color: var(--workspace-line);
+    background: transparent;
+    box-shadow: none;
+}
+
+.workspace-button-subtle:hover,
+.workspace-icon-button:hover {
+    color: var(--workspace-text);
     border-color: var(--workspace-accent);
+    background: var(--workspace-soft);
     transform: translateY(-1px);
+}
+
+.workspace-button-primary:active,
+.workspace-button-secondary:active,
+.workspace-button-danger:active {
+    box-shadow: 0 2px 0 rgba(80, 57, 38, 0.3), 0 8px 16px var(--shadow-color);
+    transform: translateY(2px) scale(0.985);
+}
+
+.workspace-button-subtle:active,
+.workspace-icon-button:active,
+.workspace-menu-action:active,
+.workspace-segmented button:active,
+.workspace-add-trigger:active {
+    transform: translateY(1px) scale(0.985);
+}
+
+.workspace-button-compact {
+    min-height: 40px;
+    padding: 8px 14px;
+    font-size: 0.88rem;
 }
 
 .workspace-button:focus-visible,
 .workspace-icon-button:focus-visible,
 .workspace-entry-card:focus-visible,
 .workspace-import-help summary:focus-visible,
-.workspace-song-card button:focus-visible,
+.workspace-menu-action:focus-visible,
+.workspace-add-trigger:focus-visible,
+.workspace-anchor-preview button:focus-visible,
 .workspace-line:focus-visible,
-.workspace-shape-change:focus-visible,
 .workspace-shape-option:focus-visible,
-.performance-toolbar button:focus-visible {
-    outline: 3px solid color-mix(in srgb, var(--workspace-accent) 45%, transparent);
+.workspace-capo-option:focus-visible {
+    outline: 3px solid var(--focus-ring);
     outline-offset: 3px;
 }
 
-.workspace-button-primary,
-.workspace-segmented .is-selected,
-.performance-toolbar button:first-child {
-    color: #fff;
-    border-color: #95673f;
-    background: #95673f;
+.workspace-segmented button:hover {
+    color: var(--secondary-hover-text);
+    border-color: var(--hover-border);
+    background: var(--secondary-hover-background);
 }
 
-.workspace-button[disabled] {
+.workspace-segmented .is-selected {
+    color: var(--primary-button-text);
+    border-color: var(--primary-button-background);
+    background: var(--primary-button-background);
+}
+
+.song-workspace-page button[disabled],
+.workspace-dialog button[disabled],
+.workspace-performance button[disabled] {
     cursor: not-allowed;
-    opacity: 0.55;
+    opacity: var(--disabled-opacity);
+    box-shadow: none;
     transform: none;
 }
 
 .workspace-icon-button {
     width: 44px;
+    min-width: 44px;
     padding: 0;
     border-radius: 8px;
+    color: var(--secondary-button-text);
+    border-color: var(--secondary-button-border);
+    background: var(--secondary-button-background);
+    box-shadow: none;
     font-size: 1.65rem;
 }
 
@@ -196,6 +290,11 @@ html[data-theme="default"] {
     border-color: var(--workspace-accent);
     transform: translateY(-3px);
     box-shadow: 0 20px 42px rgba(75, 57, 39, 0.14);
+}
+
+.workspace-entry-card:active {
+    transform: translateY(1px) scale(0.99);
+    box-shadow: var(--workspace-shadow);
 }
 
 .workspace-entry-card strong {
@@ -361,14 +460,7 @@ html[data-theme="default"] {
 }
 
 .workspace-song-actions button {
-    min-height: 42px;
-    border: 1px solid var(--workspace-line);
-    border-radius: 5px;
-    color: var(--workspace-text);
-    background: var(--workspace-surface-strong);
-    font: inherit;
-    font-weight: 700;
-    cursor: pointer;
+    width: 100%;
 }
 
 .workspace-song-download-menu {
@@ -379,15 +471,29 @@ html[data-theme="default"] {
     padding-top: 10px;
 }
 
-.workspace-song-download-menu button {
-    min-height: 38px;
-    border: 1px solid var(--workspace-line);
-    border-radius: 4px;
+.workspace-menu-action {
+    box-sizing: border-box;
+    min-height: 40px;
+    appearance: none;
+    -webkit-appearance: none;
+    border: 0;
+    border-radius: 6px;
+    padding: 8px 12px;
+    text-align: left;
     color: var(--workspace-text);
-    background: var(--workspace-soft);
+    background: transparent;
     font: inherit;
     font-weight: 700;
+    line-height: 1.2;
     cursor: pointer;
+    transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease, transform 160ms ease;
+}
+
+.workspace-menu-action:hover,
+.workspace-menu-action:focus-visible {
+    color: var(--secondary-hover-text);
+    border-color: var(--hover-border);
+    background: var(--workspace-soft);
 }
 
 .workspace-local-note {
@@ -443,8 +549,6 @@ html[data-theme="default"] {
 
 .workspace-download-menu button {
     border: 0;
-    border-radius: 4px;
-    text-align: left;
 }
 
 .workspace-song-meta {
@@ -529,9 +633,10 @@ html[data-theme="default"] {
 }
 
 #chordHintsButton[aria-pressed="true"] {
-    color: #fff;
+    color: var(--accent-button-text);
     border-color: var(--workspace-accent);
     background: var(--workspace-accent);
+    box-shadow: var(--button-depth-shadow);
 }
 
 .workspace-segmented {
@@ -564,7 +669,21 @@ html[data-theme="default"] {
     padding: 14px;
     color: var(--workspace-text);
     background: var(--workspace-surface);
+    box-shadow: none;
+    font: inherit;
     cursor: pointer;
+    transition: background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.workspace-capo-option:hover {
+    border-color: var(--workspace-accent);
+    background: var(--workspace-soft);
+    box-shadow: var(--workspace-shadow);
+    transform: translateY(-1px);
+}
+
+.workspace-capo-option:active {
+    transform: translateY(1px) scale(0.99);
 }
 
 .workspace-capo-option strong,
@@ -638,13 +757,7 @@ html[data-theme="default"] {
 }
 
 .workspace-section-actions button {
-    min-height: 36px;
-    border: 1px solid var(--workspace-line);
-    border-radius: 999px;
-    padding: 6px 10px;
-    color: var(--workspace-muted);
-    background: transparent;
-    cursor: pointer;
+    white-space: nowrap;
 }
 
 .workspace-lines {
@@ -824,21 +937,7 @@ html[data-theme="default"] .workspace-chord-chip {
 }
 
 .workspace-add-menu button {
-    min-height: 40px;
-    border: 0;
-    border-radius: 4px;
-    padding: 8px 12px;
-    text-align: left;
-    color: var(--workspace-text);
-    background: transparent;
-    font: inherit;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-.workspace-add-menu button:hover,
-.workspace-add-menu button:focus-visible {
-    background: var(--workspace-soft);
+    width: 100%;
 }
 
 @media (hover: none), (pointer: coarse) {
@@ -877,7 +976,6 @@ html[data-theme="default"] .workspace-chord-chip {
     height: 132px;
 }
 
-.workspace-shape-change,
 .workspace-shape-option {
     min-height: 40px;
     border: 1px solid var(--workspace-line);
@@ -888,6 +986,18 @@ html[data-theme="default"] .workspace-chord-chip {
     font: inherit;
     font-weight: 700;
     cursor: pointer;
+    transition: background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.workspace-shape-option:hover {
+    border-color: var(--workspace-accent);
+    background: var(--workspace-soft);
+    box-shadow: var(--workspace-shadow);
+    transform: translateY(-1px);
+}
+
+.workspace-shape-option:active {
+    transform: translateY(1px) scale(0.99);
 }
 
 .workspace-shape-dialog {
@@ -1001,7 +1111,7 @@ html.workspace-shape-picker-restoring {
 }
 
 .workspace-anchor-preview button.is-selected {
-    color: #fff;
+    color: var(--accent-button-text);
     background: var(--workspace-accent);
 }
 
@@ -1029,12 +1139,7 @@ html.workspace-shape-picker-restoring {
 }
 
 .workspace-anchor-item button {
-    min-height: 38px;
-    border: 1px solid var(--workspace-line);
-    border-radius: 4px;
-    color: var(--workspace-text);
-    background: transparent;
-    cursor: pointer;
+    white-space: nowrap;
 }
 
 .workspace-performance {
@@ -1093,6 +1198,25 @@ html.workspace-shape-picker-restoring {
     display: flex;
     align-items: center;
     gap: 7px;
+    min-height: 40px;
+    border: 1px solid var(--workspace-line);
+    border-radius: var(--workspace-control-radius);
+    padding: 4px 12px;
+    color: var(--workspace-muted);
+    background: var(--workspace-soft);
+    font-weight: 700;
+}
+
+.performance-toolbar input[type="range"] {
+    width: clamp(90px, 22vw, 150px);
+    accent-color: var(--workspace-accent);
+}
+
+.performance-toolbar output {
+    min-width: 2.7em;
+    color: var(--workspace-text);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
 }
 
 @media (max-width: 1050px) {
@@ -1279,8 +1403,30 @@ html.workspace-shape-picker-restoring {
 
 @media (prefers-reduced-motion: reduce) {
     .workspace-button,
+    .workspace-icon-button,
+    .workspace-segmented button,
+    .workspace-menu-action,
     .workspace-entry-card,
-    .workspace-line {
+    .workspace-line,
+    .workspace-add-trigger,
+    .workspace-shape-option,
+    .workspace-capo-option {
         transition: none;
+    }
+
+    .workspace-button:hover,
+    .workspace-button:active,
+    .workspace-icon-button:hover,
+    .workspace-icon-button:active,
+    .workspace-segmented button:active,
+    .workspace-menu-action:active,
+    .workspace-entry-card:hover,
+    .workspace-entry-card:active,
+    .workspace-add-trigger:active,
+    .workspace-shape-option:hover,
+    .workspace-shape-option:active,
+    .workspace-capo-option:hover,
+    .workspace-capo-option:active {
+        transform: none;
     }
 }
