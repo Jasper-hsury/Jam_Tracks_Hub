@@ -49,7 +49,7 @@ The **Create Song** area keeps the three common starting points prominent:
 The lower-weight **Other Import Options** area is for existing data rather than a fourth creation method:
 
 - **ChordPro**: import common metadata, inline chord anchors, and straightforward section directives.
-- **Jam Tracks Hub JSON**: restore one complete, validated Song Document V1 project previously exported from the workspace.
+- **Jam Tracks Hub JSON**: restore one complete, validated Song Document V1 project previously exported from the workspace. Single-song import uses the canonical deserializer, assigns a fresh opaque song ID, writes the result to IndexedDB, refreshes the in-memory collection, and opens the imported song. Invalid, empty, or wrong-schema files receive a generic localized error without echoing file content.
 
 Create and ChordPro dialogs keep validation attached only to the real **Create** or **Import ChordPro** submission. X, Cancel, and Escape always close immediately—even when required fields are empty or only partly filled—and do not disable submit-time validation.
 
@@ -59,6 +59,8 @@ Library-level portability remains separate:
 
 - **Restore Backup**: add the validated songs from a Song Workspace backup without silently deleting existing songs.
 - **Backup All**: export the complete local library backup envelope.
+
+Single-song `.jth.json` import and library backup restore are intentionally separate paths. The former accepts one `jamtrackshub-song` document; the latter accepts only the versioned `jamtrackshub-song-backup` envelope.
 
 Recognized leading text metadata includes `Title`, `Artist`, `Key`, `Tempo` or `BPM`, and `Time Signature`. ChordPro import recognizes the corresponding common directives. The parsers are intentionally conservative and bounded; ambiguous content remains editable instead of being guessed as a chord.
 
@@ -72,11 +74,13 @@ Each song keeps one canonical Song Document. Transposed, capo, simplified, Roman
 - **Number Charts** show Roman numeral or Nashville Number views, including common non-diatonic roots.
 - **Visual chord editing** stores chord positions as logical Unicode character anchors, so Chinese and English lyric positions remain stable across responsive layouts.
 - **Single-row chord annotations** keep every lyric line on one chord row. Labels stay left-aligned to their logical lyric anchors, while bounded presentation-only condensation handles ordinary tight spacing without stretching or modifying lyrics.
-- **Chord Shapes** link unique computed chords to the existing Chord Dictionary instead of duplicating its guitar-shape database.
-- **Shape Picker scroll contract** keeps the document body fixed while the native dialog is open. X, Escape, and voicing selection share one close path; selection replaces only the affected diagram, focus returns to the originating button while the body is still locked, and the captured page position is restored once with instant scroll behavior before unlock completes. The dialog retains its own bounded vertical scrolling.
+- **Chord Shapes** use the same shared voicing engine and interval-color tokens as Chord Dictionary and Write Your Own Progression. The picker now also reuses the Progression Writer dialog header, result summary, Position and Root string filters, responsive card grid, shape metadata, **Use Shape** action, and text **Close** control. Filters operate on actual generated voicing position/root data; no fake filter UI or second shape database is introduced.
+- **Shape Picker scroll contract** keeps the document body fixed while the native dialog is open. Close, Escape, and voicing selection share one close path; selection replaces only the affected diagram, focus returns to the originating button while the body is still locked, and the captured page position is restored once with instant scroll behavior before unlock completes. The dialog retains its own bounded vertical scrolling.
 - **Performance Mode** presents a focused chart with target key, capo, shape key, BPM, font controls, and adjustable auto-scroll. Auto-scroll derives its 1.0× base from `BPM / 60 × 24px per beat`, calibrated so 120 BPM retains the previous 48px/s default and a typical four-beat chart line advances at roughly the current visual line rhythm. The base is bounded to 18–96px/s, missing or invalid BPM falls back to 48px/s, and the user's independent 0.5×–2.0× multiplier remains unchanged when BPM changes. Scrolling accumulates fractional distance from elapsed time, so 60Hz and 120Hz displays progress at the same rate, and stops at the content end.
 
 Autosave runs after a short editing pause. Song metadata, sections, lyric lines, and chord anchors are saved together in IndexedDB.
+
+The shared Chords + Lyrics, Lyrics Only, Chords Only, and ChordPro Create/Import dialog remains vertically scrollable when its content exceeds the viewport, but hides its native scrollbar with Firefox and WebKit-compatible CSS. Keyboard focus can still scroll to the footer actions; content is not clipped.
 
 ## Downloads And Backups
 
@@ -110,5 +114,5 @@ Song Workspace controls reuse the site's established primary, secondary, danger,
 - Chord and ChordPro parsing covers common syntax, not every informal chart convention or ChordPro extension.
 - Local songs do not sync between browsers or devices.
 - Smart Capo uses a bounded chord-difficulty heuristic rather than instrument-specific fingering history.
-- Chord shapes open in the existing Chord Dictionary; they are not embedded as a second shape library in the workspace.
+- Chord shapes are generated from the shared local voicing engine; Song Workspace does not maintain a separate shape database.
 - PDF output uses the browser print dialog.

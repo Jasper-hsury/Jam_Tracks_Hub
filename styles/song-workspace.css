@@ -1025,36 +1025,8 @@ html[data-theme="default"] .workspace-chord-chip {
     height: 132px;
 }
 
-.workspace-shape-option {
-    min-height: 40px;
-    border: 1px solid var(--workspace-line);
-    border-radius: 4px;
-    padding: 8px 10px;
-    color: var(--workspace-text);
-    background: var(--workspace-surface-strong);
-    font: inherit;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
-}
-
-.workspace-shape-option:hover {
-    border-color: var(--workspace-accent);
-    background: var(--workspace-soft);
-    box-shadow: var(--workspace-shadow);
-    transform: translateY(-1px);
-}
-
-.workspace-shape-option:active {
-    transform: translateY(1px) scale(0.99);
-}
-
-.workspace-shape-dialog {
-    width: min(980px, calc(100% - 32px));
-}
-
 .workspace-shape-dialog-shell {
-    padding: 24px;
+    width: 100%;
 }
 
 .workspace-shape-dialog {
@@ -1071,22 +1043,8 @@ html.workspace-shape-picker-restoring {
     scroll-behavior: auto !important;
 }
 
-.workspace-shape-picker-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
-    margin-top: 18px;
-}
-
 .workspace-shape-option {
-    display: grid;
-    gap: 10px;
     min-width: 0;
-    text-align: left;
-}
-
-.workspace-shape-option .chord-diagram {
-    max-width: 170px;
 }
 
 .workspace-shape-option.is-selected {
@@ -1104,6 +1062,31 @@ html.workspace-shape-picker-restoring {
     color: var(--workspace-text);
     background: var(--workspace-surface-strong);
     box-shadow: 0 30px 80px rgba(0, 0, 0, 0.28);
+}
+
+.workspace-dialog.workspace-create-dialog {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.workspace-dialog.workspace-create-dialog::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+}
+
+.workspace-dialog.workspace-shape-dialog {
+    width: min(1280px, calc(100% - 32px));
+    max-height: calc(100dvh - 32px);
+    overflow: hidden;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.workspace-shape-dialog-shell.progression-writer-shape-picker-dialog {
+    width: 100%;
+    max-height: calc(100dvh - 32px);
 }
 
 .workspace-dialog::backdrop,
@@ -1386,9 +1369,6 @@ html.workspace-shape-picker-restoring {
         border-radius: 8px;
     }
 
-    .workspace-shape-picker-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
 }
 
 @media (max-width: 420px) {
@@ -1411,10 +1391,6 @@ html.workspace-shape-picker-restoring {
     .workspace-panel-heading {
         align-items: flex-start;
         flex-direction: column;
-    }
-
-    .workspace-shape-picker-grid {
-        grid-template-columns: 1fr;
     }
 
     .performance-toolbar label {

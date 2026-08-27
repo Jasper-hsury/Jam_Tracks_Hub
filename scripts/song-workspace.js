@@ -3,8 +3,9 @@
 
     const Core = window.JamSongCore;
     const Storage = window.JamSongStorage;
+    const SongImport = window.JamSongImport;
     const Shapes = window.JamChordShapes;
-    if (!Core || !Storage || !Shapes) return;
+    if (!Core || !Storage || !SongImport || !Shapes) return;
 
     const MAX_IMPORT_BYTES = 1024 * 1024;
     const MAX_BACKUP_SONGS = 500;
@@ -21,6 +22,8 @@
         editingAnchorId: null,
         shapePickerSymbol: null,
         shapePickerOptions: [],
+        shapePickerPosition: "all",
+        shapePickerRootString: "all",
         shapePickerTrigger: null,
         shapePickerScroll: null,
         shapePickerClosing: false,
@@ -52,7 +55,9 @@
         anchorPreview: $("anchorPreview"), anchorChord: $("anchorChordInput"), anchorPosition: $("anchorPositionInput"),
         anchorList: $("anchorList"), addAnchor: $("addAnchorButton"), lineError: $("lineDialogError"),
         chordHints: $("chordHintsButton"), shapePicker: $("shapePickerDialog"),
-        shapePickerSymbol: $("shapePickerSymbol"), shapePickerGrid: $("shapePickerGrid"),
+        shapePickerSymbol: $("shapePickerSymbol"), shapePickerCount: $("shapePickerCount"),
+        shapePickerPosition: $("shapePositionFilter"), shapePickerRoot: $("shapeRootFilter"),
+        shapePickerGrid: $("shapePickerGrid"),
         sectionDialog: $("sectionNameDialog"), sectionForm: $("sectionNameForm"), sectionName: $("sectionNameInput"),
         performance: $("performanceDialog"), performanceTitle: $("performanceTitle"),
         performanceMeta: $("performanceMeta"), performanceChart: $("performanceChart"),
@@ -576,6 +581,37 @@
         return true;
     }
 
+    function updateShapeFilterPressedState(container, selector, selectedValue) {
+        container.querySelectorAll(selector).forEach(function(control) {
+            const value = control.dataset.shapePosition || control.dataset.shapeRootString;
+            const isSelected = value === selectedValue;
+            control.classList.toggle("is-selected", isSelected);
+            control.setAttribute("aria-pressed", String(isSelected));
+        });
+    }
+
+    function resetShapePickerFilters() {
+        state.shapePickerPosition = "all";
+        state.shapePickerRootString = "all";
+        updateShapeFilterPressedState(elements.shapePickerPosition, "button[data-shape-position]", "all");
+        updateShapeFilterPressedState(elements.shapePickerRoot, "button[data-shape-root-string]", "all");
+    }
+
+    function filteredShapePickerOptions(parsed) {
+        return state.shapePickerOptions
+            .map(function(voicing, index) { return { voicing, index }; })
+            .filter(function(item) {
+                const matchesPosition = state.shapePickerPosition === "all"
+                    || Shapes.nearestPositionTarget(item.voicing.frets) === Number(state.shapePickerPosition);
+                const matchesRootString = Shapes.voicingHasRootOnString(
+                    item.voicing.frets,
+                    state.shapePickerRootString,
+                    parsed
+                );
+                return matchesPosition && matchesRootString;
+            });
+    }
+
     function renderShapePicker() {
         const symbol = state.shapePickerSymbol;
         const selected = symbol ? selectedVoicing(symbol, state.shapePickerOptions) : null;
@@ -583,14 +619,42 @@
         elements.shapePickerGrid.replaceChildren();
         const parsed = Shapes.parseChord(symbol);
         if (!parsed) return;
-        state.shapePickerOptions.forEach(function(voicing, index) {
-            const option = button("", "select-shape", "workspace-shape-option");
-            option.dataset.shapeIndex = String(index);
-            option.classList.toggle("is-selected", Shapes.voicingKey(voicing) === Shapes.voicingKey(selected));
-            option.setAttribute("aria-pressed", String(Shapes.voicingKey(voicing) === Shapes.voicingKey(selected)));
-            option.setAttribute("aria-label", t("pages.songWorkspace.chooseShapeFor", "Choose a guitar shape for {{chord}}", { chord: symbol }));
-            option.appendChild(Shapes.createDiagramElement(parsed, voicing, document));
-            elements.shapePickerGrid.appendChild(option);
+        const filtered = filteredShapePickerOptions(parsed);
+        const total = state.shapePickerOptions.length;
+        const hasFilter = state.shapePickerPosition !== "all" || state.shapePickerRootString !== "all";
+        elements.shapePickerCount.textContent = hasFilter
+            ? t("pages.songWorkspace.shapeCountFiltered", "{{count}} of {{total}} shapes shown", { count: filtered.length, total })
+            : t("pages.songWorkspace.shapeCount", "{{count}} shapes found", { count: total });
+
+        if (!filtered.length) {
+            const empty = node("div", "dictionary-empty progression-writer-shape-picker-empty");
+            empty.append(
+                node("strong", "", t("pages.songWorkspace.noShapes", "No shapes found.")),
+                node("span", "", t("pages.songWorkspace.noShapesHelp", "Choose another fret area, root string, or select All."))
+            );
+            elements.shapePickerGrid.appendChild(empty);
+            return;
+        }
+
+        filtered.forEach(function(item) {
+            const template = document.createElement("template");
+            template.innerHTML = Shapes.renderProgressionDiagram(parsed, item.voicing, item.index, total, {
+                action: "select",
+                variant: "picker",
+                shapeIndex: item.index,
+                labels: {
+                    shape: t("pages.songWorkspace.shape", "Shape"),
+                    useShape: t("pages.songWorkspace.useShape", "Use Shape"),
+                    openPosition: t("pages.songWorkspace.openLowPosition", "Open / low position"),
+                    startsAtFret: t("pages.songWorkspace.startsAtFret", "Starts at fret {{fret}}")
+                }
+            });
+            const card = template.content.firstElementChild;
+            const isSelected = Shapes.voicingKey(item.voicing) === Shapes.voicingKey(selected);
+            card.classList.add("workspace-shape-option");
+            card.classList.toggle("is-selected", isSelected);
+            card.setAttribute("aria-current", String(isSelected));
+            elements.shapePickerGrid.appendChild(card);
         });
     }
 
@@ -666,6 +730,8 @@
         restoreShapePickerScroll();
         state.shapePickerSymbol = null;
         state.shapePickerOptions = [];
+        state.shapePickerPosition = "all";
+        state.shapePickerRootString = "all";
         state.shapePickerClosing = false;
     }
 
@@ -679,14 +745,19 @@
         const parsed = Shapes.parseChord(symbol);
         if (!parsed) return;
         state.shapePickerSymbol = symbol;
-        state.shapePickerOptions = Shapes.generateVoicings(parsed).slice(0, 24);
+        state.shapePickerOptions = Shapes.generateVoicings(parsed);
         state.shapePickerTrigger = trigger || document.activeElement;
         state.shapePickerClosing = false;
+        resetShapePickerFilters();
         renderShapePicker();
         lockShapePickerScroll();
         elements.shapePicker.showModal();
         window.requestAnimationFrame(function() {
-            elements.shapePickerGrid.querySelector(".is-selected, button")?.focus();
+            try {
+                $("closeShapePickerButton").focus({ preventScroll: true });
+            } catch (error) {
+                $("closeShapePickerButton").focus();
+            }
         });
     }
 
@@ -905,22 +976,29 @@
     async function readJsonFile(file) {
         if (!file || file.size > MAX_IMPORT_BYTES) throw new Error(t("pages.songWorkspace.fileTooLarge", "Choose a JSON file under 1 MB."));
         try {
-            return JSON.parse(await file.text());
+            return await file.text();
         } catch (error) {
             throw new Error(t("pages.songWorkspace.importError", "We could not recognize this chart."));
         }
     }
 
     async function importSong(file) {
-        const value = await readJsonFile(file);
-        const song = Core.validateSong(value);
-        song.id = Core.createSong({}).id;
-        song.createdAt = new Date().toISOString();
-        song.updatedAt = song.createdAt;
-        if (state.storageAvailable) await Storage.put(song);
-        state.songs.unshift(song);
-        renderLibrary();
-        showEditor(song);
+        if (!state.storageAvailable) {
+            throw new Error(t("pages.songWorkspace.storageUnavailable", "Local saving is unavailable. Download a backup to keep your work."));
+        }
+        const source = await readJsonFile(file);
+        try {
+            const result = await SongImport.importSingleSong(source, {
+                core: Core,
+                storage: Storage,
+                existingSongs: state.songs
+            });
+            state.songs = result.songs;
+            renderLibrary();
+            showEditor(result.song);
+        } catch (error) {
+            throw new Error(t("pages.songWorkspace.importError", "We could not recognize this chart."));
+        }
     }
 
     function backupSongs() {
@@ -938,7 +1016,13 @@
         if (!state.storageAvailable) {
             throw new Error(t("pages.songWorkspace.storageUnavailable", "Local saving is unavailable. Download a backup to keep your work."));
         }
-        const value = await readJsonFile(file);
+        const source = await readJsonFile(file);
+        let value;
+        try {
+            value = JSON.parse(source);
+        } catch (error) {
+            throw new Error(t("pages.songWorkspace.importError", "We could not recognize this chart."));
+        }
         if (!value || value.schema !== "jamtrackshub-song-backup" || Number(value.version) !== 1 || !Array.isArray(value.songs) || value.songs.length > MAX_BACKUP_SONGS) {
             throw new Error(t("pages.songWorkspace.invalidBackup", "This is not a supported Jam Tracks Hub backup."));
         }
@@ -1160,9 +1244,31 @@
             const control = event.target.closest('[data-action="choose-shape"]');
             if (control) openShapePicker(control.dataset.chordSymbol, control);
         });
-        elements.shapePickerGrid.addEventListener("click", function(event) {
-            const control = event.target.closest('[data-action="select-shape"]');
-            if (control) selectShape(Number(control.dataset.shapeIndex));
+        elements.shapePicker.addEventListener("click", function(event) {
+            const positionControl = event.target.closest("button[data-shape-position]");
+            if (positionControl) {
+                state.shapePickerPosition = positionControl.dataset.shapePosition;
+                updateShapeFilterPressedState(elements.shapePickerPosition, "button[data-shape-position]", state.shapePickerPosition);
+                renderShapePicker();
+                return;
+            }
+            const rootControl = event.target.closest("button[data-shape-root-string]");
+            if (rootControl) {
+                state.shapePickerRootString = rootControl.dataset.shapeRootString;
+                updateShapeFilterPressedState(elements.shapePickerRoot, "button[data-shape-root-string]", state.shapePickerRootString);
+                renderShapePicker();
+                return;
+            }
+            const shapeControl = event.target.closest("[data-select-shape-index]");
+            if (shapeControl) selectShape(Number(shapeControl.dataset.selectShapeIndex));
+        });
+        elements.shapePickerGrid.addEventListener("keydown", function(event) {
+            if (event.key !== "Enter" && event.key !== " ") return;
+            if (event.target.closest("button")) return;
+            const shapeControl = event.target.closest("[data-select-shape-index]");
+            if (!shapeControl) return;
+            event.preventDefault();
+            selectShape(Number(shapeControl.dataset.selectShapeIndex));
         });
         $("closeShapePickerButton").addEventListener("click", closeShapePicker);
         elements.shapePicker.addEventListener("cancel", function(event) {

@@ -429,6 +429,16 @@
         return validateSong(value);
     }
 
+    function prepareImportedSong(source, now) {
+        const song = deserializeSong(source);
+        const requestedDate = now === undefined ? new Date() : new Date(now);
+        const timestamp = Number.isNaN(requestedDate.getTime()) ? new Date().toISOString() : requestedDate.toISOString();
+        song.id = uid("song");
+        song.createdAt = timestamp;
+        song.updatedAt = timestamp;
+        return song;
+    }
+
     function sectionFromHeading(value) {
         const clean = String(value || "").trim().replace(/^\[|\]$/g, "").replace(/:$/, "").trim();
         const normalized = clean.toLowerCase().replace(/\s+/g, "-").replace(/\d+$/, "");
@@ -835,6 +845,7 @@
         validateSong,
         serializeSong,
         deserializeSong,
+        prepareImportedSong,
         parseChordLyrics,
         parseChordPro,
         transformSongChords,

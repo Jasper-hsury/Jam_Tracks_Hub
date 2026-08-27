@@ -39,21 +39,21 @@ Song Workspace is a user-supplied-content practice and arrangement tool. It is n
 
 ## 3. Git Snapshot
 
-Repository truth before the current Analytics / Error-Logging No-Lyrics-Egress audit:
+Repository truth before the current picker / modal-scrollbar / single-song JSON hardening round:
 
 ```text
 Branch: feat/song-workspace-v1
-HEAD: 4460aa2b1119f5ae0c46d423baac769677ee13b4
-origin/feat/song-workspace-v1: 4460aa2b1119f5ae0c46d423baac769677ee13b4
+HEAD: 85f6d7239c0d5024f64eed98562c9070b117efbf
+origin/feat/song-workspace-v1: 85f6d7239c0d5024f64eed98562c9070b117efbf
 main: 9b5ed9b
 origin/main: 9b5ed9b
-Feature branch vs origin/main: 10 ahead, 0 behind
+Feature branch vs origin/main: verify with Git before release work
 Origin fetch/push: git@github.com:Passerby-WB/Jam_Tracks_Hub.git
 ```
 
 The product history reports that GitHub has advertised a newer location, `git@github.com:Jasper-hsury/Jam_Tracks_Hub.git`. The current remote still uses the old URL, so remote URL normalization is **PENDING**. Do not change the remote during unrelated work; confirm the canonical owner and URL first.
 
-Before the current no-lyrics-egress audit, there were no tracked modifications and only the two approved untracked exceptions in section 4. There were no uncommitted Song Workspace production changes.
+Before the current bounded UI/import round, there were no tracked modifications and only the two approved untracked exceptions in section 4. There were no uncommitted Song Workspace production changes.
 
 ## 4. Approved Working-Tree Exceptions
 
@@ -117,7 +117,7 @@ song-workspace.html
   -> scripts/song-workspace.js
 ```
 
-Song Workspace starts through a `DOMContentLoaded` handler in `scripts/song-workspace.js`. The core and storage modules expose browser globals and CommonJS exports so Node's built-in test runner can test them without a browser bundle.
+Song Workspace starts through a `DOMContentLoaded` handler in `scripts/song-workspace.js`. The core, storage, and single-song import modules expose browser globals and CommonJS exports so Node's built-in test runner can test them without a browser bundle.
 
 Other architecture areas:
 
@@ -128,7 +128,7 @@ Other architecture areas:
 - `tools/scripts/build-cloudflare.js`: prepares static `dist/`, skipping oversized PDF assets.
 - `data/`: shared site/track data; chord-shape generation is code-driven in `scripts/chord-shapes.js`.
 
-Known documentation drift: the README page table does not list `song-workspace.html`, and `docs/song-workspace.md` says diagrams are not embedded even though the current editor embeds them. Do not silently trust those statements over source code.
+Known documentation drift: the README page table does not list `song-workspace.html`. The prior `docs/song-workspace.md` statement that diagrams were not embedded has been corrected; do not silently trust future prose over source code.
 
 ## 7. Existing Product Pages
 
@@ -270,18 +270,18 @@ Current supported creation/import paths:
 - **Lyrics Only**: creates editable lyric content without inferred chords.
 - **Chords Only**: creates chord-only progression/chart content.
 - **ChordPro**: common metadata, inline chord anchors, and common section directives (`parseChordPro`, line 500).
-- **JTH JSON import**: validates one canonical Song Document; app-side input is limited to 1 MB.
+- **JTH JSON import**: accepts one canonical Song Document; app-side input is limited to 1 MB. The canonical deserializer validates the source, `prepareImportedSong` replaces the exported ID/timestamps with fresh local values, and `scripts/song-workspace-import.js` writes the result to IndexedDB before returning the updated collection and opening the song.
 - **Backup restore**: validates `jamtrackshub-song-backup` version 1 and a maximum of 500 songs.
 
 Parsers are intentionally conservative and bounded. Ambiguous text should remain editable rather than being aggressively guessed. Imported user content must not be auto-translated or sent to a server.
 
 ## 14. JSON vs ChordPro
 
-**Jam Tracks Hub JSON (`.jth.json`)** is the complete canonical project/backup format. It preserves IDs, metadata, sections, lyric text, chord anchors, and timestamps.
+**Jam Tracks Hub single-song JSON (`.jth.json`)** is one complete canonical Song Document. Export preserves project metadata, sections, lyric text, chord anchors, and timestamps; import intentionally regenerates the top-level song ID and timestamps before local persistence/navigation. **Backup All / Restore Backup** uses the separate `jamtrackshub-song-backup` envelope and must not be sent through the single-song import path.
 
 **ChordPro (`.cho`)** is an interchange text format such as `[G]lyric [D]lyric`. It can represent useful metadata and inline anchors but is not guaranteed to preserve every JTH-specific identity or preference.
 
-Do not treat ChordPro as the complete backup format. The confirmed information-architecture change is **RESOLVED** on 2026-08-27: `song-workspace.html` keeps exactly three primary create cards, while the secondary Other Import Options area contains ChordPro—with `[G]lyrics [D]lyrics` guidance and optional help—and Jam Tracks Hub JSON. `tests/song-workspace-import-ia.test.js` covers hierarchy, handler wiring, localization, responsive contracts, synthetic ChordPro, and valid/invalid JTH project validation.
+Do not treat ChordPro as the complete backup format. The confirmed information-architecture change is **RESOLVED** on 2026-08-27: `song-workspace.html` keeps exactly three primary create cards, while the secondary Other Import Options area contains ChordPro—with `[G]lyrics [D]lyrics` guidance and optional help—and Jam Tracks Hub JSON. `tests/song-workspace-import-ia.test.js` covers hierarchy, handler wiring, localization, responsive contracts, synthetic ChordPro, valid/invalid JTH validation, ID regeneration, collection insertion, and persistence orchestration.
 
 ## 15. Lyric / Chord Anchor Model
 
@@ -352,7 +352,7 @@ Consumers:
 - Chord Progressions (`scripts/chords.js`)
 - Song Workspace (`scripts/song-workspace.js`)
 
-Song Workspace cards show chord name, diagram, and Choose Another Shape. The picker lists available voicings; selection is persisted per song as a presentation preference and updates the inline diagram. Avoid duplicating separate shape datasets/rendering semantics or exposing ranking/debug metadata such as “Shape X of Y” in the primary card.
+Song Workspace cards show chord name, diagram, and Choose Another Shape. The picker reuses Write Your Own Progression's `progression-writer-shape-picker-*` dialog/header/summary/grid/card classes, `dictionary-position-filter`, and the shared `renderProgressionDiagram` renderer. It exposes fixed Available guitar shapes help, a result count, real Position and Root string filters backed by `nearestPositionTarget` / `voicingHasRootOnString`, localized shape metadata, Use Shape actions, and a text Close control. Selection is persisted per song as a presentation preference and updates only the inline diagram. Avoid duplicating separate shape datasets/rendering semantics or exposing ranking/debug metadata in the primary inline card.
 
 The tested regression set includes C, Am7, Fadd9, G/B, C#m7b5, Bbmaj9, A7(b13), and F#sus4. Shape availability is broad but not mathematically exhaustive for every possible chord symbol.
 
@@ -364,19 +364,21 @@ Song Workspace reuses the Chord Dictionary interval variables and presentation r
 
 ## 22. Modal / Scroll Behavior
 
-The Chord Shape Picker is a native dialog (`song-workspace.html:242-253`). Current implementation in `scripts/song-workspace.js`:
+The Chord Shape Picker is a native dialog. Current implementation in `scripts/song-workspace.js`:
 
 - captures exact scroll X/Y;
 - dynamically measures scrollbar width and compensates body padding;
 - fixes/locks the background body;
 - allows internal dialog scrolling with a bounded max height;
 - supports iOS momentum and overscroll containment in CSS;
-- routes X, Escape/native dialog cancel, and voicing selection through one guarded `closeShapePicker` path;
+- routes the text Close control, Escape/native dialog cancel, and voicing selection through one guarded `closeShapePicker` path;
 - updates only the selected card's diagram while the background remains locked instead of rebuilding the card subtree;
 - restores focus to the originating Choose Another Shape button, using `preventScroll` where supported, while the body is still fixed;
 - restores body styles and the captured page position exactly once, with smooth scrolling temporarily disabled and no animation-frame or timeout retry.
 
 The main Song Chart and Chord Shapes columns are normal document-flow columns, top-aligned, without a sticky right panel or independent vertical scrollbar. Performance Mode is intentionally its own dialog/scroll context.
+
+The shared Chords + Lyrics, Lyrics Only, Chords Only, and ChordPro dialog uses `workspace-create-dialog`. Its outer container remains `overflow: auto`, while `scrollbar-width: none`, `-ms-overflow-style: none`, and a zero-size `::-webkit-scrollbar` hide the visible native scrollbar without clipping content. Responsive browser acceptance at 375 CSS pixels confirmed `scrollHeight > clientHeight`, computed `scrollbar-width: none`, and keyboard focus moving `scrollTop` to the footer actions.
 
 The code-level transient-jump issue is **RESOLVED** in this snapshot. Root cause was a combination of replacing the entire shape-card subtree during selection, unlocking the body before focus restoration, global smooth-scroll behavior affecting `scrollTo`, and a second deferred restoration attempt. The new pipeline keeps the background locked through selection and focus restoration, then performs one instant restore. In-app browser acceptance at 1280×720, 1024×768, and 375×812 recorded zero final scroll delta for X and selection paths, including 10 consecutive desktop selections, preserved card/diagram geometry, internal modal scrolling, trigger focus, and reload persistence. The product owner subsequently reported macOS Safari user acceptance with no visible shape-selection jump: **PASS**. iPhone/iOS hardware acceptance remains **PENDING RELEASE** and must not be inferred from the macOS result.
 
@@ -518,10 +520,10 @@ git diff --check
 
 There are no separate `lint`, `typecheck`, or `format` scripts. `npm run check` performs `node --check` over listed JavaScript/Worker/API/build files. `npm test` uses Node's built-in test runner on `tests/*.test.js`.
 
-Current Copyright / Local-First Disclosure hardening baseline on 2026-08-27:
+Current picker / modal-scrollbar / single-song JSON hardening baseline on 2026-08-27:
 
 ```text
-npm test: PASS, 62/62
+npm test: PASS, 75/75
 npm run check: PASS
 npm run build:cloudflare: PASS
 git diff --check: PASS
@@ -533,6 +535,7 @@ Test files:
 - `tests/song-workspace-disclosure.test.js`
 - `tests/song-workspace-import-ia.test.js`
 - `tests/song-workspace-interaction.test.js`
+- `tests/song-workspace-picker-modal.test.js`
 - `tests/song-workspace-scroll.test.js`
 - `tests/song-workspace-storage.test.js`
 - `tests/song-workspace-style.test.js`
@@ -544,7 +547,9 @@ Important limitation: `.github/workflows/ci.yml` runs `npm run check` and `npm r
 
 | SHA | Message | Purpose |
 | --- | --- | --- |
-| Current change | `fix: clarify local song content and copyright boundaries` | Adds accurate browser-local, import-rights, export-content, persistence-risk, and user-content wording across Song Workspace and the existing Privacy page without changing feature behavior. |
+| Current change | `fix: polish song workspace picker and restore json import` | Aligns the picker with Write Your Own Progression, hides Create/Import dialog scrollbars without disabling scrolling, and hardens/test-drives canonical single-song JSON persistence. |
+| `85f6d72` | `fix: prevent song content from entering analytics and logs` | Isolates Song Workspace from analytics/error side channels and adds content-free title/URL/error/transport regressions. |
+| `4460aa2` | `fix: clarify local song content and copyright boundaries` | Adds accurate browser-local, import-rights, export-content, persistence-risk, and user-content wording across Song Workspace and the existing Privacy page. |
 | `08472d0` | `fix: refine song workspace interaction and performance controls` | Makes create/import cancellation independent of validation, links auto-scroll base speed to BPM while retaining the user multiplier, and aligns all workspace button semantics with shared site tokens. |
 | `e02140e` | `fix: clarify song creation and import options` | Separates three primary creation methods from ChordPro/JTH JSON imports, adds optional ChordPro help, responsive hierarchy, localization, tests, and status documentation. |
 | `6cc1187` | `fix: stabilize song shape picker scroll restoration` | Unifies close/focus/restore ordering, updates one diagram without rebuilding its card, suppresses smooth restore, adds scroll-contract regressions, and records responsive in-app browser acceptance. |
@@ -610,9 +615,20 @@ Status: **RESOLVED** on 2026-08-27. Static and dynamic controls now use explicit
 
 Status: **RESOLVED** on 2026-08-27. A production-code audit found no Song Workspace content transport and traced song content through browser-local parsing, IndexedDB/localStorage, File APIs, and local export Blob URLs. The home/create area, mode-specific Create/ChordPro dialog, JTH JSON card, local-storage warning, and Download menu now provide short English/zh-TW wording. `privacy-policy.html` extends the existing legal-information architecture with Song Workspace storage and bounded user-provided-content/copyright sections. The copy neither equates local storage with legality nor advertises cloud sync, server backup, public sharing, or Share Arrangement. `tests/song-workspace-disclosure.test.js` covers locations, localization, export preservation, false-feature copy, policy wiring, and transport primitives.
 
+### Issue G — Song Workspace picker diverges from Write Your Own Progression
+
+Status: **RESOLVED** on 2026-08-27. Song Workspace now reuses the Progression Writer picker dialog/header/summary/filter/grid/card classes and shared card renderer. Available guitar shapes, result count, actual Position and Root string filters, shape/position metadata, Use Shape, and text Close are localized in English and zh-TW. The existing body-lock, guarded close, focus-before-unlock, single diagram replacement, and one-time scroll restoration pipeline remains intact.
+
+### Issue H — Create/Import dialog shows a native vertical scrollbar
+
+Status: **RESOLVED** on 2026-08-27. All four Create/ChordPro modes share `workspace-create-dialog`. Cross-browser scrollbar-hiding rules apply only to that scroll container; `overflow: auto`, keyboard scrolling, footer reachability, and bounded viewport height remain. Browser acceptance covered 1280, 1024, and 375 CSS pixels in light/dark themes with no horizontal overflow.
+
+### Issue I — JTH single-song JSON import appears to fail
+
+Status: **RESOLVED** on 2026-08-27. The exact starting-SHA button → hidden input → file-change → parse → validate → ID regeneration → IndexedDB → editor path succeeded under synthetic browser reproduction, so no deterministic wiring failure was reproducible. The investigation did find that the route was coupled to a private callback, bypassed the canonical string deserializer, allowed a storage-unavailable session-only result, and surfaced non-localized schema errors. The hardened path now reads text locally, uses `prepareImportedSong`, regenerates the opaque ID/timestamps, persists through the testable `song-workspace-import.js` service, updates the collection, opens the song, and maps all invalid/empty/wrong-schema content to a generic localized message. Automated tests cover collection growth, persistence, ID regeneration, URL safety, and bounded errors; browser acceptance confirmed collection 6→7, auto-open, reload persistence, and no raw invalid-file canary in the UI.
+
 ### Documentation and release issues
 
-- `docs/song-workspace.md` incorrectly says diagrams are not embedded.
 - README route table omits Song Workspace.
 - CI omits `npm test`.
 - Analytics/error-payload review and Copyright/local-only UI wording are resolved.
@@ -627,7 +643,9 @@ Status: **RESOLVED** on 2026-08-27. A production-code audit found no Song Worksp
 | Chords + Lyrics / Lyrics / Chords creation | DONE | `song-workspace.html:73-88`, app/core parsers | Current primary creation paths. |
 | ChordPro import/export | DONE | `parseChordPro`, `toChordPro` | Functionality exists. |
 | ChordPro / JTH JSON import hierarchy | RESOLVED | `song-workspace.html`, `styles/song-workspace.css`, locale files, `tests/song-workspace-import-ia.test.js` | Exactly three primary create methods; both existing-data formats are secondary imports. |
+| JTH single-song JSON import | RESOLVED | `prepareImportedSong`, `scripts/song-workspace-import.js`, app handler, import tests, browser acceptance | Canonical validation, fresh opaque ID, IndexedDB write, collection refresh, auto-open, reload persistence, generic errors. |
 | Create/import cancellation vs validation | RESOLVED | dialog markup, shared close/Escape handlers, `tests/song-workspace-interaction.test.js`, responsive browser acceptance | X, Cancel, and Escape bypass validation; only real Create/Import submits validate. |
+| Create/Import visible scrollbar | RESOLVED | `workspace-create-dialog`, CSS contract test, responsive browser acceptance | Scrollbar hidden across Firefox/WebKit rules while overflow, keyboard scrolling, and footer reachability remain. |
 | IndexedDB song persistence | DONE | `scripts/song-workspace-storage.js` | Browser-local only. |
 | Preference persistence | DONE | storage/app preference helpers | Includes hints and selected voicings. |
 | Autosave and reload | DONE | `scripts/song-workspace.js:681-701` | 500 ms debounce plus visibility flush. |
@@ -645,6 +663,7 @@ Status: **RESOLVED** on 2026-08-27. A production-code audit found no Song Worksp
 | Shared chord-shape data | DONE | `scripts/chord-shapes.js` | Used across three tools. |
 | Shared interval colors | DONE | `styles/chord-dictionary.css`, style test | Light/dark centralized. |
 | Inline Chord Shapes / picker | DONE | app render/picker code | Selection persists locally. |
+| Picker parity with Write Your Own Progression | RESOLVED | shared picker classes/card renderer, real voicing filters, locale files, picker/modal tests | Header, count, filters, cards, Use Shape, text Close, responsive layout aligned. |
 | Background modal scroll lock | DONE | `lockShapePickerScroll`, `finalizeShapePickerClose`, `restoreShapePickerScroll` | One captured position, one guarded close pipeline, focus-before-unlock, one instant restore. |
 | Shape Picker zero-jump code hardening | RESOLVED | `scripts/song-workspace.js`, `styles/song-workspace.css`, `tests/song-workspace-scroll.test.js` | Responsive in-app browser acceptance has zero final delta and stable geometry. |
 | Zero visible Safari picker jump | macOS PASS / iOS PENDING | Product-owner macOS acceptance plus pending iPhone/iOS hardware acceptance | Do not infer iPhone/iOS from the macOS result. |
@@ -680,6 +699,9 @@ Bounded future work, clearly outside current implementation:
 - **RESOLVED**: Song Workspace button semantics and interaction states aligned with shared Jam Tracks Hub theme tokens.
 - **RESOLVED**: add/review browser-local, import-rights, storage-loss, export-content, and bounded user-content/copyright wording.
 - **RESOLVED**: analytics/error-log no-song-content-egress inventory, Umami isolation, URL/title/import-ID hardening, generic import errors, automated canaries, and browser network/console acceptance.
+- **RESOLVED**: Song Workspace picker parity with Write Your Own Progression using shared styles/card rendering and real voicing filters.
+- **RESOLVED**: Create/ChordPro visible scrollbar removal while retaining bounded keyboard/wheel scrolling and footer reachability.
+- **RESOLVED**: canonical single-song JTH JSON import orchestration, fresh opaque IDs, IndexedDB persistence, collection refresh, generic errors, and reload acceptance.
 - **PENDING RELEASE**: add `npm test` to remote CI after confirming runtime expectations.
 - **RESOLVED**: single-row annotation fitting, rendering, regressions, and Chromium responsive acceptance completed on 2026-08-27.
 - **RESOLVED**: bounded Shape Picker close/focus/instant-restore implementation and responsive in-app browser acceptance.
@@ -714,6 +736,9 @@ All categories require explicit review before release:
 - Single chord-row invariant passes all modes and responsive layouts.
 - Safari shape selection has zero visible jump.
 - ChordPro / JTH JSON hierarchy is implemented and regression-tested.
+- Single-song JTH JSON import validates the canonical document, regenerates the ID, persists locally, refreshes/opens correctly, and survives reload; backup envelopes remain a separate path.
+- Shape Picker retains Write Your Own Progression parity for header, count, real filters, cards, Use Shape, Close, localization, and responsive behavior.
+- Shared Create/ChordPro dialogs hide their native scrollbar without disabling scrolling or clipping footer actions.
 - Create/import cancellation bypasses validation while actual submissions remain validated.
 - BPM-linked auto-scroll and user multiplier pass monotonic, pause/resume, end-stop, and responsive checks.
 - Button semantics pass light/dark, keyboard focus, reduced-motion, and responsive review.
@@ -777,4 +802,4 @@ A new Codex session must begin in this order:
 9. Run baseline `npm test`, `npm run check`, `npm run build:cloudflare`, and `git diff --check` when appropriate.
 10. Only then modify production code, and only for the explicitly requested bounded task.
 
-Highest-priority remaining release work includes iPhone/iOS hardware acceptance, anti-abuse review, remote/CI/PR coordination, and explicit production approval. Analytics/error-log no-song-content-egress, Copyright/local-only UI wording, the Create Song / Other Import hierarchy, cancellation-vs-validation contract, BPM-linked Performance Auto Scroll, button design-system hardening, one-row chord-annotation contract, Shape Picker code fix, and macOS Safari zero-jump user acceptance are resolved. Do not begin a remaining gate without an explicit bounded request.
+Highest-priority remaining release work includes iPhone/iOS hardware acceptance, anti-abuse review, remote/CI/PR coordination, and explicit production approval. Analytics/error-log no-song-content-egress, Copyright/local-only UI wording, the Create Song / Other Import hierarchy, cancellation-vs-validation contract, BPM-linked Performance Auto Scroll, button design-system hardening, one-row chord-annotation contract, Shape Picker parity/zero-jump code fix, Create/Import scrollbar polish, canonical single-song JSON import, and macOS Safari zero-jump user acceptance are resolved. Do not begin a remaining gate without an explicit bounded request.

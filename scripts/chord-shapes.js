@@ -397,12 +397,17 @@
 
     function renderProgressionDiagram(parsed, voicing, index, total, options) {
         const settings = options || {};
+        const labels = settings.labels || {};
+        const shapeLabel = labels.shape || "Shape";
+        const useShapeLabel = labels.useShape || "Use Shape";
+        const openPositionLabel = labels.openPosition || "Open / low position";
         const action = settings.action === "select"
-            ? `<button class="secondary-button progression-writer-shape-button" type="button" data-select-shape-index="${settings.shapeIndex}">Use Shape</button>`
+            ? `<button class="secondary-button progression-writer-shape-button" type="button" data-select-shape-index="${settings.shapeIndex}">${escapeHtml(useShapeLabel)}</button>`
             : '<button class="secondary-button progression-writer-shape-button" type="button" data-open-shape-picker>Choose Other Shape</button>';
         const baseFret = diagramBaseFret(voicing.frets);
-        const position = baseFret === 1 ? "Open / low position" : `Starts at fret ${baseFret}`;
-        return `<article class="chord-shape-card progression-writer-shape-card${settings.variant === "picker" ? " progression-writer-shape-picker-card" : ""}"${settings.action === "select" ? ` data-select-shape-index="${settings.shapeIndex}" tabindex="0"` : ""}><div class="chord-shape-card-heading progression-writer-shape-heading"><div><span>Shape ${index + 1}${settings.variant === "picker" ? "" : ` of ${total}`}</span><strong>${escapeHtml(parsed.symbol)}</strong><small>${escapeHtml(voicing.frets.map(function(fret) { return fret < 0 ? "x" : fret; }).join(" "))}</small></div><small>${escapeHtml(position)}</small>${action}</div>${diagramMarkup(parsed, voicing)}</article>`;
+        const startsAtFret = labels.startsAtFret || "Starts at fret {{fret}}";
+        const position = baseFret === 1 ? openPositionLabel : startsAtFret.replace("{{fret}}", String(baseFret));
+        return `<article class="chord-shape-card progression-writer-shape-card${settings.variant === "picker" ? " progression-writer-shape-picker-card" : ""}"${settings.action === "select" ? ` data-select-shape-index="${settings.shapeIndex}" tabindex="0"` : ""}><div class="chord-shape-card-heading progression-writer-shape-heading"><div><span>${escapeHtml(shapeLabel)} ${index + 1}${settings.variant === "picker" ? "" : ` of ${total}`}</span><strong>${escapeHtml(parsed.symbol)}</strong><small>${escapeHtml(voicing.frets.map(function(fret) { return fret < 0 ? "x" : fret; }).join(" "))}</small></div><small>${escapeHtml(position)}</small>${action}</div>${diagramMarkup(parsed, voicing)}</article>`;
     }
 
     return {

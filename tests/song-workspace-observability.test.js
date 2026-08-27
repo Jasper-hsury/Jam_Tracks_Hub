@@ -10,6 +10,7 @@ const workspaceHtml = read("song-workspace.html");
 const workspaceJs = read("scripts/song-workspace.js");
 const workspaceCore = read("scripts/song-workspace-core.js");
 const workspaceStorage = read("scripts/song-workspace-storage.js");
+const workspaceImport = read("scripts/song-workspace-import.js");
 const indexHtml = read("index.html");
 const en = JSON.parse(read("locales/en/common.json"));
 const zh = JSON.parse(read("locales/zh-TW/common.json"));
@@ -51,7 +52,8 @@ test("allows only generated opaque song IDs in workspace navigation URLs", () =>
 });
 
 test("regenerates imported and restored song IDs before navigation or storage", () => {
-    assert.match(workspaceJs, /async function importSong[\s\S]*?song\.id = Core\.createSong\(\{\}\)\.id;/);
+    assert.match(workspaceCore, /function prepareImportedSong[\s\S]*?song\.id = uid\("song"\)/);
+    assert.match(workspaceImport, /core\.prepareImportedSong\(source, settings\.now\)[\s\S]*?storage\.put\(song\)/);
     assert.match(workspaceJs, /const restored = value\.songs\.map\(Core\.validateSong\)[\s\S]*?song\.id = Core\.createSong\(\{\}\)\.id;/);
     assert.match(workspaceJs, /history\.replaceState\(null, "", Core\.songWorkspaceUrl\(state\.song\.id\)\)/);
     assert.match(workspaceJs, /requestedId && !Core\.isOpaqueSongId\(requestedId\)/);
@@ -72,7 +74,7 @@ test("parser and JSON import failures never serialize raw song content", () => {
 });
 
 test("Song Workspace production modules have no remote content transport or error forwarding", () => {
-    const source = [workspaceCore, workspaceStorage, workspaceJs].join("\n");
+    const source = [workspaceCore, workspaceStorage, workspaceImport, workspaceJs].join("\n");
     assert.doesNotMatch(source, /\bfetch\s*\(|XMLHttpRequest|sendBeacon|new\s+WebSocket|WebSocket\s*\(|EventSource|FormData|navigator\.sendBeacon/i);
     assert.doesNotMatch(source, /window\.onerror|unhandledrejection|console\.(?:log|warn|error)\s*\(/i);
     assert.doesNotMatch(source, /sentry|logrocket|posthog|mixpanel|segment|telemetry/i);

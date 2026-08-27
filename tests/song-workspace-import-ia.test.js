@@ -3,6 +3,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
 const Core = require("../scripts/song-workspace-core.js");
+const SongImport = require("../scripts/song-workspace-import.js");
 
 const root = path.resolve(__dirname, "..");
 const workspaceHtml = fs.readFileSync(path.join(root, "song-workspace.html"), "utf8");
@@ -43,8 +44,9 @@ test("keeps existing ChordPro and JSON handlers wired to the new controls", () =
     assert.match(workspaceJs, /querySelectorAll\("\[data-create-mode\]"\)[\s\S]*?openCreateDialog\(control\.dataset\.createMode\)/);
     assert.match(workspaceJs, /if \(mode === "chordpro"\) song = Core\.parseChordPro/);
     assert.match(workspaceJs, /importSongButton"\)\.addEventListener\("click", \(\) => elements\.importInput\.click\(\)\)/);
-    assert.match(workspaceJs, /const song = Core\.validateSong\(value\)/);
-    assert.match(workspaceJs, /if \(state\.storageAvailable\) await Storage\.put\(song\)/);
+    assert.match(workspaceJs, /SongImport\.importSingleSong\(source, \{/);
+    assert.match(workspaceJs, /state\.songs = result\.songs/);
+    assert.match(workspaceJs, /showEditor\(result\.song\)/);
 });
 
 test("keeps the secondary import area responsive and keyboard visible", () => {
@@ -94,4 +96,49 @@ test("accepts a valid JTH project and rejects invalid JSON or schema", () => {
     assert.equal(restored.sections[0].lines[0].text, "測試內容");
     assert.throws(() => Core.deserializeSong("not-json"), /valid JSON/);
     assert.throws(() => Core.validateSong({ schema: "not-jamtrackshub-song", version: 1, sections: [] }), /supported Song Document/);
+});
+
+test("imports one exported song, regenerates its id, updates the collection, and persists it", async () => {
+    const exported = Core.createSong({
+        id: "song-user-provided-id",
+        title: "Synthetic Single Song Import",
+        sections: [Core.createSection("Verse", "verse", [
+            Core.createLine("Synthetic lyric", [Core.createChord("G", 0)], "lyric")
+        ])]
+    });
+    const persisted = new Map();
+    const existing = [Core.createSong({ title: "Existing Song" })];
+    const storage = {
+        async put(song) { persisted.set(song.id, structuredClone(song)); }
+    };
+
+    const result = await SongImport.importSingleSong(Core.serializeSong(exported), {
+        core: Core,
+        storage,
+        existingSongs: existing,
+        now: "2026-08-27T12:00:00.000Z"
+    });
+
+    assert.equal(result.song.title, "Synthetic Single Song Import");
+    assert.notEqual(result.song.id, exported.id);
+    assert.equal(Core.isOpaqueSongId(result.song.id), true);
+    assert.equal(result.songs.length, 2);
+    assert.equal(result.songs[0].id, result.song.id);
+    assert.equal(persisted.has(result.song.id), true);
+    assert.equal(Array.from(persisted.values())[0].sections[0].lines[0].text, "Synthetic lyric");
+    assert.doesNotMatch(Core.songWorkspaceUrl(result.song.id), /song-user-provided-id/);
+});
+
+test("single-song import rejects invalid input with a bounded content-free error", async () => {
+    const canary = "RAW_JSON_CANARY_NEVER_ECHO";
+    const storage = { async put() { throw new Error("should not write"); } };
+
+    for (const source of ["", `{ broken: ${canary}`, JSON.stringify({ schema: "backup", version: 1, songs: [] })]) {
+        await assert.rejects(
+            SongImport.importSingleSong(source, { core: Core, storage, existingSongs: [] }),
+            error => error.name === "SingleSongImportError"
+                && error.message === "JTH_SINGLE_SONG_IMPORT_FAILED"
+                && !error.message.includes(canary)
+        );
+    }
 });
