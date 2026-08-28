@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="styles/pages.css?v=20260826-song-workspace">
     <link rel="stylesheet" href="styles/themes.css?v=20260826-song-workspace">
     <link rel="stylesheet" href="styles/chord-dictionary.css?v=20260826-workspace-hardening">
-    <link rel="stylesheet" href="styles/song-workspace.css?v=20260828-compact-read-mode">
+    <link rel="stylesheet" href="styles/song-workspace.css?v=20260828-mobile-global-add">
 </head>
 <body data-i18n-title="titles.songWorkspace">
     <nav class="navbar">
@@ -150,20 +150,20 @@
         <section id="workspaceEditorView" class="workspace-view workspace-editor" hidden>
             <div class="workspace-editor-topbar">
                 <button class="workspace-button workspace-button-secondary" id="backToSongsButton" type="button">
-                    <svg class="workspace-mobile-action-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19 12H5m6-6-6 6 6 6"/></svg>
+                    <svg class="workspace-action-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19 12H5m6-6-6 6 6 6"/></svg>
                     <span data-i18n="pages.songWorkspace.backToSongs">Back to My Songs</span>
                 </button>
                 <div class="workspace-editor-actions">
                     <button class="workspace-button workspace-button-secondary" id="downloadMenuButton" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="downloadMenu" aria-describedby="exportDisclosure">
-                        <svg class="workspace-mobile-action-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v12m-5-5 5 5 5-5M5 19h14"/></svg>
+                        <svg class="workspace-action-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v12m-5-5 5 5 5-5M5 19h14"/></svg>
                         <span data-i18n="pages.songWorkspace.download">Download</span>
                     </button>
                     <button class="workspace-button workspace-button-secondary" id="readModeButton" type="button">
-                        <svg class="workspace-mobile-action-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5c2.7-.9 5.3-.4 8 1.5v12c-2.7-1.9-5.3-2.4-8-1.5v-12Zm16 0c-2.7-.9-5.3-.4-8 1.5v12c2.7-1.9 5.3-2.4 8-1.5v-12Z"/></svg>
+                        <svg class="workspace-action-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5c2.7-.9 5.3-.4 8 1.5v12c-2.7-1.9-5.3-2.4-8-1.5v-12Zm16 0c-2.7-.9-5.3-.4-8 1.5v12c2.7-1.9 5.3-2.4 8-1.5v-12Z"/></svg>
                         <span data-i18n="pages.songWorkspace.readMode">Read Mode</span>
                     </button>
                     <button class="workspace-button workspace-button-primary" id="performanceButton" type="button">
-                        <svg class="workspace-mobile-action-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 10v4m4-8v12m4-15v18m4-13v8m4-6v4"/></svg>
+                        <svg class="workspace-action-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 10v4m4-8v12m4-15v18m4-13v8m4-6v4"/></svg>
                         <span data-i18n="pages.songWorkspace.performance">Performance Mode</span>
                     </button>
                 </div>
@@ -276,7 +276,10 @@
                 <section class="workspace-chart-panel" aria-labelledby="songChartTitle">
                     <header class="workspace-score-header">
                         <div class="workspace-score-identity">
-                            <span class="result-kicker" data-i18n="pages.songWorkspace.chart">Song chart</span>
+                            <div class="workspace-score-kicker-row">
+                                <span class="result-kicker" data-i18n="pages.songWorkspace.chart">Song chart</span>
+                                <button class="workspace-button workspace-button-subtle workspace-global-add-button" id="globalAddButton" type="button" aria-haspopup="dialog" aria-controls="globalAddDialog"><span aria-hidden="true">+</span><span data-i18n="pages.songWorkspace.add">Add</span></button>
+                            </div>
                             <div class="workspace-title-view" id="songTitleView">
                                 <h2 id="songChartTitle"><button class="workspace-title-trigger" id="songTitleEditButton" type="button"><span id="songTitleDisplay"></span><small data-i18n="pages.songWorkspace.edit">Edit</small></button></h2>
                             </div>
@@ -392,6 +395,40 @@
             </div>
 
             <div class="progression-writer-shape-picker-grid workspace-shape-picker-grid" id="shapePickerGrid"></div>
+        </div>
+    </dialog>
+
+    <dialog class="workspace-dialog workspace-global-add-dialog" id="globalAddDialog" aria-labelledby="globalAddTitle">
+        <div class="workspace-global-add-shell">
+            <div class="workspace-dialog-heading">
+                <div>
+                    <span class="result-kicker" id="globalAddStepLabel">Step 1 of 2</span>
+                    <h2 id="globalAddTitle" data-i18n="pages.songWorkspace.addToSong">Add to Song</h2>
+                </div>
+                <button class="workspace-icon-button" type="button" data-dialog-close aria-label="Close" data-i18n-aria-label="common.close">×</button>
+            </div>
+            <section class="workspace-global-add-step" id="globalAddTypeStep" aria-labelledby="globalAddTypeTitle">
+                <h3 id="globalAddTypeTitle" data-i18n="pages.songWorkspace.chooseWhatToAdd">Choose what to add</h3>
+                <div class="workspace-global-add-types">
+                    <button class="workspace-global-add-type" type="button" data-global-add-type="line"><strong data-i18n="pages.songWorkspace.line">Line</strong><span data-i18n="pages.songWorkspace.addLine">Add Line</span></button>
+                    <button class="workspace-global-add-type" type="button" data-global-add-type="section"><strong data-i18n="pages.songWorkspace.section">Section</strong><span data-i18n="pages.songWorkspace.addSection">Add Section</span></button>
+                    <button class="workspace-global-add-type" type="button" data-global-add-type="instrumental"><strong data-i18n="pages.songWorkspace.instrumentalChords">Instrumental Chords</strong><span data-i18n="pages.songWorkspace.addInstrumentalSection">Add Instrumental Section</span></button>
+                </div>
+                <div class="workspace-dialog-actions">
+                    <button class="workspace-button workspace-button-secondary" type="button" data-dialog-close data-i18n="common.cancel">Cancel</button>
+                </div>
+            </section>
+            <section class="workspace-global-add-step" id="globalAddPositionStep" aria-labelledby="globalAddPositionTitle" hidden>
+                <div class="workspace-global-add-position-heading">
+                    <h3 id="globalAddPositionTitle" data-i18n="pages.songWorkspace.chooseWhereToInsert">Choose where to insert</h3>
+                    <p id="globalAddPositionHint" data-i18n="pages.songWorkspace.positionPreviewHint">Choose a compact song boundary preview.</p>
+                </div>
+                <div class="workspace-global-add-positions" id="globalAddPositionList"></div>
+                <div class="workspace-dialog-actions">
+                    <button class="workspace-button workspace-button-secondary" id="globalAddBackButton" type="button" data-i18n="pages.songWorkspace.back">← Back</button>
+                    <button class="workspace-button workspace-button-secondary" type="button" data-dialog-close data-i18n="common.cancel">Cancel</button>
+                </div>
+            </section>
         </div>
     </dialog>
 
@@ -521,6 +558,6 @@
     <script src="scripts/song-workspace-core.js?v=20260827-picker-json-fix"></script>
     <script src="scripts/song-workspace-storage.js?v=20260828-settings-ux"></script>
     <script src="scripts/song-workspace-import.js?v=20260827-picker-json-fix"></script>
-    <script src="scripts/song-workspace.js?v=20260828-compact-read-mode"></script>
+    <script src="scripts/song-workspace.js?v=20260828-mobile-global-add"></script>
 </body>
 </html>

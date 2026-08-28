@@ -9,6 +9,8 @@
     --workspace-shadow: 0 16px 34px rgba(75, 57, 39, 0.1);
     --workspace-control-radius: 999px;
     --workspace-control-height: 44px;
+    --song-settings-control-height: 42px;
+    --song-settings-label-height: 20px;
     --workspace-progression-card-radius: 10px;
 }
 
@@ -582,6 +584,22 @@ html[data-theme="default"] {
     margin-bottom: 18px;
 }
 
+.workspace-editor-topbar .workspace-button {
+    gap: 8px;
+}
+
+.workspace-action-icon {
+    display: block;
+    flex: 0 0 auto;
+    width: 19px;
+    height: 19px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.8;
+}
+
 .workspace-download-menu {
     position: absolute;
     z-index: 20;
@@ -703,19 +721,31 @@ html[data-theme="default"] {
 .workspace-settings-nav {
     display: grid;
     grid-template-columns: minmax(80px, 0.8fr) minmax(80px, 0.8fr) minmax(62px, 0.55fr) minmax(76px, 0.65fr) minmax(112px, 1.05fr) auto;
-    align-items: end;
+    align-items: stretch;
     gap: 8px;
 }
 
 .workspace-settings-nav .workspace-field {
+    grid-template-rows: var(--song-settings-label-height) var(--song-settings-control-height);
+    align-content: end;
     gap: 5px;
     font-size: 0.7rem;
+}
+
+.workspace-settings-nav .workspace-field > span,
+.workspace-settings-nav .workspace-setting-label,
+.workspace-settings-nav .workspace-reading-control-label {
+    min-height: var(--song-settings-label-height);
+    box-sizing: border-box;
+    align-items: center;
 }
 
 .workspace-settings-nav .workspace-field input,
 .workspace-settings-nav .workspace-field select,
 .workspace-settings-nav .workspace-readonly-field strong {
-    min-height: 42px;
+    box-sizing: border-box;
+    height: var(--song-settings-control-height);
+    min-height: var(--song-settings-control-height);
     padding: 8px 10px;
 }
 
@@ -725,14 +755,20 @@ html[data-theme="default"] {
 
 .workspace-reading-controls {
     display: flex;
-    align-items: end;
+    align-items: stretch;
     gap: 8px;
 }
 
 .workspace-settings-nav .workspace-reading-control {
+    display: grid;
+    grid-template-rows: var(--song-settings-label-height) var(--song-settings-control-height);
+    align-content: end;
+    align-items: center;
     gap: 5px;
-    min-height: 42px;
-    padding: 3px;
+    min-height: 0;
+    border: 0;
+    padding: 0;
+    background: transparent;
 }
 
 .workspace-settings-nav .workspace-reading-control-label {
@@ -741,7 +777,13 @@ html[data-theme="default"] {
 
 .workspace-settings-nav .workspace-reading-stepper {
     grid-template-columns: 32px 52px 32px;
+    height: var(--song-settings-control-height);
+    box-sizing: border-box;
     gap: 3px;
+    border: 1px solid var(--workspace-line);
+    border-radius: var(--workspace-control-radius);
+    padding: 3px;
+    background: var(--workspace-soft);
 }
 
 .workspace-settings-nav .workspace-reading-step-button {
@@ -1043,6 +1085,17 @@ html[data-theme="default"] {
 
 .workspace-score-identity {
     min-width: 0;
+}
+
+.workspace-score-kicker-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.workspace-global-add-button {
+    display: none;
 }
 
 .workspace-title-view h2 {
@@ -1817,6 +1870,97 @@ html.workspace-dialog-restoring {
     display: none;
 }
 
+.workspace-global-add-shell {
+    padding: 24px;
+}
+
+.workspace-global-add-step {
+    margin-top: 22px;
+}
+
+.workspace-global-add-step h3,
+.workspace-global-add-position-heading p {
+    margin: 0;
+}
+
+.workspace-global-add-position-heading p {
+    margin-top: 5px;
+    color: var(--workspace-muted);
+    font-size: 0.86rem;
+    line-height: 1.5;
+}
+
+.workspace-global-add-types,
+.workspace-global-add-positions {
+    display: grid;
+    gap: 9px;
+    margin-top: 14px;
+}
+
+.workspace-global-add-type,
+.workspace-global-add-position {
+    width: 100%;
+    min-height: 56px;
+    box-sizing: border-box;
+    border: 1px solid var(--workspace-line);
+    border-radius: 8px;
+    padding: 12px 14px;
+    color: var(--workspace-text);
+    background: var(--workspace-surface);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.workspace-global-add-type {
+    display: grid;
+    gap: 3px;
+}
+
+.workspace-global-add-type span,
+.workspace-global-add-position small,
+.workspace-global-add-preview {
+    color: var(--workspace-muted);
+    font-size: 0.8rem;
+    line-height: 1.4;
+}
+
+.workspace-global-add-type:hover,
+.workspace-global-add-position:hover {
+    border-color: var(--workspace-accent);
+    background: var(--workspace-soft);
+}
+
+.workspace-global-add-type:focus-visible,
+.workspace-global-add-position:focus-visible {
+    outline: 3px solid var(--focus-ring);
+    outline-offset: 2px;
+}
+
+.workspace-global-add-position {
+    display: grid;
+    gap: 5px;
+}
+
+.workspace-global-add-position strong {
+    color: var(--workspace-accent);
+}
+
+.workspace-global-add-preview {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.workspace-global-add-divider {
+    width: 100%;
+    height: 2px;
+    border-radius: 999px;
+    background: var(--workspace-accent);
+    opacity: 0.72;
+}
+
 .workspace-dialog.workspace-shape-dialog {
     width: min(1280px, calc(100% - 32px));
     max-height: calc(100dvh - 32px);
@@ -2036,10 +2180,6 @@ html.workspace-dialog-restoring {
 }
 
 @media (min-width: 721px) {
-    .workspace-mobile-action-icon {
-        display: none;
-    }
-
     .workspace-settings-disclosure > .workspace-settings-panel {
         display: grid !important;
     }
@@ -2101,27 +2241,52 @@ html.workspace-dialog-restoring {
     .workspace-editor-topbar > .workspace-button,
     .workspace-editor-actions > .workspace-button {
         position: relative;
-        flex-direction: column;
-        gap: 7px;
+        flex-direction: row;
+        gap: 4px;
         min-width: 0;
-        min-height: 92px;
+        min-height: 72px;
         border-radius: 18px;
-        padding: 10px 5px;
+        padding: 9px 4px;
         font-size: 0.72rem;
         line-height: 1.25;
         text-align: center;
         box-shadow: 0 4px 12px color-mix(in srgb, var(--shadow-color) 58%, transparent);
     }
 
-    .workspace-editor-topbar .workspace-mobile-action-icon {
+    .workspace-editor-topbar .workspace-action-icon {
         display: block;
-        width: 27px;
-        height: 27px;
+        width: 23px;
+        height: 23px;
         fill: none;
         stroke: currentColor;
         stroke-linecap: round;
         stroke-linejoin: round;
         stroke-width: 1.8;
+    }
+
+    .workspace-global-add-button {
+        display: inline-flex;
+        min-height: 40px;
+        flex: 0 0 auto;
+        gap: 4px;
+        padding: 7px 11px;
+        color: var(--workspace-accent);
+        font-size: 0.78rem;
+    }
+
+    .workspace-editor.is-read-mode .workspace-global-add-button,
+    .workspace-editor.is-performance-open .workspace-global-add-button,
+    .workspace-chart .workspace-add-control {
+        display: none !important;
+    }
+
+    .workspace-global-add-dialog {
+        width: min(520px, calc(100% - 20px));
+        max-height: calc(100dvh - 20px);
+    }
+
+    .workspace-global-add-shell {
+        padding: 18px;
     }
 
     #performanceButton::after {
@@ -2289,8 +2454,7 @@ html.workspace-dialog-restoring {
         display: grid;
         justify-items: center;
         min-width: 0;
-        gap: 2px;
-        padding: 3px;
+        gap: 5px;
     }
 
     .workspace-settings-nav .workspace-reading-control-label {
@@ -2300,6 +2464,7 @@ html.workspace-dialog-restoring {
 
     .workspace-settings-nav .workspace-reading-stepper {
         grid-template-columns: 44px 44px 44px;
+        width: 100%;
         gap: 3px;
     }
 
