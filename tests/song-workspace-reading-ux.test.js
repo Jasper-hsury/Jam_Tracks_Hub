@@ -16,28 +16,44 @@ const progressionWriterJs = read("scripts/progression-writer.js");
 const en = JSON.parse(read("locales/en/common.json")).pages.songWorkspace;
 const zh = JSON.parse(read("locales/zh-TW/common.json")).pages.songWorkspace;
 
-test("chart zoom exposes bounded native controls beside the five view modes", () => {
+test("reading controls expose bounded native inputs beside the five view modes", () => {
     const modebar = workspaceHtml.slice(
         workspaceHtml.indexOf('<div class="workspace-modebar">'),
         workspaceHtml.indexOf('<div class="workspace-capo-results"')
     );
     assert.equal((modebar.match(/data-view-mode=/g) || []).length, 5);
-    assert.match(modebar, /class="workspace-view-controls"[\s\S]*class="workspace-segmented"[\s\S]*class="workspace-chart-zoom"/);
+    assert.match(modebar, /class="workspace-view-controls"[\s\S]*class="workspace-segmented"[\s\S]*id="chartZoomInput"[\s\S]*id="lineSpacingInput"/);
     assert.match(modebar, /id="chartZoomInput"[^>]*type="number"[^>]*min="50"[^>]*max="150"[^>]*step="1"[^>]*value="100"[^>]*inputmode="numeric"/);
     assert.match(modebar, /id="chartZoomDecreaseButton"[^>]*type="button"[^>]*data-i18n-aria-label="pages\.songWorkspace\.decreaseZoom"/);
     assert.match(modebar, /id="chartZoomIncreaseButton"[^>]*type="button"[^>]*data-i18n-aria-label="pages\.songWorkspace\.increaseZoom"/);
+    assert.match(modebar, /id="lineSpacingInput"[^>]*type="number"[^>]*min="5"[^>]*max="15"[^>]*step="1"[^>]*value="10"[^>]*inputmode="numeric"/);
+    assert.match(modebar, /id="lineSpacingDecreaseButton"[^>]*type="button"[^>]*data-i18n-aria-label="pages\.songWorkspace\.decreaseLineSpacing"/);
+    assert.match(modebar, /id="lineSpacingIncreaseButton"[^>]*type="button"[^>]*data-i18n-aria-label="pages\.songWorkspace\.increaseLineSpacing"/);
     for (const locale of [en, zh]) {
-        ["zoom", "chartZoom", "decreaseZoom", "increaseZoom"].forEach(key => assert.equal(typeof locale[key], "string", key));
+        ["zoom", "chartZoom", "decreaseZoom", "increaseZoom", "lineSpacing", "decreaseLineSpacing", "increaseLineSpacing"]
+            .forEach(key => assert.equal(typeof locale[key], "string", key));
     }
 });
 
-test("main and Performance charts share one local chart zoom preference", () => {
+test("main and Performance charts share local reading preferences", () => {
     assert.match(workspaceJs, /\[elements\.chart, elements\.performanceChart\][\s\S]*setProperty\("--song-chart-zoom", `\$\{zoom\}%`\)/);
+    assert.match(workspaceJs, /\[elements\.chart, elements\.performanceChart\][\s\S]*setProperty\("--song-line-spacing", `\$\{spacing\}px`\)/);
     assert.match(workspaceJs, /Storage\.stepChartZoom\(state\.preferences\.chartZoom, delta\)/);
+    assert.match(workspaceJs, /Storage\.stepLineSpacing\(state\.preferences\.lineSpacing, delta\)/);
     assert.match(workspaceJs, /delete state\.preferences\.fontScale/);
     assert.doesNotMatch(workspaceJs, /style\.fontSize|preferences\.fontScale\s*=/);
     assert.match(storageJs, /jamTracksHubSongWorkspacePreferences/);
     assert.doesNotMatch(workspaceJs, /fetch\(|sendBeacon|XMLHttpRequest|WebSocket|EventSource/);
+});
+
+test("mode selector stays content-sized and both steppers have centered symmetric values", () => {
+    assert.match(workspaceCss, /\.workspace-view-controls\s*\{[^}]*flex:\s*0 1 auto[^}]*flex-wrap:\s*wrap/s);
+    assert.match(workspaceCss, /\.workspace-view-controls > \.workspace-segmented\s*\{[^}]*flex:\s*0 1 auto[^}]*width:\s*fit-content/s);
+    assert.doesNotMatch(workspaceCss, /\.workspace-view-controls > \.workspace-segmented\s*\{[^}]*flex:\s*1/s);
+    assert.match(workspaceCss, /\.workspace-reading-stepper\s*\{[^}]*grid-template-columns:\s*36px 64px 36px/s);
+    assert.match(workspaceCss, /\.workspace-reading-value\s*\{[^}]*justify-content:\s*center[^}]*width:\s*64px/s);
+    assert.match(workspaceCss, /\.workspace-reading-value input\s*\{[^}]*width:\s*36px[^}]*text-align:\s*center/s);
+    assert.doesNotMatch(workspaceCss, /\.workspace-reading-value input\s*\{[^}]*text-align:\s*right/s);
 });
 
 test("chart zoom uses reflowing typography and leaves print at its compact baseline", () => {
@@ -48,6 +64,15 @@ test("chart zoom uses reflowing typography and leaves print at its compact basel
     assert.match(workspaceCss, /\.workspace-chord-annotation\s*\{[^}]*font-size:\s*clamp\(11\.5px, var\(--song-chart-chord-size\), 24\.75px\)/s);
     assert.doesNotMatch(workspaceCss, /\.workspace-chart\s*\{[^}]*transform:\s*scale/s);
     assert.match(workspaceCss, /@media print[\s\S]*?\.workspace-chart\s*\{[^}]*--song-chart-zoom:\s*100% !important/s);
+});
+
+test("line spacing changes only non-instrumental reading rows and print remains compact", () => {
+    assert.match(workspaceCss, /\.workspace-chart,\s*\.performance-chart\s*\{[^}]*--song-line-spacing:\s*10px/s);
+    assert.match(workspaceCss, /\.workspace-line:not\(\.is-instrumental\)\s*\{[^}]*min-height:\s*0[^}]*padding-block:\s*calc\(var\(--song-line-spacing\) \/ 2\)/s);
+    assert.match(workspaceCss, /\.workspace-line\.is-instrumental\s*\{[^}]*min-height:\s*94px/s);
+    assert.match(workspaceCss, /@media print[\s\S]*?\.workspace-chart\s*\{[^}]*--song-line-spacing:\s*5px !important/s);
+    assert.doesNotMatch(coreJs + importJs, /lineSpacing|song-line-spacing/);
+    assert.doesNotMatch(workspaceJs, /URLSearchParams[\s\S]{0,160}lineSpacing|umami[\s\S]{0,160}lineSpacing/);
 });
 
 test("instrumental bars use the Progression Writer chip hierarchy without changing grid counts", () => {

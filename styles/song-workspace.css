@@ -686,21 +686,24 @@ html[data-theme="default"] {
 
 .workspace-view-controls {
     display: flex;
-    flex: 1 1 650px;
+    flex: 0 1 auto;
     align-items: center;
+    flex-wrap: wrap;
     gap: 10px;
     min-width: 0;
 }
 
 .workspace-view-controls > .workspace-segmented {
-    flex: 1 1 auto;
+    flex: 0 1 auto;
+    width: fit-content;
+    max-width: 100%;
 }
 
-.workspace-chart-zoom {
+.workspace-reading-control {
     display: inline-flex;
     flex: 0 0 auto;
     align-items: center;
-    gap: 5px;
+    gap: 8px;
     min-height: 46px;
     border: 1px solid var(--workspace-line);
     border-radius: var(--workspace-control-radius);
@@ -708,14 +711,21 @@ html[data-theme="default"] {
     background: var(--workspace-soft);
 }
 
-.workspace-chart-zoom-label {
+.workspace-reading-control-label {
     padding-left: 8px;
     color: var(--workspace-muted);
     font-size: 0.78rem;
     font-weight: 800;
 }
 
-.workspace-zoom-button {
+.workspace-reading-stepper {
+    display: grid;
+    grid-template-columns: 36px 64px 36px;
+    align-items: center;
+    gap: 4px;
+}
+
+.workspace-reading-step-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -734,34 +744,36 @@ html[data-theme="default"] {
     cursor: pointer;
 }
 
-.workspace-zoom-button:hover:not(:disabled) {
+.workspace-reading-step-button:hover:not(:disabled) {
     color: var(--accent-button-text);
     background: var(--workspace-accent);
 }
 
-.workspace-zoom-button:focus-visible,
-.workspace-chart-zoom-value input:focus-visible {
+.workspace-reading-step-button:focus-visible,
+.workspace-reading-value input:focus-visible {
     outline: 3px solid var(--focus-ring);
     outline-offset: 2px;
 }
 
-.workspace-zoom-button:disabled {
+.workspace-reading-step-button:disabled {
     cursor: not-allowed;
     opacity: 0.42;
 }
 
-.workspace-chart-zoom-value {
+.workspace-reading-value {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 2px;
+    width: 64px;
     color: var(--workspace-muted);
     font-size: 0.82rem;
     font-weight: 800;
 }
 
-.workspace-chart-zoom-value input {
+.workspace-reading-value input {
     box-sizing: border-box;
-    width: 48px;
+    width: 36px;
     height: 34px;
     appearance: textfield;
     -moz-appearance: textfield;
@@ -772,11 +784,11 @@ html[data-theme="default"] {
     background: transparent;
     font: inherit;
     font-variant-numeric: tabular-nums;
-    text-align: right;
+    text-align: center;
 }
 
-.workspace-chart-zoom-value input::-webkit-inner-spin-button,
-.workspace-chart-zoom-value input::-webkit-outer-spin-button {
+.workspace-reading-value input::-webkit-inner-spin-button,
+.workspace-reading-value input::-webkit-outer-spin-button {
     margin: 0;
     -webkit-appearance: none;
 }
@@ -880,6 +892,7 @@ html[data-theme="default"] {
 .workspace-chart,
 .performance-chart {
     --song-chart-zoom: 100%;
+    --song-line-spacing: 10px;
     --song-chart-lyric-size: 1.1875em;
     --song-chart-chord-size: 1.03125em;
     --song-chart-heading-size: 1.375em;
@@ -966,6 +979,11 @@ html[data-theme="default"] {
     color: var(--workspace-text);
     background: transparent;
     cursor: pointer;
+}
+
+.workspace-line:not(.is-instrumental) {
+    min-height: 0;
+    padding-block: calc(var(--song-line-spacing) / 2);
 }
 
 .workspace-line:hover {
@@ -1508,11 +1526,10 @@ html.workspace-dialog-restoring {
     .workspace-view-controls {
         flex-basis: auto;
         flex-wrap: wrap;
-        width: 100%;
     }
 
     .workspace-view-controls > .workspace-segmented {
-        flex-basis: 100%;
+        flex-basis: auto;
     }
 
     .workspace-chart,
@@ -1629,10 +1646,10 @@ html.workspace-dialog-restoring {
         justify-content: center;
     }
 
-    .workspace-chart-zoom {
+    .workspace-reading-control {
         box-sizing: border-box;
         justify-content: center;
-        width: 100%;
+        max-width: 100%;
     }
 
     .workspace-line-dialog-actions #deleteLineButton {
@@ -1686,6 +1703,7 @@ html.workspace-dialog-restoring {
 
     .workspace-chart {
         --song-chart-zoom: 100% !important;
+        --song-line-spacing: 5px !important;
     }
 
     .workspace-instrumental-line {
@@ -1715,7 +1733,7 @@ html.workspace-dialog-restoring {
     .workspace-entry-card,
     .workspace-line,
     .workspace-add-trigger,
-    .workspace-zoom-button,
+    .workspace-reading-step-button,
     .workspace-shape-option,
     .workspace-capo-option {
         transition: none;

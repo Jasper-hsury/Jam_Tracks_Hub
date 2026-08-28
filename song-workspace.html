@@ -214,14 +214,27 @@
                         <button type="button" data-view-mode="roman" aria-pressed="false" data-i18n="pages.songWorkspace.roman">Roman</button>
                         <button type="button" data-view-mode="nashville" aria-pressed="false" data-i18n="pages.songWorkspace.nashville">Nashville</button>
                     </div>
-                    <div class="workspace-chart-zoom" role="group" aria-label="Chart zoom" data-i18n-aria-label="pages.songWorkspace.chartZoom">
-                        <span class="workspace-chart-zoom-label" data-i18n="pages.songWorkspace.zoom">Zoom</span>
-                        <button class="workspace-zoom-button" id="chartZoomDecreaseButton" type="button" aria-label="Decrease zoom" data-i18n-aria-label="pages.songWorkspace.decreaseZoom">−</button>
-                        <label class="workspace-chart-zoom-value">
-                            <input id="chartZoomInput" type="number" min="50" max="150" step="1" value="100" inputmode="numeric" autocomplete="off" aria-label="Chart zoom" data-i18n-aria-label="pages.songWorkspace.chartZoom">
-                            <span aria-hidden="true">%</span>
-                        </label>
-                        <button class="workspace-zoom-button" id="chartZoomIncreaseButton" type="button" aria-label="Increase zoom" data-i18n-aria-label="pages.songWorkspace.increaseZoom">+</button>
+                    <div class="workspace-reading-control" role="group" aria-label="Chart zoom" data-i18n-aria-label="pages.songWorkspace.chartZoom">
+                        <span class="workspace-reading-control-label" data-i18n="pages.songWorkspace.zoom">Zoom</span>
+                        <div class="workspace-reading-stepper">
+                            <button class="workspace-reading-step-button" id="chartZoomDecreaseButton" type="button" aria-label="Decrease zoom" data-i18n-aria-label="pages.songWorkspace.decreaseZoom">−</button>
+                            <label class="workspace-reading-value">
+                                <input id="chartZoomInput" type="number" min="50" max="150" step="1" value="100" inputmode="numeric" autocomplete="off" aria-label="Chart zoom" data-i18n-aria-label="pages.songWorkspace.chartZoom">
+                                <span aria-hidden="true">%</span>
+                            </label>
+                            <button class="workspace-reading-step-button" id="chartZoomIncreaseButton" type="button" aria-label="Increase zoom" data-i18n-aria-label="pages.songWorkspace.increaseZoom">+</button>
+                        </div>
+                    </div>
+                    <div class="workspace-reading-control" role="group" aria-label="Line spacing" data-i18n-aria-label="pages.songWorkspace.lineSpacing">
+                        <span class="workspace-reading-control-label" data-i18n="pages.songWorkspace.lineSpacing">Line Spacing</span>
+                        <div class="workspace-reading-stepper">
+                            <button class="workspace-reading-step-button" id="lineSpacingDecreaseButton" type="button" aria-label="Decrease line spacing" data-i18n-aria-label="pages.songWorkspace.decreaseLineSpacing">−</button>
+                            <label class="workspace-reading-value">
+                                <input id="lineSpacingInput" type="number" min="5" max="15" step="1" value="10" inputmode="numeric" autocomplete="off" aria-label="Line spacing" data-i18n-aria-label="pages.songWorkspace.lineSpacing">
+                                <span aria-hidden="true">px</span>
+                            </label>
+                            <button class="workspace-reading-step-button" id="lineSpacingIncreaseButton" type="button" aria-label="Increase line spacing" data-i18n-aria-label="pages.songWorkspace.increaseLineSpacing">+</button>
+                        </div>
                     </div>
                 </div>
                 <div class="workspace-mode-actions">

@@ -63,6 +63,8 @@
         chordHints: $("chordHintsButton"), shapePicker: $("shapePickerDialog"),
         chartZoomInput: $("chartZoomInput"), chartZoomDecrease: $("chartZoomDecreaseButton"),
         chartZoomIncrease: $("chartZoomIncreaseButton"),
+        lineSpacingInput: $("lineSpacingInput"), lineSpacingDecrease: $("lineSpacingDecreaseButton"),
+        lineSpacingIncrease: $("lineSpacingIncreaseButton"),
         shapePickerSymbol: $("shapePickerSymbol"), shapePickerCount: $("shapePickerCount"),
         shapePickerPosition: $("shapePositionFilter"), shapePickerRoot: $("shapeRootFilter"),
         shapePickerGrid: $("shapePickerGrid"),
@@ -92,7 +94,14 @@
         if (changed) Storage.writePreferences(state.preferences);
     }
 
-    function updateChartZoomLabels() {
+    function initializeLineSpacingPreference() {
+        const storedSpacing = state.preferences.lineSpacing;
+        const spacing = Storage.normalizeStoredLineSpacing(storedSpacing);
+        state.preferences.lineSpacing = spacing;
+        if (storedSpacing !== spacing) Storage.writePreferences(state.preferences);
+    }
+
+    function updateReadingControlLabels() {
         const decrease = t("pages.songWorkspace.decreaseZoom", "Decrease zoom");
         const increase = t("pages.songWorkspace.increaseZoom", "Increase zoom");
         const chartZoom = t("pages.songWorkspace.chartZoom", "Chart zoom");
@@ -103,6 +112,9 @@
             control.title = increase;
         });
         elements.chartZoomInput.title = chartZoom;
+        elements.lineSpacingDecrease.title = t("pages.songWorkspace.decreaseLineSpacing", "Decrease line spacing");
+        elements.lineSpacingIncrease.title = t("pages.songWorkspace.increaseLineSpacing", "Increase line spacing");
+        elements.lineSpacingInput.title = t("pages.songWorkspace.lineSpacing", "Line spacing");
     }
 
     function applyChartZoom() {
@@ -134,6 +146,34 @@
 
     function commitChartZoomInput() {
         setChartZoom(elements.chartZoomInput.value);
+    }
+
+    function applyLineSpacing() {
+        const spacing = Storage.normalizeStoredLineSpacing(state.preferences.lineSpacing);
+        state.preferences.lineSpacing = spacing;
+        [elements.chart, elements.performanceChart].forEach(function(chart) {
+            chart.style.setProperty("--song-line-spacing", `${spacing}px`);
+        });
+        elements.lineSpacingInput.value = String(spacing);
+        elements.lineSpacingDecrease.disabled = spacing <= Storage.LINE_SPACING.min;
+        elements.lineSpacingIncrease.disabled = spacing >= Storage.LINE_SPACING.max;
+    }
+
+    function setLineSpacing(value) {
+        const previous = Storage.normalizeStoredLineSpacing(state.preferences.lineSpacing);
+        state.preferences.lineSpacing = Storage.commitLineSpacing(value, previous);
+        Storage.writePreferences(state.preferences);
+        applyLineSpacing();
+    }
+
+    function adjustLineSpacing(delta) {
+        state.preferences.lineSpacing = Storage.stepLineSpacing(state.preferences.lineSpacing, delta);
+        Storage.writePreferences(state.preferences);
+        applyLineSpacing();
+    }
+
+    function commitLineSpacingInput() {
+        setLineSpacing(elements.lineSpacingInput.value);
     }
 
     function node(tag, className, text) {
@@ -344,6 +384,7 @@
         elements.chordHints.setAttribute("aria-pressed", String(hintsEnabled));
         renderChart(elements.chart, current.song, true);
         applyChartZoom();
+        applyLineSpacing();
         renderShapeCards(currentPlayShapeSong());
     }
 
@@ -1283,6 +1324,7 @@
         elements.performanceMeta.textContent = `${state.song.targetKey} · Capo ${state.song.capo} · ${current.shapeKey} ${t("pages.songWorkspace.shapes", "shapes")}${state.song.bpm ? ` · ${state.song.bpm} BPM` : ""}`;
         renderChart(elements.performanceChart, current.song, false);
         applyChartZoom();
+        applyLineSpacing();
         updateScrollSpeedControl(performanceSpeedMultiplier());
         elements.performance.showModal();
         elements.performance.scrollTop = 0;
@@ -1351,6 +1393,16 @@
             event.preventDefault();
             commitChartZoomInput();
             elements.chartZoomInput.blur();
+        });
+        elements.lineSpacingDecrease.addEventListener("click", () => adjustLineSpacing(-Storage.LINE_SPACING.step));
+        elements.lineSpacingIncrease.addEventListener("click", () => adjustLineSpacing(Storage.LINE_SPACING.step));
+        elements.lineSpacingInput.addEventListener("change", commitLineSpacingInput);
+        elements.lineSpacingInput.addEventListener("blur", commitLineSpacingInput);
+        elements.lineSpacingInput.addEventListener("keydown", function(event) {
+            if (event.key !== "Enter") return;
+            event.preventDefault();
+            commitLineSpacingInput();
+            elements.lineSpacingInput.blur();
         });
         elements.chordHints.addEventListener("click", function() {
             state.preferences.chordHints = !Boolean(state.preferences.chordHints);
@@ -1606,7 +1658,7 @@
             else if (event.key === "-") adjustChartZoom(-Storage.CHART_ZOOM.step);
         });
         window.addEventListener("jasper:language-change", function() {
-            updateChartZoomLabels();
+            updateReadingControlLabels();
             setSaveState(state.saveState);
             renderLibrary();
             if (state.song) renderEditor();
@@ -1671,8 +1723,10 @@
         state.viewMode = ["original", "balanced", "beginner", "roman", "nashville"].includes(state.preferences.viewMode) ? state.preferences.viewMode : "original";
         state.preferences.chordHints = Boolean(state.preferences.chordHints);
         initializeChartZoomPreference();
-        updateChartZoomLabels();
+        initializeLineSpacingPreference();
+        updateReadingControlLabels();
         applyChartZoom();
+        applyLineSpacing();
         attachEvents();
         await loadSongs();
         const requestedId = new URLSearchParams(location.search).get("song");

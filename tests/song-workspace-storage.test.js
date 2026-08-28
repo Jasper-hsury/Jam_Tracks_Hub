@@ -14,8 +14,8 @@ test("stores lightweight preferences in localStorage when available", () => {
         setItem(key, value) { values.set(key, value); }
     };
     try {
-        assert.equal(Storage.writePreferences({ chartZoom: 120, viewMode: "roman" }), true);
-        assert.deepEqual(Storage.readPreferences(), { chartZoom: 120, viewMode: "roman" });
+        assert.equal(Storage.writePreferences({ chartZoom: 120, lineSpacing: 7, viewMode: "roman" }), true);
+        assert.deepEqual(Storage.readPreferences(), { chartZoom: 120, lineSpacing: 7, viewMode: "roman" });
         values.set(Storage.PREFERENCES_KEY, "not-json");
         assert.deepEqual(Storage.readPreferences(), {});
     } finally {
@@ -51,18 +51,46 @@ test("steps chart zoom by ten and clamps at both boundaries", () => {
     assert.equal(Storage.stepChartZoom(50, -Storage.CHART_ZOOM.step), 50);
 });
 
-test("persists only the normalized chart zoom preference across reads", () => {
+test("normalizes line spacing to whole pixels from 5 through 15", () => {
+    assert.deepEqual(Storage.LINE_SPACING, { min: 5, max: 15, step: 1, default: 10 });
+    assert.equal(Storage.normalizeStoredLineSpacing(undefined), 10);
+    assert.equal(Storage.normalizeStoredLineSpacing(7), 7);
+    assert.equal(Storage.normalizeStoredLineSpacing(4), 10);
+    assert.equal(Storage.normalizeStoredLineSpacing(16), 10);
+    assert.equal(Storage.normalizeStoredLineSpacing("abc"), 10);
+
+    assert.equal(Storage.commitLineSpacing(12, 10), 12);
+    assert.equal(Storage.commitLineSpacing(12.6, 10), 13);
+    assert.equal(Storage.commitLineSpacing(1, 10), 5);
+    assert.equal(Storage.commitLineSpacing(100, 10), 15);
+    assert.equal(Storage.commitLineSpacing("", 7), 7);
+    assert.equal(Storage.commitLineSpacing("abc", 7), 7);
+});
+
+test("steps line spacing by one and clamps at both boundaries", () => {
+    assert.equal(Storage.stepLineSpacing(10, Storage.LINE_SPACING.step), 11);
+    assert.equal(Storage.stepLineSpacing(10, -Storage.LINE_SPACING.step), 9);
+    assert.equal(Storage.stepLineSpacing(15, Storage.LINE_SPACING.step), 15);
+    assert.equal(Storage.stepLineSpacing(5, -Storage.LINE_SPACING.step), 5);
+});
+
+test("persists normalized reading preferences across reads", () => {
     const values = new Map();
     global.localStorage = {
         getItem(key) { return values.has(key) ? values.get(key) : null; },
         setItem(key, value) { values.set(key, value); }
     };
     try {
-        const preferences = { chartZoom: Storage.commitChartZoom(120, 100) };
+        const preferences = {
+            chartZoom: Storage.commitChartZoom(120, 100),
+            lineSpacing: Storage.commitLineSpacing(7, 10)
+        };
         assert.equal(Storage.writePreferences(preferences), true);
         assert.equal(Storage.normalizeStoredChartZoom(Storage.readPreferences().chartZoom), 120);
-        values.set(Storage.PREFERENCES_KEY, JSON.stringify({ chartZoom: 999999 }));
+        assert.equal(Storage.normalizeStoredLineSpacing(Storage.readPreferences().lineSpacing), 7);
+        values.set(Storage.PREFERENCES_KEY, JSON.stringify({ chartZoom: 999999, lineSpacing: 999999 }));
         assert.equal(Storage.normalizeStoredChartZoom(Storage.readPreferences().chartZoom), 100);
+        assert.equal(Storage.normalizeStoredLineSpacing(Storage.readPreferences().lineSpacing), 10);
     } finally {
         delete global.localStorage;
     }

@@ -14,6 +14,7 @@
     const STORE_NAME = "songs";
     const PREFERENCES_KEY = "jamTracksHubSongWorkspacePreferences";
     const CHART_ZOOM = Object.freeze({ min: 50, max: 150, step: 10, default: 100 });
+    const LINE_SPACING = Object.freeze({ min: 5, max: 15, step: 1, default: 10 });
 
     class StorageUnavailableError extends Error {
         constructor(message) {
@@ -114,24 +115,45 @@
         }
     }
 
-    function normalizeStoredChartZoom(value) {
+    function normalizeStoredInteger(value, bounds) {
         const numeric = Number(value);
-        return Number.isInteger(numeric) && numeric >= CHART_ZOOM.min && numeric <= CHART_ZOOM.max
+        return Number.isInteger(numeric) && numeric >= bounds.min && numeric <= bounds.max
             ? numeric
-            : CHART_ZOOM.default;
+            : bounds.default;
     }
 
-    function commitChartZoom(value, lastValid) {
-        const fallback = normalizeStoredChartZoom(lastValid);
+    function commitBoundedInteger(value, lastValid, bounds) {
+        const fallback = normalizeStoredInteger(lastValid, bounds);
         if (typeof value === "string" && value.trim() === "") return fallback;
         const numeric = Number(value);
         if (!Number.isFinite(numeric)) return fallback;
-        return Math.max(CHART_ZOOM.min, Math.min(CHART_ZOOM.max, Math.round(numeric)));
+        return Math.max(bounds.min, Math.min(bounds.max, Math.round(numeric)));
+    }
+
+    function normalizeStoredChartZoom(value) {
+        return normalizeStoredInteger(value, CHART_ZOOM);
+    }
+
+    function commitChartZoom(value, lastValid) {
+        return commitBoundedInteger(value, lastValid, CHART_ZOOM);
     }
 
     function stepChartZoom(value, delta) {
         const current = normalizeStoredChartZoom(value);
         return commitChartZoom(current + delta, current);
+    }
+
+    function normalizeStoredLineSpacing(value) {
+        return normalizeStoredInteger(value, LINE_SPACING);
+    }
+
+    function commitLineSpacing(value, lastValid) {
+        return commitBoundedInteger(value, lastValid, LINE_SPACING);
+    }
+
+    function stepLineSpacing(value, delta) {
+        const current = normalizeStoredLineSpacing(value);
+        return commitLineSpacing(current + delta, current);
     }
 
     return {
@@ -140,6 +162,7 @@
         STORE_NAME,
         PREFERENCES_KEY,
         CHART_ZOOM,
+        LINE_SPACING,
         StorageUnavailableError,
         openDatabase,
         list,
@@ -151,6 +174,9 @@
         writePreferences,
         normalizeStoredChartZoom,
         commitChartZoom,
-        stepChartZoom
+        stepChartZoom,
+        normalizeStoredLineSpacing,
+        commitLineSpacing,
+        stepLineSpacing
     };
 });
