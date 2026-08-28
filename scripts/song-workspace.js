@@ -65,6 +65,7 @@
         chartZoomIncrease: $("chartZoomIncreaseButton"),
         lineSpacingInput: $("lineSpacingInput"), lineSpacingDecrease: $("lineSpacingDecreaseButton"),
         lineSpacingIncrease: $("lineSpacingIncreaseButton"),
+        settingsDisclosure: $("workspaceSettingsDisclosure"),
         shapePickerSymbol: $("shapePickerSymbol"), shapePickerCount: $("shapePickerCount"),
         shapePickerPosition: $("shapePositionFilter"), shapePickerRoot: $("shapeRootFilter"),
         shapePickerGrid: $("shapePickerGrid"),
@@ -174,6 +175,13 @@
 
     function commitLineSpacingInput() {
         setLineSpacing(elements.lineSpacingInput.value);
+    }
+
+    function syncSettingsDisclosureViewport() {
+        const viewportMode = window.matchMedia("(max-width: 720px)").matches ? "narrow" : "wide";
+        if (elements.settingsDisclosure.dataset.viewportMode === viewportMode) return;
+        elements.settingsDisclosure.open = viewportMode === "wide";
+        elements.settingsDisclosure.dataset.viewportMode = viewportMode;
     }
 
     function node(tag, className, text) {
@@ -1697,6 +1705,7 @@
         });
         window.addEventListener("jasper:theme-change", scheduleChordLayouts);
         window.addEventListener("resize", function() {
+            syncSettingsDisclosureViewport();
             scheduleChordLayouts();
             if (state.addMenuTrigger) {
                 const menu = state.addMenuTrigger.closest(".workspace-add-control")?.querySelector(".workspace-add-menu");
@@ -1724,6 +1733,7 @@
         state.preferences.chordHints = Boolean(state.preferences.chordHints);
         initializeChartZoomPreference();
         initializeLineSpacingPreference();
+        syncSettingsDisclosureViewport();
         updateReadingControlLabels();
         applyChartZoom();
         applyLineSpacing();

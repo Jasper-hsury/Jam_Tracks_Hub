@@ -51,18 +51,18 @@ test("steps chart zoom by ten and clamps at both boundaries", () => {
     assert.equal(Storage.stepChartZoom(50, -Storage.CHART_ZOOM.step), 50);
 });
 
-test("normalizes line spacing to whole pixels from 5 through 15", () => {
-    assert.deepEqual(Storage.LINE_SPACING, { min: 5, max: 15, step: 1, default: 10 });
+test("normalizes line spacing to whole pixels from 0 through 20", () => {
+    assert.deepEqual(Storage.LINE_SPACING, { min: 0, max: 20, step: 1, default: 10 });
     assert.equal(Storage.normalizeStoredLineSpacing(undefined), 10);
     assert.equal(Storage.normalizeStoredLineSpacing(7), 7);
-    assert.equal(Storage.normalizeStoredLineSpacing(4), 10);
-    assert.equal(Storage.normalizeStoredLineSpacing(16), 10);
+    assert.equal(Storage.normalizeStoredLineSpacing(-1), 10);
+    assert.equal(Storage.normalizeStoredLineSpacing(21), 10);
     assert.equal(Storage.normalizeStoredLineSpacing("abc"), 10);
 
     assert.equal(Storage.commitLineSpacing(12, 10), 12);
     assert.equal(Storage.commitLineSpacing(12.6, 10), 13);
-    assert.equal(Storage.commitLineSpacing(1, 10), 5);
-    assert.equal(Storage.commitLineSpacing(100, 10), 15);
+    assert.equal(Storage.commitLineSpacing(-1, 10), 0);
+    assert.equal(Storage.commitLineSpacing(100, 10), 20);
     assert.equal(Storage.commitLineSpacing("", 7), 7);
     assert.equal(Storage.commitLineSpacing("abc", 7), 7);
 });
@@ -70,8 +70,8 @@ test("normalizes line spacing to whole pixels from 5 through 15", () => {
 test("steps line spacing by one and clamps at both boundaries", () => {
     assert.equal(Storage.stepLineSpacing(10, Storage.LINE_SPACING.step), 11);
     assert.equal(Storage.stepLineSpacing(10, -Storage.LINE_SPACING.step), 9);
-    assert.equal(Storage.stepLineSpacing(15, Storage.LINE_SPACING.step), 15);
-    assert.equal(Storage.stepLineSpacing(5, -Storage.LINE_SPACING.step), 5);
+    assert.equal(Storage.stepLineSpacing(20, Storage.LINE_SPACING.step), 20);
+    assert.equal(Storage.stepLineSpacing(0, -Storage.LINE_SPACING.step), 0);
 });
 
 test("persists normalized reading preferences across reads", () => {

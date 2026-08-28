@@ -39,12 +39,12 @@ Song Workspace is a user-supplied-content practice and arrangement tool. It is n
 
 ## 3. Git Snapshot
 
-Repository truth before the Reading Controls Refinement round:
+Repository truth before the Settings Navigation / Reading Controls UX round:
 
 ```text
 Branch: feat/song-workspace-v1
-HEAD: 67a6ca5ce62928fd2f8429f459a58c5390406959
-origin/feat/song-workspace-v1: 67a6ca5ce62928fd2f8429f459a58c5390406959
+HEAD: b39b183e3cab109d207152ade6eed35f7a5c4709
+origin/feat/song-workspace-v1: b39b183e3cab109d207152ade6eed35f7a5c4709
 main: 9b5ed9b
 origin/main: 9b5ed9b
 Feature branch vs origin/main: verify with Git before release work
@@ -542,10 +542,10 @@ git diff --check
 
 There are no separate `lint`, `typecheck`, or `format` scripts. `npm run check` performs `node --check` over listed JavaScript/Worker/API/build files. `npm test` uses Node's built-in test runner on `tests/*.test.js`.
 
-Current Reading Controls Refinement repository baseline on 2026-08-28:
+Current Settings Navigation / Reading Controls UX validation on 2026-08-28:
 
 ```text
-npm test: PASS, 122/122
+npm test: PASS, 124/124
 npm run check: PASS
 npm run build:cloudflare: PASS
 Python py_compile: PASS
@@ -578,6 +578,8 @@ Final layout/legal browser acceptance on 2026-08-27 reused only synthetic local 
 Final Reading UX browser acceptance on 2026-08-28 used only synthetic English, Chinese, mixed, long-chord, multiple-chord, and empty-bar content. At 100%, computed desktop typography measured lyric 19 px, annotation 16.5 px, instrumental 17 px, heading 22 px, and 1.75 lyric line height; 375 px measured 17/15.5/16/20 px. Values 50, 75, 100, 110, 120, and 150 all reflowed with zero page/card overflow; 1 and 1000 clamped to 50/150, empty/non-numeric restored 120, ± moved 100→110→100, and both limits disabled their corresponding button. Reload retained 120, while Performance opened at the same 120 and its A+ control updated both charts to 130. The 16-bar section rendered eight columns at 1280/1024 and four at 375 in English/zh-TW and light/dark; every long card remained bounded. All five chart modes retained exactly one annotation layer per lyric track, browser geometry measured 0 px anchor-left delta for the English, Chinese, and mixed fixtures, and Shape Picker close retained its captured scroll position with 0 px final delta. Console inspection reported zero warnings/errors and the local server observed fixed static/locale GETs only. The in-app automation surface is Chromium, so this is not new physical Safari/iPhone evidence; WebKit-facing native-number-input, focus/blur, custom-property, container-query, and `-webkit-appearance` paths were reviewed, existing macOS Safari Shape Picker acceptance remains PASS, and iPhone/iOS remains PENDING RELEASE.
 
 Reading Controls Refinement browser acceptance on 2026-08-28 reused the synthetic `READING UX CANARY` fixture. At 1280 px the five-mode selector measured 598 px inside a 1071 px reading-controls row, proving it no longer grows into unused space. Both Zoom and Line Spacing measured symmetric 54 px center-to-center distances on each side of the value column at 1280, 1024, and 375 px. Zoom checkpoints 50/75/100/120/150 retained one chord layer and one annotation row in all five modes. Line-spacing checkpoints 5/7/10/12/15 increased non-instrumental row height one-for-one while the instrumental row stayed 94 px. Direct input rounding/clamping and empty-value recovery passed; 120%/7 px survived reload and a song switch, and Performance read the same two values. English/zh-TW and light/dark remained readable with zero page-level horizontal overflow; the 375 px chart rows did not overlap. Console inspection reported zero warnings and zero errors. This remains in-app Chromium evidence; it does not change macOS Safari PASS or iPhone/iOS PENDING RELEASE.
+
+Settings Navigation / Reading Controls UX browser acceptance on 2026-08-28 reused that same synthetic fixture without adding or deleting songs. At 1280×800 and 1024×768 the settings panel stayed open with its summary hidden, the independent five-mode selector kept every button on one y-coordinate, and the following mode bar had no overlap. A supplemental 768×1024 tablet check kept the five key/spelling fields on one row, paired the reading controls on the next settings subrow, and measured zero panel/page overflow. At 375×812 the localized native summary began closed, expanded through its single explicit click/keyboard target, kept Zoom and Line Spacing side by side in equal 154.5 px controls, and introduced no horizontal overflow. Direct checkpoints 0, 10, and 20 px shared the same editor/Performance custom property; the non-instrumental row changed by exactly 20 px between the bounds while the instrumental row height remained unchanged, ±1 worked, both limits disabled the correct button, reload retained the preference, and the prior synthetic fixture preference was restored afterward. English/dark and zh-TW/light checks covered key semantics and the Target A + Capo 2 = G shapes / hear A example. The Performance BPM disclosure stayed visible above its fixed mobile toolbar, auto-scroll moved and then remained stable after Pause, all five modes measured one chord layer and at most one annotation y-position per lyric track, and Shape Picker close restored the captured page position with 0 px final delta. Every inspected viewport/theme/locale had zero page-level horizontal overflow, browser console inspection reported zero warnings/errors, and the local server observed static/locale GETs only. This is in-app Chromium evidence; macOS Safari remains PASS and iPhone/iOS remains PENDING RELEASE.
 
 ## 32. Recent Relevant Commits
 
@@ -711,7 +713,11 @@ Status: **RESOLVED** on 2026-08-27. The fourth Hero promise badge is now the sol
 
 ### Issue T — reading controls stretch the mode selector and lack adjustable row spacing
 
-Status: **RESOLVED** on 2026-08-28. The five-mode segmented selector is now content-sized and no longer grows to fill the space beside reading controls. Zoom uses a symmetric 36/64/36-pixel stepper with the complete number-plus-percent value centered between equal-size buttons. A matching localized Line Spacing control provides a browser-local 5–15 px integer preference, default 10 px, direct entry, and ±1 controls. Editor and Performance share both preferences across reloads and song changes; line spacing applies only to non-instrumental reading rows, while Print/PDF keeps a fixed compact 5 px baseline. Storage and reading-UX tests cover defaults, invalid stored values, rounding/clamping, stepping, persistence, compact layout, centered geometry, print independence, and content-egress boundaries. In-app browser acceptance covered 1280/1024/375, English/zh-TW, light/dark, every zoom/spacing checkpoint, Performance sharing, five chord modes, single-row annotations, no horizontal overflow, and an empty warning/error console.
+Status: **RESOLVED** on 2026-08-28. The five-mode segmented selector is now independent from the settings navigation. Zoom uses a symmetric stepper with the complete number-plus-percent value centered between equal-size buttons. A matching localized Line Spacing control provides a browser-local 0–20 px integer preference, default 10 px, direct entry, and ±1 controls. Editor and Performance share both preferences across reloads and song changes; line spacing applies only to non-instrumental reading rows, while Print/PDF keeps a fixed compact 5 px baseline. Storage and reading-UX tests cover defaults, invalid stored values, rounding/clamping, stepping, persistence, centered geometry, print independence, and content-egress boundaries.
+
+### Issue U — settings, reading controls, and mode choices lack a stable responsive hierarchy
+
+Status: **RESOLVED IN REPOSITORY / BROWSER ACCEPTANCE PASS** on 2026-08-28. The editor now has a first-row settings navigation for Original/Target/Shape keys, Chord Spelling, Capo, Zoom, and Line Spacing, followed by an independent five-choice chord-view navigation. Desktop/tablet keep the settings panel visible; narrow screens use an explicit native `details` summary as the sole collapse target, and Zoom plus Line Spacing remain paired on one row. Nested English/zh-TW help explains Original, Target/concert, and Shape/play semantics with the Target A + Capo 2 = G shapes / hear A example. Performance Mode now explains that BPM controls the bounded base velocity, while chart/section height, viewport, Zoom, and Line Spacing affect distance and perceived duration; time signature remains outside the implemented velocity formula. No scroll algorithm, song schema, export, analytics, or persistence boundary changed. Responsive in-app browser acceptance covered 1280/1024/768/375, English/zh-TW, light/dark, disclosure interaction, 0/10/20 px boundaries and reload, Performance visibility/pause, five single-row modes, Shape Picker zero-jump, zero overflow, and an empty console.
 ### Documentation and release issues
 
 - README route table omits Song Workspace.
@@ -762,8 +768,9 @@ Status: **RESOLVED** on 2026-08-28. The five-mode segmented selector is now cont
 | One document scroll / top-aligned columns | DONE | `styles/song-workspace.css` editor grid | Right panel is not sticky. |
 | Performance Mode / auto-scroll | RESOLVED | `AUTO_SCROLL` core helpers, performance dialog/app loop, core/interaction tests, browser speed measurements | BPM-linked bounded base, 48px/s fallback, retained 0.5×–2.0× preference, time/subpixel-safe scrolling. |
 | Song Chart Zoom | RESOLVED | storage normalization, editor/performance controls, CSS reflow scale, reading-UX/storage tests, browser acceptance | One local-only 50–150% integer preference; ±10 and direct entry; invalid values bounded; Performance shares it; print/export stay independent. |
-| Reading toolbar compactness / Zoom centering | RESOLVED | content-sized mode selector, symmetric stepper CSS, reading-UX tests, 1280/1024/375 browser measurements | Mode background no longer absorbs unused width; number plus `%` remains centered at every tested zoom. |
-| Line Spacing | RESOLVED | storage normalization, editor/performance CSS preference, localized control, reading-UX/storage tests, browser acceptance | One local-only 5–15 px integer preference; default 10, ±1 and direct entry; only non-instrumental reading rows change; fixed 5 px Print baseline. |
+| Settings / mode responsive hierarchy | RESOLVED | settings disclosure/nav, independent segmented mode nav, localized key/performance help, reading-UX tests | Desktop/tablet settings remain visible; mobile uses one explicit disclosure; Zoom and Line Spacing share one row; mode choices remain independent. |
+| Reading toolbar compactness / Zoom centering | RESOLVED | settings navigation, symmetric stepper CSS, reading-UX tests, 1280/1024/375 browser measurements | Mode choices no longer share a container with reading controls; number plus `%` remains centered at every tested zoom. |
+| Line Spacing | RESOLVED | storage normalization, editor/performance CSS preference, localized control, reading-UX/storage tests, browser acceptance | One local-only 0–20 px integer preference; default 10, ±1 and direct entry; only non-instrumental reading rows change; fixed 5 px Print baseline. |
 | Default lyric/chord readability | RESOLVED | workspace CSS typography variables, anchor/single-row regressions, responsive browser acceptance | 100% desktop baseline: lyric 19 px, chord 16.5 px, instrumental 17 px, heading 22 px; mobile uses 17/15.5/16/20 px with bounded zoom reflow. |
 | Song Workspace button design system | RESOLVED | workspace markup/app/CSS, shared theme tokens, interaction/style tests, 1280/1024/375 light/dark acceptance | Primary, secondary, danger, icon, segmented, toggle, subtle, menu, modal, and performance controls aligned. |
 | JTH JSON / TXT / Print / backup | DONE | app export/backup functions | Local exports. |
@@ -808,7 +815,8 @@ Bounded future work, clearly outside current implementation:
 - **RESOLVED**: instrumental sections use a responsive four/eight-column horizontal bar grid in editor, Performance, and Print, while retaining ordered chords and stable persistent IDs.
 - **RESOLVED**: instrumental bars use the established progression-card visual hierarchy in editor and Performance, with compact Print treatment and unchanged 4/8-column behavior.
 - **RESOLVED**: one local-only 50–150% Song Chart Zoom preference controls the editor and Performance charts, supports bounded direct input and ±10 controls, reflows content without transforms, and leaves exports/print data contracts unchanged.
-- **RESOLVED**: the mode selector stays content-sized; Zoom's complete value is geometrically centered; one local-only 5–15 px Line Spacing preference controls editor/Performance lyric-and-chord row spacing with ±1/direct input and a fixed compact print baseline.
+- **RESOLVED**: settings and chord-view modes use independent navigation layers; mobile uses one explicit settings disclosure with Zoom and Line Spacing on one row; localized help explains the key and Performance-scroll semantics.
+- **RESOLVED**: Zoom's complete value is geometrically centered; one local-only 0–20 px Line Spacing preference controls editor/Performance lyric-and-chord row spacing with ±1/direct input and a fixed compact print baseline.
 - **RESOLVED**: the 100% lyric, chord, instrumental, and heading typography baseline is materially larger on desktop and mobile while meaningful anchors and single-row annotations remain stable.
 - **RESOLVED**: localized `Cmaj9` chord-input hint is backed by parser, transpose, numeral, renderer, and shared voicing regression evidence.
 - **RESOLVED**: the sole autosave live region occupies the Hero promise row, and a shared localized footer link exposes the bookmarkable bounded Legal & Usage Policy.
@@ -860,7 +868,7 @@ All categories require explicit review before release:
 - Shared Create/ChordPro dialogs hide their native scrollbar without disabling scrolling or clipping footer actions.
 - Create/import cancellation bypasses validation while actual submissions remain validated.
 - BPM-linked auto-scroll and user multiplier pass monotonic, pause/resume, end-stop, and responsive checks.
-- Reading controls pass compact mode-selector layout, centered Zoom value, 50–150% persistence, 5–15 px line-spacing persistence, editor/Performance sharing, and print independence.
+- Reading controls pass independent settings/mode navigation, deterministic mobile disclosure, centered Zoom value, 50–150% persistence, 0–20 px line-spacing persistence, editor/Performance sharing, and print independence.
 - Button semantics pass light/dark, keyboard focus, reduced-motion, and responsive review.
 - No known critical Song Workspace regressions.
 
@@ -923,4 +931,4 @@ A new Codex session must begin in this order:
 9. Run baseline `npm test`, `npm run check`, `npm run build:cloudflare`, and `git diff --check` when appropriate.
 10. Only then modify production code, and only for the explicitly requested bounded task.
 
-Highest-priority remaining release work includes iPhone/iOS hardware acceptance, remote/CI/PR coordination, and explicit production approval. The compact reading toolbar, centered Zoom control, local-only Line Spacing, Song Chart Zoom persistence, larger default reading typography, progression-style Instrumental cards, analytics/error-log no-song-content-egress, Copyright/local-only UI wording, the Create Song / Other Import hierarchy, cancellation-vs-validation contract, shared modal background lock, Music Theory / Preserve Input chord spelling, Delete Line, old-format notice removal, Move-control cleanup, Instrumental Section creation/editing, Song Document V2 meaningful positions, BPM-linked Performance Auto Scroll, button design-system hardening, one-row chord-annotation contract, Shape Picker parity/zero-jump code fix, Create/Import scrollbar polish, canonical single-song JSON import, and macOS Safari zero-jump user acceptance are resolved. Do not begin a remaining gate without an explicit bounded request.
+Highest-priority remaining release work includes iPhone/iOS hardware acceptance, remote/CI/PR coordination, and explicit production approval. The independent settings/mode navigation, deterministic mobile settings disclosure, localized key/Performance explanations, 0–20 px local-only Line Spacing, centered Zoom control, Song Chart Zoom persistence, larger default reading typography, progression-style Instrumental cards, analytics/error-log no-song-content-egress, Copyright/local-only UI wording, the Create Song / Other Import hierarchy, cancellation-vs-validation contract, shared modal background lock, Music Theory / Preserve Input chord spelling, Delete Line, old-format notice removal, Move-control cleanup, Instrumental Section creation/editing, Song Document V2 meaningful positions, BPM-linked Performance Auto Scroll, button design-system hardening, one-row chord-annotation contract, Shape Picker parity/zero-jump code fix, Create/Import scrollbar polish, canonical single-song JSON import, and macOS Safari zero-jump user acceptance are resolved. Do not begin a remaining gate without an explicit bounded request.

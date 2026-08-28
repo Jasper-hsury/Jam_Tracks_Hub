@@ -14,7 +14,7 @@
     const STORE_NAME = "songs";
     const PREFERENCES_KEY = "jamTracksHubSongWorkspacePreferences";
     const CHART_ZOOM = Object.freeze({ min: 50, max: 150, step: 10, default: 100 });
-    const LINE_SPACING = Object.freeze({ min: 5, max: 15, step: 1, default: 10 });
+    const LINE_SPACING = Object.freeze({ min: 0, max: 20, step: 1, default: 10 });
 
     class StorageUnavailableError extends Error {
         constructor(message) {
