@@ -36,6 +36,15 @@
         scrolling: false,
         lastScrollTime: 0,
         scrollPosition: 0,
+        readMode: false,
+        readShapesOpen: false,
+        readModeScrollPosition: 0,
+        resumeReadAfterPerformance: false,
+        readModeTrigger: null,
+        activeSettingHelp: null,
+        titleEditing: false,
+        metadataEditing: false,
+        activeSectionActions: null,
         preferences: Storage.readPreferences()
     };
 
@@ -47,8 +56,12 @@
         targetKey: $("targetKeySelect"), capo: $("capoSelect"), shapeKey: $("shapeKeyValue"),
         chordSpelling: $("chordSpellingSelect"),
         bpm: $("bpmInput"), timeSignature: $("timeSignatureInput"), autosave: $("autosaveState"),
-        chartTitle: $("songChartTitle"), chartSummary: $("chartKeySummary"), chart: $("songChart"),
-        shapeCards: $("shapeCards"), capoResults: $("capoResults"), downloadMenu: $("downloadMenu"),
+        chartTitle: $("songChartTitle"), titleDisplay: $("songTitleDisplay"), titleView: $("songTitleView"),
+        titleEditForm: $("songTitleEditForm"), metadataView: $("songMetadataView"),
+        metadataSummary: $("songMetadataSummary"), metadataEditForm: $("songMetadataEditForm"),
+        chartSummary: $("chartKeySummary"), chart: $("songChart"),
+        shapePanel: $("chordShapesPanel"), shapeCards: $("shapeCards"), readShapesBackdrop: $("readShapesBackdrop"),
+        capoResults: $("capoResults"), downloadMenu: $("downloadMenu"),
         createDialog: $("createSongDialog"), createForm: $("createSongForm"), createMode: $("createModeLabel"),
         createTitle: $("createTitleInput"), createArtist: $("createArtistInput"), createKey: $("createKeySelect"),
         createSource: $("createSourceInput"), createSourceLabel: $("createSourceLabel"), createError: $("createDialogError"),
@@ -76,6 +89,11 @@
         performance: $("performanceDialog"), performanceTitle: $("performanceTitle"),
         performanceMeta: $("performanceMeta"), performanceChart: $("performanceChart"),
         scrollToggle: $("scrollToggleButton"), scrollSpeed: $("scrollSpeedInput"), scrollSpeedValue: $("scrollSpeedValue"),
+        readToolbar: $("readModeToolbar"), readSummary: $("readModeKeySummary"),
+        readZoomValue: $("readZoomValue"), readZoomDecrease: $("readZoomDecreaseButton"),
+        readZoomIncrease: $("readZoomIncreaseButton"), readSpacingValue: $("readSpacingValue"),
+        readSpacingDecrease: $("readSpacingDecreaseButton"), readSpacingIncrease: $("readSpacingIncreaseButton"),
+        readShapes: $("readShapesButton"),
         importInput: $("songImportInput"), restoreInput: $("songRestoreInput")
     };
 
@@ -127,6 +145,9 @@
         elements.chartZoomInput.value = String(zoom);
         elements.chartZoomDecrease.disabled = zoom <= Storage.CHART_ZOOM.min;
         elements.chartZoomIncrease.disabled = zoom >= Storage.CHART_ZOOM.max;
+        elements.readZoomValue.value = `${zoom}%`;
+        elements.readZoomDecrease.disabled = zoom <= Storage.CHART_ZOOM.min;
+        elements.readZoomIncrease.disabled = zoom >= Storage.CHART_ZOOM.max;
         $("fontDecreaseButton").disabled = zoom <= Storage.CHART_ZOOM.min;
         $("fontIncreaseButton").disabled = zoom >= Storage.CHART_ZOOM.max;
         scheduleChordLayouts();
@@ -158,6 +179,9 @@
         elements.lineSpacingInput.value = String(spacing);
         elements.lineSpacingDecrease.disabled = spacing <= Storage.LINE_SPACING.min;
         elements.lineSpacingIncrease.disabled = spacing >= Storage.LINE_SPACING.max;
+        elements.readSpacingValue.value = `${spacing}px`;
+        elements.readSpacingDecrease.disabled = spacing <= Storage.LINE_SPACING.min;
+        elements.readSpacingIncrease.disabled = spacing >= Storage.LINE_SPACING.max;
     }
 
     function setLineSpacing(value) {
@@ -182,6 +206,174 @@
         if (elements.settingsDisclosure.dataset.viewportMode === viewportMode) return;
         elements.settingsDisclosure.open = viewportMode === "wide";
         elements.settingsDisclosure.dataset.viewportMode = viewportMode;
+    }
+
+    function closeSettingHelp(options) {
+        const settings = options || {};
+        const item = state.activeSettingHelp;
+        if (!item) return;
+        item.classList.remove("is-help-open");
+        const trigger = item.querySelector("[data-setting-help]");
+        trigger?.setAttribute("aria-expanded", "false");
+        state.activeSettingHelp = null;
+        if (settings.restoreFocus && trigger?.isConnected) focusWithoutScroll(trigger);
+    }
+
+    function openSettingHelp(item) {
+        if (!item || state.activeSettingHelp === item) return;
+        closeSettingHelp();
+        state.activeSettingHelp = item;
+        item.classList.add("is-help-open");
+        item.querySelector("[data-setting-help]")?.setAttribute("aria-expanded", "true");
+    }
+
+    function metadataSummaryText() {
+        return [
+            state.song.artist || t("pages.songWorkspace.unknownArtist", "No artist"),
+            state.song.bpm ? `${state.song.bpm} BPM` : t("pages.songWorkspace.noBpm", "No BPM"),
+            state.song.timeSignature
+        ].join(" · ");
+    }
+
+    function syncScoreHeader() {
+        if (!state.song) return;
+        elements.titleDisplay.textContent = state.song.title;
+        elements.metadataSummary.textContent = metadataSummaryText();
+        elements.titleView.hidden = state.titleEditing;
+        elements.titleEditForm.hidden = !state.titleEditing;
+        elements.metadataView.hidden = state.metadataEditing;
+        elements.metadataEditForm.hidden = !state.metadataEditing;
+        $("songTitleEditButton").disabled = state.readMode;
+        $("songTitleEditButton").tabIndex = state.readMode ? -1 : 0;
+        $("songMetadataEditButton").hidden = state.readMode;
+    }
+
+    function beginTitleEdit() {
+        if (!state.song || state.readMode) return;
+        state.metadataEditing = false;
+        state.titleEditing = true;
+        elements.title.value = state.song.title;
+        elements.artist.value = state.song.artist;
+        elements.bpm.value = state.song.bpm || "";
+        elements.timeSignature.value = state.song.timeSignature;
+        syncScoreHeader();
+        window.requestAnimationFrame(function() {
+            focusWithoutScroll(elements.title);
+            elements.title.select();
+        });
+    }
+
+    function cancelTitleEdit() {
+        state.titleEditing = false;
+        elements.title.value = state.song?.title || "";
+        syncScoreHeader();
+        focusWithoutScroll($("songTitleEditButton"));
+    }
+
+    function saveTitleEdit() {
+        const title = elements.title.value.trim();
+        if (!title) {
+            elements.title.reportValidity();
+            return;
+        }
+        state.song.title = title.slice(0, 160);
+        state.song.updatedAt = new Date().toISOString();
+        state.titleEditing = false;
+        scheduleSave();
+        syncScoreHeader();
+        focusWithoutScroll($("songTitleEditButton"));
+    }
+
+    function beginMetadataEdit() {
+        if (!state.song || state.readMode) return;
+        state.titleEditing = false;
+        state.metadataEditing = true;
+        elements.title.value = state.song.title;
+        elements.artist.value = state.song.artist;
+        elements.bpm.value = state.song.bpm || "";
+        elements.timeSignature.value = state.song.timeSignature;
+        syncScoreHeader();
+        window.requestAnimationFrame(function() { focusWithoutScroll(elements.artist); });
+    }
+
+    function cancelMetadataEdit() {
+        state.metadataEditing = false;
+        elements.artist.value = state.song?.artist || "";
+        elements.bpm.value = state.song?.bpm || "";
+        elements.timeSignature.value = state.song?.timeSignature || "4/4";
+        syncScoreHeader();
+        focusWithoutScroll($("songMetadataEditButton"));
+    }
+
+    function saveMetadataEdit() {
+        const bpm = elements.bpm.value === "" ? null : Number(elements.bpm.value);
+        const signature = elements.timeSignature.value.trim();
+        if ((bpm !== null && (!Number.isFinite(bpm) || bpm < 20 || bpm > 320)) || !/^\d{1,2}\/\d{1,2}$/.test(signature)) {
+            elements.metadataEditForm.reportValidity();
+            return;
+        }
+        state.song.artist = elements.artist.value.trim().slice(0, 160);
+        state.song.bpm = bpm === null ? null : Math.round(bpm);
+        state.song.timeSignature = signature;
+        state.song.updatedAt = new Date().toISOString();
+        state.metadataEditing = false;
+        scheduleSave();
+        renderEditor();
+        focusWithoutScroll($("songMetadataEditButton"));
+    }
+
+    function updateReadShapes() {
+        const open = state.readMode && state.readShapesOpen;
+        elements.shapePanel.classList.toggle("is-read-open", open);
+        elements.readShapesBackdrop.hidden = !open;
+        elements.readShapes.setAttribute("aria-expanded", String(open));
+        elements.readShapes.textContent = open
+            ? t("pages.songWorkspace.hideChordShapes", "Hide Chord Shapes")
+            : t("pages.songWorkspace.showChordShapes", "Show Chord Shapes");
+    }
+
+    function setReadShapes(open, options) {
+        const settings = options || {};
+        state.readShapesOpen = Boolean(open) && state.readMode;
+        updateReadShapes();
+        if (state.readShapesOpen) {
+            window.requestAnimationFrame(function() { focusWithoutScroll($("closeReadShapesButton")); });
+        } else if (settings.restoreFocus !== false) {
+            focusWithoutScroll(elements.readShapes);
+        }
+    }
+
+    function setReadMode(enabled, options) {
+        const settings = options || {};
+        const next = Boolean(enabled);
+        if (state.readMode === next) return;
+        if (next && elements.performance.open) {
+            stopAutoScroll();
+            elements.performance.close();
+        }
+        if (next && !settings.preserveScroll) state.readModeScrollPosition = window.scrollY;
+        const previousScroll = state.readModeScrollPosition;
+        state.readMode = next;
+        state.readShapesOpen = false;
+        state.titleEditing = false;
+        state.metadataEditing = false;
+        state.activeSectionActions = null;
+        closeSettingHelp();
+        if (next) state.readModeTrigger = settings.trigger || document.activeElement;
+        renderEditor();
+        if (next) {
+            window.requestAnimationFrame(function() {
+                window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+                focusWithoutScroll($("exitReadModeButton"));
+            });
+        } else if (settings.restoreFocus !== false) {
+            const target = state.readModeTrigger?.isConnected ? state.readModeTrigger : $("readModeButton");
+            state.readModeTrigger = null;
+            window.requestAnimationFrame(function() {
+                focusWithoutScroll(target);
+                window.scrollTo({ top: previousScroll, left: 0, behavior: "instant" });
+            });
+        }
     }
 
     function node(tag, className, text) {
@@ -322,6 +514,12 @@
 
     function showHome() {
         stopAutoScroll();
+        document.body.classList.remove("song-workspace-read-mode");
+        state.readMode = false;
+        state.readShapesOpen = false;
+        state.titleEditing = false;
+        state.metadataEditing = false;
+        state.activeSectionActions = null;
         state.song = null;
         elements.editor.hidden = true;
         elements.home.hidden = false;
@@ -332,6 +530,11 @@
 
     function showEditor(song) {
         state.song = Core.validateSong(song);
+        state.readMode = false;
+        state.readShapesOpen = false;
+        state.titleEditing = false;
+        state.metadataEditing = false;
+        state.activeSectionActions = null;
         elements.home.hidden = true;
         elements.editor.hidden = false;
         elements.title.value = state.song.title;
@@ -382,18 +585,24 @@
         const current = currentShapeSong();
         const hintsEnabled = Boolean(state.preferences.chordHints);
         elements.shapeKey.textContent = current.shapeKey;
-        elements.chartTitle.textContent = state.song.title;
-        elements.chartSummary.textContent = `${t("pages.songWorkspace.concertKey", "Concert")}: ${state.song.targetKey} · Capo ${state.song.capo} · ${current.shapeKey} ${t("pages.songWorkspace.shapes", "shapes")}`;
+        const keySummary = `${t("pages.songWorkspace.concertKey", "Concert")}: ${state.song.targetKey} · Capo ${state.song.capo} · ${current.shapeKey} ${t("pages.songWorkspace.shapes", "shapes")}`;
+        elements.chartSummary.textContent = keySummary;
+        elements.readSummary.textContent = keySummary;
+        elements.editor.classList.toggle("is-read-mode", state.readMode);
+        document.body.classList.toggle("song-workspace-read-mode", state.readMode);
+        elements.readToolbar.hidden = !state.readMode;
+        syncScoreHeader();
         document.querySelectorAll("[data-view-mode]").forEach(function(control) {
             const selected = control.dataset.viewMode === state.viewMode;
             control.classList.toggle("is-selected", selected);
             control.setAttribute("aria-pressed", String(selected));
         });
         elements.chordHints.setAttribute("aria-pressed", String(hintsEnabled));
-        renderChart(elements.chart, current.song, true);
+        renderChart(elements.chart, current.song, !state.readMode);
         applyChartZoom();
         applyLineSpacing();
         renderShapeCards(currentPlayShapeSong());
+        updateReadShapes();
     }
 
     function renderChart(host, song, editable) {
@@ -406,15 +615,24 @@
         song.sections.forEach(function(section, sectionIndex) {
             const sectionElement = node("section", `workspace-section${section.type === "instrumental" ? " is-instrumental" : ""}`);
             const heading = node("div", "workspace-section-heading-row");
-            heading.appendChild(node("h3", "", section.title));
             if (editable) {
+                const sectionTitle = button("", "toggle-section-actions", "workspace-section-title-trigger");
+                sectionTitle.dataset.sectionIndex = String(sectionIndex);
+                sectionTitle.setAttribute("aria-expanded", String(state.activeSectionActions === sectionIndex));
+                sectionTitle.append(node("span", "", section.title), node("small", "workspace-section-edit-hint", t("pages.songWorkspace.edit", "Edit")));
+                const titleHeading = node("h3");
+                titleHeading.appendChild(sectionTitle);
+                heading.appendChild(titleHeading);
                 const actions = node("div", "workspace-section-actions");
+                actions.hidden = state.activeSectionActions !== sectionIndex;
                 const rename = button(t("pages.songWorkspace.rename", "Rename"), "rename-section", "workspace-button workspace-button-subtle workspace-button-compact");
                 const remove = button(t("pages.songWorkspace.delete", "Delete"), "delete-section", "workspace-button workspace-button-danger workspace-button-compact");
                 rename.dataset.sectionIndex = String(sectionIndex);
                 remove.dataset.sectionIndex = String(sectionIndex);
                 actions.append(rename, remove);
                 heading.appendChild(actions);
+            } else {
+                heading.appendChild(node("h3", "", section.title));
             }
             const instrumental = section.type === "instrumental";
             const lines = node("div", `workspace-lines${instrumental ? " is-instrumental-grid" : ""}`);
@@ -658,6 +876,7 @@
 
     function layoutChordTracks(host) {
         if (!host) return;
+        const compactReadMode = state.readMode && host === elements.chart;
         host.querySelectorAll(".workspace-token-track").forEach(function(track) {
             const lyricFlow = track.querySelector(".workspace-lyric-flow");
             const annotations = Array.from(track.querySelectorAll(".workspace-chord-annotation"));
@@ -682,7 +901,7 @@
                 };
             });
             const placements = Core.fitSingleRowChordAnnotations(measured, 8, 0.6);
-            const rowHeight = Math.max(20, ...annotations.map(annotation => annotation.getBoundingClientRect().height + 2));
+            const rowHeight = Math.max(compactReadMode ? 16 : 20, ...annotations.map(annotation => annotation.getBoundingClientRect().height + 1));
             const requiredWidth = Math.max(
                 track.parentElement?.clientWidth || 0,
                 lyricFlow.scrollWidth,
@@ -966,14 +1185,10 @@
 
     function updateSongFromFields() {
         if (!state.song) return;
-        state.song.title = elements.title.value.slice(0, 160) || t("pages.songWorkspace.untitled", "Untitled Song");
-        state.song.artist = elements.artist.value.slice(0, 160);
         state.song.originalKey = Core.normalizeKey(elements.originalKey.value);
         state.song.targetKey = Core.normalizeKey(elements.targetKey.value, state.song.originalKey);
         state.song.chordSpelling = Core.normalizeChordSpelling(elements.chordSpelling.value);
         state.song.capo = Math.max(0, Math.min(11, Number(elements.capo.value) || 0));
-        state.song.bpm = elements.bpm.value ? Math.max(20, Math.min(320, Number(elements.bpm.value) || 20)) : null;
-        state.song.timeSignature = /^\d{1,2}\/\d{1,2}$/.test(elements.timeSignature.value) ? elements.timeSignature.value : "4/4";
         state.song.updatedAt = new Date().toISOString();
         scheduleSave();
         renderEditor();
@@ -1327,6 +1542,8 @@
     }
 
     function openPerformance() {
+        state.resumeReadAfterPerformance = state.readMode;
+        if (state.readMode) setReadMode(false, { restoreFocus: false });
         const current = currentShapeSong();
         elements.performanceTitle.textContent = state.song.title;
         elements.performanceMeta.textContent = `${state.song.targetKey} · Capo ${state.song.capo} · ${current.shapeKey} ${t("pages.songWorkspace.shapes", "shapes")}${state.song.bpm ? ` · ${state.song.bpm} BPM` : ""}`;
@@ -1384,8 +1601,32 @@
                 control.closest("dialog")?.close("cancel");
             });
         });
-        [elements.title, elements.artist, elements.bpm, elements.timeSignature].forEach(control => control.addEventListener("input", updateSongFromFields));
+        document.querySelectorAll("[data-setting-help-item]").forEach(function(item) {
+            item.addEventListener("pointerenter", function() {
+                if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) openSettingHelp(item);
+            });
+            item.addEventListener("pointerleave", function() {
+                if (!item.contains(document.activeElement)) closeSettingHelp();
+            });
+            item.addEventListener("focusin", function() { openSettingHelp(item); });
+            item.addEventListener("focusout", function() {
+                window.requestAnimationFrame(function() {
+                    if (!item.contains(document.activeElement)) closeSettingHelp();
+                });
+            });
+            item.querySelector("[data-setting-help]")?.addEventListener("click", function(event) {
+                event.preventDefault();
+                if (state.activeSettingHelp === item && window.matchMedia("(hover: none), (pointer: coarse)").matches) closeSettingHelp();
+                else openSettingHelp(item);
+            });
+        });
         [elements.originalKey, elements.targetKey, elements.capo, elements.chordSpelling].forEach(control => control.addEventListener("change", updateSongFromFields));
+        $("songTitleEditButton").addEventListener("click", beginTitleEdit);
+        $("cancelTitleEditButton").addEventListener("click", cancelTitleEdit);
+        elements.titleEditForm.addEventListener("submit", function(event) { event.preventDefault(); saveTitleEdit(); });
+        $("songMetadataEditButton").addEventListener("click", beginMetadataEdit);
+        $("cancelMetadataEditButton").addEventListener("click", cancelMetadataEdit);
+        elements.metadataEditForm.addEventListener("submit", function(event) { event.preventDefault(); saveMetadataEdit(); });
         document.querySelectorAll("[data-view-mode]").forEach(control => control.addEventListener("click", function() {
             state.viewMode = control.dataset.viewMode;
             state.preferences.viewMode = state.viewMode;
@@ -1412,6 +1653,10 @@
             commitLineSpacingInput();
             elements.lineSpacingInput.blur();
         });
+        elements.readZoomDecrease.addEventListener("click", () => adjustChartZoom(-Storage.CHART_ZOOM.step));
+        elements.readZoomIncrease.addEventListener("click", () => adjustChartZoom(Storage.CHART_ZOOM.step));
+        elements.readSpacingDecrease.addEventListener("click", () => adjustLineSpacing(-Storage.LINE_SPACING.step));
+        elements.readSpacingIncrease.addEventListener("click", () => adjustLineSpacing(Storage.LINE_SPACING.step));
         elements.chordHints.addEventListener("click", function() {
             state.preferences.chordHints = !Boolean(state.preferences.chordHints);
             Storage.writePreferences(state.preferences);
@@ -1419,6 +1664,11 @@
         });
         $("backToSongsButton").addEventListener("click", showHome);
         $("smartCapoButton").addEventListener("click", renderCapoOptions);
+        $("readModeButton").addEventListener("click", function(event) { setReadMode(true, { trigger: event.currentTarget }); });
+        $("exitReadModeButton").addEventListener("click", function() { setReadMode(false); });
+        elements.readShapes.addEventListener("click", function() { setReadShapes(!state.readShapesOpen); });
+        $("closeReadShapesButton").addEventListener("click", function() { setReadShapes(false); });
+        elements.readShapesBackdrop.addEventListener("click", function() { setReadShapes(false); });
         $("performanceButton").addEventListener("click", openPerformance);
         $("closePerformanceButton").addEventListener("click", function() { stopAutoScroll(); elements.performance.close(); });
         elements.scrollToggle.addEventListener("click", toggleAutoScroll);
@@ -1506,11 +1756,23 @@
                 openSectionDialog(sectionIndex, Number(control.dataset.insertionIndex), control);
             } else if (control.dataset.action === "add-instrumental-section") {
                 openInstrumentalSectionDialog(sectionIndex, Number(control.dataset.insertionIndex), control);
+            } else if (control.dataset.action === "toggle-section-actions") {
+                const opening = state.activeSectionActions !== sectionIndex;
+                state.activeSectionActions = opening ? sectionIndex : null;
+                renderEditor();
+                if (opening) {
+                    window.requestAnimationFrame(function() {
+                        focusWithoutScroll(elements.chart.querySelector(`[data-action="rename-section"][data-section-index="${sectionIndex}"]`));
+                    });
+                }
             } else if (control.dataset.action === "rename-section") {
                 const section = state.song.sections[sectionIndex];
                 const title = window.prompt(t("pages.songWorkspace.sectionNamePrompt", "Section name"), section.title);
-                if (title !== null) { section.title = title.slice(0, 80) || "Section"; scheduleSave(); renderEditor(); }
+                state.activeSectionActions = null;
+                if (title !== null) { section.title = title.slice(0, 80) || "Section"; scheduleSave(); }
+                renderEditor();
             } else if (control.dataset.action === "delete-section" && window.confirm(t("pages.songWorkspace.deleteSectionConfirm", "Delete this section?"))) {
+                state.activeSectionActions = null;
                 state.song.sections.splice(sectionIndex, 1); scheduleSave(); renderEditor();
             }
         });
@@ -1630,6 +1892,11 @@
             try { await restoreSongs(elements.restoreInput.files[0]); } catch (error) { setStatus(error.message, true); } finally { elements.restoreInput.value = ""; }
         });
         document.addEventListener("click", function(event) {
+            if (!event.target.closest("[data-setting-help-item]")) closeSettingHelp();
+            if (state.activeSectionActions !== null && !event.target.closest(".workspace-section-heading-row")) {
+                state.activeSectionActions = null;
+                renderEditor();
+            }
             if (!event.target.closest(".workspace-add-control")) closeAddMenu({ restoreFocus: false });
             if (!event.target.closest("#downloadMenuButton, #downloadMenu")) {
                 elements.downloadMenu.hidden = true;
@@ -1643,6 +1910,31 @@
             }
         });
         document.addEventListener("keydown", function(event) {
+            if (event.key === "Escape" && state.activeSettingHelp) {
+                event.preventDefault();
+                closeSettingHelp({ restoreFocus: true });
+                return;
+            }
+            if (event.key === "Escape" && state.activeSectionActions !== null) {
+                event.preventDefault();
+                const sectionIndex = state.activeSectionActions;
+                state.activeSectionActions = null;
+                renderEditor();
+                window.requestAnimationFrame(function() {
+                    focusWithoutScroll(elements.chart.querySelector(`[data-action="toggle-section-actions"][data-section-index="${sectionIndex}"]`));
+                });
+                return;
+            }
+            if (event.key === "Escape" && state.readShapesOpen) {
+                event.preventDefault();
+                setReadShapes(false);
+                return;
+            }
+            if (event.key === "Escape" && state.readMode) {
+                event.preventDefault();
+                setReadMode(false);
+                return;
+            }
             if (event.key === "Escape" && elements.shapePicker.open) {
                 event.preventDefault();
                 closeShapePicker();
@@ -1718,6 +2010,12 @@
             if (menu) positionAddMenu(state.addMenuTrigger, menu);
         }, { passive: true });
         elements.performance.addEventListener("cancel", stopAutoScroll);
+        elements.performance.addEventListener("close", function() {
+            stopAutoScroll();
+            if (!state.resumeReadAfterPerformance) return;
+            state.resumeReadAfterPerformance = false;
+            setReadMode(true, { trigger: state.readModeTrigger || $("readModeButton"), preserveScroll: true });
+        });
         document.addEventListener("visibilitychange", function() {
             if (document.visibilityState === "hidden" && state.saveTimer) {
                 window.clearTimeout(state.saveTimer);
