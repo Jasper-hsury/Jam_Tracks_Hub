@@ -149,11 +149,23 @@
 
         <section id="workspaceEditorView" class="workspace-view workspace-editor" hidden>
             <div class="workspace-editor-topbar">
-                <button class="workspace-button workspace-button-secondary" id="backToSongsButton" type="button" data-i18n="pages.songWorkspace.backToSongs">Back to My Songs</button>
+                <button class="workspace-button workspace-button-secondary" id="backToSongsButton" type="button">
+                    <svg class="workspace-mobile-action-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19 12H5m6-6-6 6 6 6"/></svg>
+                    <span data-i18n="pages.songWorkspace.backToSongs">Back to My Songs</span>
+                </button>
                 <div class="workspace-editor-actions">
-                    <button class="workspace-button workspace-button-secondary" id="downloadMenuButton" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="downloadMenu" aria-describedby="exportDisclosure" data-i18n="pages.songWorkspace.download">Download</button>
-                    <button class="workspace-button workspace-button-secondary" id="readModeButton" type="button" data-i18n="pages.songWorkspace.readMode">Read Mode</button>
-                    <button class="workspace-button workspace-button-primary" id="performanceButton" type="button" data-i18n="pages.songWorkspace.performance">Performance Mode</button>
+                    <button class="workspace-button workspace-button-secondary" id="downloadMenuButton" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="downloadMenu" aria-describedby="exportDisclosure">
+                        <svg class="workspace-mobile-action-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v12m-5-5 5 5 5-5M5 19h14"/></svg>
+                        <span data-i18n="pages.songWorkspace.download">Download</span>
+                    </button>
+                    <button class="workspace-button workspace-button-secondary" id="readModeButton" type="button">
+                        <svg class="workspace-mobile-action-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5c2.7-.9 5.3-.4 8 1.5v12c-2.7-1.9-5.3-2.4-8-1.5v-12Zm16 0c-2.7-.9-5.3-.4-8 1.5v12c2.7-1.9 5.3-2.4 8-1.5v-12Z"/></svg>
+                        <span data-i18n="pages.songWorkspace.readMode">Read Mode</span>
+                    </button>
+                    <button class="workspace-button workspace-button-primary" id="performanceButton" type="button">
+                        <svg class="workspace-mobile-action-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 10v4m4-8v12m4-15v18m4-13v8m4-6v4"/></svg>
+                        <span data-i18n="pages.songWorkspace.performance">Performance Mode</span>
+                    </button>
                 </div>
                 <div class="workspace-download-menu" id="downloadMenu" role="menu" hidden>
                     <button class="workspace-menu-action" type="button" role="menuitem" data-download="json">JSON</button>
@@ -166,8 +178,11 @@
 
             <details class="workspace-settings-disclosure" id="workspaceSettingsDisclosure" open>
                 <summary>
-                    <span data-i18n="pages.songWorkspace.songSettings">Song settings</span>
-                    <small data-i18n="pages.songWorkspace.songSettingsHint">Tap to view keys and reading controls</small>
+                    <svg class="workspace-settings-summary-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h7m4 0h5M4 17h5m4 0h7M11 4v6m2 4v6"/><circle cx="13" cy="7" r="2"/><circle cx="11" cy="17" r="2"/></svg>
+                    <span class="workspace-settings-summary-copy">
+                        <span data-i18n="pages.songWorkspace.songSettings">Song settings</span>
+                        <small data-i18n="pages.songWorkspace.songSettingsHint">Tap to view keys and reading controls</small>
+                    </span>
                 </summary>
                 <section class="workspace-settings-panel" aria-label="Song settings" data-i18n-aria-label="pages.songWorkspace.songSettings">
                     <div class="workspace-settings-nav" data-settings-row="primary">
