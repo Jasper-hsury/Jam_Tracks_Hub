@@ -2242,12 +2242,12 @@ html.workspace-dialog-restoring {
     .workspace-editor-actions > .workspace-button {
         position: relative;
         flex-direction: row;
-        gap: 4px;
+        gap: 1px;
         min-width: 0;
         min-height: 72px;
         border-radius: 18px;
-        padding: 9px 4px;
-        font-size: 0.72rem;
+        padding: 9px 1px;
+        font-size: clamp(0.625rem, 2.7vw, 0.64rem);
         line-height: 1.25;
         text-align: center;
         box-shadow: 0 4px 12px color-mix(in srgb, var(--shadow-color) 58%, transparent);
@@ -2255,8 +2255,8 @@ html.workspace-dialog-restoring {
 
     .workspace-editor-topbar .workspace-action-icon {
         display: block;
-        width: 23px;
-        height: 23px;
+        width: 15px;
+        height: 15px;
         fill: none;
         stroke: currentColor;
         stroke-linecap: round;

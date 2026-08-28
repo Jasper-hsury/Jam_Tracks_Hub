@@ -29,7 +29,12 @@ test("editor actions keep icons before text across mobile, tablet, and desktop",
     assert.doesNotMatch(css, /@media \(min-width: 721px\)[\s\S]*?\.workspace-action-icon\s*\{[^}]*display:\s*none/s);
     assert.match(css, /@media \(max-width: 720px\)[\s\S]*?\.workspace-editor-topbar\s*\{[^}]*grid-template-columns:\s*repeat\(4, minmax\(0, 1fr\)\)/s);
     assert.match(css, /@media \(max-width: 720px\)[\s\S]*?\.workspace-editor-actions\s*\{[^}]*display:\s*contents/s);
-    assert.match(css, /@media \(max-width: 720px\)[\s\S]*?\.workspace-editor-topbar > \.workspace-button,[\s\S]*?flex-direction:\s*row/s);
+    const mobileActions = region(css, "@media (max-width: 720px)", ".workspace-global-add-button");
+    assert.match(mobileActions, /flex-direction:\s*row/);
+    assert.match(mobileActions, /gap:\s*1px/);
+    assert.match(mobileActions, /padding:\s*9px 1px/);
+    assert.match(mobileActions, /font-size:\s*clamp\(0\.625rem, 2\.7vw, 0\.64rem\)/);
+    assert.match(mobileActions, /\.workspace-action-icon\s*\{[^}]*width:\s*15px;[^}]*height:\s*15px/s);
     assert.match(css, /#performanceButton::after\s*\{[^}]*background:\s*var\(--workspace-accent\)/s);
 });
 
