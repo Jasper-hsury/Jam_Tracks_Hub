@@ -13,10 +13,12 @@
         "scale.html": "titles.scaleExplorer",
         "key-finder.html": "titles.keyFinder",
         "chord-progressions.html": "titles.chordProgressions",
+        "song-workspace.html": "titles.songWorkspace",
         "feedback.html": "titles.feedback",
         "progression-writer.html": "titles.progressionWriter",
         "fretboard-trainer.html": "titles.fretboardTrainer",
         "privacy-policy.html": "titles.privacy",
+        "legal.html": "titles.legal",
         "404.html": "titles.notFound",
         "service-waking.html": "service.wakingAnalyzer"
     };

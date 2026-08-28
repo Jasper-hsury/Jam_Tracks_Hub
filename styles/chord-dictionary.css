@@ -1,6 +1,9 @@
 /* Chord Dictionary */
 .chord-dictionary-page {
     max-width: 1360px;
+}
+
+:is(.chord-dictionary-page, .song-workspace-page, .workspace-shape-dialog) {
     --diagram-tone-fill: var(--chord-control);
     --diagram-tone-text: #fffaf2;
     --diagram-root-fill: var(--gold-light);
@@ -855,7 +858,7 @@ html[data-theme="light"] .dictionary-facts div {
     border-color: rgba(88, 72, 58, 0.24);
 }
 
-html[data-theme="light"] .chord-dictionary-page {
+html[data-theme="light"] :is(.chord-dictionary-page, .song-workspace-page, .workspace-shape-dialog) {
     --diagram-tone-fill: #9a6843;
     --diagram-tone-text: #fffaf2;
     --diagram-root-fill: #2d7b76;
