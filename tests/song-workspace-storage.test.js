@@ -14,10 +14,55 @@ test("stores lightweight preferences in localStorage when available", () => {
         setItem(key, value) { values.set(key, value); }
     };
     try {
-        assert.equal(Storage.writePreferences({ fontScale: 1.2, viewMode: "roman" }), true);
-        assert.deepEqual(Storage.readPreferences(), { fontScale: 1.2, viewMode: "roman" });
+        assert.equal(Storage.writePreferences({ chartZoom: 120, viewMode: "roman" }), true);
+        assert.deepEqual(Storage.readPreferences(), { chartZoom: 120, viewMode: "roman" });
         values.set(Storage.PREFERENCES_KEY, "not-json");
         assert.deepEqual(Storage.readPreferences(), {});
+    } finally {
+        delete global.localStorage;
+    }
+});
+
+test("normalizes chart zoom input to an integer from 50 through 150", () => {
+    assert.deepEqual(Storage.CHART_ZOOM, { min: 50, max: 150, step: 10, default: 100 });
+    assert.equal(Storage.normalizeStoredChartZoom(undefined), 100);
+    assert.equal(Storage.normalizeStoredChartZoom(120), 120);
+    assert.equal(Storage.normalizeStoredChartZoom(49), 100);
+    assert.equal(Storage.normalizeStoredChartZoom(151), 100);
+    assert.equal(Storage.normalizeStoredChartZoom("abc"), 100);
+
+    assert.equal(Storage.commitChartZoom(75, 100), 75);
+    assert.equal(Storage.commitChartZoom(75.6, 100), 76);
+    assert.equal(Storage.commitChartZoom(1, 100), 50);
+    assert.equal(Storage.commitChartZoom(49, 100), 50);
+    assert.equal(Storage.commitChartZoom(151, 100), 150);
+    assert.equal(Storage.commitChartZoom(1000, 100), 150);
+    assert.equal(Storage.commitChartZoom("", 120), 120);
+    assert.equal(Storage.commitChartZoom("abc", 120), 120);
+    assert.equal(Storage.commitChartZoom("100%", 120), 120);
+    assert.equal(Storage.commitChartZoom(Number.NaN, 120), 120);
+    assert.equal(Storage.commitChartZoom(Number.POSITIVE_INFINITY, 120), 120);
+});
+
+test("steps chart zoom by ten and clamps at both boundaries", () => {
+    assert.equal(Storage.stepChartZoom(100, Storage.CHART_ZOOM.step), 110);
+    assert.equal(Storage.stepChartZoom(100, -Storage.CHART_ZOOM.step), 90);
+    assert.equal(Storage.stepChartZoom(150, Storage.CHART_ZOOM.step), 150);
+    assert.equal(Storage.stepChartZoom(50, -Storage.CHART_ZOOM.step), 50);
+});
+
+test("persists only the normalized chart zoom preference across reads", () => {
+    const values = new Map();
+    global.localStorage = {
+        getItem(key) { return values.has(key) ? values.get(key) : null; },
+        setItem(key, value) { values.set(key, value); }
+    };
+    try {
+        const preferences = { chartZoom: Storage.commitChartZoom(120, 100) };
+        assert.equal(Storage.writePreferences(preferences), true);
+        assert.equal(Storage.normalizeStoredChartZoom(Storage.readPreferences().chartZoom), 120);
+        values.set(Storage.PREFERENCES_KEY, JSON.stringify({ chartZoom: 999999 }));
+        assert.equal(Storage.normalizeStoredChartZoom(Storage.readPreferences().chartZoom), 100);
     } finally {
         delete global.localStorage;
     }

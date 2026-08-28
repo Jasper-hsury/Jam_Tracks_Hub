@@ -1,6 +1,6 @@
 # Jam Tracks Hub — Song Workspace V1 Handoff
 
-Snapshot date: 2026-08-27 (Asia/Taipei)
+Snapshot date: 2026-08-28 (Asia/Taipei)
 
 This is the canonical handoff for the unreleased Song Workspace V1 feature. It is a navigation and decision document, not a replacement for source code, tests, project instructions, or Git history.
 
@@ -39,12 +39,12 @@ Song Workspace is a user-supplied-content practice and arrangement tool. It is n
 
 ## 3. Git Snapshot
 
-Repository truth before the Final Song Workspace Layout, Legal & Integration Hardening round:
+Repository truth before the Final Reading UX Polish round:
 
 ```text
 Branch: feat/song-workspace-v1
-HEAD: 171ce9c
-origin/feat/song-workspace-v1: 446a39b167b3b298eae7b22d3ddaa54cd7d7c52e
+HEAD: 1b13d625dcc04975e5f9d7f70ef1471e055e78c4
+origin/feat/song-workspace-v1: 1b13d625dcc04975e5f9d7f70ef1471e055e78c4
 main: 9b5ed9b
 origin/main: 9b5ed9b
 Feature branch vs origin/main: verify with Git before release work
@@ -53,7 +53,7 @@ Origin fetch/push: git@github.com:Passerby-WB/Jam_Tracks_Hub.git
 
 The product history reports that GitHub has advertised a newer location, `git@github.com:Jasper-hsury/Jam_Tracks_Hub.git`. The current remote still uses the old URL, so remote URL normalization is **PENDING**. Do not change the remote during unrelated work; confirm the canonical owner and URL first.
 
-Before the current bounded round, there were no tracked modifications and only the two approved untracked exceptions in section 4. There were no uncommitted Song Workspace production changes.
+Before the current bounded round, there were no tracked modifications and only the two approved untracked exceptions in section 4. There were no uncommitted Song Workspace production changes. A separate Cloudflare-only feasibility checkpoint exists on `feat/cloudflare-key-finder-container-feasibility` at `a955f2d9`; it is not merged or cherry-picked into this product branch.
 
 ## 4. Approved Working-Tree Exceptions
 
@@ -542,10 +542,10 @@ git diff --check
 
 There are no separate `lint`, `typecheck`, or `format` scripts. `npm run check` performs `node --check` over listed JavaScript/Worker/API/build files. `npm test` uses Node's built-in test runner on `tests/*.test.js`.
 
-Current Instrumental Section & Editor Cleanup automated baseline on 2026-08-27:
+Current Final Reading UX repository baseline on 2026-08-28:
 
 ```text
-npm test: PASS, 96/96
+npm test: PASS, 118/118
 npm run check: PASS
 npm run build:cloudflare: PASS
 git diff --check: PASS
@@ -559,6 +559,7 @@ Test files:
 - `tests/song-workspace-interaction.test.js`
 - `tests/song-workspace-picker-modal.test.js`
 - `tests/song-workspace-scroll.test.js`
+- `tests/song-workspace-reading-ux.test.js`
 - `tests/song-workspace-storage.test.js`
 - `tests/song-workspace-style.test.js`
 - `tests/chord-shapes.test.js`
@@ -570,6 +571,8 @@ In-app Chromium acceptance for this round also passed with synthetic-only conten
 Instrumental Section browser acceptance on 2026-08-27 passed at 1280×800, 1024×768, and 375×812 in English/zh-TW and light/dark themes. A synthetic Verse → Instrumental → Chorus workflow confirmed exact boundary insertion, the localized optional-name/default-4-bar modal, fixed-body lock, chord-only Edit Bar UI with no lyric/anchor/Move controls, multiple chord editing, contextual Add Bar, direct existing lyric-chord repositioning, Original/Balanced/Beginner/Roman/Nashville, transpose, Smart Capo, Chord Shapes, Performance Mode, four-format Download menu, autosave, and reload persistence. The local server observed only static GET/304 requests, while browser console inspection reported 0 new warnings and 0 new errors. Delete Bar/Delete Section behavior is covered by core/interaction regressions; the browser smoke verified the correctly localized destructive controls without deleting the synthetic browser fixture.
 
 Final layout/legal browser acceptance on 2026-08-27 reused only synthetic local content. A persisted 12-bar section rendered as 8+4 at 1280×800 and 1024×768 because its content container exceeded 760 px, and as 4+4+4 at 375×812; every viewport had zero page-level horizontal overflow, chord content remained above sequential localized Bar labels, and empty cells displayed `—`. Roman and Nashville retained the grid, Performance Mode used the same 4-column mobile layout, contextual Add Bar and Edit/Cancel remained usable, and autosave visibly changed Saving → saved in the sole Hero live region. `legal.html` passed English ↔ zh-TW switching, light/dark, semantic headings, one generated skip link, footer navigation, and zero horizontal overflow at all three viewport widths. A bounded shared i18n fix prevents an empty English preload object from leaving zh-TW text behind when switching back to English. Both inspected pages reported 0 new console warnings and 0 new console errors; the local server observed static GET/304 requests only.
+
+Final Reading UX browser acceptance on 2026-08-28 used only synthetic English, Chinese, mixed, long-chord, multiple-chord, and empty-bar content. At 100%, computed desktop typography measured lyric 19 px, annotation 16.5 px, instrumental 17 px, heading 22 px, and 1.75 lyric line height; 375 px measured 17/15.5/16/20 px. Values 50, 75, 100, 110, 120, and 150 all reflowed with zero page/card overflow; 1 and 1000 clamped to 50/150, empty/non-numeric restored 120, ± moved 100→110→100, and both limits disabled their corresponding button. Reload retained 120, while Performance opened at the same 120 and its A+ control updated both charts to 130. The 16-bar section rendered eight columns at 1280/1024 and four at 375 in English/zh-TW and light/dark; every long card remained bounded. All five chart modes retained exactly one annotation layer per lyric track, browser geometry measured 0 px anchor-left delta for the English, Chinese, and mixed fixtures, and Shape Picker close retained its captured scroll position with 0 px final delta. Console inspection reported zero warnings/errors and the local server observed fixed static/locale GETs only. The in-app automation surface is Chromium, so this is not new physical Safari/iPhone evidence; WebKit-facing native-number-input, focus/blur, custom-property, container-query, and `-webkit-appearance` paths were reviewed, existing macOS Safari Shape Picker acceptance remains PASS, and iPhone/iOS remains PENDING RELEASE.
 
 ## 32. Recent Relevant Commits
 
@@ -724,6 +727,7 @@ Status: **RESOLVED** on 2026-08-27. The fourth Hero promise badge is now the sol
 | Old-format user notice removal | RESOLVED | `loadSongs`, locale cleanup, interaction regression | Unsupported records are skipped without warning, deletion, migration, or rewrite. |
 | Edit Line Move controls removal | RESOLVED | line editor/app/locales, interaction regression | Edit → Position → Update remains the direct lyric-chord reposition path. |
 | Instrumental / chord-only sections | RESOLVED | core insertion helper, app grid renderer/CSS, locales, core/interaction/final-layout/export tests | Optional name, bounded 1–64 bars, 4/8-column content-first grid, subtle empty cells, contextual Add/Edit/Delete Bar, stable IDs and existing derived/export paths. |
+| Instrumental progression-style cards | RESOLVED | workspace renderer/CSS, Write Your Own Progression design audit, reading-UX tests, responsive browser acceptance | Small localized index plus larger chord hierarchy, shared visual language, multiple/long chords, empty bar, 4/8 grid, Performance and compact Print variants preserved. |
 | Cmaj9 chord input hint and support | RESOLVED | localized placeholder, core/chord-shape/final-layout tests | Parser, transpose, Roman/Nashville, renderer, and voicing lookup remain valid. |
 | Natural lyric spacing / separate chord layer | DONE | core renderer, `styles/song-workspace.css`, style tests | No chord-width spacing in lyrics. |
 | Exactly one chord row per lyric line | RESOLVED | `fitSingleRowChordAnnotations`, `layoutChordTracks`, core/style regressions | No production row metadata or collision-to-next-row path remains. |
@@ -744,6 +748,8 @@ Status: **RESOLVED** on 2026-08-27. The fourth Hero promise badge is now the sol
 | Zero visible Safari picker jump | macOS PASS / iOS PENDING | Product-owner macOS acceptance plus pending iPhone/iOS hardware acceptance | Do not infer iPhone/iOS from the macOS result. |
 | One document scroll / top-aligned columns | DONE | `styles/song-workspace.css` editor grid | Right panel is not sticky. |
 | Performance Mode / auto-scroll | RESOLVED | `AUTO_SCROLL` core helpers, performance dialog/app loop, core/interaction tests, browser speed measurements | BPM-linked bounded base, 48px/s fallback, retained 0.5×–2.0× preference, time/subpixel-safe scrolling. |
+| Song Chart Zoom | RESOLVED | storage normalization, editor/performance controls, CSS reflow scale, reading-UX/storage tests, browser acceptance | One local-only 50–150% integer preference; ±10 and direct entry; invalid values bounded; Performance shares it; print/export stay independent. |
+| Default lyric/chord readability | RESOLVED | workspace CSS typography variables, anchor/single-row regressions, responsive browser acceptance | 100% desktop baseline: lyric 19 px, chord 16.5 px, instrumental 17 px, heading 22 px; mobile uses 17/15.5/16/20 px with bounded zoom reflow. |
 | Song Workspace button design system | RESOLVED | workspace markup/app/CSS, shared theme tokens, interaction/style tests, 1280/1024/375 light/dark acceptance | Primary, secondary, danger, icon, segmented, toggle, subtle, menu, modal, and performance controls aligned. |
 | JTH JSON / TXT / Print / backup | DONE | app export/backup functions | Local exports. |
 | English and zh-TW UI | DONE | locale JSON + i18n scripts | User content not translated. |
@@ -785,6 +791,9 @@ Bounded future work, clearly outside current implementation:
 - **RESOLVED**: remove redundant Edit Line Move controls while retaining direct existing-chord position editing.
 - **RESOLVED**: bounded Add Instrumental Section with the existing chord-only line model, contextual bar editing/deletion, stable insertion, autosave, derived modes, performance, and exports.
 - **RESOLVED**: instrumental sections use a responsive four/eight-column horizontal bar grid in editor, Performance, and Print, while retaining ordered chords and stable persistent IDs.
+- **RESOLVED**: instrumental bars use the established progression-card visual hierarchy in editor and Performance, with compact Print treatment and unchanged 4/8-column behavior.
+- **RESOLVED**: one local-only 50–150% Song Chart Zoom preference controls the editor and Performance charts, supports bounded direct input and ±10 controls, reflows content without transforms, and leaves exports/print data contracts unchanged.
+- **RESOLVED**: the 100% lyric, chord, instrumental, and heading typography baseline is materially larger on desktop and mobile while meaningful anchors and single-row annotations remain stable.
 - **RESOLVED**: localized `Cmaj9` chord-input hint is backed by parser, transpose, numeral, renderer, and shared voicing regression evidence.
 - **RESOLVED**: the sole autosave live region occupies the Hero promise row, and a shared localized footer link exposes the bookmarkable bounded Legal & Usage Policy.
 - **RESOLVED**: Song Document V2 direct meaningful positions; no persistent character offset or legacy compatibility layer.
@@ -793,6 +802,7 @@ Bounded future work, clearly outside current implementation:
 - **RESOLVED**: bounded Shape Picker close/focus/instant-restore implementation and responsive in-app browser acceptance.
 - **PASS**: macOS Safari user acceptance found no visible Shape Picker movement.
 - **PENDING RELEASE**: prove zero visible Shape Picker movement and complete the browser checklist on iPhone/iOS hardware.
+- **PASS FOR PHASE 2 MIGRATION / DEFERRED**: Cloudflare-only container feasibility is recorded on the separate `a955f2d9` branch checkpoint; Phase 2, production integration, and Render retirement must not begin until separately authorized.
 
 Do not start a Song Workspace product V2, account/cloud sync, server storage, public discovery, or sharing merely because they are listed here. Song Document schema version 2 is part of the current unreleased V1 product and is not a product-version expansion.
 
@@ -896,4 +906,4 @@ A new Codex session must begin in this order:
 9. Run baseline `npm test`, `npm run check`, `npm run build:cloudflare`, and `git diff --check` when appropriate.
 10. Only then modify production code, and only for the explicitly requested bounded task.
 
-Highest-priority remaining release work includes iPhone/iOS hardware acceptance, remote/CI/PR coordination, and explicit production approval. Analytics/error-log no-song-content-egress, Copyright/local-only UI wording, the Create Song / Other Import hierarchy, cancellation-vs-validation contract, shared modal background lock, Music Theory / Preserve Input chord spelling, Delete Line, old-format notice removal, Move-control cleanup, Instrumental Section creation/editing, Song Document V2 meaningful positions, BPM-linked Performance Auto Scroll, button design-system hardening, one-row chord-annotation contract, Shape Picker parity/zero-jump code fix, Create/Import scrollbar polish, canonical single-song JSON import, and macOS Safari zero-jump user acceptance are resolved. Do not begin a remaining gate without an explicit bounded request.
+Highest-priority remaining release work includes iPhone/iOS hardware acceptance, remote/CI/PR coordination, and explicit production approval. The Song Chart Zoom, larger default reading typography, progression-style Instrumental cards, analytics/error-log no-song-content-egress, Copyright/local-only UI wording, the Create Song / Other Import hierarchy, cancellation-vs-validation contract, shared modal background lock, Music Theory / Preserve Input chord spelling, Delete Line, old-format notice removal, Move-control cleanup, Instrumental Section creation/editing, Song Document V2 meaningful positions, BPM-linked Performance Auto Scroll, button design-system hardening, one-row chord-annotation contract, Shape Picker parity/zero-jump code fix, Create/Import scrollbar polish, canonical single-song JSON import, and macOS Safari zero-jump user acceptance are resolved. Do not begin a remaining gate without an explicit bounded request.

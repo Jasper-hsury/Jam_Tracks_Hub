@@ -61,6 +61,8 @@
         anchorList: $("anchorList"), addAnchor: $("addAnchorButton"), lineError: $("lineDialogError"),
         deleteLine: $("deleteLineButton"), saveLine: $("saveLineButton"),
         chordHints: $("chordHintsButton"), shapePicker: $("shapePickerDialog"),
+        chartZoomInput: $("chartZoomInput"), chartZoomDecrease: $("chartZoomDecreaseButton"),
+        chartZoomIncrease: $("chartZoomIncreaseButton"),
         shapePickerSymbol: $("shapePickerSymbol"), shapePickerCount: $("shapePickerCount"),
         shapePickerPosition: $("shapePositionFilter"), shapePickerRoot: $("shapeRootFilter"),
         shapePickerGrid: $("shapePickerGrid"),
@@ -76,6 +78,62 @@
 
     function t(key, fallback, variables) {
         return window.JasperI18n?.translate?.(key, fallback, variables) ?? fallback;
+    }
+
+    function initializeChartZoomPreference() {
+        const storedZoom = state.preferences.chartZoom;
+        let zoom = Storage.normalizeStoredChartZoom(storedZoom);
+        if (storedZoom === undefined && state.preferences.fontScale !== undefined) {
+            zoom = Storage.commitChartZoom(Number(state.preferences.fontScale) * 100, Storage.CHART_ZOOM.default);
+        }
+        const changed = storedZoom !== zoom || Object.prototype.hasOwnProperty.call(state.preferences, "fontScale");
+        state.preferences.chartZoom = zoom;
+        delete state.preferences.fontScale;
+        if (changed) Storage.writePreferences(state.preferences);
+    }
+
+    function updateChartZoomLabels() {
+        const decrease = t("pages.songWorkspace.decreaseZoom", "Decrease zoom");
+        const increase = t("pages.songWorkspace.increaseZoom", "Increase zoom");
+        const chartZoom = t("pages.songWorkspace.chartZoom", "Chart zoom");
+        [elements.chartZoomDecrease, $("fontDecreaseButton")].forEach(function(control) {
+            control.title = decrease;
+        });
+        [elements.chartZoomIncrease, $("fontIncreaseButton")].forEach(function(control) {
+            control.title = increase;
+        });
+        elements.chartZoomInput.title = chartZoom;
+    }
+
+    function applyChartZoom() {
+        const zoom = Storage.normalizeStoredChartZoom(state.preferences.chartZoom);
+        state.preferences.chartZoom = zoom;
+        [elements.chart, elements.performanceChart].forEach(function(chart) {
+            chart.style.setProperty("--song-chart-zoom", `${zoom}%`);
+        });
+        elements.chartZoomInput.value = String(zoom);
+        elements.chartZoomDecrease.disabled = zoom <= Storage.CHART_ZOOM.min;
+        elements.chartZoomIncrease.disabled = zoom >= Storage.CHART_ZOOM.max;
+        $("fontDecreaseButton").disabled = zoom <= Storage.CHART_ZOOM.min;
+        $("fontIncreaseButton").disabled = zoom >= Storage.CHART_ZOOM.max;
+        scheduleChordLayouts();
+    }
+
+    function setChartZoom(value) {
+        const previous = Storage.normalizeStoredChartZoom(state.preferences.chartZoom);
+        state.preferences.chartZoom = Storage.commitChartZoom(value, previous);
+        Storage.writePreferences(state.preferences);
+        applyChartZoom();
+    }
+
+    function adjustChartZoom(delta) {
+        state.preferences.chartZoom = Storage.stepChartZoom(state.preferences.chartZoom, delta);
+        Storage.writePreferences(state.preferences);
+        applyChartZoom();
+    }
+
+    function commitChartZoomInput() {
+        setChartZoom(elements.chartZoomInput.value);
     }
 
     function node(tag, className, text) {
@@ -285,6 +343,7 @@
         });
         elements.chordHints.setAttribute("aria-pressed", String(hintsEnabled));
         renderChart(elements.chart, current.song, true);
+        applyChartZoom();
         renderShapeCards(currentPlayShapeSong());
     }
 
@@ -507,8 +566,8 @@
                 chords.appendChild(empty);
             }
             row.append(
-                chords,
-                node("span", "workspace-bar-label", t("pages.songWorkspace.barNumber", "Bar {{bar}}", { bar: lineIndex + 1 }))
+                node("span", "workspace-bar-label", t("pages.songWorkspace.barNumber", "Bar {{bar}}", { bar: lineIndex + 1 })),
+                chords
             );
             host.appendChild(row);
             return host;
@@ -1223,7 +1282,7 @@
         elements.performanceTitle.textContent = state.song.title;
         elements.performanceMeta.textContent = `${state.song.targetKey} · Capo ${state.song.capo} · ${current.shapeKey} ${t("pages.songWorkspace.shapes", "shapes")}${state.song.bpm ? ` · ${state.song.bpm} BPM` : ""}`;
         renderChart(elements.performanceChart, current.song, false);
-        elements.performanceChart.style.fontSize = `${Number(state.preferences.fontScale || 1)}em`;
+        applyChartZoom();
         updateScrollSpeedControl(performanceSpeedMultiplier());
         elements.performance.showModal();
         elements.performance.scrollTop = 0;
@@ -1268,14 +1327,6 @@
         if (elements.scrollToggle) elements.scrollToggle.textContent = t("pages.songWorkspace.startScroll", "Start");
     }
 
-    function adjustFont(delta) {
-        const next = Math.max(0.8, Math.min(1.8, Number(state.preferences.fontScale || 1) + delta));
-        state.preferences.fontScale = Number(next.toFixed(1));
-        Storage.writePreferences(state.preferences);
-        elements.performanceChart.style.fontSize = `${state.preferences.fontScale}em`;
-        scheduleChordLayouts();
-    }
-
     function attachEvents() {
         document.querySelectorAll("[data-create-mode]").forEach(control => control.addEventListener("click", () => openCreateDialog(control.dataset.createMode)));
         document.querySelectorAll("[data-dialog-close]").forEach(function(control) {
@@ -1291,6 +1342,16 @@
             Storage.writePreferences(state.preferences);
             renderEditor();
         }));
+        elements.chartZoomDecrease.addEventListener("click", () => adjustChartZoom(-Storage.CHART_ZOOM.step));
+        elements.chartZoomIncrease.addEventListener("click", () => adjustChartZoom(Storage.CHART_ZOOM.step));
+        elements.chartZoomInput.addEventListener("change", commitChartZoomInput);
+        elements.chartZoomInput.addEventListener("blur", commitChartZoomInput);
+        elements.chartZoomInput.addEventListener("keydown", function(event) {
+            if (event.key !== "Enter") return;
+            event.preventDefault();
+            commitChartZoomInput();
+            elements.chartZoomInput.blur();
+        });
         elements.chordHints.addEventListener("click", function() {
             state.preferences.chordHints = !Boolean(state.preferences.chordHints);
             Storage.writePreferences(state.preferences);
@@ -1305,8 +1366,8 @@
             state.scrollPosition = 0;
             elements.performance.scrollTo({ top: 0, behavior: "smooth" });
         });
-        $("fontDecreaseButton").addEventListener("click", () => adjustFont(-0.1));
-        $("fontIncreaseButton").addEventListener("click", () => adjustFont(0.1));
+        $("fontDecreaseButton").addEventListener("click", () => adjustChartZoom(-Storage.CHART_ZOOM.step));
+        $("fontIncreaseButton").addEventListener("click", () => adjustChartZoom(Storage.CHART_ZOOM.step));
         elements.scrollSpeed.addEventListener("input", function() {
             state.preferences.scrollSpeedMultiplier = updateScrollSpeedControl(elements.scrollSpeed.value);
             Storage.writePreferences(state.preferences);
@@ -1541,10 +1602,11 @@
             }
             if (!elements.performance.open || /^(INPUT|TEXTAREA|SELECT)$/.test(event.target.tagName)) return;
             if (event.key === " ") { event.preventDefault(); toggleAutoScroll(); }
-            else if (event.key === "+" || event.key === "=") adjustFont(0.1);
-            else if (event.key === "-") adjustFont(-0.1);
+            else if (event.key === "+" || event.key === "=") adjustChartZoom(Storage.CHART_ZOOM.step);
+            else if (event.key === "-") adjustChartZoom(-Storage.CHART_ZOOM.step);
         });
         window.addEventListener("jasper:language-change", function() {
+            updateChartZoomLabels();
             setSaveState(state.saveState);
             renderLibrary();
             if (state.song) renderEditor();
@@ -1608,6 +1670,9 @@
         initializeSelects();
         state.viewMode = ["original", "balanced", "beginner", "roman", "nashville"].includes(state.preferences.viewMode) ? state.preferences.viewMode : "original";
         state.preferences.chordHints = Boolean(state.preferences.chordHints);
+        initializeChartZoomPreference();
+        updateChartZoomLabels();
+        applyChartZoom();
         attachEvents();
         await loadSongs();
         const requestedId = new URLSearchParams(location.search).get("song");

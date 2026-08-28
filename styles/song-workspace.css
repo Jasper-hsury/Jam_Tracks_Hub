@@ -9,6 +9,7 @@
     --workspace-shadow: 0 16px 34px rgba(75, 57, 39, 0.1);
     --workspace-control-radius: 999px;
     --workspace-control-height: 44px;
+    --workspace-progression-card-radius: 10px;
 }
 
 html[data-theme="default"] {
@@ -678,8 +679,106 @@ html[data-theme="default"] {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
     gap: 16px;
     margin: 18px 0;
+}
+
+.workspace-view-controls {
+    display: flex;
+    flex: 1 1 650px;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.workspace-view-controls > .workspace-segmented {
+    flex: 1 1 auto;
+}
+
+.workspace-chart-zoom {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 5px;
+    min-height: 46px;
+    border: 1px solid var(--workspace-line);
+    border-radius: var(--workspace-control-radius);
+    padding: 4px;
+    background: var(--workspace-soft);
+}
+
+.workspace-chart-zoom-label {
+    padding-left: 8px;
+    color: var(--workspace-muted);
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.workspace-zoom-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    min-width: 36px;
+    height: 36px;
+    appearance: none;
+    -webkit-appearance: none;
+    border: 0;
+    border-radius: 50%;
+    color: var(--workspace-text);
+    background: var(--workspace-surface-strong);
+    font: inherit;
+    font-size: 1.12rem;
+    font-weight: 850;
+    cursor: pointer;
+}
+
+.workspace-zoom-button:hover:not(:disabled) {
+    color: var(--accent-button-text);
+    background: var(--workspace-accent);
+}
+
+.workspace-zoom-button:focus-visible,
+.workspace-chart-zoom-value input:focus-visible {
+    outline: 3px solid var(--focus-ring);
+    outline-offset: 2px;
+}
+
+.workspace-zoom-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.42;
+}
+
+.workspace-chart-zoom-value {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    color: var(--workspace-muted);
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+
+.workspace-chart-zoom-value input {
+    box-sizing: border-box;
+    width: 48px;
+    height: 34px;
+    appearance: textfield;
+    -moz-appearance: textfield;
+    border: 0;
+    border-radius: 5px;
+    padding: 4px 2px;
+    color: var(--workspace-text);
+    background: transparent;
+    font: inherit;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+}
+
+.workspace-chart-zoom-value input::-webkit-inner-spin-button,
+.workspace-chart-zoom-value input::-webkit-outer-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
 }
 
 .workspace-mode-actions {
@@ -778,16 +877,26 @@ html[data-theme="default"] {
     line-height: 1.55;
 }
 
+.workspace-chart,
+.performance-chart {
+    --song-chart-zoom: 100%;
+    --song-chart-lyric-size: 1.1875em;
+    --song-chart-chord-size: 1.03125em;
+    --song-chart-heading-size: 1.375em;
+    --song-chart-instrumental-size: 1.0625em;
+    font-size: var(--song-chart-zoom);
+}
+
 .workspace-chart {
     display: grid;
-    gap: 22px;
+    gap: clamp(16px, 1.375em, 34px);
     margin-top: 22px;
 }
 
 .workspace-section {
     min-width: 0;
     border-top: 1px solid var(--workspace-line);
-    padding-top: 18px;
+    padding-top: clamp(14px, 1.125em, 27px);
 }
 
 .workspace-section.is-instrumental {
@@ -810,6 +919,8 @@ html[data-theme="default"] {
 .workspace-section-heading-row h3 {
     margin: 0;
     color: var(--workspace-text);
+    font-size: clamp(15px, var(--song-chart-heading-size), 33px);
+    line-height: 1.25;
 }
 
 .workspace-section-actions {
@@ -850,6 +961,7 @@ html[data-theme="default"] {
     border: 0;
     border-radius: 4px;
     padding: 9px 12px 11px;
+    font: inherit;
     text-align: left;
     color: var(--workspace-text);
     background: transparent;
@@ -888,6 +1000,7 @@ html[data-theme="default"] {
 .workspace-chord-annotation {
     position: absolute;
     top: 0;
+    font-size: clamp(11.5px, var(--song-chart-chord-size), 24.75px);
     line-height: 1.15;
     transform: scaleX(var(--workspace-chord-scale, 1));
     transform-origin: left center;
@@ -913,8 +1026,12 @@ html[data-theme="default"] .workspace-chord-chip {
 
 .workspace-lyric-token {
     white-space: pre;
-    font-size: 1.05rem;
+    font-size: clamp(13px, var(--song-chart-lyric-size), 28.5px);
     line-height: 1.75;
+}
+
+.workspace-unanchored-chords .workspace-chord-chip {
+    font-size: clamp(11.5px, var(--song-chart-chord-size), 24.75px);
 }
 
 .workspace-lyric-token.is-chord-hint {
@@ -929,18 +1046,25 @@ html[data-theme="default"] .workspace-chord-chip {
 }
 
 .workspace-line.is-instrumental {
-    min-height: 92px;
+    min-height: 94px;
     border: 1px solid var(--workspace-line);
+    border-radius: var(--workspace-progression-card-radius);
     padding: 0;
     overflow: hidden;
-    background: color-mix(in srgb, var(--workspace-soft) 48%, transparent);
+    background: color-mix(in srgb, var(--workspace-soft) 62%, var(--workspace-surface-strong));
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--workspace-surface-strong) 68%, transparent);
+}
+
+.workspace-line.is-instrumental:hover {
+    border-color: color-mix(in srgb, var(--workspace-accent) 55%, var(--workspace-line));
+    background: var(--workspace-soft);
 }
 
 .workspace-instrumental-line {
     display: grid;
-    grid-template-rows: minmax(52px, 1fr) auto;
+    grid-template-rows: auto minmax(58px, 1fr);
     min-width: 0;
-    min-height: 90px;
+    min-height: 92px;
 }
 
 .workspace-instrumental-chords {
@@ -951,14 +1075,17 @@ html[data-theme="default"] .workspace-chord-chip {
     flex-wrap: wrap;
     min-width: 0;
     gap: 4px 7px;
-    padding: 10px 5px 7px;
+    padding: 5px 7px 12px;
 }
 
 .workspace-instrumental-chord {
     max-width: 100%;
     color: #8b5e39;
+    font-size: clamp(12px, var(--song-chart-instrumental-size), 25.5px);
     font-weight: 850;
+    line-height: 1.22;
     overflow-wrap: anywhere;
+    word-break: normal;
 }
 
 html[data-theme="default"] .workspace-instrumental-chord {
@@ -973,13 +1100,12 @@ html[data-theme="default"] .workspace-instrumental-chord {
 .workspace-instrumental-line .workspace-bar-label {
     display: block;
     min-width: 0;
-    border-top: 1px solid var(--workspace-line);
-    padding: 5px 3px 6px;
+    padding: 9px 9px 0;
     color: var(--workspace-muted);
-    font-size: 0.78rem;
-    font-weight: 700;
+    font-size: clamp(9px, 0.68em, 13px);
+    font-weight: 850;
     line-height: 1.2;
-    text-align: center;
+    text-align: left;
     text-transform: uppercase;
 }
 
@@ -1296,10 +1422,11 @@ html.workspace-dialog-restoring {
 }
 
 .performance-chart {
+    display: grid;
     width: min(980px, calc(100% - 32px));
     margin: 0 auto;
     padding: 48px 0 140px;
-    font-size: 1.08rem;
+    gap: clamp(16px, 1.375em, 34px);
 }
 
 .performance-toolbar {
@@ -1376,6 +1503,24 @@ html.workspace-dialog-restoring {
     .workspace-modebar {
         align-items: stretch;
         flex-direction: column;
+    }
+
+    .workspace-view-controls {
+        flex-basis: auto;
+        flex-wrap: wrap;
+        width: 100%;
+    }
+
+    .workspace-view-controls > .workspace-segmented {
+        flex-basis: 100%;
+    }
+
+    .workspace-chart,
+    .performance-chart {
+        --song-chart-lyric-size: 1.0625em;
+        --song-chart-chord-size: 0.96875em;
+        --song-chart-heading-size: 1.25em;
+        --song-chart-instrumental-size: 1em;
     }
 
     .workspace-mode-actions {
@@ -1484,6 +1629,12 @@ html.workspace-dialog-restoring {
         justify-content: center;
     }
 
+    .workspace-chart-zoom {
+        box-sizing: border-box;
+        justify-content: center;
+        width: 100%;
+    }
+
     .workspace-line-dialog-actions #deleteLineButton {
         width: 100%;
         margin-right: 0;
@@ -1527,9 +1678,32 @@ html.workspace-dialog-restoring {
     }
 
     .workspace-line.is-instrumental {
-        min-height: 78px;
+        min-height: 64px;
+        border-radius: 7px;
         break-inside: avoid;
         background: #fff;
+    }
+
+    .workspace-chart {
+        --song-chart-zoom: 100% !important;
+    }
+
+    .workspace-instrumental-line {
+        grid-template-rows: auto minmax(40px, 1fr);
+        min-height: 62px;
+    }
+
+    .workspace-instrumental-line .workspace-bar-label {
+        padding: 5px 5px 0;
+        font-size: 8px;
+    }
+
+    .workspace-instrumental-chords {
+        padding: 3px 4px 7px;
+    }
+
+    .workspace-instrumental-chord {
+        font-size: 11px;
     }
 }
 
@@ -1541,6 +1715,7 @@ html.workspace-dialog-restoring {
     .workspace-entry-card,
     .workspace-line,
     .workspace-add-trigger,
+    .workspace-zoom-button,
     .workspace-shape-option,
     .workspace-capo-option {
         transition: none;

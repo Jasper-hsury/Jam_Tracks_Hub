@@ -13,6 +13,7 @@
     const DB_VERSION = 1;
     const STORE_NAME = "songs";
     const PREFERENCES_KEY = "jamTracksHubSongWorkspacePreferences";
+    const CHART_ZOOM = Object.freeze({ min: 50, max: 150, step: 10, default: 100 });
 
     class StorageUnavailableError extends Error {
         constructor(message) {
@@ -113,11 +114,32 @@
         }
     }
 
+    function normalizeStoredChartZoom(value) {
+        const numeric = Number(value);
+        return Number.isInteger(numeric) && numeric >= CHART_ZOOM.min && numeric <= CHART_ZOOM.max
+            ? numeric
+            : CHART_ZOOM.default;
+    }
+
+    function commitChartZoom(value, lastValid) {
+        const fallback = normalizeStoredChartZoom(lastValid);
+        if (typeof value === "string" && value.trim() === "") return fallback;
+        const numeric = Number(value);
+        if (!Number.isFinite(numeric)) return fallback;
+        return Math.max(CHART_ZOOM.min, Math.min(CHART_ZOOM.max, Math.round(numeric)));
+    }
+
+    function stepChartZoom(value, delta) {
+        const current = normalizeStoredChartZoom(value);
+        return commitChartZoom(current + delta, current);
+    }
+
     return {
         DB_NAME,
         DB_VERSION,
         STORE_NAME,
         PREFERENCES_KEY,
+        CHART_ZOOM,
         StorageUnavailableError,
         openDatabase,
         list,
@@ -126,6 +148,9 @@
         remove,
         replaceAll,
         readPreferences,
-        writePreferences
+        writePreferences,
+        normalizeStoredChartZoom,
+        commitChartZoom,
+        stepChartZoom
     };
 });

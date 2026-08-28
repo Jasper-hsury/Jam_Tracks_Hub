@@ -29,7 +29,7 @@ test("instrumental bars render as a four/eight-column content-first grid", () =>
         workspaceJs.indexOf('if (line.type === "instrumental")'),
         workspaceJs.indexOf("if (!line.text)")
     );
-    assert.ok(instrumentalBranch.indexOf("workspace-instrumental-chords") < instrumentalBranch.indexOf("workspace-bar-label"));
+    assert.ok(instrumentalBranch.indexOf("workspace-bar-label") < instrumentalBranch.lastIndexOf("chords"));
     assert.match(instrumentalBranch, /workspace-empty-bar", "—"/);
     assert.doesNotMatch(instrumentalBranch, /emptyLine/);
 
