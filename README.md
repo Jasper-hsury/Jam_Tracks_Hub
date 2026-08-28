@@ -52,7 +52,9 @@ Last updated: Aug 28, 2026, 2:06 PM
 | `key-finder.html` | YouTube/audio key finder powered by the local or deployed API. |
 | `chord-progressions.html` | Chord progression explorer with major/minor key selection and common progression groups. |
 | `progression-writer.html` | Custom progression writer with chord inputs, voicing selection, save/download image output, and separated progression/shape export. |
+| `song-workspace.html` | Local-first song chart workspace with editing, chord views, Read Mode, Performance Mode, and local exports. |
 | `fretboard-trainer.html` | Guitar fretboard practice tool. |
+| `legal.html` | Legal and usage policy for local content, exports, and network-backed tools. |
 | `privacy-policy.html` | Privacy policy. |
 
 ## Interface Gallery
@@ -192,9 +194,10 @@ http://127.0.0.1:8000/api/health
 
 ## Checks
 
-Run the JavaScript and build checks before committing:
+Run the unit, JavaScript, and build checks before committing:
 
 ```bash
+npm test
 npm run check
 npm run build:cloudflare
 ```

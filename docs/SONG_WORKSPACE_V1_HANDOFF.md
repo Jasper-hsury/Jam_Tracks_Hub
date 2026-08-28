@@ -10,6 +10,12 @@ Source precedence used throughout this document:
 2. **Confirmed Product / Conversation Decisions**: requirements explicitly confirmed by the product owner and recorded here as contracts or release gates.
 3. **Proposed / Pending Decisions**: ideas not present in production code or not yet accepted for release; these are explicitly marked.
 
+## v1.0.0 Song Workspace-Only Release Context
+
+The current release integration branch is `release/song-workspace-v1.0.0`, created from the latest `origin/main`. It selectively ports Song Workspace, Legal, localization, shared frontend dependencies, tests, documentation, and a bounded CI test step. It explicitly excludes commits `3b022bc` (provider/anti-abuse hardening) and `bc9e41b` (Render direct-origin proxy authentication). `worker.js`, `wrangler.jsonc`, `scripts/site-config.js`, `scripts/key-finder.js`, `api-server/`, and Render deployment configuration remain byte-for-byte equal to the pre-release `origin/main` baseline. Legal-footer asset cache keys on `key-finder.html` and `service-waking.html` are presentation-only and do not alter the Key Finder API path.
+
+Release scope is **Song Workspace only**. Key Finder provider architecture, Cloudflare-only Phase 2, Render retirement, WAF/rate/bot/cache rollout, and provider-secret rollout are deferred. This release adds no production secret requirement. macOS Safari Shape Picker acceptance remains PASS; iPhone/iOS final hardware acceptance is honestly **PENDING / POST-RELEASE VALIDATION** and is not a v1.0.0 blocker by explicit product decision. The version policy is v1.0.0 for the first stable Song Workspace release, v1.0.1 for small bug/security fixes, and v1.1.0 for a larger backward-compatible architecture update such as Cloudflare-only Key Finder.
+
 ## 1. Purpose
 
 This document lets a new Codex session resume Song Workspace V1 without relying on prior chat context. It records:
@@ -402,7 +408,7 @@ The shared Chords + Lyrics, Lyrics Only, Chords Only, and ChordPro dialog uses `
 
 Create/Import now locks the document before `showModal()`. X, Cancel, Escape, successful Create, and successful ChordPro import all unlock through the shared close/restore contract; native required validation still runs only for the real commit action. Edit Line Save/Delete and Add Section/Add Instrumental Section success use the same utility without changing the Shape Picker's focus-before-unlock or zero-jump guarantees.
 
-The code-level transient-jump issue is **RESOLVED** in this snapshot. Root cause was a combination of replacing the entire shape-card subtree during selection, unlocking the body before focus restoration, global smooth-scroll behavior affecting `scrollTo`, and a second deferred restoration attempt. The new pipeline keeps the background locked through selection and focus restoration, then performs one instant restore. In-app browser acceptance at 1280×720, 1024×768, and 375×812 recorded zero final scroll delta for X and selection paths, including 10 consecutive desktop selections, preserved card/diagram geometry, internal modal scrolling, trigger focus, and reload persistence. The product owner subsequently reported macOS Safari user acceptance with no visible shape-selection jump: **PASS**. iPhone/iOS hardware acceptance remains **PENDING RELEASE** and must not be inferred from the macOS result.
+The code-level transient-jump issue is **RESOLVED** in this snapshot. Root cause was a combination of replacing the entire shape-card subtree during selection, unlocking the body before focus restoration, global smooth-scroll behavior affecting `scrollTo`, and a second deferred restoration attempt. The new pipeline keeps the background locked through selection and focus restoration, then performs one instant restore. In-app browser acceptance at 1280×720, 1024×768, and 375×812 recorded zero final scroll delta for X and selection paths, including 10 consecutive desktop selections, preserved card/diagram geometry, internal modal scrolling, trigger focus, and reload persistence. The product owner subsequently reported macOS Safari user acceptance with no visible shape-selection jump: **PASS**. iPhone/iOS hardware acceptance remains **PENDING / POST-RELEASE VALIDATION** and must not be inferred from the macOS result.
 
 ## 23. Export / Backup
 
@@ -512,11 +518,11 @@ Review the complete production surface for:
 - content-free operational abuse logging;
 - limits that do not punish normal users with a fragile frontend refresh lock.
 
-Cloudflare bindings/routes must be represented in tracked deployment configuration where possible so redeploys do not silently remove them. This gate is **PENDING RELEASE** and must be evaluated against current Cloudflare configuration, not assumed from frontend code.
+Cloudflare bindings/routes must be represented in tracked deployment configuration where possible so redeploys do not silently remove them. This provider hardening is **DEFERRED POST-v1.0.0** by the Song Workspace-only release decision and must be evaluated against current Cloudflare configuration when resumed.
 
-## 30. Safari / iOS Release Gate
+## 30. Safari / iOS Validation
 
-Physical Safari/macOS and iPhone/iOS manual validation is a confirmed pre-release gate. Validate at minimum:
+Physical Safari/macOS and iPhone/iOS manual validation should cover at minimum:
 
 1. Shape Picker background lock, internal scrolling, selection, close paths, focus, and zero visible scroll jump.
 2. Touch scrolling and overscroll behavior.
@@ -527,7 +533,7 @@ Physical Safari/macOS and iPhone/iOS manual validation is a confirmed pre-releas
 7. Light/dark theme and English/zh-TW.
 8. Tablet and phone stacking without nested or horizontal page scrolling.
 
-In-app browser/static checks do not substitute for hardware acceptance. The bounded code fix and non-WebKit browser acceptance are complete, and macOS Safari user acceptance reports no visible shape-selection jump: **PASS**. iPhone/iOS is still unverified and remains **PENDING RELEASE**.
+In-app browser/static checks do not substitute for hardware acceptance. The bounded code fix and non-WebKit browser acceptance are complete, and macOS Safari user acceptance reports no visible shape-selection jump: **PASS**. iPhone/iOS is still unverified and remains **PENDING / POST-RELEASE VALIDATION**; it is explicitly non-blocking for Song Workspace-only v1.0.0.
 
 ## 31. Tests / Build Commands
 
@@ -644,11 +650,11 @@ Do not reintroduce these previously addressed failures:
 
 Status: **RESOLVED** on 2026-08-27. The old `packChordAnnotations` row allocator, renderer `rowCount`, per-annotation vertical offsets, and multi-row test expectation were removed. The replacement keeps all annotations at the exact logical anchor left edge on one layer and applies bounded left-origin horizontal condensation only when ordinary labels are tight.
 
-Regression coverage includes Original, Balanced, Beginner, Roman, Nashville, `ii7 / bVIIadd9 / IV / I/III`, Nashville equivalents, long chord symbols, CJK/English/mixed lyrics, canonical immutability, shared editor/performance rendering, responsive internal line overflow, and removal of production row metadata. Chromium acceptance passed at 1280/1024/768/375 without page-level horizontal overflow. Physical Safari/iOS acceptance remains pending under Issue B and the Safari release gate.
+Regression coverage includes Original, Balanced, Beginner, Roman, Nashville, `ii7 / bVIIadd9 / IV / I/III`, Nashville equivalents, long chord symbols, CJK/English/mixed lyrics, canonical immutability, shared editor/performance rendering, responsive internal line overflow, and removal of production row metadata. Chromium acceptance passed at 1280/1024/768/375 without page-level horizontal overflow. iPhone/iOS acceptance remains post-release validation under Issue B.
 
 ### Issue B — Safari shape selection may visibly jump
 
-Status: **CODE FIX RESOLVED / macOS SAFARI USER ACCEPTANCE PASS / iPHONE-iOS PENDING**. The picker captures scroll once, keeps the body fixed while the selected diagram and trigger focus are restored, funnels every exit through one guarded close pipeline, suppresses global smooth scrolling during the single `scrollTo`, and has no deferred restoration retry. Automated source-contract tests and responsive in-app browser acceptance pass with zero final scroll delta and stable geometry. The product owner reports no visible jump in macOS Safari. iPhone/iOS hardware must still prove there is no transient visible frame before release.
+Status: **CODE FIX RESOLVED / macOS SAFARI USER ACCEPTANCE PASS / iPHONE-iOS POST-RELEASE VALIDATION PENDING**. The picker captures scroll once, keeps the body fixed while the selected diagram and trigger focus are restored, funnels every exit through one guarded close pipeline, suppresses global smooth scrolling during the single `scrollTo`, and has no deferred restoration retry. Automated source-contract tests and responsive in-app browser acceptance pass with zero final scroll delta and stable geometry. The product owner reports no visible jump in macOS Safari. iPhone/iOS hardware still needs to prove there is no transient visible frame during post-release validation.
 
 ### Issue C — create/import cancellation can trigger required validation
 
@@ -730,7 +736,7 @@ Read Mode is ephemeral presentation state. It hides the page hero and all editor
 ### Documentation and release issues
 
 - README route table omits Song Workspace.
-- CI omits `npm test`.
+- CI includes `npm test`; remote PR execution remains pending.
 - Analytics/error-payload review and Copyright/local-only UI wording are resolved.
 - Anti-abuse review and physical Safari/iOS acceptance are pending release.
 - Origin URL normalization is pending confirmation.
@@ -795,13 +801,13 @@ Read Mode is ephemeral presentation state. It hides the page hero and all editor
 | Copyright/local-only user-facing wording | RESOLVED | Workspace UI, locale files, `privacy-policy.html`, disclosure tests, responsive browser acceptance | Browser-local scope, import rights, storage-loss, export content, and no false legal guarantee are covered. |
 | Footer Legal & Usage Policy | RESOLVED | shared i18n footer annotation, `legal.html`, locale files, build/final-layout tests | Terms, local storage, copyright/user content, export, external services, and bounded disclaimer; human legal review recommended before commercial-scale release. |
 | Analytics/error payload privacy audit | RESOLVED | `song-workspace.html`, core/app URL and import hardening, `tests/song-workspace-observability.test.js`, static inventory, synthetic browser canaries | Workspace has no analytics/third-party executable script, custom event, remote logger, raw-input console path, or song transport; site-wide Umami remains elsewhere. |
-| Anti-abuse review | PENDING RELEASE | Confirmed gate | Cloudflare/CDN/API/WAF/rate limits. |
+| Anti-abuse review | DEFERRED POST-v1.0.0 | Explicit Song Workspace-only release decision | Cloudflare/CDN/API/WAF/rate limits remain future provider hardening. |
 | macOS Safari shape-picker zero-jump acceptance | PASS | Product-owner manual acceptance | No visible jump reported. |
-| iPhone/iOS hardware acceptance | PENDING RELEASE | No iPhone/iOS evidence | Required before production. |
+| iPhone/iOS hardware acceptance | PENDING / POST-RELEASE VALIDATION | No iPhone/iOS evidence | Known unverified platform; explicitly non-blocking for Song Workspace-only v1.0.0. |
 | Browser E2E suite | NOT IMPLEMENTED | No Playwright/Cypress config | Static/unit/CSS tests only. |
-| CI running unit tests | NOT IMPLEMENTED | `.github/workflows/ci.yml` | CI currently omits `npm test`. |
-| V1 production release | NOT IMPLEMENTED | Feature branch only | No PR/merge/deploy/tag in this handoff. |
-| `v1.1.0` Song Workspace release | PROPOSED | Conversation decision | Semantic release plan not executed. |
+| CI running unit tests | IMPLEMENTED / REMOTE PASS PENDING | `.github/workflows/ci.yml` | CI now runs `npm test`, `npm run check`, and `npm run build:cloudflare`; required PR result remains pending. |
+| V1 production release | IN PROGRESS | `release/song-workspace-v1.0.0` | Clean Song Workspace-only integration branch; PR/merge/deploy/tag remain gated. |
+| `v1.0.0` Song Workspace release | APPROVED SCOPE | Product decision | First stable Song Workspace release. |
 | Origin URL normalization | OPEN | Current `git remote -v` | Confirm canonical owner before changing. |
 
 ## 36. Proposed / Future Work
@@ -810,7 +816,7 @@ Bounded future work, clearly outside current implementation:
 
 - **PROPOSED**: Share Arrangement with an independent lyrics-free schema, server allowlist, unlisted/noindex defaults, expiry/revoke, and legal review.
 - **PROPOSED**: client-side fragment sharing if payload/security/usability analysis supports it.
-- **PROPOSED**: semantic version plan where current production baseline is `v1.0.0` and Song Workspace ships as `v1.1.0`; verify actual tags before adoption.
+- **CONFIRMED**: v1.0.0 is the first stable Song Workspace release; v1.0.1 is reserved for small fixes and v1.1.0 for a larger backward-compatible architecture update.
 - **RESOLVED**: exactly three primary Create Song methods; ChordPro and Jam Tracks Hub JSON are grouped under Other Import Options.
 - **RESOLVED**: Create/ChordPro X, Cancel, and Escape bypass submit validation while real commit actions retain it.
 - **RESOLVED**: BPM-linked, bounded, refresh-rate-independent Performance Auto Scroll with a retained user multiplier.
@@ -836,11 +842,11 @@ Bounded future work, clearly outside current implementation:
 - **RESOLVED**: localized `Cmaj9` chord-input hint is backed by parser, transpose, numeral, renderer, and shared voicing regression evidence.
 - **RESOLVED**: the sole autosave live region occupies the Hero promise row, and a shared localized footer link exposes the bookmarkable bounded Legal & Usage Policy.
 - **RESOLVED**: Song Document V2 direct meaningful positions; no persistent character offset or legacy compatibility layer.
-- **PENDING RELEASE**: add `npm test` to remote CI after confirming runtime expectations.
+- **IMPLEMENTED / REMOTE PASS PENDING**: remote CI now includes `npm test`; required PR execution must pass before merge.
 - **RESOLVED**: single-row annotation fitting, rendering, regressions, and Chromium responsive acceptance completed on 2026-08-27.
 - **RESOLVED**: bounded Shape Picker close/focus/instant-restore implementation and responsive in-app browser acceptance.
 - **PASS**: macOS Safari user acceptance found no visible Shape Picker movement.
-- **PENDING RELEASE**: prove zero visible Shape Picker movement and complete the browser checklist on iPhone/iOS hardware.
+- **PENDING / POST-RELEASE VALIDATION**: prove zero visible Shape Picker movement and complete the browser checklist on iPhone/iOS hardware; explicitly non-blocking for v1.0.0.
 - **PASS FOR PHASE 2 MIGRATION / DEFERRED**: Cloudflare-only container feasibility is recorded on the separate `a955f2d9` branch checkpoint; Phase 2, production integration, and Render retirement must not begin until separately authorized.
 
 Do not start a Song Workspace product V2, account/cloud sync, server storage, public discovery, or sharing merely because they are listed here. Song Document schema version 2 is part of the current unreleased V1 product and is not a product-version expansion.
@@ -851,7 +857,7 @@ Song Workspace V1 is not released. The expected sequence, only after explicit us
 
 ```text
 final acceptance
--> PR from feat/song-workspace-v1
+-> PR from release/song-workspace-v1.0.0
 -> remote CI/review
 -> merge main
 -> production deployment
@@ -890,7 +896,7 @@ All categories require explicit review before release:
 
 **Browser and accessibility**
 
-- macOS Safari and iPhone/iOS acceptance; the macOS zero-jump check passes, while iPhone/iOS remains pending.
+- macOS Safari zero-jump acceptance passes. iPhone/iOS remains a documented post-release validation item and is not a blocker for the explicitly scoped Song Workspace-only v1.0.0.
 - Chromium desktop, tablet, and mobile smoke.
 - Keyboard/focus/Escape paths, touch scrolling, light/dark, en/zh-TW.
 
