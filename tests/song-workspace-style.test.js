@@ -20,6 +20,7 @@ test("lyrics use natural flow while chord annotations occupy a separate layer", 
     assert.match(workspaceCss, /\.workspace-token-track\s*\{[^}]*position:\s*relative/s);
     assert.match(workspaceCss, /\.workspace-chord-annotation\s*\{[^}]*position:\s*absolute/s);
     assert.match(workspaceCss, /\.workspace-lyric-flow\s*\{[^}]*width:\s*max-content/s);
+    assert.match(workspaceCss, /@media \(max-width: 720px\)[\s\S]*?\.workspace-lyric-flow\s*\{[^}]*width:\s*100%[^}]*overflow-wrap:\s*anywhere/s);
     assert.doesNotMatch(workspaceCss, /grid-auto-columns:\s*max-content/);
 });
 

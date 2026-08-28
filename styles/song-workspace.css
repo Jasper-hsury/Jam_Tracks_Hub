@@ -2061,7 +2061,7 @@ html.workspace-dialog-restoring {
     }
 
     .workspace-modebar {
-        align-items: stretch;
+        align-items: flex-start;
         flex-direction: column;
     }
 
@@ -2419,8 +2419,43 @@ html.workspace-dialog-restoring {
         padding-inline: 6px;
     }
 
+    .workspace-line-content {
+        overflow-x: hidden;
+    }
+
+    .workspace-token-track {
+        width: 100% !important;
+        min-width: 0;
+        white-space: normal;
+    }
+
+    .workspace-lyric-flow {
+        width: 100%;
+        min-width: 0;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        word-break: normal;
+    }
+
+    .workspace-lyric-token {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        word-break: normal;
+    }
+
+    .workspace-add-control {
+        justify-self: stretch;
+        justify-items: start;
+        padding-inline-start: 6px;
+    }
+
     .workspace-add-trigger {
+        display: inline-flex;
+        align-items: center;
+        justify-content: flex-start;
+        min-width: 44px;
         min-height: 44px;
+        padding-inline: 0 9px;
         opacity: 1;
     }
 
