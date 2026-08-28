@@ -2543,6 +2543,10 @@ html.workspace-dialog-restoring {
         gap: 8px;
     }
 
+    .workspace-score-identity {
+        width: 100%;
+    }
+
     .workspace-title-trigger small,
     .workspace-section-edit-hint {
         opacity: 1;

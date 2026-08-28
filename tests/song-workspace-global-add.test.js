@@ -33,6 +33,7 @@ test("mobile Song Chart exposes exactly one Global Add dialog trigger", () => {
     assert.match(html, /workspace-score-kicker-row[\s\S]*?pages\.songWorkspace\.chart[\s\S]*?id="globalAddButton"/);
     assert.match(css, /\.workspace-global-add-button\s*\{[^}]*display:\s*none/s);
     assert.match(css, /@media \(max-width: 720px\)[\s\S]*?\.workspace-global-add-button\s*\{[^}]*display:\s*inline-flex/s);
+    assert.match(css, /@media \(max-width: 720px\)[\s\S]*?\.workspace-score-identity\s*\{[^}]*width:\s*100%/s);
     assert.match(css, /@media \(max-width: 720px\)[\s\S]*?\.workspace-chart \.workspace-add-control\s*\{[^}]*display:\s*none !important/s);
     assert.match(css, /\.workspace-editor\.is-read-mode \.workspace-global-add-button/);
     assert.match(css, /\.workspace-editor\.is-performance-open \.workspace-global-add-button/);
