@@ -30,11 +30,12 @@ test("editor actions keep icons before text across mobile, tablet, and desktop",
     assert.match(css, /@media \(max-width: 720px\)[\s\S]*?\.workspace-editor-topbar\s*\{[^}]*grid-template-columns:\s*repeat\(4, minmax\(0, 1fr\)\)/s);
     assert.match(css, /@media \(max-width: 720px\)[\s\S]*?\.workspace-editor-actions\s*\{[^}]*display:\s*contents/s);
     const mobileActions = region(css, "@media (max-width: 720px)", ".workspace-global-add-button");
-    assert.match(mobileActions, /flex-direction:\s*row/);
-    assert.match(mobileActions, /gap:\s*1px/);
-    assert.match(mobileActions, /padding:\s*9px 1px/);
-    assert.match(mobileActions, /font-size:\s*clamp\(0\.625rem, 2\.7vw, 0\.64rem\)/);
-    assert.match(mobileActions, /\.workspace-action-icon\s*\{[^}]*width:\s*15px;[^}]*height:\s*15px/s);
+    assert.match(mobileActions, /flex-direction:\s*column/);
+    assert.match(mobileActions, /gap:\s*8px/);
+    assert.match(mobileActions, /aspect-ratio:\s*1/);
+    assert.match(mobileActions, /padding:\s*10px 5px/);
+    assert.match(mobileActions, /font-size:\s*clamp\(0\.68rem, 3vw, 0\.78rem\)/);
+    assert.match(mobileActions, /\.workspace-action-icon\s*\{[^}]*width:\s*28px;[^}]*height:\s*28px/s);
     assert.match(css, /#performanceButton::after\s*\{[^}]*background:\s*var\(--workspace-accent\)/s);
 });
 
@@ -45,6 +46,11 @@ test("mobile settings keep a compact two-column hierarchy", () => {
     assert.match(css, /@media \(max-width: 720px\)[\s\S]*?\.workspace-settings-nav\s*\{[^}]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/s);
     assert.match(css, /\.workspace-settings-nav > \.workspace-field:nth-child\(5\)\s*\{[^}]*grid-column:\s*1 \/ -1/s);
     assert.match(css, /\.workspace-reading-controls\s*\{[^}]*grid-column:\s*1 \/ -1[^}]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/s);
+    assert.match(css, /@media \(max-width: 720px\)[\s\S]*?--song-settings-control-height:\s*54px/s);
+    assert.match(css, /@media \(max-width: 720px\)[\s\S]*?\.workspace-settings-disclosure\s*\{[^}]*border-radius:\s*14px[^}]*box-shadow:/s);
+    assert.match(css, /\.workspace-settings-nav \.workspace-field\s*\{[^}]*color:\s*var\(--workspace-text\)[^}]*text-transform:\s*none/s);
+    assert.match(css, /\.workspace-reading-controls\s*\{[^}]*border-top:\s*1px solid var\(--workspace-line\)[^}]*padding-top:\s*18px/s);
+    assert.match(css, /\.workspace-settings-nav \.workspace-reading-stepper\s*\{[^}]*height:\s*54px[^}]*border-radius:\s*999px/s);
 });
 
 test("mobile modes use the required two-plus-three row order", () => {

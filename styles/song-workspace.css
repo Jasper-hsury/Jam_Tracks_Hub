@@ -2212,7 +2212,7 @@ html.workspace-dialog-restoring {
 
 @media (max-width: 720px) {
     .song-workspace-page {
-        width: min(100% - 24px, 680px);
+        width: min(100% - 40px, 680px);
         padding-top: 42px;
     }
 
@@ -2230,8 +2230,8 @@ html.workspace-dialog-restoring {
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
         align-items: stretch;
-        gap: 7px;
-        margin-bottom: 14px;
+        gap: 10px;
+        margin-bottom: 34px;
     }
 
     .workspace-editor-actions {
@@ -2241,22 +2241,23 @@ html.workspace-dialog-restoring {
     .workspace-editor-topbar > .workspace-button,
     .workspace-editor-actions > .workspace-button {
         position: relative;
-        flex-direction: row;
-        gap: 1px;
+        flex-direction: column;
+        gap: 8px;
         min-width: 0;
-        min-height: 72px;
-        border-radius: 18px;
-        padding: 9px 1px;
-        font-size: clamp(0.625rem, 2.7vw, 0.64rem);
-        line-height: 1.25;
+        min-height: 0;
+        aspect-ratio: 1;
+        border-radius: 14px;
+        padding: 10px 5px;
+        font-size: clamp(0.68rem, 3vw, 0.78rem);
+        line-height: 1.2;
         text-align: center;
-        box-shadow: 0 4px 12px color-mix(in srgb, var(--shadow-color) 58%, transparent);
+        box-shadow: 0 5px 14px color-mix(in srgb, var(--shadow-color) 36%, transparent);
     }
 
     .workspace-editor-topbar .workspace-action-icon {
         display: block;
-        width: 15px;
-        height: 15px;
+        width: 28px;
+        height: 28px;
         fill: none;
         stroke: currentColor;
         stroke-linecap: round;
@@ -2291,9 +2292,9 @@ html.workspace-dialog-restoring {
 
     #performanceButton::after {
         position: absolute;
-        right: 25%;
-        bottom: -8px;
-        left: 25%;
+        right: 28%;
+        bottom: -12px;
+        left: 28%;
         height: 3px;
         border-radius: 999px;
         background: var(--workspace-accent);
@@ -2356,23 +2357,32 @@ html.workspace-dialog-restoring {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 9px;
-        min-height: 56px;
+        gap: 12px;
+        min-height: 64px;
         box-sizing: border-box;
-        border: 1px solid var(--workspace-line);
-        border-radius: 6px;
-        padding: 9px 11px;
+        border: 0;
+        border-radius: 14px;
+        padding: 13px 15px;
         color: var(--workspace-text);
         background: var(--workspace-surface);
-        font-weight: 850;
+        font-weight: 800;
         list-style: none;
         cursor: pointer;
     }
 
+    .workspace-settings-disclosure {
+        overflow: visible;
+        margin-top: 0;
+        border: 1px solid var(--workspace-line);
+        border-radius: 14px;
+        background: var(--workspace-surface);
+        box-shadow: 0 8px 24px color-mix(in srgb, var(--shadow-color) 22%, transparent);
+    }
+
     .workspace-settings-summary-icon {
         flex: 0 0 auto;
-        width: 24px;
-        height: 24px;
+        width: 28px;
+        height: 28px;
         fill: none;
         stroke: var(--workspace-accent);
         stroke-linecap: round;
@@ -2382,6 +2392,7 @@ html.workspace-dialog-restoring {
 
     .workspace-settings-summary-copy {
         display: flex;
+        flex: 1 1 auto;
         min-width: 0;
         align-items: baseline;
         gap: 8px;
@@ -2389,6 +2400,9 @@ html.workspace-dialog-restoring {
 
     .workspace-settings-summary-copy > span {
         flex: 0 0 auto;
+        font-size: 0.86rem;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
     }
 
     .workspace-settings-disclosure > summary::-webkit-details-marker {
@@ -2398,13 +2412,14 @@ html.workspace-dialog-restoring {
     .workspace-settings-disclosure > summary::after {
         content: "⌄";
         flex: 0 0 auto;
-        color: var(--workspace-accent);
-        font-size: 1.1rem;
+        color: var(--workspace-text);
+        font-size: 1.2rem;
         line-height: 1;
     }
 
     .workspace-settings-disclosure[open] > summary {
-        border-radius: 6px 6px 0 0;
+        border-bottom: 1px solid var(--workspace-line);
+        border-radius: 14px 14px 0 0;
     }
 
     .workspace-settings-disclosure[open] > summary::after {
@@ -2414,8 +2429,8 @@ html.workspace-dialog-restoring {
     .workspace-settings-disclosure > summary small {
         color: var(--workspace-muted);
         font-size: 0.68rem;
-        font-weight: 600;
-        line-height: 1.15;
+        font-weight: 500;
+        line-height: 1.25;
         white-space: normal;
     }
 
@@ -2424,14 +2439,43 @@ html.workspace-dialog-restoring {
     }
 
     .workspace-settings-panel {
-        border-top: 0;
-        border-radius: 0 0 6px 6px;
-        padding: 11px;
+        border: 0;
+        border-radius: 0 0 14px 14px;
+        padding: 20px 15px 16px;
+        background: var(--workspace-surface);
     }
 
     .workspace-settings-nav {
+        --song-settings-control-height: 54px;
+        --song-settings-label-height: 26px;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px 8px;
+        gap: 18px 14px;
+    }
+
+    .workspace-settings-nav .workspace-field {
+        gap: 8px;
+        color: var(--workspace-text);
+        font-size: 0.86rem;
+        font-weight: 750;
+        text-transform: none;
+    }
+
+    .workspace-settings-nav .workspace-field input,
+    .workspace-settings-nav .workspace-field select,
+    .workspace-settings-nav .workspace-readonly-field strong {
+        border-radius: 14px;
+        padding-inline: 14px;
+        font-size: 1rem;
+    }
+
+    .workspace-settings-nav .workspace-readonly-field strong {
+        background: color-mix(in srgb, var(--workspace-soft) 82%, transparent);
+    }
+
+    .workspace-settings-nav .workspace-setting-help-trigger {
+        width: 24px;
+        height: 24px;
+        font-size: 0.72rem;
     }
 
     .workspace-settings-nav > .workspace-field:nth-child(5) {
@@ -2447,39 +2491,81 @@ html.workspace-dialog-restoring {
         display: grid;
         grid-column: 1 / -1;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 8px;
+        gap: 14px;
+        margin-top: 2px;
+        border-top: 1px solid var(--workspace-line);
+        padding-top: 18px;
     }
 
     .workspace-settings-nav .workspace-reading-control {
         display: grid;
-        justify-items: center;
+        grid-template-rows: var(--song-settings-label-height) 54px;
+        justify-items: stretch;
         min-width: 0;
-        gap: 5px;
+        gap: 8px;
     }
 
     .workspace-settings-nav .workspace-reading-control-label {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: space-between;
         padding-left: 0;
+        color: var(--workspace-text);
+        font-size: 0.86rem;
+        font-weight: 750;
         white-space: nowrap;
     }
 
+    .workspace-settings-nav .workspace-reading-control-label::after,
+    .workspace-settings-nav > .workspace-field:nth-child(5) > span::after {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px;
+        height: 22px;
+        border: 1px solid var(--workspace-line);
+        border-radius: 50%;
+        color: var(--workspace-muted);
+        content: "?";
+        font-size: 0.7rem;
+        font-weight: 850;
+    }
+
+    .workspace-settings-nav > .workspace-field:nth-child(5) > span {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
     .workspace-settings-nav .workspace-reading-stepper {
-        grid-template-columns: 44px 44px 44px;
+        grid-template-columns: 44px minmax(40px, 1fr) 44px;
         width: 100%;
-        gap: 3px;
+        height: 54px;
+        gap: 4px;
+        border-radius: 999px;
+        padding: 4px;
+        background: color-mix(in srgb, var(--workspace-soft) 72%, transparent);
     }
 
     .workspace-settings-nav .workspace-reading-step-button {
         width: 44px;
         min-width: 44px;
         height: 44px;
+        border-radius: 50%;
+        background: var(--workspace-surface-strong);
+        box-shadow: none;
     }
 
     .workspace-settings-nav .workspace-reading-value {
-        width: 44px;
+        width: 100%;
+        color: var(--workspace-text);
+        font-size: 0.9rem;
     }
 
     .workspace-settings-nav .workspace-reading-value input {
-        width: 30px;
+        width: 36px;
+        font-size: 0.9rem;
     }
 
     .workspace-segmented {
