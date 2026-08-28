@@ -305,7 +305,7 @@
 
         scope.querySelectorAll("[data-i18n]").forEach(function(element) {
             const value = translate(element.dataset.i18n, undefined, elementVariables(element));
-            if (typeof value === "string") {
+            if (typeof value === "string" && element.textContent !== value) {
                 element.textContent = value;
             }
         });
@@ -343,6 +343,7 @@
 
         document.documentElement.lang = SUPPORTED_LANGUAGES[state.language].htmlLang;
         document.documentElement.dataset.language = state.language;
+        document.documentElement.dataset.i18nReady = "true";
         document.documentElement.removeAttribute("data-i18n-loading");
         document.getElementById("i18n-loading-style")?.remove();
         window.requestAnimationFrame(function() {

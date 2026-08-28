@@ -51,10 +51,10 @@ test("main and Performance charts share local reading preferences", () => {
     assert.doesNotMatch(workspaceJs, /fetch\(|sendBeacon|XMLHttpRequest|WebSocket|EventSource/);
 });
 
-test("mode selector stays on one row until mobile and both steppers have centered symmetric values", () => {
+test("mode selector stays on one row until the deterministic mobile grid and both steppers have centered symmetric values", () => {
     assert.match(workspaceCss, /\.workspace-modebar\s*\{[^}]*flex-wrap:\s*nowrap/s);
     assert.match(workspaceCss, /\.workspace-segmented\s*\{[^}]*flex-wrap:\s*nowrap[^}]*flex:\s*0 0 auto/s);
-    assert.match(workspaceCss, /@media \(max-width: 720px\)[\s\S]*?\.workspace-segmented\s*\{[^}]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/s);
+    assert.match(workspaceCss, /@media \(max-width: 720px\)[\s\S]*?\.workspace-segmented\s*\{[^}]*grid-template-columns:\s*repeat\(6, minmax\(0, 1fr\)\)/s);
     assert.match(workspaceCss, /\.workspace-reading-stepper\s*\{[^}]*grid-template-columns:\s*36px 64px 36px/s);
     assert.match(workspaceCss, /\.workspace-reading-value\s*\{[^}]*justify-content:\s*center[^}]*width:\s*64px/s);
     assert.match(workspaceCss, /\.workspace-reading-value input\s*\{[^}]*width:\s*36px[^}]*text-align:\s*center/s);
