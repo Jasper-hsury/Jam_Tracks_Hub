@@ -17,15 +17,24 @@ function region(source, start, end) {
     return source.slice(startIndex, endIndex);
 }
 
-test("mobile editor actions form one four-card icon grid", () => {
+test("editor actions keep icons before text across mobile, tablet, and desktop", () => {
     const topbar = region(html, '<div class="workspace-editor-topbar">', '<div class="workspace-download-menu"');
     ["backToSongsButton", "downloadMenuButton", "readModeButton", "performanceButton"].forEach(id => {
-        assert.match(topbar, new RegExp(`id="${id}"[\\s\\S]*?workspace-mobile-action-icon`));
+        const action = region(topbar, `id="${id}"`, "</button>");
+        assert.match(action, /workspace-action-icon[\s\S]*?<span[^>]*data-i18n=/);
+        assert.match(action, /aria-hidden="true"/);
     });
-    assert.equal((topbar.match(/workspace-mobile-action-icon/g) || []).length, 4);
-    assert.match(css, /\.workspace-mobile-action-icon\s*\{[^}]*display:\s*none/s);
+    assert.equal((topbar.match(/workspace-action-icon/g) || []).length, 4);
+    assert.match(css, /\.workspace-action-icon\s*\{[^}]*display:\s*block/s);
+    assert.doesNotMatch(css, /@media \(min-width: 721px\)[\s\S]*?\.workspace-action-icon\s*\{[^}]*display:\s*none/s);
     assert.match(css, /@media \(max-width: 720px\)[\s\S]*?\.workspace-editor-topbar\s*\{[^}]*grid-template-columns:\s*repeat\(4, minmax\(0, 1fr\)\)/s);
     assert.match(css, /@media \(max-width: 720px\)[\s\S]*?\.workspace-editor-actions\s*\{[^}]*display:\s*contents/s);
+    const mobileActions = region(css, "@media (max-width: 720px)", ".workspace-global-add-button");
+    assert.match(mobileActions, /flex-direction:\s*row/);
+    assert.match(mobileActions, /gap:\s*1px/);
+    assert.match(mobileActions, /padding:\s*9px 1px/);
+    assert.match(mobileActions, /font-size:\s*clamp\(0\.625rem, 2\.7vw, 0\.64rem\)/);
+    assert.match(mobileActions, /\.workspace-action-icon\s*\{[^}]*width:\s*15px;[^}]*height:\s*15px/s);
     assert.match(css, /#performanceButton::after\s*\{[^}]*background:\s*var\(--workspace-accent\)/s);
 });
 
