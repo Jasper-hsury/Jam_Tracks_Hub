@@ -164,3 +164,13 @@ Song Workspace controls reuse the site's established primary, secondary, danger,
 - Smart Capo uses a bounded chord-difficulty heuristic rather than instrument-specific fingering history.
 - Chord shapes are generated from the shared local voicing engine; Song Workspace does not maintain a separate shape database.
 - PDF output uses the browser print dialog.
+
+## Security And Resource Bounds
+
+Song Workspace treats all imported, pasted, restored, and locally stored song fields as untrusted data. User text is rendered as text rather than executable markup, the browser title and URL remain content-free, and no song field is sent to the site APIs or analytics. The generated chord-diagram renderer accepts only the parsed local chord model rather than raw imported HTML.
+
+Current logical bounds are intentionally below browser/platform maximums: 200,000 source characters, 1,000 characters per line, 200 sections, 2,000 lines total, 500 lines per section, 64 chords per lyric line, 16 chords per instrumental bar, 64 instrumental bars per section, and 10,000 chords per song. Single-song and backup files are limited to 1 MiB, a backup contains at most 500 songs, the local list exposes at most 500 valid records, and the preferences envelope is capped at 256 KiB and allowlisted before use.
+
+Validation occurs before canonicalization so oversized arrays cannot be made apparently valid by truncation. Unsupported or corrupt IndexedDB records are skipped without deletion, a generic localized warning is shown, and other valid songs remain usable. Create/import/restore commit actions also reject duplicate concurrent submissions. These limits are resilience controls; they do not change Song Document V2, exports, stable IDs, local-first behavior, or the no-lyrics-egress contract.
+
+Whole-site security headers, API request bounds, and the manual Cloudflare rollout are documented in `docs/production-anti-abuse.md`.

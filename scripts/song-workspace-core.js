@@ -14,7 +14,11 @@
     const MAX_SOURCE_LENGTH = 200000;
     const MAX_SECTIONS = 200;
     const MAX_LINES = 2000;
+    const MAX_LINES_PER_SECTION = 500;
     const MAX_LINE_LENGTH = 1000;
+    const MAX_CHORDS_PER_LINE = 64;
+    const MAX_CHORDS_PER_BAR = 16;
+    const MAX_CHORDS = 10000;
     const INSTRUMENTAL_BARS = Object.freeze({ default: 4, min: 1, max: 64 });
     const OPAQUE_SONG_ID = /^song-(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|[a-z0-9]{8,}-[a-z0-9]{6,})$/i;
     const AUTO_SCROLL = Object.freeze({
@@ -46,6 +50,8 @@
         verse: "Verse", chorus: "Chorus", "pre-chorus": "Pre-Chorus", bridge: "Bridge",
         intro: "Intro", outro: "Outro", instrumental: "Instrumental", tag: "Tag", section: "Section"
     };
+    const VALID_SECTION_TYPES = new Set(Object.keys(SECTION_TITLES));
+    const VALID_LINE_TYPES = new Set(["lyric", "instrumental"]);
     const VALID_SUFFIX = /^(?:m|minor|maj|major|dim|°|aug|\+|sus2|sus4|sus|5|6|m6|7|maj7|M7|Δ7|m7|mMaj7|m\(maj7\)|m7b5|ø7|dim7|°7|add9|madd9|m\(add9\)|6\/9|9|maj9|M9|m9|11|m11|13|maj13|m13|7sus4|9sus4|7b5|7#5|7b9|7#9|7#11|7b13|13b9|7\((?:b5|#5|b9|#9|#11|b13)(?:,(?:b5|#5|b9|#9|#11|b13))*\)|alt)?$/i;
     const ROMAN_BASE = ["I", "bII", "II", "bIII", "III", "IV", "#IV", "V", "bVI", "VI", "bVII", "VII"];
     const NASHVILLE_BASE = ["1", "b2", "2", "b3", "3", "4", "#4", "5", "b6", "6", "b7", "7"];
@@ -210,11 +216,12 @@
         const lineText = String(text || "").slice(0, MAX_LINE_LENGTH);
         const lineType = type || "lyric";
         const positionCount = meaningfulPositionCount(lineText);
+        const chordLimit = lineType === "instrumental" ? MAX_CHORDS_PER_BAR : MAX_CHORDS_PER_LINE;
         return {
             id: id || uid("line"),
             type: lineType,
             text: lineText,
-            chords: (Array.isArray(chords) ? chords : []).map(function(chord) {
+            chords: (Array.isArray(chords) ? chords : []).slice(0, chordLimit).map(function(chord) {
                 const position = Math.max(0, Math.floor(Number(chord.anchorPosition) || 0));
                 return {
                     id: chord.id || uid("chord"),
@@ -464,7 +471,7 @@
             id: id || uid("section"),
             type: sectionType,
             title: String(title || SECTION_TITLES[sectionType] || SECTION_TITLES.section).slice(0, 80),
-            lines: Array.isArray(lines) ? lines.slice(0, MAX_LINES).map(normalizeLine) : []
+            lines: Array.isArray(lines) ? lines.slice(0, MAX_LINES_PER_SECTION).map(normalizeLine) : []
         };
     }
 
@@ -506,8 +513,68 @@
         if (!Array.isArray(value.sections) || value.sections.length > MAX_SECTIONS) {
             throw new Error("Song Document has too many or invalid sections.");
         }
+        [["id", 160], ["title", 160], ["artist", 160], ["createdAt", 40], ["updatedAt", 40]].forEach(function(rule) {
+            const field = rule[0];
+            const limit = rule[1];
+            if (value[field] !== undefined && (typeof value[field] !== "string" || value[field].length > limit)) {
+                throw new Error("Song Document has invalid or oversized metadata.");
+            }
+        });
+        [["originalKey", 16], ["targetKey", 16], ["chordSpelling", 32], ["timeSignature", 16]].forEach(function(rule) {
+            const field = rule[0];
+            const limit = rule[1];
+            if (value[field] !== undefined && (typeof value[field] !== "string" || value[field].length > limit)) {
+                throw new Error("Song Document has invalid or oversized settings.");
+            }
+        });
+        if (value.capo !== undefined && (typeof value.capo !== "number" || !Number.isFinite(value.capo))) {
+            throw new Error("Song Document has invalid capo data.");
+        }
+        if (value.bpm !== undefined && value.bpm !== null && (typeof value.bpm !== "number" || !Number.isFinite(value.bpm))) {
+            throw new Error("Song Document has invalid tempo data.");
+        }
+        let totalChords = 0;
         const totalLines = value.sections.reduce(function(total, section) {
-            return total + (Array.isArray(section.lines) ? section.lines.length : MAX_LINES + 1);
+            if (!section || typeof section !== "object" || !Array.isArray(section.lines) || section.lines.length > MAX_LINES_PER_SECTION) {
+                throw new Error("Song Document has too many or invalid lines in a section.");
+            }
+            if (section.type === "instrumental" && section.lines.length > INSTRUMENTAL_BARS.max) {
+                throw new Error("Song Document has too many instrumental bars.");
+            }
+            if (typeof section.title !== "string" || section.title.length > 80 || (section.id !== undefined && (typeof section.id !== "string" || section.id.length > 160))) {
+                throw new Error("Song Document has invalid or oversized section data.");
+            }
+            if (!VALID_SECTION_TYPES.has(section.type)) {
+                throw new Error("Song Document has invalid section types.");
+            }
+            section.lines.forEach(function(line) {
+                if (!line || typeof line !== "object" || typeof line.text !== "string" || line.text.length > MAX_LINE_LENGTH || !Array.isArray(line.chords)) {
+                    throw new Error("Song Document has invalid or oversized line data.");
+                }
+                if (line.id !== undefined && (typeof line.id !== "string" || line.id.length > 160)) {
+                    throw new Error("Song Document has invalid line identifiers.");
+                }
+                if (!VALID_LINE_TYPES.has(line.type)) {
+                    throw new Error("Song Document has invalid line types.");
+                }
+                const chordLimit = line.type === "instrumental" ? MAX_CHORDS_PER_BAR : MAX_CHORDS_PER_LINE;
+                if (line.chords.length > chordLimit) {
+                    throw new Error("Song Document has too many chords in a line.");
+                }
+                line.chords.forEach(function(chord) {
+                    if (!chord || typeof chord !== "object" || typeof chord.symbol !== "string" || chord.symbol.length > 40 || !parseChordSymbol(chord.symbol)) {
+                        throw new Error("Song Document has invalid or oversized chord data.");
+                    }
+                    if (chord.id !== undefined && (typeof chord.id !== "string" || chord.id.length > 160)) {
+                        throw new Error("Song Document has invalid chord identifiers.");
+                    }
+                });
+                totalChords += line.chords.length;
+                if (totalChords > MAX_CHORDS) {
+                    throw new Error("Song Document has too many chords.");
+                }
+            });
+            return total + section.lines.length;
         }, 0);
         if (totalLines > MAX_LINES) {
             throw new Error("Song Document has too many lines.");
@@ -515,12 +582,36 @@
         const invalidAnchor = value.sections.some(function(section) {
             return !Array.isArray(section.lines) || section.lines.some(function(line) {
                 return !Array.isArray(line.chords) || line.chords.some(function(chord) {
-                    return !Number.isInteger(chord.anchorPosition) || chord.anchorPosition < 0 || Object.prototype.hasOwnProperty.call(chord, "anchor");
+                    return !Number.isInteger(chord.anchorPosition) || chord.anchorPosition < 0 || chord.anchorPosition > MAX_LINE_LENGTH || Object.prototype.hasOwnProperty.call(chord, "anchor");
                 });
             });
         });
         if (invalidAnchor) throw new Error("Song Document has invalid chord positions.");
         return createSong(value);
+    }
+
+    function assertParsedStructureBounds(sections, label) {
+        const sourceLabel = label || "Imported chart";
+        if (sections.length > MAX_SECTIONS) {
+            throw new Error(`${sourceLabel} has too many sections.`);
+        }
+        let totalLines = 0;
+        let totalChords = 0;
+        sections.forEach(function(section) {
+            if (section.lines.length > MAX_LINES_PER_SECTION) {
+                throw new Error(`${sourceLabel} has too many lines in a section.`);
+            }
+            totalLines += section.lines.length;
+            section.lines.forEach(function(line) {
+                const chordLimit = line.type === "instrumental" ? MAX_CHORDS_PER_BAR : MAX_CHORDS_PER_LINE;
+                if (line.chords.length > chordLimit) {
+                    throw new Error(`${sourceLabel} has too many chords in a line.`);
+                }
+                totalChords += line.chords.length;
+            });
+        });
+        if (totalLines > MAX_LINES) throw new Error(`${sourceLabel} has too many lines.`);
+        if (totalChords > MAX_CHORDS) throw new Error(`${sourceLabel} has too many chords.`);
     }
 
     function serializeSong(song) {
@@ -614,7 +705,10 @@
         sections.push(section);
 
         for (let index = 0; index < sourceLines.length; index += 1) {
-            const line = sourceLines[index].slice(0, MAX_LINE_LENGTH);
+            if (sourceLines[index].length > MAX_LINE_LENGTH) {
+                throw new Error("The pasted chart has an oversized line.");
+            }
+            const line = sourceLines[index];
             const parsedMetadata = readingMetadata ? chartMetadata(line) : null;
             if (parsedMetadata) {
                 metadata[parsedMetadata.name] = parsedMetadata.value;
@@ -638,7 +732,14 @@
             }
             const tokens = chordTokens(line);
             if (tokens.length) {
-                const next = sourceLines[index + 1] === undefined ? "" : sourceLines[index + 1].slice(0, MAX_LINE_LENGTH);
+                if (tokens.length > MAX_CHORDS_PER_LINE) {
+                    throw new Error("The pasted chart has too many chords in a line.");
+                }
+                const nextSource = sourceLines[index + 1] === undefined ? "" : sourceLines[index + 1];
+                if (nextSource.length > MAX_LINE_LENGTH) {
+                    throw new Error("The pasted chart has an oversized line.");
+                }
+                const next = nextSource;
                 const nextTokens = chordTokens(next);
                 if (next && !nextTokens.length && !isSectionHeading(next)) {
                     section.lines.push(createLine(next, tokens.map(function(token) {
@@ -646,6 +747,9 @@
                     }), "lyric"));
                     index += 1;
                 } else {
+                    if (tokens.length > MAX_CHORDS_PER_BAR) {
+                        throw new Error("The pasted chart has too many chords in an instrumental line.");
+                    }
                     section.lines.push(createLine("", tokens.map(function(token, tokenIndex) {
                         return createChord(token.symbol, tokenIndex);
                     }), "instrumental"));
@@ -658,6 +762,7 @@
         const usefulSections = sections.filter(function(item, index) {
             return item.lines.length || index === sections.length - 1;
         });
+        assertParsedStructureBounds(usefulSections, "The pasted chart");
         return createSong({
             title: settings.title || metadata.title,
             artist: settings.artist || metadata.artist,
@@ -684,7 +789,10 @@
         }
 
         lines.forEach(function(rawLine) {
-            const line = rawLine.slice(0, MAX_LINE_LENGTH);
+            if (rawLine.length > MAX_LINE_LENGTH) {
+                throw new Error("The ChordPro document has an oversized line.");
+            }
+            const line = rawLine;
             const directive = line.match(/^\{\s*([^}:]+)(?::\s*([^}]*))?\s*\}$/);
             if (directive) {
                 const name = directive[1].trim().toLowerCase().replace(/\s+/g, "_");
@@ -730,6 +838,10 @@
                 return match;
             });
             text += line.slice(cursor);
+            const chordLimit = text ? MAX_CHORDS_PER_LINE : MAX_CHORDS_PER_BAR;
+            if (chordMarkers.length > chordLimit) {
+                throw new Error("The ChordPro document has too many chords in a line.");
+            }
             const chords = chordMarkers.map(function(marker) {
                 return createChord(marker.symbol, positionIndexForCharacterOffset(text, marker.offset));
             });
@@ -739,6 +851,7 @@
         metadata.sections = sections.filter(function(item, index) {
             return item.lines.length || index === sections.length - 1;
         });
+        assertParsedStructureBounds(metadata.sections, "The ChordPro document");
         metadata.targetKey = metadata.originalKey;
         return createSong(metadata);
     }
@@ -942,7 +1055,17 @@
         VERSION,
         KEY_OPTIONS: { major: MAJOR_KEY_OPTIONS.slice(), minor: MINOR_KEY_OPTIONS.slice() },
         CHORD_SPELLING,
-        LIMITS: { MAX_SOURCE_LENGTH, MAX_SECTIONS, MAX_LINES, MAX_LINE_LENGTH, INSTRUMENTAL_BARS },
+        LIMITS: {
+            MAX_SOURCE_LENGTH,
+            MAX_SECTIONS,
+            MAX_LINES,
+            MAX_LINES_PER_SECTION,
+            MAX_LINE_LENGTH,
+            MAX_CHORDS_PER_LINE,
+            MAX_CHORDS_PER_BAR,
+            MAX_CHORDS,
+            INSTRUMENTAL_BARS
+        },
         AUTO_SCROLL,
         isOpaqueSongId,
         songWorkspaceUrl,

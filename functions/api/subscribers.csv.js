@@ -1,3 +1,5 @@
+import { timingSafeTokenEqual } from "./request-security.mjs";
+
 function csvEscape(value) {
     const text = String(value ?? "");
     if (!/[",\n\r]/.test(text)) {
@@ -34,8 +36,8 @@ export async function onRequestGet(context) {
     const adminToken = context.env.SUBSCRIBERS_ADMIN_TOKEN;
 
     if (!database || !adminToken) {
-        return new Response("Subscriber export is not configured.\n", {
-            status: 500,
+        return new Response("Service unavailable.\n", {
+            status: 503,
             headers: {
                 "Content-Type": "text/plain; charset=utf-8",
                 "Cache-Control": "no-store"
@@ -43,12 +45,10 @@ export async function onRequestGet(context) {
         });
     }
 
-    const url = new URL(context.request.url);
-    const queryToken = url.searchParams.get("token");
     const authHeader = context.request.headers.get("Authorization") || "";
     const bearerToken = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
 
-    if (queryToken !== adminToken && bearerToken !== adminToken) {
+    if (!await timingSafeTokenEqual(bearerToken, adminToken)) {
         return unauthorizedResponse();
     }
 

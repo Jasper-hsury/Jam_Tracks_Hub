@@ -34,10 +34,13 @@ The subscribe endpoint creates the `subscribers` table automatically on first us
 
 ## How To Export Emails
 
-Open this URL after replacing the token:
+Use an `Authorization` header from a trusted terminal. Do not put the token in a URL:
 
-```text
-https://jamtrackshub.com/api/subscribers.csv?token=YOUR_PRIVATE_TOKEN
+```bash
+curl -L \
+  -H "Authorization: Bearer YOUR_PRIVATE_TOKEN" \
+  -o jam-tracks-hub-subscribers.csv \
+  https://jamtrackshub.com/api/subscribers.csv
 ```
 
 This downloads a CSV with:

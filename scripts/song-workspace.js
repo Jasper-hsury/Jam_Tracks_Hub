@@ -50,6 +50,10 @@
         titleEditing: false,
         metadataEditing: false,
         activeSectionActions: null,
+        createInFlight: false,
+        importInFlight: false,
+        restoreInFlight: false,
+        duplicateInFlight: new Set(),
         preferences: Storage.readPreferences()
     };
 
@@ -557,14 +561,15 @@
     async function loadSongs() {
         try {
             const storedSongs = await Storage.list();
-            state.songs = storedSongs.flatMap(function(song) {
-                try {
-                    return [Core.validateSong(song)];
-                } catch (error) {
-                    return [];
-                }
-            });
+            const result = Storage.filterValidSongs(storedSongs, Core.validateSong);
+            state.songs = result.songs;
             state.storageAvailable = true;
+            if (result.skippedCount) {
+                setStatus(t(
+                    "pages.songWorkspace.corruptSongsSkipped",
+                    "Some unsupported local songs were skipped. Your other songs are still available."
+                ), true);
+            }
         } catch (error) {
             state.storageAvailable = false;
             state.songs = [];
@@ -2092,9 +2097,18 @@
             } else if (control.dataset.action === "library-download") {
                 downloadSong(song, control.dataset.format);
             } else if (control.dataset.action === "duplicate") {
-                const copy = Core.createSong(Object.assign({}, song, { id: undefined, title: `${song.title} (${t("common.duplicate", "Duplicate")})`, createdAt: undefined, updatedAt: undefined }));
-                if (state.storageAvailable) await Storage.put(copy);
-                state.songs.unshift(copy); renderLibrary();
+                if (state.duplicateInFlight.has(song.id)) return;
+                state.duplicateInFlight.add(song.id);
+                control.disabled = true;
+                try {
+                    const copy = Core.createSong(Object.assign({}, song, { id: undefined, title: `${song.title} (${t("common.duplicate", "Duplicate")})`, createdAt: undefined, updatedAt: undefined }));
+                    if (state.storageAvailable) await Storage.put(copy);
+                    state.songs.unshift(copy);
+                    renderLibrary();
+                } finally {
+                    state.duplicateInFlight.delete(song.id);
+                    if (control.isConnected) control.disabled = false;
+                }
             } else if (control.dataset.action === "delete" && window.confirm(t("pages.songWorkspace.deleteConfirm", "Delete this local song? This cannot be undone."))) {
                 if (state.storageAvailable) await Storage.remove(song.id);
                 state.songs = state.songs.filter(item => item.id !== song.id); renderLibrary();
@@ -2228,7 +2242,17 @@
         elements.createForm.addEventListener("submit", async function(event) {
             if (event.submitter?.value !== "default") return;
             event.preventDefault();
-            try { await createSongFromDialog(); } catch (error) { elements.createError.textContent = error.message || t("pages.songWorkspace.importError", "We could not recognize this chart."); }
+            if (state.createInFlight) return;
+            state.createInFlight = true;
+            elements.confirmCreate.disabled = true;
+            try {
+                await createSongFromDialog();
+            } catch (error) {
+                elements.createError.textContent = error.message || t("pages.songWorkspace.importError", "We could not recognize this chart.");
+            } finally {
+                state.createInFlight = false;
+                elements.confirmCreate.disabled = false;
+            }
         });
         elements.lineText.addEventListener("input", function() { state.lineDraft.text = elements.lineText.value; renderAnchorEditor(); });
         elements.anchorPosition.addEventListener("input", function() { state.selectedAnchorPosition = Math.max(0, (Number(elements.anchorPosition.value) || 1) - 1); renderAnchorEditor(); });
@@ -2268,10 +2292,24 @@
         $("restoreSongsButton").addEventListener("click", () => elements.restoreInput.click());
         $("backupSongsButton").addEventListener("click", backupSongs);
         elements.importInput.addEventListener("change", async function() {
-            try { await importSong(elements.importInput.files[0]); } catch (error) { setStatus(error.message, true); } finally { elements.importInput.value = ""; }
+            if (state.importInFlight) return;
+            state.importInFlight = true;
+            $("importSongButton").disabled = true;
+            try { await importSong(elements.importInput.files[0]); } catch (error) { setStatus(error.message, true); } finally {
+                state.importInFlight = false;
+                $("importSongButton").disabled = false;
+                elements.importInput.value = "";
+            }
         });
         elements.restoreInput.addEventListener("change", async function() {
-            try { await restoreSongs(elements.restoreInput.files[0]); } catch (error) { setStatus(error.message, true); } finally { elements.restoreInput.value = ""; }
+            if (state.restoreInFlight) return;
+            state.restoreInFlight = true;
+            $("restoreSongsButton").disabled = true;
+            try { await restoreSongs(elements.restoreInput.files[0]); } catch (error) { setStatus(error.message, true); } finally {
+                state.restoreInFlight = false;
+                $("restoreSongsButton").disabled = false;
+                elements.restoreInput.value = "";
+            }
         });
         document.addEventListener("click", function(event) {
             if (!event.target.closest("[data-setting-help-item]")) closeSettingHelp();

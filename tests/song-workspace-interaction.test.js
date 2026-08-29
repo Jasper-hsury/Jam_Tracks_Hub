@@ -67,16 +67,16 @@ test("Edit Line offers a danger Delete Line action and meaningful positions with
     assert.match(workspaceJs, /state\.editingAnchorId = chord\.id;[\s\S]*?state\.selectedAnchorPosition = chord\.anchorPosition/);
 });
 
-test("unsupported pre-release records remain skipped without a user warning or destructive cleanup", () => {
+test("unsupported local records are skipped with a generic warning and no destructive cleanup", () => {
     const loadSongs = workspaceJs.slice(
         workspaceJs.indexOf("async function loadSongs()"),
         workspaceJs.indexOf("function renderLibrary()")
     );
-    assert.match(loadSongs, /Core\.validateSong\(song\)[\s\S]*?catch \(error\) \{[\s\S]*?return \[\];/);
+    assert.match(loadSongs, /Storage\.filterValidSongs\(storedSongs, Core\.validateSong\)/);
+    assert.match(loadSongs, /result\.skippedCount[\s\S]*?corruptSongsSkipped/);
     assert.doesNotMatch(loadSongs, /Storage\.remove|replaceAll/);
-    assert.doesNotMatch(workspaceJs, /preReleaseDataIncompatible/);
-    assert.doesNotMatch(englishLocale, /older pre-release local songs/i);
-    assert.doesNotMatch(chineseLocale, /較舊開發版本的本機歌曲/);
+    assert.match(englishLocale, /Some unsupported local songs were skipped/);
+    assert.match(chineseLocale, /部分不支援的本機歌曲已略過/);
 });
 
 test("+ Add provides a bounded instrumental-section modal and contextual bar editing", () => {

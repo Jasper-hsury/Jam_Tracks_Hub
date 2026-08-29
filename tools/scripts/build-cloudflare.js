@@ -8,6 +8,7 @@ const maxWorkerAssetBytes = 24 * 1024 * 1024;
 const skippedLargeAssets = [];
 
 const rootFiles = [
+  "_headers",
   "404.html",
   "chord-dictionary.html",
   "chord-progressions.html",
