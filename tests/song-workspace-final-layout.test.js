@@ -18,7 +18,7 @@ const buildScript = read("tools/scripts/build-cloudflare.js");
 const en = JSON.parse(read("locales/en/common.json"));
 const zh = JSON.parse(read("locales/zh-TW/common.json"));
 
-test("instrumental bars render as a four/eight-column content-first grid", () => {
+test("instrumental bars render as a compact four/eight-column measure strip", () => {
     assert.match(workspaceJs, /workspace-lines\$\{instrumental \? " is-instrumental-grid" : ""\}/);
     assert.match(workspaceCss, /\.workspace-lines\.is-instrumental-grid\s*\{[^}]*repeat\(4, minmax\(0, 1fr\)\)/s);
     assert.match(workspaceCss, /@container \(min-width: 760px\)[\s\S]*?repeat\(8, minmax\(0, 1fr\)\)/);
@@ -29,18 +29,31 @@ test("instrumental bars render as a four/eight-column content-first grid", () =>
         workspaceJs.indexOf('if (line.type === "instrumental")'),
         workspaceJs.indexOf("if (!line.text)")
     );
+    assert.match(instrumentalBranch, /if \(editable\) \{[\s\S]*?chords\.setAttribute\("aria-hidden", "true"\)[\s\S]*?\} else \{[\s\S]*?workspace-bar-label[\s\S]*?barNumber/);
     assert.ok(instrumentalBranch.indexOf("workspace-bar-label") < instrumentalBranch.lastIndexOf("chords"));
+    assert.match(workspaceJs, /editBarNumber[\s\S]{0,220}barChordSummary/);
+    assert.match(instrumentalBranch, /setAttribute\("role", "group"\)/);
     assert.match(instrumentalBranch, /workspace-empty-bar", "—"/);
     assert.doesNotMatch(instrumentalBranch, /emptyLine/);
+
+    assert.match(workspaceCss, /@media screen[\s\S]*?\.workspace-lines\.is-instrumental-grid\s*\{[^}]*width:\s*min\(100%, 288px\)[^}]*row-gap:\s*3px[^}]*justify-self:\s*start/s);
+    assert.match(workspaceCss, /@media screen[\s\S]*?\.workspace-editor:not\(\.is-read-mode\) \.workspace-chart \.workspace-line\.is-instrumental\s*\{[^}]*min-height:\s*44px[^}]*border-width:\s*0 0 0 1px[^}]*border-radius:\s*0[^}]*background:\s*transparent[^}]*box-shadow:\s*none/s);
+    assert.match(workspaceCss, /\.workspace-editor:not\(\.is-read-mode\) \.workspace-chart \.workspace-line\.is-instrumental:nth-child\(4n\)[\s\S]*?border-right-width:\s*1px/);
+    assert.match(workspaceCss, /@container \(min-width: 760px\)[\s\S]*?\.workspace-line\.is-instrumental:nth-child\(8n\)[\s\S]*?border-right-width:\s*1px/);
+    assert.doesNotMatch(workspaceCss, /\.workspace-editor:not\(\.is-read-mode\) \.workspace-chart \.workspace-line\.is-instrumental\s*\{[^}]*border-width:\s*1px 1px 1px 0/s);
+    assert.match(workspaceCss, /\.workspace-editor:not\(\.is-read-mode\) \.workspace-chart \.workspace-instrumental-line\s*\{[^}]*grid-template-rows:\s*minmax\(42px, 1fr\)[^}]*min-height:\s*42px/s);
+    assert.match(workspaceCss, /@container \(min-width: 760px\)[\s\S]*?\.workspace-lines\.is-instrumental-grid\s*\{[^}]*width:\s*min\(100%, 768px\)/s);
+    assert.doesNotMatch(workspaceCss, /\.workspace-editor:not\(\.is-read-mode\) \.workspace-chart \.workspace-instrumental-line \.workspace-bar-label/);
 
     const rowSizes = (barCount, columnCount) => Array.from(
         { length: Math.ceil(barCount / columnCount) },
         (_, row) => Math.min(columnCount, barCount - row * columnCount)
     );
     assert.deepEqual(rowSizes(4, 4), [4]);
+    assert.deepEqual(rowSizes(8, 4), [4, 4]);
+    assert.deepEqual(rowSizes(12, 4), [4, 4, 4]);
     assert.deepEqual(rowSizes(8, 8), [8]);
     assert.deepEqual(rowSizes(12, 8), [8, 4]);
-    assert.deepEqual(rowSizes(8, 4), [4, 4]);
 });
 
 test("instrumental ordering and stable IDs survive middle-bar deletion", () => {
@@ -61,8 +74,9 @@ test("instrumental ordering and stable IDs survive middle-bar deletion", () => {
         lines.filter((_, index) => index !== 4).map(line => line.id)
     );
     assert.deepEqual(deleted.song.sections[0].lines[4].chords.map(chord => chord.symbol), ["G/B", "Em7"]);
-    assert.match(workspaceJs, /host\.dataset\.barNumber = String\(lineIndex \+ 1\)/);
-    assert.match(workspaceJs, /bar: lineIndex \+ 1/);
+    assert.match(workspaceJs, /const barNumber = lineIndex \+ 1/);
+    assert.match(workspaceJs, /host\.dataset\.barNumber = String\(barNumber\)/);
+    assert.match(workspaceJs, /bar: barNumber/);
 });
 
 test("Cmaj9 is a localized input example and remains valid across chord systems", () => {

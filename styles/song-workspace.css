@@ -1375,14 +1375,26 @@ body.song-workspace-read-mode .song-workspace-page {
     padding-top: 18px;
 }
 
+.workspace-editor.is-read-mode {
+    --workspace-read-content-width: 1180px;
+}
+
 .workspace-editor.is-read-mode .workspace-editor-layout {
     grid-template-columns: minmax(0, 1fr);
 }
 
 .workspace-editor.is-read-mode .workspace-chart-panel {
-    width: min(1180px, 100%);
+    width: min(var(--workspace-read-content-width), 100%);
     margin: 0 auto;
     padding: 16px clamp(14px, 2.4vw, 28px) 22px;
+}
+
+.workspace-editor.is-read-mode .workspace-read-toolbar {
+    box-sizing: border-box;
+    width: min(var(--workspace-read-content-width), 100%);
+    min-height: 58px;
+    margin: 0 auto 10px;
+    padding: 8px 10px;
 }
 
 .workspace-editor.is-read-mode .workspace-title-trigger {
@@ -1709,6 +1721,61 @@ html[data-theme="default"] .workspace-instrumental-chord {
     text-transform: uppercase;
 }
 
+/* Normal Workspace uses a compact measure strip; Read, Performance, and Print keep their own presentation. */
+@media screen {
+    .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-lines.is-instrumental-grid {
+        width: min(100%, 288px);
+        column-gap: 0;
+        row-gap: 3px;
+        justify-self: start;
+    }
+
+    .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-line.is-instrumental {
+        min-height: 44px;
+        border-width: 0 0 0 1px;
+        border-style: solid;
+        border-color: var(--workspace-line);
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-line.is-instrumental:nth-child(4n),
+    .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-line.is-instrumental:last-child {
+        border-right-width: 1px;
+    }
+
+    .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-line.is-instrumental:hover {
+        border-color: var(--workspace-line);
+        background: transparent;
+    }
+
+    .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-instrumental-line {
+        grid-template-rows: minmax(42px, 1fr);
+        min-height: 42px;
+    }
+
+    .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-instrumental-chords {
+        gap: 2px 5px;
+        padding: 3px 4px;
+    }
+
+    @container (min-width: 760px) {
+        .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-lines.is-instrumental-grid {
+            width: min(100%, 768px);
+        }
+
+        .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-line.is-instrumental:nth-child(4n) {
+            border-right-width: 0;
+        }
+
+        .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-line.is-instrumental:nth-child(8n),
+        .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-line.is-instrumental:last-child {
+            border-right-width: 1px;
+        }
+    }
+}
+
 .workspace-add-control {
     position: relative;
     z-index: 2;
@@ -2016,8 +2083,64 @@ html.workspace-dialog-restoring {
     margin-top: 20px;
 }
 
+.workspace-line-sheet-handle,
+.workspace-line-dialog-subtitle,
+.workspace-line-character-count,
+.workspace-anchor-position-help,
+.workspace-anchor-list-heading {
+    display: none;
+}
+
+.workspace-anchor-action-icon {
+    display: inline-flex;
+    flex: 0 0 auto;
+    width: 1.1em;
+    height: 1.1em;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+svg.workspace-anchor-action-icon {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+[data-action="edit-anchor"] .workspace-anchor-action-icon {
+    transform: scaleX(-1);
+}
+
+.workspace-line-card,
+.workspace-anchor-position-row,
+.workspace-line-secondary-actions {
+    display: contents;
+}
+
+.workspace-line-textarea-shell {
+    display: block;
+    min-width: 0;
+}
+
+.workspace-line-dialog .workspace-anchor-list {
+    width: 100%;
+    flex: 1 0 100%;
+}
+
 .workspace-line-dialog-actions #deleteLineButton {
+    order: 1;
     margin-right: auto;
+}
+
+.workspace-line-dialog-actions #cancelLineButton {
+    order: 2;
+}
+
+.workspace-line-dialog-actions #saveLineButton {
+    order: 3;
 }
 
 .workspace-dialog-error {
@@ -2079,6 +2202,7 @@ html.workspace-dialog-restoring {
 }
 
 .workspace-anchor-item button {
+    gap: 6px;
     white-space: nowrap;
 }
 
@@ -2183,6 +2307,12 @@ html.workspace-dialog-restoring {
     .workspace-settings-disclosure > .workspace-settings-panel {
         display: grid !important;
     }
+
+    .workspace-editor.is-read-mode .workspace-read-toolbar {
+        min-height: 70px;
+        gap: 10px;
+        padding: 12px 14px;
+    }
 }
 
 @media (max-width: 900px) and (min-width: 721px) {
@@ -2212,7 +2342,7 @@ html.workspace-dialog-restoring {
 
 @media (max-width: 720px) {
     .song-workspace-page {
-        width: min(100% - 24px, 680px);
+        width: min(100% - 40px, 680px);
         padding-top: 42px;
     }
 
@@ -2228,10 +2358,11 @@ html.workspace-dialog-restoring {
 
     .workspace-editor-topbar {
         display: grid;
+        width: 100%;
         grid-template-columns: repeat(4, minmax(0, 1fr));
         align-items: stretch;
-        gap: 7px;
-        margin-bottom: 14px;
+        gap: 10px;
+        margin-bottom: 34px;
     }
 
     .workspace-editor-actions {
@@ -2241,22 +2372,24 @@ html.workspace-dialog-restoring {
     .workspace-editor-topbar > .workspace-button,
     .workspace-editor-actions > .workspace-button {
         position: relative;
-        flex-direction: row;
-        gap: 1px;
+        width: 100%;
+        flex-direction: column;
+        gap: 8px;
         min-width: 0;
-        min-height: 72px;
-        border-radius: 18px;
-        padding: 9px 1px;
-        font-size: clamp(0.625rem, 2.7vw, 0.64rem);
-        line-height: 1.25;
+        min-height: 0;
+        aspect-ratio: 1;
+        border-radius: 14px;
+        padding: 10px 5px;
+        font-size: clamp(0.68rem, 3vw, 0.78rem);
+        line-height: 1.2;
         text-align: center;
-        box-shadow: 0 4px 12px color-mix(in srgb, var(--shadow-color) 58%, transparent);
+        box-shadow: 0 5px 14px color-mix(in srgb, var(--shadow-color) 36%, transparent);
     }
 
     .workspace-editor-topbar .workspace-action-icon {
         display: block;
-        width: 15px;
-        height: 15px;
+        width: 28px;
+        height: 28px;
         fill: none;
         stroke: currentColor;
         stroke-linecap: round;
@@ -2291,9 +2424,9 @@ html.workspace-dialog-restoring {
 
     #performanceButton::after {
         position: absolute;
-        right: 25%;
-        bottom: -8px;
-        left: 25%;
+        right: 28%;
+        bottom: -12px;
+        left: 28%;
         height: 3px;
         border-radius: 999px;
         background: var(--workspace-accent);
@@ -2356,23 +2489,32 @@ html.workspace-dialog-restoring {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 9px;
-        min-height: 56px;
+        gap: 12px;
+        min-height: 64px;
         box-sizing: border-box;
-        border: 1px solid var(--workspace-line);
-        border-radius: 6px;
-        padding: 9px 11px;
+        border: 0;
+        border-radius: 14px;
+        padding: 13px 15px;
         color: var(--workspace-text);
         background: var(--workspace-surface);
-        font-weight: 850;
+        font-weight: 800;
         list-style: none;
         cursor: pointer;
     }
 
+    .workspace-settings-disclosure {
+        overflow: visible;
+        margin-top: 0;
+        border: 1px solid var(--workspace-line);
+        border-radius: 14px;
+        background: var(--workspace-surface);
+        box-shadow: 0 8px 24px color-mix(in srgb, var(--shadow-color) 22%, transparent);
+    }
+
     .workspace-settings-summary-icon {
         flex: 0 0 auto;
-        width: 24px;
-        height: 24px;
+        width: 28px;
+        height: 28px;
         fill: none;
         stroke: var(--workspace-accent);
         stroke-linecap: round;
@@ -2382,6 +2524,7 @@ html.workspace-dialog-restoring {
 
     .workspace-settings-summary-copy {
         display: flex;
+        flex: 1 1 auto;
         min-width: 0;
         align-items: baseline;
         gap: 8px;
@@ -2389,6 +2532,9 @@ html.workspace-dialog-restoring {
 
     .workspace-settings-summary-copy > span {
         flex: 0 0 auto;
+        font-size: 0.86rem;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
     }
 
     .workspace-settings-disclosure > summary::-webkit-details-marker {
@@ -2398,13 +2544,14 @@ html.workspace-dialog-restoring {
     .workspace-settings-disclosure > summary::after {
         content: "⌄";
         flex: 0 0 auto;
-        color: var(--workspace-accent);
-        font-size: 1.1rem;
+        color: var(--workspace-text);
+        font-size: 1.2rem;
         line-height: 1;
     }
 
     .workspace-settings-disclosure[open] > summary {
-        border-radius: 6px 6px 0 0;
+        border-bottom: 1px solid var(--workspace-line);
+        border-radius: 14px 14px 0 0;
     }
 
     .workspace-settings-disclosure[open] > summary::after {
@@ -2414,8 +2561,8 @@ html.workspace-dialog-restoring {
     .workspace-settings-disclosure > summary small {
         color: var(--workspace-muted);
         font-size: 0.68rem;
-        font-weight: 600;
-        line-height: 1.15;
+        font-weight: 500;
+        line-height: 1.25;
         white-space: normal;
     }
 
@@ -2424,14 +2571,43 @@ html.workspace-dialog-restoring {
     }
 
     .workspace-settings-panel {
-        border-top: 0;
-        border-radius: 0 0 6px 6px;
-        padding: 11px;
+        border: 0;
+        border-radius: 0 0 14px 14px;
+        padding: 20px 15px 16px;
+        background: var(--workspace-surface);
     }
 
     .workspace-settings-nav {
+        --song-settings-control-height: 54px;
+        --song-settings-label-height: 26px;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px 8px;
+        gap: 18px 14px;
+    }
+
+    .workspace-settings-nav .workspace-field {
+        gap: 8px;
+        color: var(--workspace-text);
+        font-size: 0.86rem;
+        font-weight: 750;
+        text-transform: none;
+    }
+
+    .workspace-settings-nav .workspace-field input,
+    .workspace-settings-nav .workspace-field select,
+    .workspace-settings-nav .workspace-readonly-field strong {
+        border-radius: 14px;
+        padding-inline: 14px;
+        font-size: 1rem;
+    }
+
+    .workspace-settings-nav .workspace-readonly-field strong {
+        background: color-mix(in srgb, var(--workspace-soft) 82%, transparent);
+    }
+
+    .workspace-settings-nav .workspace-setting-help-trigger {
+        width: 24px;
+        height: 24px;
+        font-size: 0.72rem;
     }
 
     .workspace-settings-nav > .workspace-field:nth-child(5) {
@@ -2447,39 +2623,81 @@ html.workspace-dialog-restoring {
         display: grid;
         grid-column: 1 / -1;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 8px;
+        gap: 14px;
+        margin-top: 2px;
+        border-top: 1px solid var(--workspace-line);
+        padding-top: 18px;
     }
 
     .workspace-settings-nav .workspace-reading-control {
         display: grid;
-        justify-items: center;
+        grid-template-rows: var(--song-settings-label-height) 54px;
+        justify-items: stretch;
         min-width: 0;
-        gap: 5px;
+        gap: 8px;
     }
 
     .workspace-settings-nav .workspace-reading-control-label {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: space-between;
         padding-left: 0;
+        color: var(--workspace-text);
+        font-size: 0.86rem;
+        font-weight: 750;
         white-space: nowrap;
     }
 
+    .workspace-settings-nav .workspace-reading-control-label::after,
+    .workspace-settings-nav > .workspace-field:nth-child(5) > span::after {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px;
+        height: 22px;
+        border: 1px solid var(--workspace-line);
+        border-radius: 50%;
+        color: var(--workspace-muted);
+        content: "?";
+        font-size: 0.7rem;
+        font-weight: 850;
+    }
+
+    .workspace-settings-nav > .workspace-field:nth-child(5) > span {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
     .workspace-settings-nav .workspace-reading-stepper {
-        grid-template-columns: 44px 44px 44px;
+        grid-template-columns: 44px minmax(40px, 1fr) 44px;
         width: 100%;
-        gap: 3px;
+        height: 54px;
+        gap: 4px;
+        border-radius: 999px;
+        padding: 4px;
+        background: color-mix(in srgb, var(--workspace-soft) 72%, transparent);
     }
 
     .workspace-settings-nav .workspace-reading-step-button {
         width: 44px;
         min-width: 44px;
         height: 44px;
+        border-radius: 50%;
+        background: var(--workspace-surface-strong);
+        box-shadow: none;
     }
 
     .workspace-settings-nav .workspace-reading-value {
-        width: 44px;
+        width: 100%;
+        color: var(--workspace-text);
+        font-size: 0.9rem;
     }
 
     .workspace-settings-nav .workspace-reading-value input {
-        width: 30px;
+        width: 36px;
+        font-size: 0.9rem;
     }
 
     .workspace-segmented {
@@ -2562,13 +2780,59 @@ html.workspace-dialog-restoring {
     }
 
     .workspace-read-toolbar {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         top: 5px;
-        justify-content: center;
+        align-items: center;
     }
 
     .workspace-read-summary {
-        order: -1;
-        flex-basis: 100%;
+        grid-column: 1 / -1;
+        grid-row: 1;
+    }
+
+    #exitReadModeButton {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    #readShapesButton {
+        grid-column: 2;
+        grid-row: 2;
+    }
+
+    .workspace-read-toolbar .workspace-read-stepper:first-of-type {
+        grid-column: 1;
+        grid-row: 3;
+    }
+
+    .workspace-read-toolbar .workspace-read-stepper:last-of-type {
+        grid-column: 2;
+        grid-row: 3;
+    }
+
+    .workspace-read-toolbar .workspace-button,
+    .workspace-read-toolbar .workspace-read-stepper {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .workspace-read-toolbar .workspace-read-stepper {
+        grid-template-columns: 44px minmax(0, 1fr) 44px;
+    }
+
+    .workspace-read-toolbar .workspace-read-stepper button:first-child {
+        justify-self: start;
+    }
+
+    .workspace-read-toolbar .workspace-read-stepper output {
+        width: 100%;
+        justify-self: center;
+        text-align: center;
+    }
+
+    .workspace-read-toolbar .workspace-read-stepper button:last-child {
+        justify-self: end;
     }
 
     .workspace-editor.is-read-mode .workspace-chart-panel {
@@ -2638,6 +2902,341 @@ html.workspace-dialog-restoring {
 
     .performance-toolbar {
         border-radius: 8px;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode {
+        position: fixed;
+        inset: max(24px, env(safe-area-inset-top)) 12px 0;
+        width: auto;
+        max-width: 680px;
+        height: auto;
+        max-height: none;
+        margin: 0 auto;
+        overflow-x: hidden;
+        overflow-y: auto;
+        border: 1px solid var(--workspace-line);
+        border-bottom: 0;
+        border-radius: 26px 26px 0 0;
+        background: var(--workspace-surface-strong);
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode::backdrop {
+        background: rgba(15, 13, 11, 0.76);
+        backdrop-filter: blur(5px);
+    }
+
+    .workspace-line-dialog.is-edit-line-mode #lineEditorForm {
+        min-height: 100%;
+        box-sizing: border-box;
+        padding: 11px 16px calc(24px + env(safe-area-inset-bottom));
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-line-sheet-handle {
+        display: block;
+        width: 68px;
+        height: 5px;
+        margin: 0 auto 14px;
+        border-radius: 999px;
+        background: color-mix(in srgb, var(--workspace-muted) 34%, transparent);
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-dialog-heading {
+        position: relative;
+        justify-content: center;
+        min-height: 82px;
+        padding: 0 54px 12px;
+        text-align: center;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-line-dialog-heading-copy {
+        min-width: 0;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-dialog-heading .result-kicker {
+        display: none;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-dialog-heading h2 {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(2rem, 9vw, 2.6rem);
+        font-weight: 700;
+        line-height: 1.05;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-line-dialog-subtitle {
+        display: block;
+        margin: 8px 0 0;
+        color: var(--workspace-muted);
+        font-size: clamp(0.78rem, 3.4vw, 0.9rem);
+        font-weight: 500;
+        line-height: 1.35;
+        white-space: nowrap;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-dialog-heading .workspace-icon-button {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 48px;
+        min-width: 48px;
+        min-height: 48px;
+        border: 0;
+        border-radius: 50%;
+        color: var(--workspace-text);
+        background: var(--workspace-soft);
+        box-shadow: none;
+        font-size: 1.8rem;
+        font-weight: 400;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-line-card {
+        display: block;
+        box-sizing: border-box;
+        margin-top: 14px;
+        border: 1px solid var(--workspace-line);
+        border-radius: 15px;
+        padding: 15px;
+        background: var(--workspace-surface);
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-field {
+        gap: 10px;
+        font-size: 0.78rem;
+        letter-spacing: 0.01em;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-field input,
+    .workspace-line-dialog.is-edit-line-mode .workspace-field textarea {
+        border-radius: 11px;
+        padding: 14px;
+        font-size: 1rem;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-line-textarea-shell {
+        position: relative;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode #lineTextInput {
+        min-height: 168px;
+        padding-bottom: 38px;
+        resize: none;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-line-character-count {
+        position: absolute;
+        right: 13px;
+        bottom: 12px;
+        display: block;
+        color: var(--workspace-muted);
+        font-size: 0.76rem;
+        font-variant-numeric: tabular-nums;
+        font-weight: 500;
+        pointer-events: none;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-anchor-preview {
+        gap: 8px;
+        min-height: 0;
+        margin: 15px 0 0;
+        border: 0;
+        padding: 0;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-anchor-preview button {
+        min-width: 44px;
+        min-height: 44px;
+        border-radius: 8px;
+        padding: 8px 11px;
+        font-size: 1rem;
+        text-align: center;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-anchor-controls {
+        display: block;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-chord-symbol-card input {
+        min-height: 56px;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-anchor-position-row {
+        display: grid;
+        grid-template-columns: 72px minmax(0, 1fr) auto;
+        align-items: end;
+        gap: 8px;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode #anchorPositionField {
+        min-width: 0;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode #anchorPositionInput {
+        min-height: 56px;
+        padding-inline: 11px;
+        font-size: 1.15rem;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-anchor-position-help {
+        display: block;
+        min-width: 0;
+        margin: 0 0 5px;
+        color: var(--workspace-muted);
+        font-size: 0.7rem;
+        line-height: 1.35;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode #addAnchorButton {
+        min-width: 104px;
+        min-height: 56px;
+        gap: 8px;
+        border-radius: 999px;
+        padding: 10px 12px;
+        font-size: 0.88rem;
+        white-space: nowrap;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode #addAnchorButton::after {
+        content: "+";
+        font-size: 1.35rem;
+        font-weight: 500;
+        line-height: 1;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-anchor-list-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 22px;
+        color: var(--workspace-accent);
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.01em;
+        text-transform: uppercase;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode #anchorChordCount {
+        color: var(--workspace-muted);
+        font-weight: 500;
+        letter-spacing: 0;
+        text-transform: none;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-anchor-list {
+        display: grid;
+        width: auto;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-anchor-item {
+        grid-template-columns: minmax(0, 1fr) 44px 44px;
+        min-height: 62px;
+        box-sizing: border-box;
+        gap: 8px;
+        border: 1px solid var(--workspace-line);
+        border-radius: 11px;
+        padding: 8px 10px 8px 14px;
+        background: var(--workspace-surface-strong);
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-anchor-item strong {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        font-size: 1rem;
+        line-height: 1.35;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-anchor-item .workspace-button {
+        width: 44px;
+        min-width: 44px;
+        min-height: 44px;
+        border: 0;
+        border-radius: 50%;
+        padding: 0;
+        box-shadow: none;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-anchor-action-text {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-anchor-action-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.45rem;
+        line-height: 1;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode svg.workspace-anchor-action-icon {
+        width: 21px;
+        height: 21px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-anchor-item [data-action="edit-anchor"] {
+        color: var(--secondary-button-text);
+        background: var(--workspace-soft);
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-anchor-item [data-action="delete-anchor"] {
+        color: var(--danger-border);
+        background: color-mix(in srgb, var(--danger-background) 18%, var(--workspace-surface));
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-dialog-error:empty {
+        display: none;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-line-dialog-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 18px;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-line-secondary-actions {
+        display: contents;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-line-dialog-actions .workspace-button {
+        min-height: 56px;
+        border-radius: 999px;
+        font-size: 1rem;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-line-dialog-actions #saveLineButton {
+        order: 1;
+        grid-column: 1 / -1;
+        width: 100%;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-line-dialog-actions #cancelLineButton {
+        order: 2;
+        grid-column: 1;
+        width: 100%;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-line-dialog-actions #deleteLineButton {
+        order: 3;
+        grid-column: 2;
+        width: 100%;
+        margin-right: 0;
     }
 
 }

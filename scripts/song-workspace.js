@@ -71,6 +71,7 @@
         createLocalDisclosure: $("createLocalDisclosure"),
         confirmCreate: $("confirmCreateButton"),
         lineDialog: $("lineEditorDialog"), lineForm: $("lineEditorForm"), lineText: $("lineTextInput"),
+        lineTextCount: $("lineTextCharacterCount"), anchorCount: $("anchorChordCount"),
         lineTitle: $("lineDialogTitle"), lineTextField: $("lineTextField"),
         anchorPreview: $("anchorPreview"), anchorChord: $("anchorChordInput"), anchorPosition: $("anchorPositionInput"),
         anchorPositionField: $("anchorPositionField"),
@@ -394,6 +395,27 @@
         item.type = "button";
         if (action) item.dataset.action = action;
         return item;
+    }
+
+    function deleteActionIcon() {
+        const namespace = "http://www.w3.org/2000/svg";
+        const icon = document.createElementNS(namespace, "svg");
+        icon.classList.add("workspace-anchor-action-icon");
+        icon.setAttribute("viewBox", "0 0 24 24");
+        icon.setAttribute("aria-hidden", "true");
+        icon.setAttribute("focusable", "false");
+        [
+            "M3 6h18",
+            "M8 6V4h8v2",
+            "M19 6l-1 14H6L5 6",
+            "M10 11v5",
+            "M14 11v5"
+        ].forEach(function(pathData) {
+            const path = document.createElementNS(namespace, "path");
+            path.setAttribute("d", pathData);
+            icon.appendChild(path);
+        });
+        return icon;
     }
 
     function setStatus(message, isError) {
@@ -992,17 +1014,25 @@
 
     function renderLine(line, sectionIndex, lineIndex, editable) {
         const host = node(editable ? "button" : "div", `workspace-line${line.type === "instrumental" ? " is-instrumental" : ""}`);
+        const barNumber = lineIndex + 1;
+        const barChordSummary = line.type === "instrumental"
+            ? line.chords.map(function(chord) { return chord.symbol; }).join(" ") || "—"
+            : "";
         if (editable) {
             host.type = "button";
             host.dataset.action = "edit-line";
             host.dataset.sectionIndex = String(sectionIndex);
             host.dataset.lineIndex = String(lineIndex);
             host.setAttribute("aria-label", line.type === "instrumental"
-                ? t("pages.songWorkspace.editBarNumber", "Edit bar {{bar}}", { bar: lineIndex + 1 })
+                ? `${t("pages.songWorkspace.editBarNumber", "Edit bar {{bar}}", { bar: barNumber })}, ${barChordSummary}`
                 : t("pages.songWorkspace.editLine", "Edit line"));
         }
         if (line.type === "instrumental") {
-            host.dataset.barNumber = String(lineIndex + 1);
+            host.dataset.barNumber = String(barNumber);
+            if (!editable) {
+                host.setAttribute("role", "group");
+                host.setAttribute("aria-label", `${t("pages.songWorkspace.barNumber", "Bar {{bar}}", { bar: barNumber })}, ${barChordSummary}`);
+            }
             const row = node("div", "workspace-instrumental-line");
             const chords = node("div", "workspace-instrumental-chords");
             line.chords.forEach(chord => chords.appendChild(node("span", "workspace-instrumental-chord", chord.symbol)));
@@ -1011,10 +1041,16 @@
                 empty.setAttribute("aria-hidden", "true");
                 chords.appendChild(empty);
             }
-            row.append(
-                node("span", "workspace-bar-label", t("pages.songWorkspace.barNumber", "Bar {{bar}}", { bar: lineIndex + 1 })),
-                chords
-            );
+            if (editable) {
+                chords.setAttribute("aria-hidden", "true");
+            } else {
+                row.appendChild(node(
+                    "span",
+                    "workspace-bar-label",
+                    t("pages.songWorkspace.barNumber", "Bar {{bar}}", { bar: barNumber })
+                ));
+            }
+            row.appendChild(chords);
             host.appendChild(row);
             return host;
         }
@@ -1489,6 +1525,7 @@
         elements.anchorChord.value = "";
         elements.addAnchor.textContent = t("pages.songWorkspace.addChord", "Add Chord");
         elements.lineForm.classList.toggle("is-instrumental", instrumental);
+        elements.lineDialog.classList.toggle("is-edit-line-mode", !instrumental && !context.isNew);
         elements.lineTitle.textContent = context.isNew
             ? t("pages.songWorkspace.addLine", "Add Line")
             : instrumental
@@ -1539,6 +1576,7 @@
     function renderAnchorEditor() {
         const instrumental = state.lineDraft.type === "instrumental";
         const positions = Core.tokenizeLyric(elements.lineText.value).filter(function(token) { return token.meaningful; });
+        elements.lineTextCount.textContent = `${elements.lineText.value.length} / ${elements.lineText.maxLength}`;
         elements.anchorPreview.replaceChildren();
         const instrumentalCount = Math.max(
             1,
@@ -1562,14 +1600,30 @@
         elements.anchorPosition.max = String(availablePositions.length);
         elements.anchorPosition.value = String(state.selectedAnchorPosition + 1);
         elements.anchorList.replaceChildren();
+        elements.anchorCount.textContent = t(
+            "pages.songWorkspace.chordCount",
+            "{{count}} chords",
+            { count: state.lineDraft.chords.length }
+        );
         state.lineDraft.chords.slice().sort((a, b) => a.anchorPosition - b.anchorPosition).forEach(function(chord) {
             const row = node("div", "workspace-anchor-item");
             const positionLabel = availablePositions[chord.anchorPosition] || String(chord.anchorPosition + 1);
             row.appendChild(node("strong", "", instrumental
                 ? chord.symbol
                 : `${chord.symbol} · ${chord.anchorPosition + 1}: ${positionLabel}`));
-            const edit = button(t("pages.songWorkspace.edit", "Edit"), "edit-anchor", "workspace-button workspace-button-subtle workspace-button-compact");
-            const remove = button(t("pages.songWorkspace.delete", "Delete"), "delete-anchor", "workspace-button workspace-button-danger workspace-button-compact");
+            const editLabel = t("pages.songWorkspace.edit", "Edit");
+            const deleteLabel = t("pages.songWorkspace.delete", "Delete");
+            const edit = button("", "edit-anchor", "workspace-button workspace-button-subtle workspace-button-compact");
+            const remove = button("", "delete-anchor", "workspace-button workspace-button-danger workspace-button-compact");
+            edit.setAttribute("aria-label", editLabel);
+            remove.setAttribute("aria-label", deleteLabel);
+            const editText = node("span", "workspace-anchor-action-text", editLabel);
+            const removeText = node("span", "workspace-anchor-action-text", deleteLabel);
+            const editIcon = node("span", "workspace-anchor-action-icon", "✎");
+            const removeIcon = deleteActionIcon();
+            editIcon.setAttribute("aria-hidden", "true");
+            edit.append(editIcon, editText);
+            remove.append(removeIcon, removeText);
             edit.dataset.anchorId = chord.id;
             remove.dataset.anchorId = chord.id;
             row.append(edit, remove);

@@ -12,7 +12,6 @@ const workspaceCss = read("styles/song-workspace.css");
 const storageJs = read("scripts/song-workspace-storage.js");
 const coreJs = read("scripts/song-workspace-core.js");
 const importJs = read("scripts/song-workspace-import.js");
-const progressionWriterJs = read("scripts/progression-writer.js");
 const en = JSON.parse(read("locales/en/common.json")).pages.songWorkspace;
 const zh = JSON.parse(read("locales/zh-TW/common.json")).pages.songWorkspace;
 
@@ -108,13 +107,15 @@ test("line spacing changes only non-instrumental reading rows and print remains 
     assert.doesNotMatch(workspaceJs, /URLSearchParams[\s\S]{0,160}lineSpacing|umami[\s\S]{0,160}lineSpacing/);
 });
 
-test("instrumental bars use the Progression Writer chip hierarchy without changing grid counts", () => {
-    assert.match(progressionWriterJs, /svgProgressionChip[\s\S]*padStart\(2, "0"\)[\s\S]*weight:\s*900/);
-    assert.match(workspaceCss, /\.workspace-line\.is-instrumental\s*\{[^}]*border-radius:\s*var\(--workspace-progression-card-radius\)[^}]*background:/s);
-    assert.match(workspaceCss, /\.workspace-instrumental-line \.workspace-bar-label\s*\{[^}]*color:\s*var\(--workspace-muted\)[^}]*font-weight:\s*850/s);
+test("normal Workspace instrumental bars use a compact measure-strip hierarchy", () => {
+    assert.match(workspaceCss, /@media screen[\s\S]*?\.workspace-editor:not\(\.is-read-mode\) \.workspace-chart \.workspace-line\.is-instrumental\s*\{[^}]*min-height:\s*44px[^}]*border-width:\s*0 0 0 1px[^}]*background:\s*transparent[^}]*box-shadow:\s*none/s);
+    assert.match(workspaceCss, /\.workspace-editor:not\(\.is-read-mode\) \.workspace-chart \.workspace-instrumental-line\s*\{[^}]*grid-template-rows:\s*minmax\(42px, 1fr\)/s);
+    assert.doesNotMatch(workspaceCss, /\.workspace-editor:not\(\.is-read-mode\) \.workspace-chart \.workspace-instrumental-line \.workspace-bar-label/);
     assert.match(workspaceCss, /\.workspace-instrumental-chord\s*\{[^}]*font-size:\s*clamp\(12px, var\(--song-chart-instrumental-size\), 25\.5px\)[^}]*overflow-wrap:\s*anywhere/s);
     assert.match(workspaceCss, /\.workspace-lines\.is-instrumental-grid\s*\{[^}]*repeat\(4, minmax\(0, 1fr\)\)/s);
     assert.match(workspaceCss, /@container \(min-width: 760px\)[\s\S]*?repeat\(8, minmax\(0, 1fr\)\)/);
+    assert.match(workspaceCss, /\.workspace-editor\.is-read-mode \.workspace-line\.is-instrumental\s*\{[^}]*min-height:\s*54px/s);
+    assert.match(workspaceCss, /@media print[\s\S]*?\.workspace-line\.is-instrumental\s*\{[^}]*min-height:\s*64px/s);
 });
 
 test("long and multiple instrumental chords remain bounded across all five derived views", () => {

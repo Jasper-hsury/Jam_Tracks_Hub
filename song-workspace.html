@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="styles/pages.css?v=20260826-song-workspace">
     <link rel="stylesheet" href="styles/themes.css?v=20260826-song-workspace">
     <link rel="stylesheet" href="styles/chord-dictionary.css?v=20260826-workspace-hardening">
-    <link rel="stylesheet" href="styles/song-workspace.css?v=20260828-mobile-chart-add-alignment">
+    <link rel="stylesheet" href="styles/song-workspace.css?v=20260829-condensed-measure-strip">
 </head>
 <body data-i18n-title="titles.songWorkspace">
     <nav class="navbar">
@@ -151,7 +151,7 @@
             <div class="workspace-editor-topbar">
                 <button class="workspace-button workspace-button-secondary" id="backToSongsButton" type="button">
                     <svg class="workspace-action-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19 12H5m6-6-6 6 6 6"/></svg>
-                    <span data-i18n="pages.songWorkspace.backToSongs">Back to My Songs</span>
+                    <span data-i18n="pages.songWorkspace.backToSongs">My Songs</span>
                 </button>
                 <div class="workspace-editor-actions">
                     <button class="workspace-button workspace-button-secondary" id="downloadMenuButton" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="downloadMenu" aria-describedby="exportDisclosure">
@@ -480,37 +480,57 @@
         </form>
     </dialog>
 
-    <dialog class="workspace-dialog workspace-line-dialog" id="lineEditorDialog">
+    <dialog class="workspace-dialog workspace-line-dialog" id="lineEditorDialog" aria-labelledby="lineDialogTitle" aria-describedby="lineDialogSubtitle">
         <form method="dialog" id="lineEditorForm">
+            <span class="workspace-line-sheet-handle" aria-hidden="true"></span>
             <div class="workspace-dialog-heading">
-                <div>
+                <div class="workspace-line-dialog-heading-copy">
                     <span class="result-kicker" data-i18n="pages.songWorkspace.visualEditor">Visual chord editor</span>
                     <h2 id="lineDialogTitle" data-i18n="pages.songWorkspace.editLine">Edit Line</h2>
+                    <p class="workspace-line-dialog-subtitle" id="lineDialogSubtitle" data-i18n="pages.songWorkspace.editLineSubtitle">Edit lyrics and chords for this line</p>
                 </div>
                 <button class="workspace-icon-button" type="button" data-dialog-close aria-label="Close" data-i18n-aria-label="common.close">×</button>
             </div>
-            <label class="workspace-field workspace-field-source" id="lineTextField">
-                <span data-i18n="pages.songWorkspace.lyricText">Lyric or section text</span>
-                <textarea id="lineTextInput" rows="3" maxlength="1000"></textarea>
-            </label>
-            <div class="workspace-anchor-preview" id="anchorPreview" aria-label="Choose a chord anchor" data-i18n-aria-label="pages.songWorkspace.chooseAnchor"></div>
+            <section class="workspace-line-card workspace-line-text-card">
+                <label class="workspace-field workspace-field-source" id="lineTextField">
+                    <span data-i18n="pages.songWorkspace.lyricText">Lyric or section text</span>
+                    <span class="workspace-line-textarea-shell">
+                        <textarea id="lineTextInput" rows="3" maxlength="1000"></textarea>
+                        <output class="workspace-line-character-count" id="lineTextCharacterCount" for="lineTextInput" aria-live="polite">0 / 1000</output>
+                    </span>
+                </label>
+                <div class="workspace-anchor-preview" id="anchorPreview" aria-label="Choose a chord anchor" data-i18n-aria-label="pages.songWorkspace.chooseAnchor"></div>
+            </section>
             <div class="workspace-anchor-controls">
-                <label class="workspace-field">
-                    <span data-i18n="pages.songWorkspace.chordSymbol">Chord symbol</span>
-                    <input id="anchorChordInput" type="text" maxlength="40" placeholder="G, D/F#, Em7, Cmaj9..." data-i18n-placeholder="pages.songWorkspace.chordInputPlaceholder">
-                </label>
-                <label class="workspace-field" id="anchorPositionField">
-                    <span data-i18n="pages.songWorkspace.anchorPosition">Anchor position</span>
-                    <input id="anchorPositionInput" type="number" min="1" value="1" inputmode="numeric">
-                </label>
-                <button class="workspace-button workspace-button-secondary" id="addAnchorButton" type="button" data-i18n="pages.songWorkspace.addChord">Add Chord</button>
+                <section class="workspace-line-card workspace-chord-symbol-card">
+                    <label class="workspace-field">
+                        <span data-i18n="pages.songWorkspace.chordSymbol">Chord symbol</span>
+                        <input id="anchorChordInput" type="text" maxlength="40" placeholder="G, D/F#, Em7, Cmaj9..." data-i18n-placeholder="pages.songWorkspace.chordInputPlaceholder">
+                    </label>
+                </section>
+                <section class="workspace-line-card workspace-anchor-position-card">
+                    <div class="workspace-anchor-position-row">
+                        <label class="workspace-field" id="anchorPositionField">
+                            <span data-i18n="pages.songWorkspace.anchorPosition">Anchor position</span>
+                            <input id="anchorPositionInput" type="number" min="1" value="1" inputmode="numeric">
+                        </label>
+                        <p class="workspace-anchor-position-help" data-i18n="pages.songWorkspace.anchorPositionHelp">The position where the chord appears in this line.</p>
+                        <button class="workspace-button workspace-button-secondary" id="addAnchorButton" type="button" data-i18n="pages.songWorkspace.addChord">Add Chord</button>
+                    </div>
+                    <div class="workspace-anchor-list-heading">
+                        <span data-i18n="pages.songWorkspace.chordsInThisLine">Chords in this line</span>
+                        <span id="anchorChordCount">0 chords</span>
+                    </div>
+                    <div class="workspace-anchor-list" id="anchorList"></div>
+                </section>
             </div>
-            <div class="workspace-anchor-list" id="anchorList"></div>
             <p class="workspace-dialog-error" id="lineDialogError" role="alert"></p>
             <div class="workspace-dialog-actions workspace-line-dialog-actions">
-                <button class="workspace-button workspace-button-danger" id="deleteLineButton" type="button" data-i18n="pages.songWorkspace.deleteLine">Delete Line</button>
-                <button class="workspace-button workspace-button-secondary" type="button" data-dialog-close data-i18n="common.cancel">Cancel</button>
                 <button class="workspace-button workspace-button-primary" id="saveLineButton" value="default" type="submit" data-i18n="pages.songWorkspace.saveLine">Save Line</button>
+                <div class="workspace-line-secondary-actions">
+                    <button class="workspace-button workspace-button-secondary" id="cancelLineButton" type="button" data-dialog-close data-i18n="common.cancel">Cancel</button>
+                    <button class="workspace-button workspace-button-danger" id="deleteLineButton" type="button" data-i18n="pages.songWorkspace.deleteLine">Delete Line</button>
+                </div>
             </div>
         </form>
     </dialog>
@@ -558,6 +578,6 @@
     <script src="scripts/song-workspace-core.js?v=20260827-picker-json-fix"></script>
     <script src="scripts/song-workspace-storage.js?v=20260828-settings-ux"></script>
     <script src="scripts/song-workspace-import.js?v=20260827-picker-json-fix"></script>
-    <script src="scripts/song-workspace.js?v=20260828-mobile-global-add"></script>
+    <script src="scripts/song-workspace.js?v=20260829-condensed-measure-strip"></script>
 </body>
 </html>
