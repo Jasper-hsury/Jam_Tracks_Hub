@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const HISTORY_KEY = "jasperMusicKeyFinderHistory";
     const RESULT_MODE_KEY = "jasperMusicKeyFinderResultMode";
     const apiBaseUrl = window.JASPER_MUSIC_CONFIG?.apiBaseUrl ?? "http://127.0.0.1:8000";
-    const productionApiBaseUrl = window.JASPER_MUSIC_CONFIG?.productionApiBaseUrl ?? "https://jasper-music.onrender.com";
+    const productionApiBaseUrl = window.JASPER_MUSIC_CONFIG?.productionApiBaseUrl ?? "https://api.jamtrackshub.com";
     const youtubeSiteApiBaseUrlCandidates = Array.from(new Set([
         apiBaseUrl,
         productionApiBaseUrl

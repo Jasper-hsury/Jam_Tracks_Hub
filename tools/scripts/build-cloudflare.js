@@ -3,7 +3,7 @@ const path = require("path");
 
 const root = path.resolve(__dirname, "../..");
 const dist = path.join(root, "dist");
-const renderAssetBaseUrl = "https://jasper-music.onrender.com";
+const renderAssetBaseUrl = "https://api.jamtrackshub.com";
 const maxWorkerAssetBytes = 24 * 1024 * 1024;
 const skippedLargeAssets = [];
 
