@@ -463,6 +463,18 @@ html[data-theme="default"] {
     gap: 10px;
 }
 
+.workspace-count-control {
+    display: inline-flex;
+    align-items: center;
+}
+
+.workspace-library-action-icon,
+.workspace-song-action-icon,
+.workspace-song-meta-icon,
+.workspace-song-artwork {
+    display: none;
+}
+
 .workspace-library {
     padding-top: 24px;
     border-top: 1px solid var(--workspace-line);
@@ -485,6 +497,10 @@ html[data-theme="default"] {
     background: var(--workspace-surface);
 }
 
+.workspace-song-card-identity {
+    min-width: 0;
+}
+
 .workspace-song-card h3 {
     margin: 0;
     overflow-wrap: anywhere;
@@ -502,6 +518,10 @@ html[data-theme="default"] {
     gap: 8px 15px;
     color: var(--workspace-muted);
     font-size: 0.9rem;
+}
+
+.workspace-song-meta-row {
+    min-width: 0;
 }
 
 .workspace-song-actions {
@@ -2471,6 +2491,182 @@ svg.workspace-anchor-action-icon {
         flex-direction: column;
     }
 
+    .workspace-library > .workspace-section-heading {
+        gap: 22px;
+    }
+
+    .workspace-library > .workspace-section-heading .result-kicker {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--workspace-muted);
+        font-size: 0.78rem;
+        font-weight: 750;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    .workspace-library > .workspace-section-heading h2 {
+        margin-top: 0;
+        font-size: clamp(2rem, 10vw, 2.65rem);
+        line-height: 1.05;
+    }
+
+    .workspace-library-actions,
+    .workspace-count-control,
+    .workspace-file-actions {
+        width: 100%;
+    }
+
+    .workspace-count-control {
+        min-height: 54px;
+        box-sizing: border-box;
+        border: 1px solid var(--workspace-line);
+        border-radius: 16px;
+        padding: 0 14px;
+        background: var(--workspace-surface);
+    }
+
+    .workspace-count-control .workspace-count {
+        border: 0;
+        padding: 0;
+        background: transparent;
+        font-size: 0.95rem;
+    }
+
+    .workspace-file-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .workspace-file-actions .workspace-button:first-child {
+        grid-column: auto;
+    }
+
+    .workspace-file-actions .workspace-button {
+        min-height: 56px;
+        width: 100%;
+        gap: 10px;
+        border-radius: 16px;
+        font-size: 0.95rem;
+    }
+
+    .workspace-library-action-icon,
+    .workspace-song-action-icon,
+    .workspace-song-meta-icon,
+    .workspace-song-artwork-icon {
+        display: block;
+        flex: 0 0 auto;
+        width: 22px;
+        height: 22px;
+        fill: none;
+        stroke: currentColor;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 1.7;
+    }
+
+    .workspace-library-action-icon {
+        color: var(--workspace-accent);
+    }
+
+    .workspace-song-grid {
+        gap: 14px;
+        margin-top: 18px;
+    }
+
+    .workspace-song-card {
+        gap: 16px;
+        border-radius: 18px;
+        padding: 16px;
+        background: var(--workspace-surface);
+        box-shadow: 0 8px 22px color-mix(in srgb, var(--shadow-color) 18%, transparent);
+    }
+
+    .workspace-song-card-identity {
+        display: grid;
+        grid-template-columns: 68px minmax(0, 1fr);
+        align-items: center;
+        gap: 14px;
+    }
+
+    .workspace-song-artwork {
+        display: grid;
+        width: 68px;
+        height: 68px;
+        place-items: center;
+        border: 1px solid var(--workspace-line);
+        border-radius: 14px;
+        color: var(--primary-button-background);
+        background: var(--workspace-soft);
+    }
+
+    .workspace-song-artwork-icon {
+        width: 34px;
+        height: 34px;
+    }
+
+    .workspace-song-title-block {
+        min-width: 0;
+    }
+
+    .workspace-song-card h3 {
+        font-size: 1.35rem;
+        line-height: 1.15;
+    }
+
+    .workspace-song-card p {
+        margin-top: 7px;
+        font-size: 0.95rem;
+    }
+
+    .workspace-song-meta-summary {
+        display: grid;
+        gap: 9px;
+        border-top: 1px solid var(--workspace-line);
+        border-bottom: 1px solid var(--workspace-line);
+        padding: 13px 4px;
+        font-size: 0.87rem;
+    }
+
+    .workspace-song-meta-row {
+        display: grid;
+        grid-template-columns: 24px minmax(0, 1fr);
+        align-items: center;
+        gap: 8px;
+        line-height: 1.3;
+    }
+
+    .workspace-song-meta-icon {
+        width: 19px;
+        height: 19px;
+        color: color-mix(in srgb, var(--workspace-muted) 82%, var(--primary-button-background));
+    }
+
+    .workspace-song-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 9px;
+    }
+
+    .workspace-song-actions .workspace-button {
+        min-height: 52px;
+        gap: 8px;
+        border-radius: 16px;
+        padding: 9px 10px;
+        font-size: 0.88rem;
+    }
+
+    .workspace-song-actions .workspace-button-danger {
+        color: var(--danger-border);
+        border-color: var(--danger-border);
+        background: var(--workspace-surface-strong);
+    }
+
+    .workspace-song-download-menu {
+        margin-top: -2px;
+    }
+
     .workspace-song-meta,
     .workspace-song-identity {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2541,21 +2737,34 @@ svg.workspace-anchor-action-icon {
         display: none;
     }
 
-    .workspace-settings-disclosure > summary::after {
-        content: "⌄";
-        flex: 0 0 auto;
+    .workspace-settings-summary-chevron {
+        display: grid;
+        width: 44px;
+        height: 44px;
+        flex: 0 0 44px;
+        place-items: center;
+        border-radius: 50%;
         color: var(--workspace-text);
-        font-size: 1.2rem;
-        line-height: 1;
+        transition: transform 240ms cubic-bezier(0.25, 0.8, 0.25, 1);
     }
 
-    .workspace-settings-disclosure[open] > summary {
+    .workspace-settings-summary-chevron svg {
+        width: 22px;
+        height: 22px;
+        fill: none;
+        stroke: currentColor;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 2;
+    }
+
+    .workspace-settings-disclosure.is-settings-expanded > summary {
         border-bottom: 1px solid var(--workspace-line);
         border-radius: 14px 14px 0 0;
     }
 
-    .workspace-settings-disclosure[open] > summary::after {
-        content: "⌃";
+    .workspace-settings-disclosure.is-settings-expanded .workspace-settings-summary-chevron {
+        transform: rotate(180deg);
     }
 
     .workspace-settings-disclosure > summary small {
@@ -2571,10 +2780,13 @@ svg.workspace-anchor-action-icon {
     }
 
     .workspace-settings-panel {
+        box-sizing: border-box;
+        overflow: hidden;
         border: 0;
         border-radius: 0 0 14px 14px;
         padding: 20px 15px 16px;
         background: var(--workspace-surface);
+        transform-origin: top;
     }
 
     .workspace-settings-nav {
@@ -3243,7 +3455,6 @@ svg.workspace-anchor-action-icon {
 
 @media (max-width: 420px) {
     .workspace-file-actions,
-    .workspace-song-actions,
     .workspace-song-meta {
         grid-template-columns: 1fr;
     }
@@ -3377,7 +3588,8 @@ svg.workspace-anchor-action-icon {
     .workspace-add-trigger,
     .workspace-reading-step-button,
     .workspace-shape-option,
-    .workspace-capo-option {
+    .workspace-capo-option,
+    .workspace-settings-summary-chevron {
         transition: none;
     }
 

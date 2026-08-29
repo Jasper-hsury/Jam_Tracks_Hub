@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="styles/pages.css?v=20260826-song-workspace">
     <link rel="stylesheet" href="styles/themes.css?v=20260826-song-workspace">
     <link rel="stylesheet" href="styles/chord-dictionary.css?v=20260826-workspace-hardening">
-    <link rel="stylesheet" href="styles/song-workspace.css?v=20260829-condensed-measure-strip">
+    <link rel="stylesheet" href="styles/song-workspace.css?v=20260829-mobile-library-v2">
 </head>
 <body data-i18n-title="titles.songWorkspace">
     <nav class="navbar">
@@ -128,10 +128,18 @@
                         <h2 id="mySongsTitle" data-i18n="pages.songWorkspace.mySongs">My Songs</h2>
                     </div>
                     <div class="workspace-library-actions">
-                        <span class="workspace-count" id="songCount">0</span>
+                        <div class="workspace-count-control" role="status" aria-live="polite">
+                            <span class="workspace-count" id="songCount">0</span>
+                        </div>
                         <div class="workspace-file-actions">
-                            <button class="workspace-button workspace-button-secondary" type="button" id="backupSongsButton" data-i18n="pages.songWorkspace.backupAll">Backup All</button>
-                            <button class="workspace-button workspace-button-secondary" type="button" id="restoreSongsButton" data-i18n="pages.songWorkspace.restoreBackup">Restore Backup</button>
+                            <button class="workspace-button workspace-button-secondary" type="button" id="backupSongsButton">
+                                <svg class="workspace-library-action-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 18H6a4 4 0 0 1-.7-7.94A7 7 0 0 1 18.7 8.3 4.5 4.5 0 0 1 18.5 17H17M12 11v10m-4-6 4-4 4 4"/></svg>
+                                <span data-i18n="pages.songWorkspace.backupAll">Backup All</span>
+                            </button>
+                            <button class="workspace-button workspace-button-secondary" type="button" id="restoreSongsButton">
+                                <svg class="workspace-library-action-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12a8 8 0 1 0 2.35-5.65L4 8.7M4 4v4.7h4.7M12 8v4l2.5 1.5"/></svg>
+                                <span data-i18n="pages.songWorkspace.restoreBackup">Restore Backup</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -177,14 +185,17 @@
             </div>
 
             <details class="workspace-settings-disclosure" id="workspaceSettingsDisclosure" open>
-                <summary>
+                <summary id="workspaceSettingsSummary" aria-expanded="true" aria-controls="workspaceSettingsPanel">
                     <svg class="workspace-settings-summary-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h7m4 0h5M4 17h5m4 0h7M11 4v6m2 4v6"/><circle cx="13" cy="7" r="2"/><circle cx="11" cy="17" r="2"/></svg>
                     <span class="workspace-settings-summary-copy">
                         <span data-i18n="pages.songWorkspace.songSettings">Song settings</span>
                         <small data-i18n="pages.songWorkspace.songSettingsHint">Tap to view keys and reading controls</small>
                     </span>
+                    <span class="workspace-settings-summary-chevron" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" focusable="false"><path d="m7 9 5 5 5-5"/></svg>
+                    </span>
                 </summary>
-                <section class="workspace-settings-panel" aria-label="Song settings" data-i18n-aria-label="pages.songWorkspace.songSettings">
+                <section class="workspace-settings-panel" id="workspaceSettingsPanel" aria-label="Song settings" data-i18n-aria-label="pages.songWorkspace.songSettings">
                     <div class="workspace-settings-nav" data-settings-row="primary">
                         <div class="workspace-field workspace-setting-item" data-setting-help-item>
                             <div class="workspace-setting-label"><label for="originalKeySelect" data-i18n="pages.songWorkspace.originalKey">Original Key</label><button class="workspace-setting-help-trigger" type="button" data-setting-help aria-expanded="false" aria-controls="originalKeyHelp" aria-label="Original Key help" data-i18n-aria-label="pages.songWorkspace.originalKeyHelpLabel">?</button></div>
@@ -251,7 +262,7 @@
                 </div>
                 <div class="workspace-mode-actions">
                     <button class="workspace-button workspace-button-secondary" id="chordHintsButton" type="button" aria-pressed="false" data-i18n="pages.songWorkspace.chordChangeHints">Chord Change Hints</button>
-                    <button class="workspace-button workspace-button-secondary" id="smartCapoButton" type="button" data-i18n="pages.songWorkspace.smartCapo">Smart Capo</button>
+                    <button class="workspace-button workspace-button-primary" id="smartCapoButton" type="button" data-i18n="pages.songWorkspace.smartCapo">Smart Capo</button>
                 </div>
             </div>
             <div class="workspace-capo-results" id="capoResults" hidden></div>
@@ -578,6 +589,6 @@
     <script src="scripts/song-workspace-core.js?v=20260827-picker-json-fix"></script>
     <script src="scripts/song-workspace-storage.js?v=20260828-settings-ux"></script>
     <script src="scripts/song-workspace-import.js?v=20260827-picker-json-fix"></script>
-    <script src="scripts/song-workspace.js?v=20260829-condensed-measure-strip"></script>
+    <script src="scripts/song-workspace.js?v=20260829-mobile-library-v2"></script>
 </body>
 </html>
