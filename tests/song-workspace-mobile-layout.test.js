@@ -8,6 +8,8 @@ const read = relativePath => fs.readFileSync(path.join(root, relativePath), "utf
 const html = read("song-workspace.html");
 const css = read("styles/song-workspace.css");
 const app = read("scripts/song-workspace.js");
+const en = JSON.parse(read("locales/en/common.json"));
+const zh = JSON.parse(read("locales/zh-TW/common.json"));
 
 function region(source, start, end) {
     const startIndex = source.indexOf(start);
@@ -28,15 +30,23 @@ test("editor actions keep icons before text across mobile, tablet, and desktop",
     assert.match(css, /\.workspace-action-icon\s*\{[^}]*display:\s*block/s);
     assert.doesNotMatch(css, /@media \(min-width: 721px\)[\s\S]*?\.workspace-action-icon\s*\{[^}]*display:\s*none/s);
     assert.match(css, /@media \(max-width: 720px\)[\s\S]*?\.workspace-editor-topbar\s*\{[^}]*grid-template-columns:\s*repeat\(4, minmax\(0, 1fr\)\)/s);
+    assert.match(css, /@media \(max-width: 720px\)[\s\S]*?\.workspace-editor-topbar\s*\{[^}]*width:\s*100%/s);
     assert.match(css, /@media \(max-width: 720px\)[\s\S]*?\.workspace-editor-actions\s*\{[^}]*display:\s*contents/s);
     const mobileActions = region(css, "@media (max-width: 720px)", ".workspace-global-add-button");
     assert.match(mobileActions, /flex-direction:\s*column/);
     assert.match(mobileActions, /gap:\s*8px/);
     assert.match(mobileActions, /aspect-ratio:\s*1/);
+    assert.match(mobileActions, /width:\s*100%/);
     assert.match(mobileActions, /padding:\s*10px 5px/);
     assert.match(mobileActions, /font-size:\s*clamp\(0\.68rem, 3vw, 0\.78rem\)/);
     assert.match(mobileActions, /\.workspace-action-icon\s*\{[^}]*width:\s*28px;[^}]*height:\s*28px/s);
     assert.match(css, /#performanceButton::after\s*\{[^}]*background:\s*var\(--workspace-accent\)/s);
+});
+
+test("the library action uses the concise My Songs label in both locales", () => {
+    assert.match(html, /data-i18n="pages\.songWorkspace\.backToSongs">My Songs<\/span>/);
+    assert.equal(en.pages.songWorkspace.backToSongs, "My Songs");
+    assert.equal(zh.pages.songWorkspace.backToSongs, "我的歌曲");
 });
 
 test("mobile settings keep a compact two-column hierarchy", () => {

@@ -45,6 +45,22 @@ test("mobile Edit Line exposes readable lyric, chord, anchor, and chord-list car
     assert.match(app, /setAttribute\("aria-label", editLabel\)[\s\S]*?setAttribute\("aria-label", deleteLabel\)/);
 });
 
+test("mobile chord delete actions use an accessible trash-can icon", () => {
+    assert.match(app, /function deleteActionIcon\(\)[\s\S]*?createElementNS\(namespace, "svg"\)[\s\S]*?M19 6l-1 14H6L5 6/);
+    assert.match(app, /const removeIcon = deleteActionIcon\(\)/);
+    assert.match(app, /edit\.append\(editIcon, editText\)[\s\S]*?remove\.append\(removeIcon, removeText\)/);
+    assert.doesNotMatch(app, /workspace-anchor-action-icon", "⌫"/);
+    assert.match(mobile, /svg\.workspace-anchor-action-icon\s*\{[^}]*width:\s*21px[^}]*height:\s*21px[^}]*stroke:\s*currentColor/s);
+});
+
+test("chord actions show icon-before-text on desktop and mirrored icon-only controls on mobile", () => {
+    const desktop = css.slice(0, css.indexOf("@media (max-width: 720px)"));
+    assert.match(desktop, /\.workspace-anchor-action-icon\s*\{[^}]*display:\s*inline-flex[^}]*width:\s*1\.1em/s);
+    assert.match(desktop, /\[data-action="edit-anchor"\] \.workspace-anchor-action-icon\s*\{[^}]*transform:\s*scaleX\(-1\)/s);
+    assert.match(desktop, /\.workspace-anchor-item button\s*\{[^}]*gap:\s*6px/s);
+    assert.match(mobile, /\.workspace-anchor-action-text\s*\{[^}]*position:\s*absolute[^}]*clip-path:\s*inset\(50%\)/s);
+});
+
 test("mobile action hierarchy is Save, then Cancel and Delete", () => {
     const actions = region(lineDialog, '<div class="workspace-dialog-actions workspace-line-dialog-actions">', "</div>\n            </div>");
     const saveIndex = actions.indexOf('id="saveLineButton"');

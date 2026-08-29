@@ -1375,14 +1375,26 @@ body.song-workspace-read-mode .song-workspace-page {
     padding-top: 18px;
 }
 
+.workspace-editor.is-read-mode {
+    --workspace-read-content-width: 1180px;
+}
+
 .workspace-editor.is-read-mode .workspace-editor-layout {
     grid-template-columns: minmax(0, 1fr);
 }
 
 .workspace-editor.is-read-mode .workspace-chart-panel {
-    width: min(1180px, 100%);
+    width: min(var(--workspace-read-content-width), 100%);
     margin: 0 auto;
     padding: 16px clamp(14px, 2.4vw, 28px) 22px;
+}
+
+.workspace-editor.is-read-mode .workspace-read-toolbar {
+    box-sizing: border-box;
+    width: min(var(--workspace-read-content-width), 100%);
+    min-height: 58px;
+    margin: 0 auto 10px;
+    padding: 8px 10px;
 }
 
 .workspace-editor.is-read-mode .workspace-title-trigger {
@@ -1709,6 +1721,55 @@ html[data-theme="default"] .workspace-instrumental-chord {
     text-transform: uppercase;
 }
 
+/* Normal Workspace uses a compact measure strip; Read, Performance, and Print keep their own presentation. */
+@media screen {
+    .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-lines.is-instrumental-grid {
+        column-gap: 0;
+        row-gap: 6px;
+    }
+
+    .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-line.is-instrumental {
+        min-height: 58px;
+        border-width: 1px 1px 1px 0;
+        border-radius: 0;
+        background: color-mix(in srgb, var(--workspace-soft) 38%, var(--workspace-surface-strong));
+        box-shadow: none;
+    }
+
+    .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-line.is-instrumental:nth-child(4n + 1) {
+        border-left-width: 1px;
+    }
+
+    .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-instrumental-line {
+        grid-template-rows: auto minmax(36px, 1fr);
+        min-height: 56px;
+    }
+
+    .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-instrumental-line .workspace-bar-label {
+        padding: 5px 6px 0;
+        font-size: clamp(10px, 0.62em, 12px);
+        font-weight: 750;
+        line-height: 1;
+        text-align: center;
+        text-transform: none;
+    }
+
+    .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-instrumental-chords {
+        gap: 2px 5px;
+        padding: 1px 4px 7px;
+    }
+
+    @container (min-width: 760px) {
+        .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-line.is-instrumental:nth-child(4n + 1) {
+            border-left-width: 0;
+        }
+
+        .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-line.is-instrumental:nth-child(8n + 1) {
+            border-left-width: 1px;
+        }
+    }
+}
+
 .workspace-add-control {
     position: relative;
     z-index: 2;
@@ -2020,9 +2081,31 @@ html.workspace-dialog-restoring {
 .workspace-line-dialog-subtitle,
 .workspace-line-character-count,
 .workspace-anchor-position-help,
-.workspace-anchor-list-heading,
-.workspace-anchor-action-icon {
+.workspace-anchor-list-heading {
     display: none;
+}
+
+.workspace-anchor-action-icon {
+    display: inline-flex;
+    flex: 0 0 auto;
+    width: 1.1em;
+    height: 1.1em;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+svg.workspace-anchor-action-icon {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+[data-action="edit-anchor"] .workspace-anchor-action-icon {
+    transform: scaleX(-1);
 }
 
 .workspace-line-card,
@@ -2113,6 +2196,7 @@ html.workspace-dialog-restoring {
 }
 
 .workspace-anchor-item button {
+    gap: 6px;
     white-space: nowrap;
 }
 
@@ -2217,6 +2301,12 @@ html.workspace-dialog-restoring {
     .workspace-settings-disclosure > .workspace-settings-panel {
         display: grid !important;
     }
+
+    .workspace-editor.is-read-mode .workspace-read-toolbar {
+        min-height: 70px;
+        gap: 10px;
+        padding: 12px 14px;
+    }
 }
 
 @media (max-width: 900px) and (min-width: 721px) {
@@ -2262,6 +2352,7 @@ html.workspace-dialog-restoring {
 
     .workspace-editor-topbar {
         display: grid;
+        width: 100%;
         grid-template-columns: repeat(4, minmax(0, 1fr));
         align-items: stretch;
         gap: 10px;
@@ -2275,6 +2366,7 @@ html.workspace-dialog-restoring {
     .workspace-editor-topbar > .workspace-button,
     .workspace-editor-actions > .workspace-button {
         position: relative;
+        width: 100%;
         flex-direction: column;
         gap: 8px;
         min-width: 0;
@@ -2682,13 +2774,59 @@ html.workspace-dialog-restoring {
     }
 
     .workspace-read-toolbar {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         top: 5px;
-        justify-content: center;
+        align-items: center;
     }
 
     .workspace-read-summary {
-        order: -1;
-        flex-basis: 100%;
+        grid-column: 1 / -1;
+        grid-row: 1;
+    }
+
+    #exitReadModeButton {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    #readShapesButton {
+        grid-column: 2;
+        grid-row: 2;
+    }
+
+    .workspace-read-toolbar .workspace-read-stepper:first-of-type {
+        grid-column: 1;
+        grid-row: 3;
+    }
+
+    .workspace-read-toolbar .workspace-read-stepper:last-of-type {
+        grid-column: 2;
+        grid-row: 3;
+    }
+
+    .workspace-read-toolbar .workspace-button,
+    .workspace-read-toolbar .workspace-read-stepper {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .workspace-read-toolbar .workspace-read-stepper {
+        grid-template-columns: 44px minmax(0, 1fr) 44px;
+    }
+
+    .workspace-read-toolbar .workspace-read-stepper button:first-child {
+        justify-self: start;
+    }
+
+    .workspace-read-toolbar .workspace-read-stepper output {
+        width: 100%;
+        justify-self: center;
+        text-align: center;
+    }
+
+    .workspace-read-toolbar .workspace-read-stepper button:last-child {
+        justify-self: end;
     }
 
     .workspace-editor.is-read-mode .workspace-chart-panel {
@@ -3033,6 +3171,16 @@ html.workspace-dialog-restoring {
         justify-content: center;
         font-size: 1.45rem;
         line-height: 1;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode svg.workspace-anchor-action-icon {
+        width: 21px;
+        height: 21px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
     }
 
     .workspace-line-dialog.is-edit-line-mode .workspace-anchor-item [data-action="edit-anchor"] {

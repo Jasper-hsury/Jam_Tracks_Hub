@@ -86,8 +86,20 @@ test("Read Mode reuses the chart while removing editor chrome", () => {
     assert.match(app, /elements\.editor\.classList\.toggle\("is-read-mode", state\.readMode\)/);
     assert.match(css, /\.workspace-editor\.is-read-mode \.workspace-editor-topbar,[\s\S]*\.workspace-settings-disclosure,[\s\S]*\.workspace-modebar/);
     assert.match(css, /\.workspace-editor\.is-read-mode \.workspace-chart\s*\{[^}]*--song-chart-lyric-size:\s*0\.96875em[^}]*--song-chart-chord-size:\s*0\.875em/s);
+    assert.match(css, /\.workspace-editor\.is-read-mode\s*\{[^}]*--workspace-read-content-width:\s*1180px/s);
+    assert.match(css, /\.workspace-editor\.is-read-mode \.workspace-chart-panel\s*\{[^}]*width:\s*min\(var\(--workspace-read-content-width\), 100%\)[^}]*margin:\s*0 auto/s);
+    assert.match(css, /\.workspace-editor\.is-read-mode \.workspace-read-toolbar\s*\{[^}]*box-sizing:\s*border-box[^}]*width:\s*min\(var\(--workspace-read-content-width\), 100%\)[^}]*min-height:\s*58px[^}]*margin:\s*0 auto 10px[^}]*padding:\s*8px 10px/s);
+    assert.match(css, /@media \(min-width: 721px\)[\s\S]*?\.workspace-editor\.is-read-mode \.workspace-read-toolbar\s*\{[^}]*min-height:\s*70px[^}]*gap:\s*10px[^}]*padding:\s*12px 14px/s);
     assert.match(css, /\.workspace-editor\.is-read-mode \.workspace-line\.is-instrumental\s*\{[^}]*min-height:\s*54px/s);
     assert.match(css, /\.workspace-editor\.is-read-mode \.workspace-line:not\(\.is-instrumental\)\s*\{[^}]*var\(--song-line-spacing\) \/ 4/s);
+    assert.match(css, /@media \(max-width: 720px\)[\s\S]*?#exitReadModeButton\s*\{[^}]*grid-column:\s*1[^}]*grid-row:\s*2/s);
+    assert.match(css, /@media \(max-width: 720px\)[\s\S]*?#readShapesButton\s*\{[^}]*grid-column:\s*2[^}]*grid-row:\s*2/s);
+    assert.match(css, /@media \(max-width: 720px\)[\s\S]*?\.workspace-read-toolbar \.workspace-read-stepper:first-of-type\s*\{[^}]*grid-column:\s*1[^}]*grid-row:\s*3/s);
+    assert.match(css, /@media \(max-width: 720px\)[\s\S]*?\.workspace-read-toolbar \.workspace-read-stepper:last-of-type\s*\{[^}]*grid-column:\s*2[^}]*grid-row:\s*3/s);
+    assert.match(css, /@media \(max-width: 720px\)[\s\S]*?\.workspace-read-toolbar \.workspace-read-stepper\s*\{[^}]*grid-template-columns:\s*44px minmax\(0, 1fr\) 44px/s);
+    assert.match(css, /\.workspace-read-toolbar \.workspace-read-stepper button:first-child\s*\{[^}]*justify-self:\s*start/s);
+    assert.match(css, /\.workspace-read-toolbar \.workspace-read-stepper output\s*\{[^}]*width:\s*100%[^}]*justify-self:\s*center[^}]*text-align:\s*center/s);
+    assert.match(css, /\.workspace-read-toolbar \.workspace-read-stepper button:last-child\s*\{[^}]*justify-self:\s*end/s);
 });
 
 test("Read Mode shapes use a closed-by-default drawer with bounded controls", () => {

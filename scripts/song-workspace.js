@@ -397,6 +397,27 @@
         return item;
     }
 
+    function deleteActionIcon() {
+        const namespace = "http://www.w3.org/2000/svg";
+        const icon = document.createElementNS(namespace, "svg");
+        icon.classList.add("workspace-anchor-action-icon");
+        icon.setAttribute("viewBox", "0 0 24 24");
+        icon.setAttribute("aria-hidden", "true");
+        icon.setAttribute("focusable", "false");
+        [
+            "M3 6h18",
+            "M8 6V4h8v2",
+            "M19 6l-1 14H6L5 6",
+            "M10 11v5",
+            "M14 11v5"
+        ].forEach(function(pathData) {
+            const path = document.createElementNS(namespace, "path");
+            path.setAttribute("d", pathData);
+            icon.appendChild(path);
+        });
+        return icon;
+    }
+
     function setStatus(message, isError) {
         elements.status.textContent = message || "";
         elements.status.classList.toggle("is-error", Boolean(isError));
@@ -993,17 +1014,25 @@
 
     function renderLine(line, sectionIndex, lineIndex, editable) {
         const host = node(editable ? "button" : "div", `workspace-line${line.type === "instrumental" ? " is-instrumental" : ""}`);
+        const barNumber = lineIndex + 1;
+        const barChordSummary = line.type === "instrumental"
+            ? line.chords.map(function(chord) { return chord.symbol; }).join(" ") || "—"
+            : "";
         if (editable) {
             host.type = "button";
             host.dataset.action = "edit-line";
             host.dataset.sectionIndex = String(sectionIndex);
             host.dataset.lineIndex = String(lineIndex);
             host.setAttribute("aria-label", line.type === "instrumental"
-                ? t("pages.songWorkspace.editBarNumber", "Edit bar {{bar}}", { bar: lineIndex + 1 })
+                ? `${t("pages.songWorkspace.editBarNumber", "Edit bar {{bar}}", { bar: barNumber })}, ${barChordSummary}`
                 : t("pages.songWorkspace.editLine", "Edit line"));
         }
         if (line.type === "instrumental") {
-            host.dataset.barNumber = String(lineIndex + 1);
+            host.dataset.barNumber = String(barNumber);
+            if (!editable) {
+                host.setAttribute("role", "group");
+                host.setAttribute("aria-label", `${t("pages.songWorkspace.barNumber", "Bar {{bar}}", { bar: barNumber })}, ${barChordSummary}`);
+            }
             const row = node("div", "workspace-instrumental-line");
             const chords = node("div", "workspace-instrumental-chords");
             line.chords.forEach(chord => chords.appendChild(node("span", "workspace-instrumental-chord", chord.symbol)));
@@ -1012,8 +1041,17 @@
                 empty.setAttribute("aria-hidden", "true");
                 chords.appendChild(empty);
             }
+            const visualBarNumber = node(
+                "span",
+                "workspace-bar-label",
+                editable ? String(barNumber) : t("pages.songWorkspace.barNumber", "Bar {{bar}}", { bar: barNumber })
+            );
+            if (editable) {
+                visualBarNumber.setAttribute("aria-hidden", "true");
+                chords.setAttribute("aria-hidden", "true");
+            }
             row.append(
-                node("span", "workspace-bar-label", t("pages.songWorkspace.barNumber", "Bar {{bar}}", { bar: lineIndex + 1 })),
+                visualBarNumber,
                 chords
             );
             host.appendChild(row);
@@ -1585,11 +1623,10 @@
             const editText = node("span", "workspace-anchor-action-text", editLabel);
             const removeText = node("span", "workspace-anchor-action-text", deleteLabel);
             const editIcon = node("span", "workspace-anchor-action-icon", "✎");
-            const removeIcon = node("span", "workspace-anchor-action-icon", "⌫");
+            const removeIcon = deleteActionIcon();
             editIcon.setAttribute("aria-hidden", "true");
-            removeIcon.setAttribute("aria-hidden", "true");
-            edit.append(editText, editIcon);
-            remove.append(removeText, removeIcon);
+            edit.append(editIcon, editText);
+            remove.append(removeIcon, removeText);
             edit.dataset.anchorId = chord.id;
             remove.dataset.anchorId = chord.id;
             row.append(edit, remove);
