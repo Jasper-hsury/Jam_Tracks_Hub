@@ -107,14 +107,14 @@ test("line spacing changes only non-instrumental reading rows and print remains 
     assert.doesNotMatch(workspaceJs, /URLSearchParams[\s\S]{0,160}lineSpacing|umami[\s\S]{0,160}lineSpacing/);
 });
 
-test("normal Workspace instrumental bars use a compact measure-strip hierarchy", () => {
-    assert.match(workspaceCss, /@media screen[\s\S]*?\.workspace-editor:not\(\.is-read-mode\) \.workspace-chart \.workspace-line\.is-instrumental\s*\{[^}]*min-height:\s*44px[^}]*border-width:\s*0 0 0 1px[^}]*background:\s*transparent[^}]*box-shadow:\s*none/s);
-    assert.match(workspaceCss, /\.workspace-editor:not\(\.is-read-mode\) \.workspace-chart \.workspace-instrumental-line\s*\{[^}]*grid-template-rows:\s*minmax\(42px, 1fr\)/s);
-    assert.doesNotMatch(workspaceCss, /\.workspace-editor:not\(\.is-read-mode\) \.workspace-chart \.workspace-instrumental-line \.workspace-bar-label/);
+test("Workspace, Read Mode, and Performance share the compact measure-strip hierarchy", () => {
+    assert.match(workspaceCss, /@media screen[\s\S]*?\.workspace-chart \.workspace-line\.is-instrumental,\s*\.performance-chart \.workspace-line\.is-instrumental\s*\{[^}]*min-height:\s*44px[^}]*border-width:\s*0 0 0 1px[^}]*background:\s*transparent[^}]*box-shadow:\s*none/s);
+    assert.match(workspaceCss, /\.workspace-chart \.workspace-instrumental-line,\s*\.performance-chart \.workspace-instrumental-line\s*\{[^}]*grid-template-rows:\s*minmax\(42px, 1fr\)/s);
+    assert.match(workspaceCss, /\.workspace-chart \.workspace-instrumental-line \.workspace-bar-label,\s*\.performance-chart \.workspace-instrumental-line \.workspace-bar-label\s*\{[^}]*display:\s*none/s);
     assert.match(workspaceCss, /\.workspace-instrumental-chord\s*\{[^}]*font-size:\s*clamp\(12px, var\(--song-chart-instrumental-size\), 25\.5px\)[^}]*overflow-wrap:\s*anywhere/s);
     assert.match(workspaceCss, /\.workspace-lines\.is-instrumental-grid\s*\{[^}]*repeat\(4, minmax\(0, 1fr\)\)/s);
     assert.match(workspaceCss, /@container \(min-width: 760px\)[\s\S]*?repeat\(8, minmax\(0, 1fr\)\)/);
-    assert.match(workspaceCss, /\.workspace-editor\.is-read-mode \.workspace-line\.is-instrumental\s*\{[^}]*min-height:\s*54px/s);
+    assert.doesNotMatch(workspaceCss, /\.workspace-editor\.is-read-mode \.workspace-line\.is-instrumental\s*\{/);
     assert.match(workspaceCss, /@media print[\s\S]*?\.workspace-line\.is-instrumental\s*\{[^}]*min-height:\s*64px/s);
 });
 

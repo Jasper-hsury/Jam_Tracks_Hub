@@ -37,13 +37,13 @@ test("instrumental bars render as a compact four/eight-column measure strip", ()
     assert.doesNotMatch(instrumentalBranch, /emptyLine/);
 
     assert.match(workspaceCss, /@media screen[\s\S]*?\.workspace-lines\.is-instrumental-grid\s*\{[^}]*width:\s*min\(100%, 288px\)[^}]*row-gap:\s*3px[^}]*justify-self:\s*start/s);
-    assert.match(workspaceCss, /@media screen[\s\S]*?\.workspace-editor:not\(\.is-read-mode\) \.workspace-chart \.workspace-line\.is-instrumental\s*\{[^}]*min-height:\s*44px[^}]*border-width:\s*0 0 0 1px[^}]*border-radius:\s*0[^}]*background:\s*transparent[^}]*box-shadow:\s*none/s);
-    assert.match(workspaceCss, /\.workspace-editor:not\(\.is-read-mode\) \.workspace-chart \.workspace-line\.is-instrumental:nth-child\(4n\)[\s\S]*?border-right-width:\s*1px/);
+    assert.match(workspaceCss, /@media screen[\s\S]*?\.workspace-chart \.workspace-line\.is-instrumental,\s*\.performance-chart \.workspace-line\.is-instrumental\s*\{[^}]*min-height:\s*44px[^}]*border-width:\s*0 0 0 1px[^}]*border-radius:\s*0[^}]*background:\s*transparent[^}]*box-shadow:\s*none/s);
+    assert.match(workspaceCss, /\.workspace-chart \.workspace-line\.is-instrumental:nth-child\(4n\)[\s\S]*?border-right-width:\s*1px/);
     assert.match(workspaceCss, /@container \(min-width: 760px\)[\s\S]*?\.workspace-line\.is-instrumental:nth-child\(8n\)[\s\S]*?border-right-width:\s*1px/);
-    assert.doesNotMatch(workspaceCss, /\.workspace-editor:not\(\.is-read-mode\) \.workspace-chart \.workspace-line\.is-instrumental\s*\{[^}]*border-width:\s*1px 1px 1px 0/s);
-    assert.match(workspaceCss, /\.workspace-editor:not\(\.is-read-mode\) \.workspace-chart \.workspace-instrumental-line\s*\{[^}]*grid-template-rows:\s*minmax\(42px, 1fr\)[^}]*min-height:\s*42px/s);
+    assert.doesNotMatch(workspaceCss, /\.workspace-chart \.workspace-line\.is-instrumental\s*\{[^}]*border-width:\s*1px 1px 1px 0/s);
+    assert.match(workspaceCss, /\.workspace-chart \.workspace-instrumental-line,\s*\.performance-chart \.workspace-instrumental-line\s*\{[^}]*grid-template-rows:\s*minmax\(42px, 1fr\)[^}]*min-height:\s*42px/s);
     assert.match(workspaceCss, /@container \(min-width: 760px\)[\s\S]*?\.workspace-lines\.is-instrumental-grid\s*\{[^}]*width:\s*min\(100%, 768px\)/s);
-    assert.doesNotMatch(workspaceCss, /\.workspace-editor:not\(\.is-read-mode\) \.workspace-chart \.workspace-instrumental-line \.workspace-bar-label/);
+    assert.match(workspaceCss, /\.workspace-chart \.workspace-instrumental-line \.workspace-bar-label,\s*\.performance-chart \.workspace-instrumental-line \.workspace-bar-label\s*\{[^}]*display:\s*none/s);
 
     const rowSizes = (barCount, columnCount) => Array.from(
         { length: Math.ceil(barCount / columnCount) },

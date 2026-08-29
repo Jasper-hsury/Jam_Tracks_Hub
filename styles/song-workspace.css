@@ -14,6 +14,30 @@
     --workspace-progression-card-radius: 10px;
 }
 
+/* Song Workspace keeps all scroll surfaces usable while minimizing persistent scrollbar chrome. */
+html,
+body,
+.song-workspace-page,
+.workspace-performance,
+.workspace-dialog,
+.workspace-shapes-panel,
+.workspace-line-content {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+.song-workspace-page::-webkit-scrollbar,
+.workspace-performance::-webkit-scrollbar,
+.workspace-dialog::-webkit-scrollbar,
+.workspace-shapes-panel::-webkit-scrollbar,
+.workspace-line-content::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
 html[data-theme="default"] {
     --workspace-surface: rgba(26, 25, 24, 0.91);
     --workspace-surface-strong: #1c1b1a;
@@ -57,7 +81,6 @@ html[data-theme="default"] {
 }
 
 .song-workspace-promises span,
-.workspace-count,
 .workspace-save-state {
     border: 1px solid var(--workspace-line);
     border-radius: 999px;
@@ -463,15 +486,8 @@ html[data-theme="default"] {
     gap: 10px;
 }
 
-.workspace-count-control {
-    display: inline-flex;
-    align-items: center;
-}
-
 .workspace-library-action-icon,
-.workspace-song-action-icon,
-.workspace-song-meta-icon,
-.workspace-song-artwork {
+.workspace-song-action-icon {
     display: none;
 }
 
@@ -1455,26 +1471,6 @@ body.song-workspace-read-mode .song-workspace-page {
     padding-top: var(--workspace-chord-row-height, 1.05rem);
 }
 
-.workspace-editor.is-read-mode .workspace-line.is-instrumental {
-    min-height: 54px;
-    border-radius: 7px;
-}
-
-.workspace-editor.is-read-mode .workspace-instrumental-line {
-    grid-template-rows: auto minmax(32px, 1fr);
-    min-height: 52px;
-}
-
-.workspace-editor.is-read-mode .workspace-instrumental-line .workspace-bar-label {
-    padding: 5px 6px 0;
-    font-size: clamp(8px, 0.58em, 11px);
-}
-
-.workspace-editor.is-read-mode .workspace-instrumental-chords {
-    gap: 2px 5px;
-    padding: 2px 5px 6px;
-}
-
 .workspace-editor.is-read-mode .workspace-shapes-panel {
     position: fixed;
     z-index: 1001;
@@ -1487,6 +1483,14 @@ body.song-workspace-read-mode .song-workspace-page {
     border-radius: 0;
     padding: 18px;
     box-shadow: -18px 0 48px rgba(0, 0, 0, 0.24);
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.workspace-editor.is-read-mode .workspace-shapes-panel::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
 }
 
 .workspace-editor.is-read-mode .workspace-shapes-panel.is-read-open {
@@ -1741,16 +1745,18 @@ html[data-theme="default"] .workspace-instrumental-chord {
     text-transform: uppercase;
 }
 
-/* Normal Workspace uses a compact measure strip; Read, Performance, and Print keep their own presentation. */
+/* Workspace, Read Mode, and Performance share one compact measure-strip presentation. */
 @media screen {
-    .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-lines.is-instrumental-grid {
+    .workspace-chart .workspace-lines.is-instrumental-grid,
+    .performance-chart .workspace-lines.is-instrumental-grid {
         width: min(100%, 288px);
         column-gap: 0;
         row-gap: 3px;
         justify-self: start;
     }
 
-    .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-line.is-instrumental {
+    .workspace-chart .workspace-line.is-instrumental,
+    .performance-chart .workspace-line.is-instrumental {
         min-height: 44px;
         border-width: 0 0 0 1px;
         border-style: solid;
@@ -1760,37 +1766,51 @@ html[data-theme="default"] .workspace-instrumental-chord {
         box-shadow: none;
     }
 
-    .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-line.is-instrumental:nth-child(4n),
-    .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-line.is-instrumental:last-child {
+    .workspace-chart .workspace-line.is-instrumental:nth-child(4n),
+    .workspace-chart .workspace-line.is-instrumental:last-child,
+    .performance-chart .workspace-line.is-instrumental:nth-child(4n),
+    .performance-chart .workspace-line.is-instrumental:last-child {
         border-right-width: 1px;
     }
 
-    .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-line.is-instrumental:hover {
+    .workspace-chart .workspace-line.is-instrumental:hover,
+    .performance-chart .workspace-line.is-instrumental:hover {
         border-color: var(--workspace-line);
         background: transparent;
     }
 
-    .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-instrumental-line {
+    .workspace-chart .workspace-instrumental-line,
+    .performance-chart .workspace-instrumental-line {
         grid-template-rows: minmax(42px, 1fr);
         min-height: 42px;
     }
 
-    .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-instrumental-chords {
+    .workspace-chart .workspace-instrumental-chords,
+    .performance-chart .workspace-instrumental-chords {
         gap: 2px 5px;
         padding: 3px 4px;
     }
 
+    .workspace-chart .workspace-instrumental-line .workspace-bar-label,
+    .performance-chart .workspace-instrumental-line .workspace-bar-label {
+        display: none;
+    }
+
     @container (min-width: 760px) {
-        .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-lines.is-instrumental-grid {
+        .workspace-chart .workspace-lines.is-instrumental-grid,
+        .performance-chart .workspace-lines.is-instrumental-grid {
             width: min(100%, 768px);
         }
 
-        .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-line.is-instrumental:nth-child(4n) {
+        .workspace-chart .workspace-line.is-instrumental:nth-child(4n),
+        .performance-chart .workspace-line.is-instrumental:nth-child(4n) {
             border-right-width: 0;
         }
 
-        .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-line.is-instrumental:nth-child(8n),
-        .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-line.is-instrumental:last-child {
+        .workspace-chart .workspace-line.is-instrumental:nth-child(8n),
+        .workspace-chart .workspace-line.is-instrumental:last-child,
+        .performance-chart .workspace-line.is-instrumental:nth-child(8n),
+        .performance-chart .workspace-line.is-instrumental:last-child {
             border-right-width: 1px;
         }
     }
@@ -2512,25 +2532,8 @@ svg.workspace-anchor-action-icon {
     }
 
     .workspace-library-actions,
-    .workspace-count-control,
     .workspace-file-actions {
         width: 100%;
-    }
-
-    .workspace-count-control {
-        min-height: 54px;
-        box-sizing: border-box;
-        border: 1px solid var(--workspace-line);
-        border-radius: 16px;
-        padding: 0 14px;
-        background: var(--workspace-surface);
-    }
-
-    .workspace-count-control .workspace-count {
-        border: 0;
-        padding: 0;
-        background: transparent;
-        font-size: 0.95rem;
     }
 
     .workspace-file-actions {
@@ -2552,9 +2555,7 @@ svg.workspace-anchor-action-icon {
     }
 
     .workspace-library-action-icon,
-    .workspace-song-action-icon,
-    .workspace-song-meta-icon,
-    .workspace-song-artwork-icon {
+    .workspace-song-action-icon {
         display: block;
         flex: 0 0 auto;
         width: 22px;
@@ -2584,26 +2585,7 @@ svg.workspace-anchor-action-icon {
     }
 
     .workspace-song-card-identity {
-        display: grid;
-        grid-template-columns: 68px minmax(0, 1fr);
-        align-items: center;
-        gap: 14px;
-    }
-
-    .workspace-song-artwork {
-        display: grid;
-        width: 68px;
-        height: 68px;
-        place-items: center;
-        border: 1px solid var(--workspace-line);
-        border-radius: 14px;
-        color: var(--primary-button-background);
-        background: var(--workspace-soft);
-    }
-
-    .workspace-song-artwork-icon {
-        width: 34px;
-        height: 34px;
+        display: block;
     }
 
     .workspace-song-title-block {
@@ -2630,17 +2612,8 @@ svg.workspace-anchor-action-icon {
     }
 
     .workspace-song-meta-row {
-        display: grid;
-        grid-template-columns: 24px minmax(0, 1fr);
-        align-items: center;
-        gap: 8px;
+        display: block;
         line-height: 1.3;
-    }
-
-    .workspace-song-meta-icon {
-        width: 19px;
-        height: 19px;
-        color: color-mix(in srgb, var(--workspace-muted) 82%, var(--primary-button-background));
     }
 
     .workspace-song-actions {

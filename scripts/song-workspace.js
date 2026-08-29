@@ -56,7 +56,7 @@
     const $ = id => document.getElementById(id);
     const elements = {
         home: $("workspaceHomeView"), editor: $("workspaceEditorView"), status: $("workspaceStatus"),
-        list: $("songList"), empty: $("songEmptyState"), count: $("songCount"),
+        list: $("songList"), empty: $("songEmptyState"),
         title: $("songTitleInput"), artist: $("songArtistInput"), originalKey: $("originalKeySelect"),
         targetKey: $("targetKeySelect"), capo: $("capoSelect"), shapeKey: $("shapeKeyValue"),
         chordSpelling: $("chordSpellingSelect"),
@@ -457,10 +457,6 @@
     }
 
     const LIBRARY_ICON_PATHS = {
-        artwork: ["M9 18V6l10-2v12", "M9 9l10-2", "M6.5 21a2.5 2 0 1 0 0-5 2.5 2 0 0 0 5Zm10-2a2.5 2 0 1 0 0-5 2.5 2 0 0 0 5Z"],
-        key: ["M8.5 14.5a4 4 0 1 1 3-3L21 2v4h-3v3h-3v3l-2.5 2.5a4 4 0 0 1-4 0Z"],
-        capo: ["M5 7h14v5H5z", "M8 12v7", "M16 12v7"],
-        calendar: ["M5 4h14a2 2 0 0 1 2 2v14H3V6a2 2 0 0 1 2-2Z", "M7 2v4", "M17 2v4", "M3 9h18"],
         open: ["M3 7h7l2 2h9v10H3Z"],
         duplicate: ["M8 8h11v11H8Z", "M5 16H4V4h12v1"],
         download: ["M12 3v12", "m7 10 5 5 5-5", "M5 20h14"],
@@ -482,10 +478,8 @@
         return icon;
     }
 
-    function songMetaRow(iconName, text) {
-        const row = node("span", "workspace-song-meta-row");
-        row.append(libraryIcon(iconName, "workspace-song-meta-icon"), node("span", "", text));
-        return row;
+    function songMetaRow(text) {
+        return node("span", "workspace-song-meta-row", text);
     }
 
     function deleteActionIcon() {
@@ -582,21 +576,18 @@
 
     function renderLibrary() {
         elements.list.replaceChildren();
-        elements.count.textContent = String(state.songs.length);
         elements.empty.hidden = state.songs.length > 0;
         state.songs.forEach(function(song) {
             const card = node("article", "workspace-song-card");
             const identity = node("div", "workspace-song-card-identity");
-            const artwork = node("div", "workspace-song-artwork");
-            artwork.appendChild(libraryIcon("artwork", "workspace-song-artwork-icon"));
             const heading = node("div", "workspace-song-title-block");
             heading.append(node("h3", "", song.title), node("p", "", song.artist || t("pages.songWorkspace.unknownArtist", "No artist")));
-            identity.append(artwork, heading);
+            identity.appendChild(heading);
             const meta = node("div", "workspace-song-meta-summary");
             meta.append(
-                songMetaRow("key", `${t("pages.songWorkspace.key", "Key")}: ${song.targetKey || song.originalKey}`),
-                songMetaRow("capo", `Capo: ${song.capo || 0}`),
-                songMetaRow("calendar", formatDate(song.updatedAt))
+                songMetaRow(`${t("pages.songWorkspace.key", "Key")}: ${song.targetKey || song.originalKey}`),
+                songMetaRow(`Capo: ${song.capo || 0}`),
+                songMetaRow(formatDate(song.updatedAt))
             );
             const actions = node("div", "workspace-song-actions");
             const downloadMenuId = `workspace-download-${song.id}`;
