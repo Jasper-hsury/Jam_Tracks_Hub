@@ -1041,19 +1041,16 @@
                 empty.setAttribute("aria-hidden", "true");
                 chords.appendChild(empty);
             }
-            const visualBarNumber = node(
-                "span",
-                "workspace-bar-label",
-                editable ? String(barNumber) : t("pages.songWorkspace.barNumber", "Bar {{bar}}", { bar: barNumber })
-            );
             if (editable) {
-                visualBarNumber.setAttribute("aria-hidden", "true");
                 chords.setAttribute("aria-hidden", "true");
+            } else {
+                row.appendChild(node(
+                    "span",
+                    "workspace-bar-label",
+                    t("pages.songWorkspace.barNumber", "Bar {{bar}}", { bar: barNumber })
+                ));
             }
-            row.append(
-                visualBarNumber,
-                chords
-            );
+            row.appendChild(chords);
             host.appendChild(row);
             return host;
         }

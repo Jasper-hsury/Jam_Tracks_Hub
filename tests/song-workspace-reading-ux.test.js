@@ -108,8 +108,9 @@ test("line spacing changes only non-instrumental reading rows and print remains 
 });
 
 test("normal Workspace instrumental bars use a compact measure-strip hierarchy", () => {
-    assert.match(workspaceCss, /@media screen[\s\S]*?\.workspace-editor:not\(\.is-read-mode\) \.workspace-chart \.workspace-line\.is-instrumental\s*\{[^}]*min-height:\s*58px[^}]*border-radius:\s*0[^}]*box-shadow:\s*none/s);
-    assert.match(workspaceCss, /\.workspace-editor:not\(\.is-read-mode\) \.workspace-chart \.workspace-instrumental-line \.workspace-bar-label\s*\{[^}]*font-weight:\s*750[^}]*text-align:\s*center/s);
+    assert.match(workspaceCss, /@media screen[\s\S]*?\.workspace-editor:not\(\.is-read-mode\) \.workspace-chart \.workspace-line\.is-instrumental\s*\{[^}]*min-height:\s*44px[^}]*border-width:\s*0 0 0 1px[^}]*background:\s*transparent[^}]*box-shadow:\s*none/s);
+    assert.match(workspaceCss, /\.workspace-editor:not\(\.is-read-mode\) \.workspace-chart \.workspace-instrumental-line\s*\{[^}]*grid-template-rows:\s*minmax\(42px, 1fr\)/s);
+    assert.doesNotMatch(workspaceCss, /\.workspace-editor:not\(\.is-read-mode\) \.workspace-chart \.workspace-instrumental-line \.workspace-bar-label/);
     assert.match(workspaceCss, /\.workspace-instrumental-chord\s*\{[^}]*font-size:\s*clamp\(12px, var\(--song-chart-instrumental-size\), 25\.5px\)[^}]*overflow-wrap:\s*anywhere/s);
     assert.match(workspaceCss, /\.workspace-lines\.is-instrumental-grid\s*\{[^}]*repeat\(4, minmax\(0, 1fr\)\)/s);
     assert.match(workspaceCss, /@container \(min-width: 760px\)[\s\S]*?repeat\(8, minmax\(0, 1fr\)\)/);

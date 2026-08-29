@@ -29,16 +29,21 @@ test("instrumental bars render as a compact four/eight-column measure strip", ()
         workspaceJs.indexOf('if (line.type === "instrumental")'),
         workspaceJs.indexOf("if (!line.text)")
     );
+    assert.match(instrumentalBranch, /if \(editable\) \{[\s\S]*?chords\.setAttribute\("aria-hidden", "true"\)[\s\S]*?\} else \{[\s\S]*?workspace-bar-label[\s\S]*?barNumber/);
     assert.ok(instrumentalBranch.indexOf("workspace-bar-label") < instrumentalBranch.lastIndexOf("chords"));
-    assert.match(instrumentalBranch, /workspace-bar-label",[\s\S]*?editable \? String\(barNumber\) : t\("pages\.songWorkspace\.barNumber"/);
     assert.match(workspaceJs, /editBarNumber[\s\S]{0,220}barChordSummary/);
     assert.match(instrumentalBranch, /setAttribute\("role", "group"\)/);
     assert.match(instrumentalBranch, /workspace-empty-bar", "—"/);
     assert.doesNotMatch(instrumentalBranch, /emptyLine/);
 
-    assert.match(workspaceCss, /@media screen[\s\S]*?\.workspace-editor:not\(\.is-read-mode\) \.workspace-chart \.workspace-line\.is-instrumental\s*\{[^}]*min-height:\s*58px[^}]*border-radius:\s*0[^}]*box-shadow:\s*none/s);
-    assert.match(workspaceCss, /\.workspace-editor:not\(\.is-read-mode\) \.workspace-chart \.workspace-instrumental-line\s*\{[^}]*min-height:\s*56px/s);
-    assert.match(workspaceCss, /\.workspace-editor:not\(\.is-read-mode\) \.workspace-chart \.workspace-instrumental-line \.workspace-bar-label\s*\{[^}]*font-size:\s*clamp\(10px, 0\.62em, 12px\)[^}]*text-align:\s*center[^}]*text-transform:\s*none/s);
+    assert.match(workspaceCss, /@media screen[\s\S]*?\.workspace-lines\.is-instrumental-grid\s*\{[^}]*width:\s*min\(100%, 288px\)[^}]*row-gap:\s*3px[^}]*justify-self:\s*start/s);
+    assert.match(workspaceCss, /@media screen[\s\S]*?\.workspace-editor:not\(\.is-read-mode\) \.workspace-chart \.workspace-line\.is-instrumental\s*\{[^}]*min-height:\s*44px[^}]*border-width:\s*0 0 0 1px[^}]*border-radius:\s*0[^}]*background:\s*transparent[^}]*box-shadow:\s*none/s);
+    assert.match(workspaceCss, /\.workspace-editor:not\(\.is-read-mode\) \.workspace-chart \.workspace-line\.is-instrumental:nth-child\(4n\)[\s\S]*?border-right-width:\s*1px/);
+    assert.match(workspaceCss, /@container \(min-width: 760px\)[\s\S]*?\.workspace-line\.is-instrumental:nth-child\(8n\)[\s\S]*?border-right-width:\s*1px/);
+    assert.doesNotMatch(workspaceCss, /\.workspace-editor:not\(\.is-read-mode\) \.workspace-chart \.workspace-line\.is-instrumental\s*\{[^}]*border-width:\s*1px 1px 1px 0/s);
+    assert.match(workspaceCss, /\.workspace-editor:not\(\.is-read-mode\) \.workspace-chart \.workspace-instrumental-line\s*\{[^}]*grid-template-rows:\s*minmax\(42px, 1fr\)[^}]*min-height:\s*42px/s);
+    assert.match(workspaceCss, /@container \(min-width: 760px\)[\s\S]*?\.workspace-lines\.is-instrumental-grid\s*\{[^}]*width:\s*min\(100%, 768px\)/s);
+    assert.doesNotMatch(workspaceCss, /\.workspace-editor:not\(\.is-read-mode\) \.workspace-chart \.workspace-instrumental-line \.workspace-bar-label/);
 
     const rowSizes = (barCount, columnCount) => Array.from(
         { length: Math.ceil(barCount / columnCount) },

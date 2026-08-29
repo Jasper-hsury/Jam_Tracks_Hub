@@ -1724,48 +1724,54 @@ html[data-theme="default"] .workspace-instrumental-chord {
 /* Normal Workspace uses a compact measure strip; Read, Performance, and Print keep their own presentation. */
 @media screen {
     .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-lines.is-instrumental-grid {
+        width: min(100%, 288px);
         column-gap: 0;
-        row-gap: 6px;
+        row-gap: 3px;
+        justify-self: start;
     }
 
     .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-line.is-instrumental {
-        min-height: 58px;
-        border-width: 1px 1px 1px 0;
+        min-height: 44px;
+        border-width: 0 0 0 1px;
+        border-style: solid;
+        border-color: var(--workspace-line);
         border-radius: 0;
-        background: color-mix(in srgb, var(--workspace-soft) 38%, var(--workspace-surface-strong));
+        background: transparent;
         box-shadow: none;
     }
 
-    .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-line.is-instrumental:nth-child(4n + 1) {
-        border-left-width: 1px;
+    .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-line.is-instrumental:nth-child(4n),
+    .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-line.is-instrumental:last-child {
+        border-right-width: 1px;
+    }
+
+    .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-line.is-instrumental:hover {
+        border-color: var(--workspace-line);
+        background: transparent;
     }
 
     .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-instrumental-line {
-        grid-template-rows: auto minmax(36px, 1fr);
-        min-height: 56px;
-    }
-
-    .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-instrumental-line .workspace-bar-label {
-        padding: 5px 6px 0;
-        font-size: clamp(10px, 0.62em, 12px);
-        font-weight: 750;
-        line-height: 1;
-        text-align: center;
-        text-transform: none;
+        grid-template-rows: minmax(42px, 1fr);
+        min-height: 42px;
     }
 
     .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-instrumental-chords {
         gap: 2px 5px;
-        padding: 1px 4px 7px;
+        padding: 3px 4px;
     }
 
     @container (min-width: 760px) {
-        .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-line.is-instrumental:nth-child(4n + 1) {
-            border-left-width: 0;
+        .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-lines.is-instrumental-grid {
+            width: min(100%, 768px);
         }
 
-        .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-line.is-instrumental:nth-child(8n + 1) {
-            border-left-width: 1px;
+        .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-line.is-instrumental:nth-child(4n) {
+            border-right-width: 0;
+        }
+
+        .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-line.is-instrumental:nth-child(8n),
+        .workspace-editor:not(.is-read-mode) .workspace-chart .workspace-line.is-instrumental:last-child {
+            border-right-width: 1px;
         }
     }
 }
