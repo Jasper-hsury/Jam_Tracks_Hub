@@ -1,14 +1,15 @@
 # Production Anti-Abuse And Edge Security Runbook
 
-This document records the repository controls implemented during Security Infrastructure Phase 1 and the Cloudflare edge controls verified during Phase 2. Provider state is recorded only where the production Dashboard and bounded live checks supplied evidence.
+This document records the repository controls implemented during Security Infrastructure Phase 1, the Cloudflare edge controls verified during Phase 2, and the Render-behind-Cloudflare cutover prepared during Phase 3R. Provider state is recorded only where the production Dashboard and bounded live checks supplied evidence.
 
 ## Status And Scope
 
 - Repository request bounds, route and method allowlists, static security headers, cache directives, and Song Workspace logical-data bounds: **implemented**.
 - Cloudflare Free Managed Rules, DDoS protection, Browser Integrity Check, Bot Fight Mode, one public-mutation rate-limit rule, and an API cache-bypass rule: **verified enabled on 2026-08-29**.
 - Additional plan-dependent WAF tuning, administrative-export observation, alerts, and HSTS review: **deferred / unavailable on the current Free plan / pending separate review**, as detailed below.
-- Key Finder continues to use the current direct Render API topology. This phase does not migrate, proxy, retire, or otherwise change that runtime.
+- Phase 3R keeps the current Render compute service but moves the browser-facing API to `https://api.jamtrackshub.com`, a Cloudflare-proxied custom domain on the same Render service. Repository cutover and production acceptance must complete before the legacy `jasper-music.onrender.com` hostname is disabled.
 - Phase 2 changed only the documented Cloudflare Dashboard controls below. It added no secret, Render setting, application deployment, product feature, or load test.
+- The Cloudflare Containers/Durable Objects prototype remains **DEFERRED_COST_DECISION** and is not merged, deployed, or required by this topology.
 
 ## Official Capability Sources
 
@@ -21,7 +22,9 @@ Provider limits and plan availability change. Recheck the linked official pages 
 | Rate limiting | [Rate limiting rules](https://developers.cloudflare.com/waf/rate-limiting-rules/) | Rule count, counting characteristics, periods, and actions are plan-dependent. | Suggested long observation windows may need a plan-compatible equivalent. |
 | Bot controls | [Bots](https://developers.cloudflare.com/bots/) | Bot Fight Mode, Super Bot Fight Mode, and Bot Management are different products/tiers. | Choose only the control exposed by the zone and test false positives. |
 | DDoS | [DDoS protection](https://developers.cloudflare.com/ddos-protection/) | Standard DDoS protection is automatic; advanced tuning is plan-dependent. | Defense in depth, not a replacement for application body and compute bounds. |
-| Worker limits | [Workers limits](https://developers.cloudflare.com/workers/platform/limits/) | Documented request-body allowance is 100 MB on Free/Pro, 200 MB Business, 500 MB Enterprise; memory is 128 MB and static assets are limited separately. | Current small Worker JSON bodies are far below platform limits. Key Finder uploads remain direct Render and are not added to the Worker. |
+| Worker limits | [Workers limits](https://developers.cloudflare.com/workers/platform/limits/) | Documented request-body allowance is 100 MB on Free/Pro, 200 MB Business, 500 MB Enterprise; memory is 128 MB and static assets are limited separately. | Current small Worker JSON bodies are far below platform limits. Key Finder uploads pass through Cloudflare's reverse proxy to Render, not through the site Worker. |
+| Render custom domains | [Render custom domains](https://render.com/docs/custom-domains) and [Cloudflare DNS configuration](https://render.com/docs/configure-cloudflare-dns) | Render supports custom domains and managed TLS for the existing web service. Its generated `onrender.com` subdomain can be disabled after the custom domain is fully verified. | Keep the generated hostname as rollback until frontend, CORS, job creation, polling, upload, and TLS acceptance pass on the custom hostname. |
+| Cloudflare TLS | [Full (strict) mode](https://developers.cloudflare.com/ssl/origin-configuration/ssl-modes/full-strict/) | `Full` and `Full (strict)` encrypt both legs; Flexible does not. Strict validation requires a valid origin certificate. | The zone was verified as `Full`, never Flexible. Render issued a valid certificate for `api.jamtrackshub.com`; do not downgrade TLS during rollout. |
 | Static assets | [Static Asset Headers](https://developers.cloudflare.com/workers/static-assets/headers/) and [routing](https://developers.cloudflare.com/workers/static-assets/routing/worker-script/) | `_headers` applies to static asset responses; Worker-generated API responses need headers in code. Asset-first routing can bypass Worker logic for matched assets. | `_headers` covers pages/assets; `worker.js` covers `/api/*`. |
 | Cache Rules | [Cache Rules](https://developers.cloudflare.com/cache/how-to/cache-rules/) | Available on all plans with plan-dependent rule counts. | `_headers` provides safe origin policy; Dashboard rules must preserve API bypass and HTML revalidation. |
 | Secrets | [Workers secrets](https://developers.cloudflare.com/workers/configuration/secrets/) | Production values belong in encrypted bindings, not source or `vars`. | `SUBSCRIBERS_ADMIN_TOKEN` remains a secret binding; no value is committed. |
@@ -81,7 +84,7 @@ No custom WAF rule was added: the provider baseline is active, the pre-change vi
 2. Song Workspace song content remains in browser memory, IndexedDB, localStorage, and local downloads. It does not enter the site Worker APIs.
 3. `/api/subscribe` and `/api/feedback` are public same-origin mutation endpoints backed by D1.
 4. `/api/subscribers.csv` is an administrative read endpoint protected by a Worker secret.
-5. Key Finder is a separate browser-to-Render network flow and may perform expensive media work.
+5. Key Finder is a separate browser-to-`api.jamtrackshub.com`-to-Render network flow and may perform expensive media work. It does not transit the site Worker.
 6. Verified Cloudflare edge controls are an active defense-in-depth layer, but repository controls must still fail safely and cannot depend on Dashboard state.
 
 ### Primary threats
@@ -90,7 +93,7 @@ No custom WAF rule was added: the provider baseline is active, the pre-change vi
 - Oversized files, JSON bodies, deeply amplified Song Documents, excessive chords/lines, and corrupt local records causing CPU/memory/UI denial of service.
 - Automated subscribe/feedback spam, method probing, cache poisoning, API cache leakage, and unknown-route confusion.
 - Administrative token leakage through URLs, logs, referrers, browser history, response bodies, or timing-sensitive comparison.
-- Expensive Key Finder job creation or uploads bypassing site-zone rules through the direct Render hostname.
+- Expensive Key Finder job creation or uploads bypassing site-zone rules if the legacy Render hostname remains public after the verified cutover.
 - False positives that block ordinary static navigation, accessibility tools, legitimate feedback, or local browser storage.
 
 ## Production Attack Surface Inventory
@@ -99,7 +102,7 @@ No custom WAF rule was added: the provider baseline is active, the pre-change vi
 
 Public HTML includes the homepage, Tracks, Song Workspace/My Songs, Chord Dictionary, Scale Explorer, Key Finder, Chord Progressions, Progression Writer, Fretboard Trainer, Feedback, privacy/legal pages, service/error pages, and weekly slide pages. Public static data includes scripts, styles, images, fonts, locale JSON, track data, downloads, and slide assets.
 
-Third-party browser origins currently allow only the sources required by production behavior: Google Fonts, Umami on non-Song-Workspace pages, YouTube media/frame content, YouTube thumbnails, and the current direct Render Key Finder origin. Song Workspace itself does not load Umami or another third-party executable script.
+Third-party browser origins currently allow only the sources required by production behavior: Google Fonts, Umami on non-Song-Workspace pages, YouTube media/frame content, YouTube thumbnails, and the Cloudflare-proxied Key Finder API origin. Song Workspace itself does not load Umami or another third-party executable script.
 
 ### Endpoint matrix
 
@@ -110,15 +113,15 @@ Third-party browser origins currently allow only the sources required by product
 | `/api/subscribers.csv` | `GET` | No request body; CSV response | D1 read/export | `Authorization: Bearer …`; hashed fixed-size timing-safe comparison | `no-store` |
 | unknown `/api` or `/api/*` | none | None | No upstream/static fallback | Public generic 404 | `no-store` |
 | static assets | `GET`, `HEAD` | Public files | Edge/static read | Public | `_headers` policy |
-| Render `/api/health` | `GET` | None | Cheap health check | Current public Render/CORS behavior | Provider behavior |
-| Render `/api/analyze` | `POST` | URL JSON | Legacy synchronous expensive analysis | Current direct Render/CORS behavior | Provider behavior |
-| Render `/api/analyze/jobs` | `POST` | URL JSON | Expensive async job creation | Current direct Render/CORS behavior | Provider behavior |
-| Render `/api/analyze/jobs/{job_id}` | `GET` | Opaque job ID | Job polling | Current direct Render/CORS behavior | Provider behavior |
-| Render `/api/analyze-file/jobs` | `POST` | Multipart; application maximum 60 MiB, 25 MiB for MP4/WEBM | Expensive upload/job creation | Current direct Render/CORS behavior | Provider behavior |
-| Render `/api/analyze-file/jobs/{job_id}` | `GET` | Opaque job ID | Job polling | Current direct Render/CORS behavior | Provider behavior |
-| Render `/api/analyze-file` | `POST` | Multipart; same application bounds | Legacy synchronous expensive analysis | Current direct Render/CORS behavior | Provider behavior |
+| `api.jamtrackshub.com/api/health` | `GET` | None | Cheap Render health check through Cloudflare | Public; bounded response | `no-store` after repository deployment |
+| `api.jamtrackshub.com/api/analyze` | `POST` | URL JSON | Legacy synchronous expensive analysis | Exact production/local-development CORS after deployment | `no-store` |
+| `api.jamtrackshub.com/api/analyze/jobs` | `POST` | URL JSON | Expensive async job creation | Exact production/local-development CORS after deployment | `no-store`; candidate for the single Free rate rule |
+| `api.jamtrackshub.com/api/analyze/jobs/{job_id}` | `GET` | Opaque job ID | Job polling | Exact production/local-development CORS after deployment | `no-store`; never include in creation rate limit |
+| `api.jamtrackshub.com/api/analyze-file/jobs` | `POST` | Multipart; application maximum 60 MiB, 25 MiB for MP4/WEBM | Expensive upload/job creation | Exact production/local-development CORS after deployment | `no-store`; candidate for the single Free rate rule |
+| `api.jamtrackshub.com/api/analyze-file/jobs/{job_id}` | `GET` | Opaque job ID | Job polling | Exact production/local-development CORS after deployment | `no-store`; never include in creation rate limit |
+| `api.jamtrackshub.com/api/analyze-file` | `POST` | Multipart; same application bounds | Legacy synchronous expensive analysis | Exact production/local-development CORS after deployment | `no-store` |
 
-Key Finder rows are inventory only. They are not proxied by this Worker and are not covered by `jamtrackshub.com` zone path rules. Provider-side controls and a future authenticated architecture remain separate work.
+Key Finder rows are inventory only. They are not proxied by the site Worker. The `api.jamtrackshub.com` DNS record is Cloudflare-proxied, so zone-wide DDoS, Managed WAF, Bot Fight Mode, and Browser Integrity Check apply. The single Free rate rule must use exact expensive creation paths and must exclude polling. Optional Cloudflare-to-Render origin-header authentication remains deferred because a free, maintainable secret-injection path was not established for this phase.
 
 ## Repository Controls
 
@@ -253,9 +256,13 @@ The entries below remain the canonical design baseline. The Phase 2 table above 
 
 Browser Integrity Check was already enabled and passed the bounded representative browser/API smoke; its Phase 2 status is `VERIFIED_ENABLED`. Turnstile is **DEFERRED**: add it only if measured abuse persists after request bounds, origin checks, rate limits, and bot controls. If adopted, validate every token server-side, reject replay/expiry, preserve accessibility, and keep secrets in bindings.
 
-### 8. Key Finder gap
+### 8. Key Finder Render-behind-Cloudflare boundary
 
-Do not create a `jamtrackshub.com/api/key-finder/*` WAF/rate rule and claim it protects the current production flow: the browser presently calls Render directly. On a later authenticated same-origin migration, separate expensive job creation/upload thresholds from high-frequency polling and preserve Render's file/job/compute bounds. Direct-origin protection and provider configuration remain independent gates.
+The Phase 3R target is browser → `api.jamtrackshub.com` → Cloudflare proxy → the existing Render FastAPI service. The frontend has no production fallback to `jasper-music.onrender.com`; CSP and large-slide fallback embeds use the custom hostname. Render retains the existing upload, job, compute, filename, timeout, cleanup, and generic-error bounds.
+
+The generated Render hostname is a temporary rollback path only. Disable it only after the repository change is deployed and custom-domain health, production CORS, job creation, polling, one small synthetic upload, frontend network inspection, and whole-site smoke all pass. Re-enable it immediately if custom-domain traffic fails. Detailed rollout and rollback steps are in `docs/key-finder-render-behind-cloudflare.md`.
+
+The only Free rate-limit slot must remain one combined exact-path rule. After the custom-domain cutover is live, add `/api/analyze/jobs` and `/api/analyze-file/jobs` to the existing `/api/subscribe` and `/api/feedback` expression while keeping 5 requests per IP per 10 seconds and a 10-second Block. Do not include `/api/analyze/jobs/{id}` or `/api/analyze-file/jobs/{id}` polling paths.
 
 ## Rollout And Verification
 
@@ -266,7 +273,7 @@ Do not create a `jamtrackshub.com/api/key-finder/*` WAF/rate rule and claim it p
 5. Enable managed WAF rules using defaults; observe Security Events and resolve only evidenced false positives.
 6. Add one public mutation rate rule at a time, starting conservatively. Observe before adding bot controls.
 7. Enable the available bot control only after form/static/download verification.
-8. Keep Key Finder provider/direct-origin risks explicitly open; do not infer zone protection.
+8. Complete the custom-domain cutover gates before disabling the generated Render hostname; never infer completion from DNS alone.
 9. Record timestamps, expressions, actions, screenshots, test evidence, false positives, and rollback decisions.
 
 Production acceptance requires: normal pages/forms work, API methods/body/origin bounds hold, admin export requires a Bearer token, CSP emits no unexpected violations, static assets are fresh, no secret appears in HTML/JS/URL/log screenshots, Song Workspace sends no song-content request, and Security Events show the intended edge action.
@@ -285,7 +292,9 @@ Production acceptance requires: normal pages/forms work, API methods/body/origin
 - Free Managed Rules, Bot Fight Mode, Browser Integrity Check, DDoS protections, the combined public-mutation rate limit, and API cache bypass are enabled and passed bounded production smoke.
 - The Free plan has no remaining rate-limit slot and did not expose method/host matching, longer windows, Log-only, or Managed Challenge. Administrative-export edge observation and per-endpoint rate policies require a later plan/capability decision.
 - Security alerts and HSTS remain pending separate review. Turnstile remains deferred absent abuse evidence.
-- Direct Render Key Finder traffic is outside zone path protections.
+- The legacy Render hostname remains outside Cloudflare zone controls until it is disabled after all Phase 3R acceptance gates pass.
+- Cloudflare-to-Render cryptographic origin authentication is **DEFERRED**; no secret or paid feature was added in Phase 3R.
+- Cloudflare Containers/Durable Objects migration is **DEFERRED_COST_DECISION**; Render remains the compute provider.
 - CSP retains `style-src 'unsafe-inline'` for current site compatibility.
 - Same-origin checks reduce cross-site browser abuse but do not identify non-browser bots; rate limiting and bot controls remain necessary defense in depth.
 - Application limits protect ordinary resource use but are not a formal proof against every algorithmic complexity attack.

@@ -3,6 +3,7 @@
 import csv
 import hashlib
 import json
+import re
 import shutil
 import subprocess
 import tempfile
@@ -75,12 +76,26 @@ ANALYSIS_JOBS = {}
 ANALYSIS_JOBS_LOCK = threading.Lock()
 ANALYSIS_CACHE_LOCK = threading.Lock()
 
+CANONICAL_SITE_ORIGIN = "https://jamtrackshub.com"
+LOCAL_DEVELOPMENT_ORIGIN_PATTERN = r"^http://(?:localhost|127\.0\.0\.1)(?::\d{1,5})?$"
+LOCAL_DEVELOPMENT_ORIGIN_RE = re.compile(LOCAL_DEVELOPMENT_ORIGIN_PATTERN)
+CORS_ALLOWED_METHODS = ("GET", "POST", "OPTIONS")
+CORS_ALLOWED_HEADERS = ("Content-Type",)
+
+
+def is_allowed_cors_origin(origin):
+    return bool(
+        origin == CANONICAL_SITE_ORIGIN
+        or LOCAL_DEVELOPMENT_ORIGIN_RE.fullmatch(origin or "")
+    )
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[CANONICAL_SITE_ORIGIN],
+    allow_origin_regex=LOCAL_DEVELOPMENT_ORIGIN_PATTERN,
     allow_credentials=False,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=list(CORS_ALLOWED_METHODS),
+    allow_headers=list(CORS_ALLOWED_HEADERS),
 )
 
 @app.middleware("http")
@@ -89,16 +104,27 @@ async def add_private_network_access_header(request, call_next):
         request.method == "OPTIONS"
         and request.headers.get("access-control-request-private-network", "").lower() == "true"
     ):
-        origin = request.headers.get("origin") or "*"
-        requested_method = request.headers.get("access-control-request-method") or "GET, POST, OPTIONS"
-        requested_headers = request.headers.get("access-control-request-headers") or "*"
+        origin = request.headers.get("origin") or ""
+        requested_method = request.headers.get("access-control-request-method", "").upper()
+        requested_headers = {
+            header.strip().lower()
+            for header in request.headers.get("access-control-request-headers", "").split(",")
+            if header.strip()
+        }
+
+        if not is_allowed_cors_origin(origin):
+            return Response(status_code=403, content="CORS origin is not allowed.")
+        if requested_method not in CORS_ALLOWED_METHODS:
+            return Response(status_code=405, content="CORS method is not allowed.")
+        if not requested_headers.issubset({header.lower() for header in CORS_ALLOWED_HEADERS}):
+            return Response(status_code=400, content="CORS headers are not allowed.")
 
         return Response(
             status_code=204,
             headers={
                 "Access-Control-Allow-Origin": origin,
-                "Access-Control-Allow-Methods": requested_method,
-                "Access-Control-Allow-Headers": requested_headers,
+                "Access-Control-Allow-Methods": ", ".join(CORS_ALLOWED_METHODS),
+                "Access-Control-Allow-Headers": ", ".join(CORS_ALLOWED_HEADERS),
                 "Access-Control-Allow-Private-Network": "true",
                 "Access-Control-Max-Age": "600",
                 "Vary": "Origin",
@@ -106,7 +132,6 @@ async def add_private_network_access_header(request, call_next):
         )
 
     response = await call_next(request)
-    response.headers["Access-Control-Allow-Private-Network"] = "true"
     content_type = response.headers.get("content-type", "")
     is_html_page = (
         "text/html" in content_type
@@ -117,6 +142,8 @@ async def add_private_network_access_header(request, call_next):
         response.headers["Cache-Control"] = "no-cache, max-age=0, must-revalidate"
         response.headers["Pragma"] = "no-cache"
         response.headers["Expires"] = "0"
+    elif request.url.path.startswith("/api/"):
+        response.headers["Cache-Control"] = "no-store"
     return response
 
 
