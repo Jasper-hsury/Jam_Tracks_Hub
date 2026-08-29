@@ -123,6 +123,12 @@ Third-party browser origins currently allow only the sources required by product
 
 Key Finder rows are inventory only. They are not proxied by the site Worker. The `api.jamtrackshub.com` DNS record is Cloudflare-proxied, so zone-wide DDoS, Managed WAF, Bot Fight Mode, and Browser Integrity Check apply. The single Free rate rule must use exact expensive creation paths and must exclude polling. Optional Cloudflare-to-Render origin-header authentication remains deferred because a free, maintainable secret-injection path was not established for this phase.
 
+### Phase 3R production cutover — 2026-08-30
+
+PR `#12` was squash-merged as `2154dd2ce5914b29cb3841d33348472e51315bf9`; both the Cloudflare Workers production build and Render `main` deployment report that revision successful/live. Production frontend and CSP use only `https://api.jamtrackshub.com` for the Key Finder service path. Exact-origin CORS, localhost development CORS, Private Network Access preflight, API `no-store`, custom health, and one bounded repository-fixture file create/poll workflow all passed through the Cloudflare-proxied custom hostname.
+
+The sole active Free rate rule `api-public-mutation-abuse` now matches exact paths `/api/subscribe`, `/api/feedback`, `/api/analyze/jobs`, and `/api/analyze-file/jobs`. It remains 5 requests per IP per 10 seconds with Block for 10 seconds. Job polling and legacy synchronous paths are excluded. After the full acceptance sequence passed, the generated Render subdomain was disabled: direct generated-host health returns 404 with `x-render-routing: blocked-render-subdomain`, while custom health and custom job polling remain 200. Optional cryptographic Cloudflare-to-Render origin authentication remains deferred, so the proxy boundary is not represented as a cryptographic origin-identity guarantee.
+
 ## Repository Controls
 
 ### Song Workspace
