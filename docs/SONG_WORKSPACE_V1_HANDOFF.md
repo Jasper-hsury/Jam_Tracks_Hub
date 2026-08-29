@@ -984,3 +984,29 @@ Provider/manual status:
 - Key Finder direct Render abuse/origin architecture: **UNCHANGED / OPEN SEPARATE GATE**.
 
 The authoritative Phase 1 inventory, official provider references, endpoint matrix, exact suggested manual rules, rollout, verification, rollback, false-positive guidance, observability, and limitations are in `docs/production-anti-abuse.md`. A future session must read that document during context recovery. Repository implementation does not prove any edge control is active; production status may be promoted only with Dashboard and live response evidence.
+
+## 42. Security Infrastructure Phase 2 — Cloudflare Edge Enforcement
+
+Production Dashboard verification on 2026-08-29 confirmed that `jamtrackshub.com` uses Cloudflare Free. The Free Managed Ruleset is always active, Browser Integrity Check was already on, SSL/TLS and network-layer DDoS protections are active, and HTTP DDoS protection is reported as always enabled. Before Phase 2 there were no custom rules, no rate-limit rule, no Cache Rule, Bot Fight Mode was off, the preceding 24-hour Security Analytics view showed about 1.9k requests and zero suspicious activity, and the sampled Security Events view was empty.
+
+Phase 2 applied only these provider controls:
+
+- Cache Rule `api-bypass-cache`: path starts with `/api/`; active; bypass cache.
+- Rate-limit rule `api-public-mutation-abuse`: `/api/subscribe` or `/api/feedback`; 5 requests per IP per 10 seconds; Block for 10 seconds; active.
+- Bot Fight Mode: enabled for the Free-plan whole-zone product.
+
+The Free plan exposed one rate-limit slot, URI-path/verified-bot matching, IP counting, a 10-second period/mitigation, and Block only. It did not expose method/host matching, Log-only, Managed Challenge, longer windows, or a second rule. Accordingly, the administrative CSV observation rule is `NOT_AVAILABLE_ON_PLAN`; Bearer authentication, timing-safe verification, `no-store`, and application bounds remain its controls. No custom WAF rule or Turnstile was added because the audit found no abuse evidence. HTML continues to revalidate through origin `Cache-Control`; static assets retain bounded origin TTLs; no long-lived or immutable HTML cache override was added.
+
+Bounded production smoke after enablement loaded Homepage, Song Workspace, Tracks, Key Finder, Legal, Chord Dictionary, Chord Progressions, and Fretboard Trainer without a Cloudflare challenge. The homepage returned the full security headers and `max-age=0, must-revalidate`; versioned CSS returned an edge cache HIT with a bounded one-hour TTL; unauthorized subscriber export remained 401/no-store; tiny non-writing feedback probes preserved the expected 403 same-origin and 415 content-type gates. No load, flood, production data write, provider secret, application deployment, tag, or release was used.
+
+Current provider status:
+
+- Cloudflare Managed WAF: **VERIFIED_ENABLED — Free Managed Ruleset / provider defaults**.
+- Cloudflare rate limiting: **VERIFIED_ENABLED — combined public mutation rule; administrative observation plan-limited**.
+- Cloudflare Bot protection: **VERIFIED_ENABLED — Bot Fight Mode**.
+- Cloudflare Cache Rules: **VERIFIED_ENABLED — API bypass; HTML/static origin policy preserved**.
+- Browser Integrity Check: **VERIFIED_ENABLED**.
+- Turnstile: **DEFERRED — no abuse evidence**.
+- Key Finder direct Render gap: **OPEN**. Browser-to-Render traffic is still outside these `jamtrackshub.com` zone path rules.
+
+Exact expressions, false-positive considerations, verification evidence, rollback steps, official provider sources, and remaining limits are maintained in `docs/production-anti-abuse.md`.
