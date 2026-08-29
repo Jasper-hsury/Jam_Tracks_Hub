@@ -2016,8 +2016,42 @@ html.workspace-dialog-restoring {
     margin-top: 20px;
 }
 
+.workspace-line-sheet-handle,
+.workspace-line-dialog-subtitle,
+.workspace-line-character-count,
+.workspace-anchor-position-help,
+.workspace-anchor-list-heading,
+.workspace-anchor-action-icon {
+    display: none;
+}
+
+.workspace-line-card,
+.workspace-anchor-position-row,
+.workspace-line-secondary-actions {
+    display: contents;
+}
+
+.workspace-line-textarea-shell {
+    display: block;
+    min-width: 0;
+}
+
+.workspace-line-dialog .workspace-anchor-list {
+    width: 100%;
+    flex: 1 0 100%;
+}
+
 .workspace-line-dialog-actions #deleteLineButton {
+    order: 1;
     margin-right: auto;
+}
+
+.workspace-line-dialog-actions #cancelLineButton {
+    order: 2;
+}
+
+.workspace-line-dialog-actions #saveLineButton {
+    order: 3;
 }
 
 .workspace-dialog-error {
@@ -2724,6 +2758,331 @@ html.workspace-dialog-restoring {
 
     .performance-toolbar {
         border-radius: 8px;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode {
+        position: fixed;
+        inset: max(24px, env(safe-area-inset-top)) 12px 0;
+        width: auto;
+        max-width: 680px;
+        height: auto;
+        max-height: none;
+        margin: 0 auto;
+        overflow-x: hidden;
+        overflow-y: auto;
+        border: 1px solid var(--workspace-line);
+        border-bottom: 0;
+        border-radius: 26px 26px 0 0;
+        background: var(--workspace-surface-strong);
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode::backdrop {
+        background: rgba(15, 13, 11, 0.76);
+        backdrop-filter: blur(5px);
+    }
+
+    .workspace-line-dialog.is-edit-line-mode #lineEditorForm {
+        min-height: 100%;
+        box-sizing: border-box;
+        padding: 11px 16px calc(24px + env(safe-area-inset-bottom));
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-line-sheet-handle {
+        display: block;
+        width: 68px;
+        height: 5px;
+        margin: 0 auto 14px;
+        border-radius: 999px;
+        background: color-mix(in srgb, var(--workspace-muted) 34%, transparent);
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-dialog-heading {
+        position: relative;
+        justify-content: center;
+        min-height: 82px;
+        padding: 0 54px 12px;
+        text-align: center;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-line-dialog-heading-copy {
+        min-width: 0;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-dialog-heading .result-kicker {
+        display: none;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-dialog-heading h2 {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(2rem, 9vw, 2.6rem);
+        font-weight: 700;
+        line-height: 1.05;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-line-dialog-subtitle {
+        display: block;
+        margin: 8px 0 0;
+        color: var(--workspace-muted);
+        font-size: clamp(0.78rem, 3.4vw, 0.9rem);
+        font-weight: 500;
+        line-height: 1.35;
+        white-space: nowrap;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-dialog-heading .workspace-icon-button {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 48px;
+        min-width: 48px;
+        min-height: 48px;
+        border: 0;
+        border-radius: 50%;
+        color: var(--workspace-text);
+        background: var(--workspace-soft);
+        box-shadow: none;
+        font-size: 1.8rem;
+        font-weight: 400;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-line-card {
+        display: block;
+        box-sizing: border-box;
+        margin-top: 14px;
+        border: 1px solid var(--workspace-line);
+        border-radius: 15px;
+        padding: 15px;
+        background: var(--workspace-surface);
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-field {
+        gap: 10px;
+        font-size: 0.78rem;
+        letter-spacing: 0.01em;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-field input,
+    .workspace-line-dialog.is-edit-line-mode .workspace-field textarea {
+        border-radius: 11px;
+        padding: 14px;
+        font-size: 1rem;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-line-textarea-shell {
+        position: relative;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode #lineTextInput {
+        min-height: 168px;
+        padding-bottom: 38px;
+        resize: none;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-line-character-count {
+        position: absolute;
+        right: 13px;
+        bottom: 12px;
+        display: block;
+        color: var(--workspace-muted);
+        font-size: 0.76rem;
+        font-variant-numeric: tabular-nums;
+        font-weight: 500;
+        pointer-events: none;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-anchor-preview {
+        gap: 8px;
+        min-height: 0;
+        margin: 15px 0 0;
+        border: 0;
+        padding: 0;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-anchor-preview button {
+        min-width: 44px;
+        min-height: 44px;
+        border-radius: 8px;
+        padding: 8px 11px;
+        font-size: 1rem;
+        text-align: center;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-anchor-controls {
+        display: block;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-chord-symbol-card input {
+        min-height: 56px;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-anchor-position-row {
+        display: grid;
+        grid-template-columns: 72px minmax(0, 1fr) auto;
+        align-items: end;
+        gap: 8px;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode #anchorPositionField {
+        min-width: 0;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode #anchorPositionInput {
+        min-height: 56px;
+        padding-inline: 11px;
+        font-size: 1.15rem;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-anchor-position-help {
+        display: block;
+        min-width: 0;
+        margin: 0 0 5px;
+        color: var(--workspace-muted);
+        font-size: 0.7rem;
+        line-height: 1.35;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode #addAnchorButton {
+        min-width: 104px;
+        min-height: 56px;
+        gap: 8px;
+        border-radius: 999px;
+        padding: 10px 12px;
+        font-size: 0.88rem;
+        white-space: nowrap;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode #addAnchorButton::after {
+        content: "+";
+        font-size: 1.35rem;
+        font-weight: 500;
+        line-height: 1;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-anchor-list-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 22px;
+        color: var(--workspace-accent);
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.01em;
+        text-transform: uppercase;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode #anchorChordCount {
+        color: var(--workspace-muted);
+        font-weight: 500;
+        letter-spacing: 0;
+        text-transform: none;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-anchor-list {
+        display: grid;
+        width: auto;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-anchor-item {
+        grid-template-columns: minmax(0, 1fr) 44px 44px;
+        min-height: 62px;
+        box-sizing: border-box;
+        gap: 8px;
+        border: 1px solid var(--workspace-line);
+        border-radius: 11px;
+        padding: 8px 10px 8px 14px;
+        background: var(--workspace-surface-strong);
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-anchor-item strong {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        font-size: 1rem;
+        line-height: 1.35;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-anchor-item .workspace-button {
+        width: 44px;
+        min-width: 44px;
+        min-height: 44px;
+        border: 0;
+        border-radius: 50%;
+        padding: 0;
+        box-shadow: none;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-anchor-action-text {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-anchor-action-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.45rem;
+        line-height: 1;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-anchor-item [data-action="edit-anchor"] {
+        color: var(--secondary-button-text);
+        background: var(--workspace-soft);
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-anchor-item [data-action="delete-anchor"] {
+        color: var(--danger-border);
+        background: color-mix(in srgb, var(--danger-background) 18%, var(--workspace-surface));
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-dialog-error:empty {
+        display: none;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-line-dialog-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 18px;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-line-secondary-actions {
+        display: contents;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-line-dialog-actions .workspace-button {
+        min-height: 56px;
+        border-radius: 999px;
+        font-size: 1rem;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-line-dialog-actions #saveLineButton {
+        order: 1;
+        grid-column: 1 / -1;
+        width: 100%;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-line-dialog-actions #cancelLineButton {
+        order: 2;
+        grid-column: 1;
+        width: 100%;
+    }
+
+    .workspace-line-dialog.is-edit-line-mode .workspace-line-dialog-actions #deleteLineButton {
+        order: 3;
+        grid-column: 2;
+        width: 100%;
+        margin-right: 0;
     }
 
 }
