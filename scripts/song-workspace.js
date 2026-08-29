@@ -44,6 +44,8 @@
         readModeScrollPosition: 0,
         resumeReadAfterPerformance: false,
         readModeTrigger: null,
+        settingsDisclosureExpanded: true,
+        settingsDisclosureAnimation: null,
         activeSettingHelp: null,
         titleEditing: false,
         metadataEditing: false,
@@ -54,7 +56,7 @@
     const $ = id => document.getElementById(id);
     const elements = {
         home: $("workspaceHomeView"), editor: $("workspaceEditorView"), status: $("workspaceStatus"),
-        list: $("songList"), empty: $("songEmptyState"), count: $("songCount"),
+        list: $("songList"), empty: $("songEmptyState"),
         title: $("songTitleInput"), artist: $("songArtistInput"), originalKey: $("originalKeySelect"),
         targetKey: $("targetKeySelect"), capo: $("capoSelect"), shapeKey: $("shapeKeyValue"),
         chordSpelling: $("chordSpellingSelect"),
@@ -83,6 +85,7 @@
         lineSpacingInput: $("lineSpacingInput"), lineSpacingDecrease: $("lineSpacingDecreaseButton"),
         lineSpacingIncrease: $("lineSpacingIncreaseButton"),
         settingsDisclosure: $("workspaceSettingsDisclosure"),
+        settingsSummary: $("workspaceSettingsSummary"), settingsPanel: $("workspaceSettingsPanel"),
         shapePickerSymbol: $("shapePickerSymbol"), shapePickerCount: $("shapePickerCount"),
         shapePickerPosition: $("shapePositionFilter"), shapePickerRoot: $("shapeRootFilter"),
         shapePickerGrid: $("shapePickerGrid"),
@@ -208,10 +211,66 @@
         setLineSpacing(elements.lineSpacingInput.value);
     }
 
+    function prefersReducedMotion() {
+        return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    }
+
+    function setSettingsDisclosureExpanded(expanded, options) {
+        const settings = options || {};
+        const disclosure = elements.settingsDisclosure;
+        const panel = elements.settingsPanel;
+        const next = Boolean(expanded);
+        const currentHeight = disclosure.open ? panel.getBoundingClientRect().height : 0;
+        const currentOpacity = disclosure.open ? Number(window.getComputedStyle(panel).opacity) : 0;
+        state.settingsDisclosureExpanded = next;
+        state.settingsDisclosureAnimation?.cancel();
+        state.settingsDisclosureAnimation = null;
+        elements.settingsSummary.setAttribute("aria-expanded", String(next));
+        disclosure.classList.toggle("is-settings-expanded", next);
+
+        if (!settings.animate || prefersReducedMotion()) {
+            disclosure.open = next;
+            panel.style.removeProperty("height");
+            panel.style.removeProperty("opacity");
+            panel.style.removeProperty("transform");
+            return;
+        }
+
+        disclosure.open = true;
+        const endHeight = next ? panel.scrollHeight : 0;
+        const animation = panel.animate([
+            {
+                height: `${currentHeight}px`,
+                opacity: currentOpacity,
+                transform: currentHeight === 0 ? "translateY(-4px)" : "translateY(0)"
+            },
+            {
+                height: `${endHeight}px`,
+                opacity: next ? 1 : 0,
+                transform: next ? "translateY(0)" : "translateY(-4px)"
+            }
+        ], {
+            duration: 240,
+            easing: "cubic-bezier(0.25, 0.8, 0.25, 1)"
+        });
+        state.settingsDisclosureAnimation = animation;
+        animation.addEventListener("finish", function() {
+            if (state.settingsDisclosureAnimation !== animation) return;
+            state.settingsDisclosureAnimation = null;
+            disclosure.open = state.settingsDisclosureExpanded;
+            panel.style.removeProperty("height");
+            panel.style.removeProperty("opacity");
+            panel.style.removeProperty("transform");
+        }, { once: true });
+        animation.addEventListener("cancel", function() {
+            if (state.settingsDisclosureAnimation === animation) state.settingsDisclosureAnimation = null;
+        }, { once: true });
+    }
+
     function syncSettingsDisclosureViewport() {
         const viewportMode = window.matchMedia("(max-width: 720px)").matches ? "narrow" : "wide";
         if (elements.settingsDisclosure.dataset.viewportMode === viewportMode) return;
-        elements.settingsDisclosure.open = viewportMode === "wide";
+        setSettingsDisclosureExpanded(viewportMode === "wide", { animate: false });
         elements.settingsDisclosure.dataset.viewportMode = viewportMode;
     }
 
@@ -397,6 +456,32 @@
         return item;
     }
 
+    const LIBRARY_ICON_PATHS = {
+        open: ["M3 7h7l2 2h9v10H3Z"],
+        duplicate: ["M8 8h11v11H8Z", "M5 16H4V4h12v1"],
+        download: ["M12 3v12", "m7 10 5 5 5-5", "M5 20h14"],
+        delete: ["M3 6h18", "M8 6V4h8v2", "m19 6-1 14H6L5 6", "M10 11v5", "M14 11v5"]
+    };
+
+    function libraryIcon(name, className) {
+        const namespace = "http://www.w3.org/2000/svg";
+        const icon = document.createElementNS(namespace, "svg");
+        icon.classList.add(className || "workspace-library-action-icon");
+        icon.setAttribute("viewBox", "0 0 24 24");
+        icon.setAttribute("aria-hidden", "true");
+        icon.setAttribute("focusable", "false");
+        (LIBRARY_ICON_PATHS[name] || []).forEach(function(pathData) {
+            const path = document.createElementNS(namespace, "path");
+            path.setAttribute("d", pathData);
+            icon.appendChild(path);
+        });
+        return icon;
+    }
+
+    function songMetaRow(text) {
+        return node("span", "workspace-song-meta-row", text);
+    }
+
     function deleteActionIcon() {
         const namespace = "http://www.w3.org/2000/svg";
         const icon = document.createElementNS(namespace, "svg");
@@ -491,17 +576,18 @@
 
     function renderLibrary() {
         elements.list.replaceChildren();
-        elements.count.textContent = String(state.songs.length);
         elements.empty.hidden = state.songs.length > 0;
         state.songs.forEach(function(song) {
             const card = node("article", "workspace-song-card");
-            const heading = node("div");
+            const identity = node("div", "workspace-song-card-identity");
+            const heading = node("div", "workspace-song-title-block");
             heading.append(node("h3", "", song.title), node("p", "", song.artist || t("pages.songWorkspace.unknownArtist", "No artist")));
+            identity.appendChild(heading);
             const meta = node("div", "workspace-song-meta-summary");
             meta.append(
-                node("span", "", `${t("pages.songWorkspace.key", "Key")}: ${song.targetKey || song.originalKey}`),
-                node("span", "", `Capo: ${song.capo || 0}`),
-                node("span", "", formatDate(song.updatedAt))
+                songMetaRow(`${t("pages.songWorkspace.key", "Key")}: ${song.targetKey || song.originalKey}`),
+                songMetaRow(`Capo: ${song.capo || 0}`),
+                songMetaRow(formatDate(song.updatedAt))
             );
             const actions = node("div", "workspace-song-actions");
             const downloadMenuId = `workspace-download-${song.id}`;
@@ -521,6 +607,7 @@
                     control.setAttribute("aria-expanded", "false");
                     control.setAttribute("aria-controls", downloadMenuId);
                 }
+                control.replaceChildren(libraryIcon(entry[1], "workspace-song-action-icon"), node("span", "", entry[0]));
                 actions.appendChild(control);
             });
             const downloadMenu = node("div", "workspace-song-download-menu");
@@ -535,7 +622,7 @@
                 control.dataset.format = entry[1];
                 downloadMenu.appendChild(control);
             });
-            card.append(heading, meta, actions, downloadMenu);
+            card.append(identity, meta, actions, downloadMenu);
             elements.list.appendChild(card);
         });
     }
@@ -1869,6 +1956,11 @@
     }
 
     function attachEvents() {
+        elements.settingsSummary.addEventListener("click", function(event) {
+            if (!window.matchMedia("(max-width: 720px)").matches) return;
+            event.preventDefault();
+            setSettingsDisclosureExpanded(!state.settingsDisclosureExpanded, { animate: true });
+        });
         document.querySelectorAll("[data-create-mode]").forEach(control => control.addEventListener("click", () => openCreateDialog(control.dataset.createMode)));
         document.querySelectorAll("[data-dialog-close]").forEach(function(control) {
             control.addEventListener("click", function() {

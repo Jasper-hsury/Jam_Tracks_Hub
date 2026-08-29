@@ -87,6 +87,34 @@ h1 {
     border-bottom: 1px solid rgba(196, 164, 132, 0.16);
 }
 
+.navbar.navbar-smart-scroll {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+    transition: top 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change: top;
+}
+
+.navbar.navbar-smart-scroll.is-scroll-hidden {
+    top: calc((var(--site-navbar-height, 100px) + 2px) * -1);
+    pointer-events: none;
+}
+
+.navbar.navbar-smart-scroll.menu-open,
+.navbar.navbar-smart-scroll:focus-within {
+    top: 0;
+    pointer-events: auto;
+}
+
+.site-navbar-spacer {
+    display: block;
+    width: 100%;
+    pointer-events: none;
+}
+
 .logo {
     font-family: 'Noto Serif TC', serif;
     font-size: 24px;
@@ -510,4 +538,10 @@ html.motion-reduced *::after {
 .track-list {
     list-style-position: inside;
     padding: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .navbar.navbar-smart-scroll {
+        transition: none;
+    }
 }

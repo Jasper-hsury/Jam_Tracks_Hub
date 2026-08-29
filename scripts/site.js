@@ -7,6 +7,79 @@ document.addEventListener("DOMContentLoaded", function() {
     const footerLinks = document.querySelector(".footer .social-links");
     const backToTopButton = document.getElementById("backToTopBtn");
 
+    if (navbar) {
+        const navbarSpacer = document.createElement("div");
+        navbarSpacer.className = "site-navbar-spacer";
+        navbarSpacer.setAttribute("aria-hidden", "true");
+
+        function syncNavbarHeight() {
+            const navbarHeight = Math.ceil(navbar.getBoundingClientRect().height);
+            navbarSpacer.style.height = `${navbarHeight}px`;
+            navbar.style.setProperty("--site-navbar-height", `${navbarHeight}px`);
+        }
+
+        syncNavbarHeight();
+        navbar.after(navbarSpacer);
+        navbar.classList.add("navbar-smart-scroll");
+
+        if (typeof ResizeObserver === "function") {
+            const navbarResizeObserver = new ResizeObserver(syncNavbarHeight);
+            navbarResizeObserver.observe(navbar);
+        } else {
+            window.addEventListener("resize", syncNavbarHeight, { passive: true });
+        }
+
+        let previousScrollY = Math.max(0, window.scrollY);
+        let direction = 0;
+        let directionOriginY = previousScrollY;
+        let scrollFrame = 0;
+        let keepVisibleUntil = 0;
+
+        function showNavbar() {
+            navbar.classList.remove("is-scroll-hidden");
+        }
+
+        function navbarInteractionIsOpen() {
+            return navbar.classList.contains("menu-open") || Boolean(navbar.querySelector("details[open]"));
+        }
+
+        function holdNavbarVisible() {
+            keepVisibleUntil = performance.now() + 900;
+            showNavbar();
+        }
+
+        function updateNavbarFromScroll() {
+            scrollFrame = 0;
+            const currentScrollY = Math.max(0, window.scrollY);
+            const delta = currentScrollY - previousScrollY;
+
+            if (delta > 0 && direction !== 1) {
+                direction = 1;
+                directionOriginY = previousScrollY;
+            } else if (delta < 0 && direction !== -1) {
+                direction = -1;
+                directionOriginY = previousScrollY;
+            }
+
+            if (currentScrollY <= 8 || navbarInteractionIsOpen() || performance.now() < keepVisibleUntil) {
+                showNavbar();
+            } else if (direction === -1 && directionOriginY - currentScrollY >= 3) {
+                showNavbar();
+            } else if (direction === 1 && currentScrollY - directionOriginY >= 14) {
+                navbar.classList.add("is-scroll-hidden");
+            }
+
+            previousScrollY = currentScrollY;
+        }
+
+        window.addEventListener("scroll", function() {
+            if (!scrollFrame) scrollFrame = window.requestAnimationFrame(updateNavbarFromScroll);
+        }, { passive: true });
+        navbar.addEventListener("pointerdown", holdNavbarVisible);
+        navbar.addEventListener("click", holdNavbarVisible);
+        navbar.addEventListener("focusin", holdNavbarVisible);
+    }
+
     if (main) {
         if (!main.id) {
             main.id = "main-content";

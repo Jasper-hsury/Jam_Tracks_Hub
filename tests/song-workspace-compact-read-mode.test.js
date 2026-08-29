@@ -90,7 +90,7 @@ test("Read Mode reuses the chart while removing editor chrome", () => {
     assert.match(css, /\.workspace-editor\.is-read-mode \.workspace-chart-panel\s*\{[^}]*width:\s*min\(var\(--workspace-read-content-width\), 100%\)[^}]*margin:\s*0 auto/s);
     assert.match(css, /\.workspace-editor\.is-read-mode \.workspace-read-toolbar\s*\{[^}]*box-sizing:\s*border-box[^}]*width:\s*min\(var\(--workspace-read-content-width\), 100%\)[^}]*min-height:\s*58px[^}]*margin:\s*0 auto 10px[^}]*padding:\s*8px 10px/s);
     assert.match(css, /@media \(min-width: 721px\)[\s\S]*?\.workspace-editor\.is-read-mode \.workspace-read-toolbar\s*\{[^}]*min-height:\s*70px[^}]*gap:\s*10px[^}]*padding:\s*12px 14px/s);
-    assert.match(css, /\.workspace-editor\.is-read-mode \.workspace-line\.is-instrumental\s*\{[^}]*min-height:\s*54px/s);
+    assert.match(css, /\.workspace-chart \.workspace-line\.is-instrumental,\s*\.performance-chart \.workspace-line\.is-instrumental\s*\{[^}]*min-height:\s*44px/s);
     assert.match(css, /\.workspace-editor\.is-read-mode \.workspace-line:not\(\.is-instrumental\)\s*\{[^}]*var\(--song-line-spacing\) \/ 4/s);
     assert.match(css, /@media \(max-width: 720px\)[\s\S]*?#exitReadModeButton\s*\{[^}]*grid-column:\s*1[^}]*grid-row:\s*2/s);
     assert.match(css, /@media \(max-width: 720px\)[\s\S]*?#readShapesButton\s*\{[^}]*grid-column:\s*2[^}]*grid-row:\s*2/s);

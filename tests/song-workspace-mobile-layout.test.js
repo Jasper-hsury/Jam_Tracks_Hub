@@ -49,10 +49,37 @@ test("the library action uses the concise My Songs label in both locales", () =>
     assert.equal(zh.pages.songWorkspace.backToSongs, "我的歌曲");
 });
 
+test("mobile My Songs matches the compact library hierarchy and two-by-two actions", () => {
+    const library = region(html, '<section class="workspace-library"', '<div class="workspace-local-note"');
+    assert.match(library, /onThisDevice[\s\S]*mySongsTitle/);
+    assert.doesNotMatch(library, /workspace-count-control|id="songCount"/);
+    assert.doesNotMatch(app, /count:\s*\$\("songCount"\)|elements\.count/);
+    assert.doesNotMatch(css, /\.workspace-count-control/);
+    assert.match(library, /backupSongsButton[\s\S]*workspace-library-action-icon[\s\S]*backupAll/);
+    assert.match(library, /restoreSongsButton[\s\S]*workspace-library-action-icon[\s\S]*restoreBackup/);
+    assert.match(app, /workspace-song-card-identity[\s\S]*workspace-song-title-block/);
+    assert.doesNotMatch(app, /workspace-song-artwork|workspace-song-artwork-icon|artwork:/);
+    assert.match(app, /songMetaRow\(`\$\{t\("pages\.songWorkspace\.key"[\s\S]*songMetaRow\(`Capo:[\s\S]*songMetaRow\(formatDate/);
+    assert.doesNotMatch(app, /workspace-song-meta-icon|key:\s*\[|capo:\s*\[|calendar:\s*\[/);
+    assert.match(app, /\[t\("pages\.songWorkspace\.open"[\s\S]*"open"\][\s\S]*"duplicate"\][\s\S]*"download"\][\s\S]*"delete"\]/);
+    assert.match(css, /@media \(max-width: 720px\)[\s\S]*?\.workspace-song-card-identity\s*\{[^}]*display:\s*block/s);
+    assert.match(css, /@media \(max-width: 720px\)[\s\S]*?\.workspace-song-actions\s*\{[^}]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/s);
+    assert.doesNotMatch(css, /@media \(max-width: 420px\)[\s\S]*?\.workspace-song-actions,[\s\S]*?grid-template-columns:\s*1fr/s);
+});
+
+test("scrollable pages and the Read Mode chord-shape drawer hide persistent scrollbar chrome", () => {
+    assert.match(css, /html,\s*body,[\s\S]*?\.workspace-performance,[\s\S]*?\.workspace-dialog,[\s\S]*?\.workspace-shapes-panel[\s\S]*?\{[^}]*scrollbar-width:\s*none[^}]*-ms-overflow-style:\s*none/s);
+    assert.match(css, /html::\-webkit-scrollbar,[\s\S]*?\.workspace-shapes-panel::\-webkit-scrollbar[\s\S]*?\{[^}]*display:\s*none[^}]*width:\s*0[^}]*height:\s*0/s);
+    assert.match(css, /\.workspace-editor\.is-read-mode \.workspace-shapes-panel\s*\{[^}]*overflow-y:\s*auto[^}]*scrollbar-width:\s*none/s);
+    assert.match(css, /\.workspace-editor\.is-read-mode \.workspace-shapes-panel::\-webkit-scrollbar\s*\{[^}]*display:\s*none/s);
+});
+
 test("mobile settings keep a compact two-column hierarchy", () => {
     const summary = region(html, '<details class="workspace-settings-disclosure"', '<section class="workspace-settings-panel"');
     assert.match(summary, /workspace-settings-summary-icon/);
     assert.match(summary, /workspace-settings-summary-copy[\s\S]*songSettings[\s\S]*songSettingsHint/);
+    assert.match(summary, /workspaceSettingsSummary[\s\S]*aria-expanded="true"[\s\S]*aria-controls="workspaceSettingsPanel"/);
+    assert.match(summary, /workspace-settings-summary-chevron[\s\S]*aria-hidden="true"/);
     assert.match(css, /@media \(max-width: 720px\)[\s\S]*?\.workspace-settings-nav\s*\{[^}]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/s);
     assert.match(css, /\.workspace-settings-nav > \.workspace-field:nth-child\(5\)\s*\{[^}]*grid-column:\s*1 \/ -1/s);
     assert.match(css, /\.workspace-reading-controls\s*\{[^}]*grid-column:\s*1 \/ -1[^}]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/s);
@@ -61,6 +88,12 @@ test("mobile settings keep a compact two-column hierarchy", () => {
     assert.match(css, /\.workspace-settings-nav \.workspace-field\s*\{[^}]*color:\s*var\(--workspace-text\)[^}]*text-transform:\s*none/s);
     assert.match(css, /\.workspace-reading-controls\s*\{[^}]*border-top:\s*1px solid var\(--workspace-line\)[^}]*padding-top:\s*18px/s);
     assert.match(css, /\.workspace-settings-nav \.workspace-reading-stepper\s*\{[^}]*height:\s*54px[^}]*border-radius:\s*999px/s);
+    assert.match(css, /\.workspace-settings-summary-chevron\s*\{[^}]*width:\s*44px[^}]*height:\s*44px[^}]*place-items:\s*center[^}]*transition:\s*transform 240ms/s);
+    assert.match(css, /\.is-settings-expanded \.workspace-settings-summary-chevron\s*\{[^}]*transform:\s*rotate\(180deg\)/s);
+    assert.match(app, /function setSettingsDisclosureExpanded\(expanded, options\)[\s\S]*duration:\s*240[\s\S]*cubic-bezier\(0\.25, 0\.8, 0\.25, 1\)/s);
+    assert.match(app, /settingsDisclosureAnimation\?\.cancel\(\)/);
+    assert.match(app, /prefersReducedMotion\(\)/);
+    assert.match(css, /@media \(prefers-reduced-motion: reduce\)[\s\S]*?\.workspace-settings-summary-chevron[\s\S]*?transition:\s*none/s);
 });
 
 test("mobile modes use the required two-plus-three row order", () => {
@@ -71,11 +104,13 @@ test("mobile modes use the required two-plus-three row order", () => {
     assert.match(css, /\[data-view-mode="roman"\]\s*\{[^}]*order:\s*5[^}]*grid-column:\s*span 2/s);
 });
 
-test("mobile hint and Smart Capo actions share a row and Smart Capo stays text-only", () => {
+test("mobile hint and Smart Capo actions share a row and Smart Capo reuses the primary action style", () => {
     const actions = region(html, '<div class="workspace-mode-actions">', '</div>');
     const smartCapo = region(actions, 'id="smartCapoButton"', '</button>');
     assert.match(actions, /id="chordHintsButton"[\s\S]*id="smartCapoButton"/);
     assert.doesNotMatch(smartCapo, /<svg|<img|icon/i);
+    assert.match(actions, /workspace-button workspace-button-primary" id="smartCapoButton"/);
+    assert.match(html, /workspace-button workspace-button-primary" id="performanceButton"/);
     assert.match(app, /\$\("smartCapoButton"\)\.addEventListener\("click", renderCapoOptions\)/);
     assert.match(css, /@media \(max-width: 720px\)[\s\S]*?\.workspace-mode-actions\s*\{[^}]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/s);
 });
