@@ -1015,18 +1015,21 @@ Exact expressions, false-positive considerations, verification evidence, rollbac
 
 The product decision is to keep Key Finder compute on the existing Render Free service and use Cloudflare Free as the browser-facing DNS/proxy/security layer. The Cloudflare Containers/Durable Objects prototype branch `infra/key-finder-cloudflare-only-migration-v1` at checkpoint `8776616b8933dc8bae8e7779e357d842b0ba6801` remains **DEFERRED_COST_DECISION** and must not be merged, cherry-picked, or deployed as part of Phase 3R.
 
-Phase 3R branch `infra/key-finder-render-behind-cloudflare-v1` began at `1e293d19935fd7388f22ad011df9816490a9b4ee`, equal to the then-current `origin/main`. Provider preflight on 2026-08-29 added `api.jamtrackshub.com` to the existing Render `Jasper-music` service, issued the Render-managed certificate, created a Cloudflare CNAME to the generated Render hostname, and enabled Cloudflare proxying after certificate verification. The zone remained on SSL/TLS `Full`, not Flexible. A bounded request to `https://api.jamtrackshub.com/api/health` returned 200 through Cloudflare. The generated Render hostname remains enabled only as rollback until final production acceptance passes.
+Phase 3R branch `infra/key-finder-render-behind-cloudflare-v1` began at `1e293d19935fd7388f22ad011df9816490a9b4ee`, equal to the then-current `origin/main`. Provider preflight on 2026-08-29 added `api.jamtrackshub.com` to the existing Render `Jasper-music` service, issued the Render-managed certificate, created a Cloudflare CNAME to the generated Render hostname, and enabled Cloudflare proxying after certificate verification. The zone remained on SSL/TLS `Full`, not Flexible. A bounded request to `https://api.jamtrackshub.com/api/health` returned 200 through Cloudflare.
 
 Repository cutover changes the production frontend, CSP, and large-slide fallback embeds to `https://api.jamtrackshub.com`, removes the generated Render hostname as a production API fallback, restricts FastAPI CORS to `https://jamtrackshub.com` plus localhost/127.0.0.1 development origins, bounds Private Network Access preflight, and marks all FastAPI `/api/*` responses `no-store`. Render compute, job routes, upload/media limits, worker count, timeouts, cleanup, Docker configuration, and model behavior remain unchanged. No Cloudflare Worker proxy, paid service, Container, Durable Object, production secret, or Cloudflare-to-Render origin-auth header is introduced.
 
-Current Phase 3R gates before repository deployment:
+Phase 3R production acceptance completed on 2026-08-30:
 
 - Custom DNS / Render domain / certificate / Cloudflare proxy / custom health: **PASS**.
-- Repository frontend/CSP/CORS/no-store implementation: **IMPLEMENTED / PENDING PR DEPLOYMENT**.
-- Production CORS and Key Finder create/poll/upload acceptance: **PENDING DEPLOYMENT**.
-- Single Free rate-rule expansion to the two exact job-creation paths: **PENDING POST-CUTOVER SMOKE**; polling paths must remain excluded.
-- Generated Render hostname disablement and direct-host rejection: **PENDING FINAL ACCEPTANCE**.
+- Repository frontend/CSP/CORS/no-store implementation: **PASS / DEPLOYED** via PR `#12`, squash merge `2154dd2ce5914b29cb3841d33348472e51315bf9`.
+- Cloudflare Workers canonical production build and Render `main` auto-deploy: **PASS**, both tied to `2154dd2`.
+- Production CORS and Key Finder file create/poll acceptance: **PASS**; one 868 KiB repository fixture completed without load testing.
+- YouTube production analysis: **NOT RUN — NO AUTHORIZED CONTROLLED URL FIXTURE**.
+- Single Free rate rule: **PASS / ACTIVE** for exact `/api/subscribe`, `/api/feedback`, `/api/analyze/jobs`, and `/api/analyze-file/jobs`; 5 requests per IP per 10 seconds; Block for 10 seconds; polling excluded.
+- Generated Render hostname disablement and direct-host rejection: **PASS**; generated health returns 404 while custom health and job polling remain 200.
+- Whole-site/Song Workspace browser smoke and No-Lyrics-Egress regression: **PASS**; no new console errors, with unrelated known GSAP/SplitText warnings still present.
 - Cloudflare-to-Render cryptographic origin authentication: **DEFERRED**.
 - Container migration: **DEFERRED_COST_DECISION**.
 
-The authoritative topology, endpoint matrix, official provider links, exact rollout, rate-rule treatment, production acceptance, and rollback procedure are in `docs/key-finder-render-behind-cloudflare.md`. Do not disable the generated Render hostname or change the sole Free rate-limit rule until the documented order reaches those gates.
+The authoritative topology, endpoint matrix, official provider links, exact rollout, rate-rule treatment, production acceptance evidence, and rollback procedure are in `docs/key-finder-render-behind-cloudflare.md`.

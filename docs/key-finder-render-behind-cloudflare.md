@@ -26,9 +26,9 @@ The Cloudflare-only prototype at `infra/key-finder-cloudflare-only-migration-v1`
 | Cloudflare proxy | CNAME changed from DNS-only certificate setup to Proxied | Verified |
 | Zone TLS mode | `Full`; automatic mode enabled; not Flexible | Verified |
 | Custom health | `GET https://api.jamtrackshub.com/api/health` returned 200 through Cloudflare | Verified |
-| Legacy hostname | Still enabled as a rollback path | Required until final acceptance |
+| Legacy hostname | Disabled after final acceptance; direct health now returns 404 with `x-render-routing: blocked-render-subdomain` | Verified |
 
-Provider preflight does not prove the frontend/CORS cutover is deployed. Production cutover is complete only after the repository PR is merged, both canonical deployments succeed, and the acceptance sequence below passes.
+Provider preflight alone did not prove the frontend/CORS cutover. The production evidence recorded below confirms that the repository PR, both canonical deployments, the custom-domain workflow, the rate-rule expansion, and the generated-subdomain shutdown all completed in order.
 
 ## Repository Contract
 
@@ -57,7 +57,7 @@ Provider preflight does not prove the frontend/CORS cutover is deployed. Product
 
 ## Free-Plan Rate Rule
 
-The zone has one Free rate-limit slot. Preserve the existing rule name `api-public-mutation-abuse`, IP characteristic, 5 requests per 10 seconds, Block action, and 10-second mitigation. After custom-domain production smoke succeeds, expand its expression to four exact paths only:
+The zone has one Free rate-limit slot. The active rule `api-public-mutation-abuse` uses the IP characteristic, 5 requests per 10 seconds, Block action, and a 10-second mitigation. After custom-domain production smoke succeeded on 2026-08-30, its expression was expanded to these four exact paths:
 
 ```text
 http.request.uri.path eq "/api/subscribe"
@@ -85,6 +85,21 @@ The Free UI did not expose method/host matching, Log-only, Managed Challenge, a 
 13. Expand the sole Free rate rule with the two exact job-creation paths and repeat one normal smoke without triggering the threshold.
 14. Only after all preceding gates pass, disable the generated Render subdomain.
 15. Verify the generated hostname is unavailable/404 and custom health plus one normal Key Finder flow still works.
+
+## Production Acceptance Recorded On 2026-08-30
+
+- PR `#12` passed both required checks and was squash-merged as `2154dd2ce5914b29cb3841d33348472e51315bf9`.
+- Cloudflare Workers production build history reports `2154dd2` as `Success` on `main`.
+- Render reports the same commit as the last successfully deployed `Live` revision.
+- Production CSP, `site-config.js`, Key Finder runtime source, and large-slide fallback configuration use `https://api.jamtrackshub.com` and contain no active generated-Render API fallback.
+- `GET /api/health` returned 200 through Cloudflare with `Cache-Control: no-store`.
+- CORS allowed exactly `https://jamtrackshub.com`, rejected `https://evil.example`, preserved localhost development access, and bounded approved Private Network Access preflight.
+- One repository-controlled 868 KiB OGG fixture created a file-analysis job with HTTP 202, returned an opaque job ID, completed through the custom-domain polling route, and returned HTTP 200/no-store. No production load test or large upload was performed.
+- The production Key Finder page reported its API connected; Song Workspace, Read Mode, Performance Mode, Homepage, and Legal smoke checks passed. No new console errors were observed; the pre-existing GSAP/SplitText warnings remain unrelated.
+- Existing No-Lyrics-Egress regression tests passed, and the production Song Workspace continued to use existing synthetic browser-local songs without adding a song-content network path.
+- The sole Free rate rule was expanded to the exact two Key Finder creation paths in addition to subscribe/feedback. Polling remains excluded and the threshold/action/duration were unchanged.
+- After all preceding gates passed, the generated Render subdomain was disabled. Its health path now returns 404 while custom health and the already-created job polling path remain 200.
+- YouTube production analysis was not run because no separately authorized controlled URL fixture was available.
 
 ## Rollback
 
