@@ -1,0 +1,34 @@
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://cloud.umami.is; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://img.youtube.com; connect-src 'self' https://cloud.umami.is https://jasper-music.onrender.com; media-src 'self' blob:; frame-src https://www.youtube.com https://jasper-music.onrender.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
+  Permissions-Policy: camera=(), geolocation=(), microphone=(), payment=(), usb=()
+  Referrer-Policy: no-referrer
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  X-Permitted-Cross-Domain-Policies: none
+
+/
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/scripts/*
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/styles/*
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/assets/*
+  Cache-Control: public, max-age=86400, must-revalidate
+
+/downloads/*
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/data/*
+  Cache-Control: public, max-age=300, must-revalidate
+
+/locales/*
+  Cache-Control: public, max-age=300, must-revalidate
+
+/slides/*
+  Cache-Control: public, max-age=3600, must-revalidate

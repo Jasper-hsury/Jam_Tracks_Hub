@@ -1,3 +1,11 @@
+import {
+    RequestValidationError,
+    assertSameOrigin,
+    readBoundedJson,
+    sameOriginCorsHeaders
+} from "./request-security.mjs";
+
+const MAX_REQUEST_BODY_BYTES = 16 * 1024;
 const JSON_HEADERS = {
     "Content-Type": "application/json; charset=utf-8",
     "Cache-Control": "no-store"
@@ -28,22 +36,18 @@ function normalizeField(value, maxLength) {
 }
 
 function createId() {
-    if (globalThis.crypto?.randomUUID) {
-        return globalThis.crypto.randomUUID();
-    }
-
-    return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    return globalThis.crypto.randomUUID();
 }
 
-export async function onRequestOptions() {
+export async function onRequestOptions(context) {
+    try {
+        assertSameOrigin(context.request);
+    } catch (error) {
+        return jsonResponse({ ok: false, message: "Request origin is not allowed." }, error.status || 403);
+    }
     return new Response(null, {
         status: 204,
-        headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "POST, OPTIONS",
-            "Access-Control-Allow-Headers": "Content-Type",
-            "Access-Control-Max-Age": "86400"
-        }
+        headers: sameOriginCorsHeaders(context.request)
     });
 }
 
@@ -53,18 +57,19 @@ export async function onRequestPost(context) {
     if (!database) {
         return jsonResponse({
             ok: false,
-            message: "Feedback database is not configured."
-        }, 500);
+            message: "Service unavailable."
+        }, 503);
     }
 
     let payload;
     try {
-        payload = await context.request.json();
+        assertSameOrigin(context.request);
+        payload = await readBoundedJson(context.request, MAX_REQUEST_BODY_BYTES);
     } catch (error) {
         return jsonResponse({
             ok: false,
-            message: "Invalid request body."
-        }, 400);
+            message: error instanceof RequestValidationError ? error.message : "Invalid request body."
+        }, error instanceof RequestValidationError ? error.status : 400);
     }
 
     const honeypot = normalizeField(payload.website, 120);

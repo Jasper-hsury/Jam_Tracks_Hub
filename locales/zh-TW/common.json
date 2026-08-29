@@ -628,6 +628,7 @@
       "importError": "無法辨識這份樂譜。",
       "invalidBackup": "這不是支援的 Jam Tracks Hub 備份檔。",
       "restoreComplete": "備份已還原為額外歌曲。",
+      "corruptSongsSkipped": "部分不支援的本機歌曲已略過，其他歌曲仍可繼續使用。",
       "capoReasonOpen": "保留較熟悉的開放和弦指型。",
       "capoReasonEasy": "減少較困難或少見的和弦指型。",
       "capoReasonAlternate": "提供另一組實用的彈奏指型。"

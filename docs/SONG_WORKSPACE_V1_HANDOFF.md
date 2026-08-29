@@ -760,7 +760,7 @@ Read Mode is ephemeral presentation state. It hides the page hero and all editor
 | Meaningful Position Anchor Model | RESOLVED | `tokenizeLyric`, `layoutLyricLine`, core/interaction tests | Chinese character + whitespace-separated English unit; no lyric Start or character-offset compatibility. |
 | Enharmonic Chord Spelling | RESOLVED | core spelling policy, key options, editor control, locale/interaction tests | Music Theory / Preserve Input, C#m regression, slash pitch identity, persisted per song. |
 | Edit Line Delete Line | RESOLVED | `deleteLine`, danger control, core/interaction tests | Selected line only, stable siblings/section, empty section allowed, autosave/reload. |
-| Old-format user notice removal | RESOLVED | `loadSongs`, locale cleanup, interaction regression | Unsupported records are skipped without warning, deletion, migration, or rewrite. |
+| Old-format user notice removal | RESOLVED | `loadSongs`, locale cleanup, interaction regression | The development-format notice stays removed. Unsupported/corrupt records are skipped without deletion, migration, or rewrite; Phase 1 may show one generic content-free recovery warning. |
 | Edit Line Move controls removal | RESOLVED | line editor/app/locales, interaction regression | Edit → Position → Update remains the direct lyric-chord reposition path. |
 | Instrumental / chord-only sections | RESOLVED | core insertion helper, app grid renderer/CSS, locales, core/interaction/final-layout/export tests | Optional name, bounded 1–64 bars, 4/8-column content-first grid, subtle empty cells, contextual Add/Edit/Delete Bar, stable IDs and existing derived/export paths. |
 | Instrumental compact measure strip | RESOLVED | workspace renderer/CSS, final-layout/reading-UX tests, responsive browser acceptance | Normal Workspace is unboxed and shows only ordered chord content between vertical barlines; localized Bar numbers remain accessible but visually hidden. It keeps 44 px full-cell edit targets, capped 288/768 px 4/8 grids, multiple/long chord wrapping, and empty `—`; Read, Performance, and Print variants remain isolated. |
@@ -881,7 +881,7 @@ All categories require explicit review before release:
 - Delete Line removes only one line, preserves section/sibling IDs, and survives autosave/reload.
 - Add Instrumental Section inserts at the chosen boundary, creates 1–64 chord-only bars without lyric anchors, preserves existing IDs, and supports contextual add/edit/delete plus autosave/reload.
 - Edit Line exposes no Move controls; direct existing-chord position editing and Delete Line/Delete Bar remain usable.
-- Unsupported pre-release records are skipped without a user warning or automatic destructive cleanup.
+- Unsupported/corrupt records are skipped without automatic destructive cleanup; one generic content-free recovery warning may appear, but the removed development-format notice must not return.
 - Song Document V2 meaningful positions pass exact English/Chinese/mixed examples, no lyric Start, ChordPro/pasted-chart mapping, hints, exports, and JSON round-trip.
 - Single chord-row invariant passes all modes and responsive layouts.
 - Safari shape selection has zero visible jump.
@@ -956,3 +956,31 @@ A new Codex session must begin in this order:
 10. Only then modify production code, and only for the explicitly requested bounded task.
 
 Highest-priority remaining release work includes iPhone/iOS hardware acceptance, remote/CI/PR coordination, and explicit production approval. The independent settings/mode navigation, deterministic mobile settings disclosure, localized key/Performance explanations, 0–20 px local-only Line Spacing, centered Zoom control, Song Chart Zoom persistence, larger default reading typography, compact Instrumental measure strips, analytics/error-log no-song-content-egress, Copyright/local-only UI wording, the Create Song / Other Import hierarchy, cancellation-vs-validation contract, shared modal background lock, Music Theory / Preserve Input chord spelling, Delete Line, old-format notice removal, Move-control cleanup, Instrumental Section creation/editing, Song Document V2 meaningful positions, BPM-linked Performance Auto Scroll, button design-system hardening, one-row chord-annotation contract, Shape Picker parity/zero-jump code fix, Create/Import scrollbar polish, canonical single-song JSON import, and macOS Safari zero-jump user acceptance are resolved. Do not begin a remaining gate without an explicit bounded request.
+
+## 41. Security Infrastructure Phase 1
+
+Repository-side Song Workspace and whole-site abuse hardening is implemented on `security/song-workspace-site-abuse-hardening-v1` from security base `45f99f2927325493e4b654912950eca27a3dafe0`. The bounded phase does not modify the Key Finder backend, Render runtime, Cloudflare Dashboard, provider secrets, deployment, release, or direct-origin architecture.
+
+Implemented repository controls:
+
+- Song validation now applies pre-canonicalization limits to metadata, sections, per-section/total lines, lyric-line and instrumental-bar chord counts, total chords, symbols, IDs, imported source, JSON/backup bytes, backup count, local record count, and preferences.
+- Corrupt/unsupported local records are skipped without deletion; a content-free localized warning preserves access to valid songs. Preferences are allowlisted/clamped before use.
+- Create, file import, and backup restore have duplicate-submit guards without changing cancellation, modal lock, autosave, stable IDs, or exports.
+- Song Workspace keeps text-only sinks and the established no-lyrics-egress boundary. No song transport, analytics, remote logging, URL/title content, or schema change was added.
+- Worker APIs use explicit route/method allowlists, same-origin mutation checks, bounded streamed JSON parsing (4 KiB subscribe, 16 KiB feedback), exact CORS reflection, generic errors, and `no-store`.
+- Subscriber CSV export now accepts `SUBSCRIBERS_ADMIN_TOKEN` only as a Bearer header and compares fixed-size digests with a timing-safe operation; query-token use is removed.
+- Static `_headers` supplies bounded CSP, frame/object/form/base restrictions, no-referrer, nosniff, permissions policy, and cache directives. The service-waking inline script was externalized to satisfy `script-src` without `unsafe-inline`.
+- Unknown `/api/*` paths return a generic 404 and never fall through to static assets. Static non-GET/HEAD methods return 405.
+- Automated security tests cover XSS canaries, parser/document amplification, corrupt storage/preferences, origin/body/admin-token behavior, route/method/cache/header policy, generic failure, and no-song-content transport.
+
+Provider/manual status:
+
+- Cloudflare plan: **UNKNOWN / MANUAL VERIFICATION REQUIRED**.
+- Managed WAF: **PENDING MANUAL CONFIGURATION**.
+- Public mutation rate limits: **PENDING MANUAL CONFIGURATION**.
+- Bot protection: **PENDING MANUAL CONFIGURATION**.
+- Dashboard Cache Rules and production header verification: **PENDING MANUAL CONFIGURATION**.
+- HSTS: **AUDITED / NOT ENABLED** pending all-host HTTPS and rollback review.
+- Key Finder direct Render abuse/origin architecture: **UNCHANGED / OPEN SEPARATE GATE**.
+
+The authoritative Phase 1 inventory, official provider references, endpoint matrix, exact suggested manual rules, rollout, verification, rollback, false-positive guidance, observability, and limitations are in `docs/production-anti-abuse.md`. A future session must read that document during context recovery. Repository implementation does not prove any edge control is active; production status may be promoted only with Dashboard and live response evidence.

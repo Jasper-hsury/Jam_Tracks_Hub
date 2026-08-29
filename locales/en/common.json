@@ -628,6 +628,7 @@
       "importError": "We could not recognize this chart.",
       "invalidBackup": "This is not a supported Jam Tracks Hub backup.",
       "restoreComplete": "Backup restored as additional songs.",
+      "corruptSongsSkipped": "Some unsupported local songs were skipped. Your other songs are still available.",
       "capoReasonOpen": "Keeps familiar open-position shapes available.",
       "capoReasonEasy": "Reduces difficult or uncommon chord shapes.",
       "capoReasonAlternate": "Offers a useful alternate set of play shapes."

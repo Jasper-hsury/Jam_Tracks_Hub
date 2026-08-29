@@ -13,6 +13,10 @@
     const DB_VERSION = 1;
     const STORE_NAME = "songs";
     const PREFERENCES_KEY = "jamTracksHubSongWorkspacePreferences";
+    const MAX_PREFERENCES_BYTES = 256 * 1024;
+    const MAX_STORED_RECORDS = 500;
+    const MAX_SHAPE_SELECTION_SONGS = 500;
+    const MAX_SHAPE_SELECTIONS_PER_SONG = 128;
     const CHART_ZOOM = Object.freeze({ min: 50, max: 150, step: 10, default: 100 });
     const LINE_SPACING = Object.freeze({ min: 0, max: 20, step: 1, default: 10 });
 
@@ -72,7 +76,7 @@
 
     function list(indexedDb) {
         return withStore("readonly", async function(store) {
-            const items = await requestResult(store.getAll());
+            const items = await requestResult(store.getAll(undefined, MAX_STORED_RECORDS + 1));
             return items.sort(function(a, b) { return String(b.updatedAt).localeCompare(String(a.updatedAt)); });
         }, indexedDb);
     }
@@ -97,10 +101,60 @@
         }, indexedDb);
     }
 
+    function boundedString(value, maxLength) {
+        return typeof value === "string" && value.length <= maxLength ? value : null;
+    }
+
+    function sanitizeShapeSelections(value) {
+        if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+        const selections = {};
+        Object.keys(value).slice(0, MAX_SHAPE_SELECTION_SONGS).forEach(function(songId) {
+            const safeSongId = boundedString(songId, 160);
+            const songSelections = value[songId];
+            if (!safeSongId || !songSelections || typeof songSelections !== "object" || Array.isArray(songSelections)) return;
+            const safeSelections = {};
+            Object.keys(songSelections).slice(0, MAX_SHAPE_SELECTIONS_PER_SONG).forEach(function(symbol) {
+                const safeSymbol = boundedString(symbol, 40);
+                const safeVoicing = boundedString(songSelections[symbol], 200);
+                if (safeSymbol && safeVoicing) safeSelections[safeSymbol] = safeVoicing;
+            });
+            if (Object.keys(safeSelections).length) selections[safeSongId] = safeSelections;
+        });
+        return selections;
+    }
+
+    function sanitizePreferences(value) {
+        if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+        const preferences = {};
+        if (Object.prototype.hasOwnProperty.call(value, "chartZoom")) {
+            preferences.chartZoom = normalizeStoredChartZoom(value.chartZoom);
+        }
+        if (Object.prototype.hasOwnProperty.call(value, "lineSpacing")) {
+            preferences.lineSpacing = normalizeStoredLineSpacing(value.lineSpacing);
+        }
+        if (["original", "balanced", "beginner", "roman", "nashville"].includes(value.viewMode)) {
+            preferences.viewMode = value.viewMode;
+        }
+        if (typeof value.chordHints === "boolean") preferences.chordHints = value.chordHints;
+        const lastSongId = boundedString(value.lastSongId, 160);
+        if (lastSongId && /^song-[a-z0-9-]+$/i.test(lastSongId)) preferences.lastSongId = lastSongId;
+        const multiplier = Number(value.scrollSpeedMultiplier);
+        if (Number.isFinite(multiplier)) preferences.scrollSpeedMultiplier = Math.max(0.5, Math.min(2, multiplier));
+        const legacyFontScale = Number(value.fontScale);
+        if (Number.isFinite(legacyFontScale)) preferences.fontScale = Math.max(0.5, Math.min(1.5, legacyFontScale));
+        const legacyScrollSpeed = Number(value.scrollSpeed);
+        if (Number.isFinite(legacyScrollSpeed)) preferences.scrollSpeed = Math.max(1, Math.min(200, legacyScrollSpeed));
+        if (Object.prototype.hasOwnProperty.call(value, "songShapeSelections")) {
+            preferences.songShapeSelections = sanitizeShapeSelections(value.songShapeSelections);
+        }
+        return preferences;
+    }
+
     function readPreferences() {
         try {
-            const value = JSON.parse(localStorage.getItem(PREFERENCES_KEY) || "{}");
-            return value && typeof value === "object" ? value : {};
+            const raw = localStorage.getItem(PREFERENCES_KEY) || "{}";
+            if (raw.length > MAX_PREFERENCES_BYTES) return {};
+            return sanitizePreferences(JSON.parse(raw));
         } catch (error) {
             return {};
         }
@@ -108,7 +162,7 @@
 
     function writePreferences(preferences) {
         try {
-            localStorage.setItem(PREFERENCES_KEY, JSON.stringify(preferences || {}));
+            localStorage.setItem(PREFERENCES_KEY, JSON.stringify(sanitizePreferences(preferences)));
             return true;
         } catch (error) {
             return false;
@@ -156,11 +210,30 @@
         return commitLineSpacing(current + delta, current);
     }
 
+    function filterValidSongs(records, validator) {
+        const songs = [];
+        let skippedCount = 0;
+        (Array.isArray(records) ? records : []).forEach(function(record) {
+            if (songs.length >= MAX_STORED_RECORDS) {
+                skippedCount += 1;
+                return;
+            }
+            try {
+                songs.push(validator(record));
+            } catch (error) {
+                skippedCount += 1;
+            }
+        });
+        return { songs, skippedCount };
+    }
+
     return {
         DB_NAME,
         DB_VERSION,
         STORE_NAME,
         PREFERENCES_KEY,
+        MAX_PREFERENCES_BYTES,
+        MAX_STORED_RECORDS,
         CHART_ZOOM,
         LINE_SPACING,
         StorageUnavailableError,
@@ -172,6 +245,8 @@
         replaceAll,
         readPreferences,
         writePreferences,
+        sanitizePreferences,
+        filterValidSongs,
         normalizeStoredChartZoom,
         commitChartZoom,
         stepChartZoom,
