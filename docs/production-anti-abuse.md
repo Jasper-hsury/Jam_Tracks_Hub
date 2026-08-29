@@ -1,13 +1,14 @@
 # Production Anti-Abuse And Edge Security Runbook
 
-This document records the repository controls implemented during Security Infrastructure Phase 1 and the manual Cloudflare configuration that remains outside source control. It is deliberately provider-aware without claiming that any Dashboard rule is active until production evidence confirms it.
+This document records the repository controls implemented during Security Infrastructure Phase 1 and the Cloudflare edge controls verified during Phase 2. Provider state is recorded only where the production Dashboard and bounded live checks supplied evidence.
 
 ## Status And Scope
 
 - Repository request bounds, route and method allowlists, static security headers, cache directives, and Song Workspace logical-data bounds: **implemented**.
-- Cloudflare WAF, rate limiting, bot controls, cache rules, alerts, and HSTS review: **pending manual configuration and production verification**.
+- Cloudflare Free Managed Rules, DDoS protection, Browser Integrity Check, Bot Fight Mode, one public-mutation rate-limit rule, and an API cache-bypass rule: **verified enabled on 2026-08-29**.
+- Additional plan-dependent WAF tuning, administrative-export observation, alerts, and HSTS review: **deferred / unavailable on the current Free plan / pending separate review**, as detailed below.
 - Key Finder continues to use the current direct Render API topology. This phase does not migrate, proxy, retire, or otherwise change that runtime.
-- No production secret, Cloudflare Dashboard setting, Render setting, deployment, or load test is part of this phase.
+- Phase 2 changed only the documented Cloudflare Dashboard controls below. It added no secret, Render setting, application deployment, product feature, or load test.
 
 ## Official Capability Sources
 
@@ -37,7 +38,40 @@ Application guidance reviewed for this phase:
 - [OWASP File Upload](https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html)
 - [OWASP HTTP Security Response Headers](https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html)
 
-The current Cloudflare plan is not encoded in the repository. All plan-dependent rows below therefore require **MANUAL VERIFICATION**.
+The production zone displayed the **Free** plan during the 2026-08-29 Phase 2 audit. Re-check the Dashboard before future changes because plan limits and product availability can change.
+
+## Phase 2 Production Edge State — 2026-08-29
+
+### Before-state snapshot
+
+| Control | Verified before state |
+| --- | --- |
+| Plan | Free |
+| Managed WAF | Free Managed Ruleset checked and marked `Always active`; no separately configurable Managed Rules deployment |
+| Custom rules | 0 of 5 |
+| Rate limiting | 0 of 1 |
+| Bot protection | Bot Fight Mode off; JavaScript detections shown as on |
+| Browser Integrity Check | On |
+| Cache Rules | 0 active |
+| DDoS | SSL/TLS and network-layer DDoS protections active; HTTP DDoS protection reported as always enabled |
+| Security visibility | Last 24 hours: about 1.9k requests, 0 suspicious activity, and no sampled Security Events matching the default view |
+
+### Applied controls and rollback matrix
+
+| Control / rule | Match or scope | New state | Verification | Rollback |
+| --- | --- | --- | --- | --- |
+| Free Managed Ruleset | Entire proxied zone, provider defaults | `VERIFIED_ENABLED` / always active | Dashboard settings plus normal-page/API smoke | Not independently disabled on the Free plan; investigate an evidenced false positive before changing broader security posture |
+| `api-bypass-cache` | `starts_with(http.request.uri.path, "/api/")` | Active; bypass cache | Dashboard shows 1 active rule; protected export returned `Cache-Control: no-store` | Disable or delete this one Cache Rule; keep Worker `no-store` intact |
+| `api-public-mutation-abuse` | path equals `/api/subscribe` **or** `/api/feedback` | Active; 5 requests per IP per 10 seconds; Block for 10 seconds | Dashboard shows 1/1 active, historical preview matched 2 requests (0.1% of 24-hour traffic), and bounded requests remained below the threshold | Disable this one rate-limit rule; retain application origin/body/content-type limits |
+| Bot Fight Mode | Entire zone; Free-plan provider classification | On | Dashboard persisted the checked state; representative normal browser pages loaded without challenge | Toggle Bot Fight Mode off; do not weaken application validation |
+| Browser Integrity Check | Entire zone | Remained on | Dashboard verified on and representative browser/API smoke passed | Toggle off only for an evidenced compatibility problem |
+| Origin cache policy | HTML and static paths through tracked `_headers` | No extra provider override | HTML retained `max-age=0, must-revalidate`; versioned CSS returned an edge HIT with one-hour bounded origin TTL | Revert only an evidenced origin header change through the normal repository workflow |
+
+The Free rate-limiting product exposed only URI-path/verified-bot match fields, IP counting, one rule, a 10-second period, a 10-second mitigation timeout, and the Block action. It did not expose method/host matching, Log-only, Managed Challenge, a second rule, or the runbook's longer windows. The combined rule therefore uses a conservative five-request threshold so a normal preflight-plus-submit flow and shared NAT users are less likely to be blocked. It must be reviewed in Security Events before any tightening.
+
+`api-subscribers-export-observe` was **not deployed**. The single Free rate-limit slot is used by the public mutation endpoints, and the Dashboard did not expose Log-only. The export remains protected by Bearer authentication, timing-safe verification, application bounds, and `no-store`; edge observation is `NOT_AVAILABLE_ON_PLAN` under the current configuration.
+
+No custom WAF rule was added: the provider baseline is active, the pre-change view showed zero suspicious activity/events, and there was no evidenced gap that justified another broad block rule. Turnstile remains **DEFERRED** because there was no subscribe or feedback abuse evidence.
 
 ## Trust Boundaries And Threat Model
 
@@ -48,7 +82,7 @@ The current Cloudflare plan is not encoded in the repository. All plan-dependent
 3. `/api/subscribe` and `/api/feedback` are public same-origin mutation endpoints backed by D1.
 4. `/api/subscribers.csv` is an administrative read endpoint protected by a Worker secret.
 5. Key Finder is a separate browser-to-Render network flow and may perform expensive media work.
-6. Cloudflare edge controls are a future/manual layer. Repository controls must still fail safely without assuming a WAF rule exists.
+6. Verified Cloudflare edge controls are an active defense-in-depth layer, but repository controls must still fail safely and cannot depend on Dashboard state.
 
 ### Primary threats
 
@@ -125,11 +159,13 @@ HSTS is intentionally not enabled in source during Phase 1. Before enabling it, 
 - Subscriber export accepts the admin token only in a Bearer header. Query-token support was removed to avoid URL/history/referrer/log leakage.
 - Token candidates are SHA-256 digested and compared as fixed-size bytes with the runtime timing-safe primitive when available, with a constant-work fixed-size fallback for the Node test environment.
 
-## Manual Cloudflare Configuration
+## Cloudflare Configuration Baseline And Current Result
 
-Apply only after confirming the zone plan, backing up current settings, and observing normal traffic. Take screenshots/exported expressions before every change.
+The entries below remain the canonical design baseline. The Phase 2 table above records what the production Free plan could actually enforce. Future changes must re-confirm the plan, preserve rollback evidence, and observe normal traffic first.
 
 ### 1. Managed rules
+
+- **Phase 2 result:** `VERIFIED_ENABLED` — Free Managed Ruleset, provider defaults, marked `Always active`; no additional custom WAF rule was justified.
 
 - **Rule name:** Cloudflare Managed Rules baseline
 - **Match:** Entire `jamtrackshub.com` zone, excluding only a documented false positive after evidence.
@@ -141,6 +177,8 @@ Apply only after confirming the zone plan, backing up current settings, and obse
 - **Rollback:** Disable the offending rule ID or ruleset and document the event; do not disable application bounds.
 
 ### 2. Subscribe mutation rate
+
+- **Phase 2 result:** covered by combined active rule `api-public-mutation-abuse`; the Free plan cannot express the preferred host/method/long-window policy separately.
 
 - **Rule name:** `api-subscribe-mutation`
 - **Expression:** hostname equals the canonical host, path equals `/api/subscribe`, method equals `POST`.
@@ -154,6 +192,8 @@ Apply only after confirming the zone plan, backing up current settings, and obse
 
 ### 3. Feedback mutation rate
 
+- **Phase 2 result:** covered by combined active rule `api-public-mutation-abuse`; the conservative combined threshold is 5 requests/IP/10 seconds with a 10-second Block.
+
 - **Rule name:** `api-feedback-mutation`
 - **Expression:** hostname equals the canonical host, path equals `/api/feedback`, method equals `POST`.
 - **Suggested threshold:** 5 requests per IP per 10 minutes; if limited to 10 seconds, begin with 2 per 10 seconds.
@@ -165,6 +205,8 @@ Apply only after confirming the zone plan, backing up current settings, and obse
 - **Rollback:** Disable the rule; retain honeypot, field, body, and origin checks.
 
 ### 4. Administrative export observation
+
+- **Phase 2 result:** `NOT_AVAILABLE_ON_PLAN` — the only Free rate-limit slot is used by public mutations and Log-only was not exposed. Application Bearer authentication remains primary.
 
 - **Rule name:** `api-subscribers-export-observe`
 - **Expression:** path equals `/api/subscribers.csv` and method equals `GET`.
@@ -178,6 +220,8 @@ Apply only after confirming the zone plan, backing up current settings, and obse
 
 ### 5. Bot controls
 
+- **Phase 2 result:** `VERIFIED_ENABLED` — Free Bot Fight Mode, whole zone. Representative navigation passed; continue monitoring privacy browsers, accessibility tools, search crawlers, and API clients.
+
 - **Setting:** Enable the zone's available Bot Fight control only after representative observation.
 - **Scope:** Public pages and mutation endpoints; explicitly verify static downloads, locale/data fetches, feedback, subscribe, and search-engine access.
 - **Plan dependency:** Bot Fight Mode vs Super Bot Fight Mode vs Bot Management requires confirmation.
@@ -187,6 +231,8 @@ Apply only after confirming the zone plan, backing up current settings, and obse
 - **Rollback:** Disable the bot setting or narrow custom exceptions with documented evidence.
 
 ### 6. Cache rules
+
+- **Phase 2 result:** `VERIFIED_ENABLED` for `api-bypass-cache`. No redundant HTML/static provider override was added; tracked origin directives remain authoritative and passed live header checks.
 
 - **Rule name:** `api-bypass-cache`
 - **Match:** path starts with `/api/`.
@@ -205,7 +251,7 @@ Apply only after confirming the zone plan, backing up current settings, and obse
 
 ### 7. Browser Integrity Check and Turnstile
 
-Browser Integrity Check should be evaluated in observation with representative Safari/Chromium/mobile/API traffic before enablement. Turnstile is **deferred**: add it only if measured abuse persists after request bounds, origin checks, rate limits, and bot controls. If adopted, validate every token server-side, reject replay/expiry, preserve accessibility, and keep secrets in bindings.
+Browser Integrity Check was already enabled and passed the bounded representative browser/API smoke; its Phase 2 status is `VERIFIED_ENABLED`. Turnstile is **DEFERRED**: add it only if measured abuse persists after request bounds, origin checks, rate limits, and bot controls. If adopted, validate every token server-side, reject replay/expiry, preserve accessibility, and keep secrets in bindings.
 
 ### 8. Key Finder gap
 
@@ -235,8 +281,10 @@ Production acceptance requires: normal pages/forms work, API methods/body/origin
 
 ## Known Limitations / Remaining Gates
 
-- Cloudflare plan and Dashboard state are unknown from source control.
-- WAF, rate limits, bot controls, cache rules, alerts, and HSTS remain pending manual configuration and production smoke.
+- Cloudflare production state cannot be reconstructed from source control alone; the verified 2026-08-29 snapshot must be rechecked before later provider changes.
+- Free Managed Rules, Bot Fight Mode, Browser Integrity Check, DDoS protections, the combined public-mutation rate limit, and API cache bypass are enabled and passed bounded production smoke.
+- The Free plan has no remaining rate-limit slot and did not expose method/host matching, longer windows, Log-only, or Managed Challenge. Administrative-export edge observation and per-endpoint rate policies require a later plan/capability decision.
+- Security alerts and HSTS remain pending separate review. Turnstile remains deferred absent abuse evidence.
 - Direct Render Key Finder traffic is outside zone path protections.
 - CSP retains `style-src 'unsafe-inline'` for current site compatibility.
 - Same-origin checks reduce cross-site browser abuse but do not identify non-browser bots; rate limiting and bot controls remain necessary defense in depth.
