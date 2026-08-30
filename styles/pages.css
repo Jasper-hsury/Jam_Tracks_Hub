@@ -405,6 +405,56 @@ h1 {
     line-height: 1.25;
 }
 
+.legal-page .legal-policy-panel:hover {
+    color: var(--text);
+    background: var(--panel-background);
+    border-color: var(--border-soft);
+    border-left-color: var(--teal);
+    box-shadow: 0 10px 26px var(--shadow-color);
+    transform: none;
+}
+
+/* Privacy policy mirrors the stable Legal typography and remains a static document panel. */
+.privacy-page-title {
+    font-family: "Noto Serif TC", serif;
+}
+
+.privacy-page-metadata {
+    margin: 0 0 18px;
+    color: var(--muted);
+    font-family: "Noto Sans TC", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.6;
+}
+
+.privacy-policy-panel p {
+    font-family: "Noto Sans TC", sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+.privacy-policy-panel {
+    animation: none;
+}
+
+.privacy-policy-panel .section-title,
+.privacy-policy-panel .result-section h2 {
+    font-family: "Noto Sans TC", sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.privacy-page .privacy-policy-panel:hover {
+    color: var(--text);
+    background: var(--panel-background);
+    border-color: var(--border-soft);
+    border-left-color: var(--teal);
+    box-shadow: 0 10px 26px var(--shadow-color);
+    transform: none;
+}
+
 .key-finder-copy,
 .tool-section-heading p {
     color: var(--muted);
