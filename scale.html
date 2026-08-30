@@ -28,9 +28,9 @@
     <script src="scripts/i18n-init.js?v=20260804-no-language-flash"></script>
     <script defer src="https://cloud.umami.is/script.js" data-website-id="c8dfc471-6512-4344-8e1b-25566e1a93cd"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles/base.css?v=20260830-typography-v1">
-    <link rel="stylesheet" href="styles/components.css?v=20260830-typography-v1">
-    <link rel="stylesheet" href="styles/pages.css?v=20260830-typography-v1">
+    <link rel="stylesheet" href="styles/base.css?v=20260829-smart-navbar-v2">
+    <link rel="stylesheet" href="styles/components.css?v=20260827-legal-footer">
+    <link rel="stylesheet" href="styles/pages.css?v=20260804-feedback-consistency">
     <link rel="stylesheet" href="styles/themes.css?v=20260804-feedback-consistency">
     <link rel="stylesheet" href="styles/scale.css?v=20260718-scale-original">
 </head>
@@ -53,7 +53,7 @@
     <main class="tracks-page scale-page">
         <header class="scale-page-heading">
             <p class="home-eyebrow" data-i18n="pages.scaleExplorer.eyebrow">Fretboard · intervals · scale shapes</p>
-            <h1 class="type-page-title" data-i18n="pages.scaleExplorer.title">Scale Explorer</h1>
+            <h1 data-i18n="pages.scaleExplorer.title">Scale Explorer</h1>
             <p class="hero-tagline signature-slogan" data-i18n="pages.scaleExplorer.tagline">See the pattern. Hear the color. Learn the neck.</p>
         </header>
 
@@ -62,7 +62,7 @@
                 <div class="scale-control-heading">
                     <div>
                         <p class="scale-section-kicker" data-i18n="pages.scaleExplorer.build">Build a scale</p>
-                        <h2 class="type-subsection-heading" id="scaleControlsHeading" data-i18n="pages.scaleExplorer.chooseSound">Choose the sound</h2>
+                        <h2 id="scaleControlsHeading" data-i18n="pages.scaleExplorer.chooseSound">Choose the sound</h2>
                     </div>
                     <p data-i18n="pages.scaleExplorer.standardTuning">Standard tuning: E A D G B E</p>
                 </div>
@@ -70,7 +70,7 @@
                 <div class="scale-control-grid">
                     <label class="scale-select-field" for="scaleType">
                         <span data-i18n="pages.scaleExplorer.scaleType">Scale type</span>
-                        <select class="type-form-input" id="scaleType">
+                        <select id="scaleType">
                             <option value="major">Major</option>
                             <option value="natural-minor">Natural Minor</option>
                             <option value="major-pentatonic">Major Pentatonic</option>

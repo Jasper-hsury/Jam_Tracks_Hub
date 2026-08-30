@@ -28,9 +28,9 @@
     <script src="scripts/i18n-init.js?v=20260804-no-language-flash"></script>
     <script defer src="https://cloud.umami.is/script.js" data-website-id="c8dfc471-6512-4344-8e1b-25566e1a93cd"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles/base.css?v=20260830-typography-v1">
-    <link rel="stylesheet" href="styles/components.css?v=20260830-typography-v1">
-    <link rel="stylesheet" href="styles/pages.css?v=20260830-typography-v1">
+    <link rel="stylesheet" href="styles/base.css?v=20260829-smart-navbar-v2">
+    <link rel="stylesheet" href="styles/components.css?v=20260827-legal-footer">
+    <link rel="stylesheet" href="styles/pages.css?v=20260804-feedback-consistency">
     <link rel="stylesheet" href="styles/themes.css?v=20260804-feedback-consistency">
 </head>
 
@@ -50,12 +50,12 @@
     </nav>
 
     <main class="tracks-page">
-        <h1 class="type-page-title" data-i18n="pages.chordProgressions.title">Chord Progressions</h1>
+        <h1 data-i18n="pages.chordProgressions.title">Chord Progressions</h1>
         <p class="hero-tagline signature-slogan" data-i18n="pages.chordProgressions.tagline">Capture the Feeling. Compose the Meaning.</p>
 
         <section class="key-selector" aria-labelledby="progressionExplorerTitle">
             <div class="tool-section-heading">
-                <h2 id="progressionExplorerTitle" class="section-title type-section-heading" data-i18n="pages.chordProgressions.explorerTitle">Chord Progression Explorer</h2>
+                <h2 id="progressionExplorerTitle" class="section-title" data-i18n="pages.chordProgressions.explorerTitle">Chord Progression Explorer</h2>
                 <p data-i18n="pages.chordProgressions.intro">Choose a key, switch between triads and seventh chords, then compare guitar-friendly root-position voicings.</p>
             </div>
 
@@ -67,7 +67,7 @@
                 <div class="key-mode-heading">
                     <div>
                         <span class="result-kicker" data-i18n="pages.chordProgressions.keyMode">Key mode</span>
-                        <h2 class="section-title type-subsection-heading" data-i18n="pages.chordProgressions.chooseTonic">Choose a Tonic</h2>
+                        <h2 class="section-title" data-i18n="pages.chordProgressions.chooseTonic">Choose a Tonic</h2>
                     </div>
                     <label class="key-mode-switch" for="keyModeToggle">
                         <span class="key-mode-label key-mode-label-major" data-i18n="pages.chordProgressions.major">Major</span>
@@ -105,7 +105,7 @@
             </div>
 
             <div class="key-result" id="keyResult">
-                <h3 class="type-subsection-heading" data-i18n="pages.chordProgressions.selectKey">Select a key</h3>
+                <h3 data-i18n="pages.chordProgressions.selectKey">Select a key</h3>
                 <p data-i18n="pages.chordProgressions.selectKeyCopy">Click a key above to see its notes.</p>
             </div>
         </section>

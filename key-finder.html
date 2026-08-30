@@ -28,9 +28,9 @@
     <script src="scripts/i18n-init.js?v=20260804-no-language-flash"></script>
     <script defer src="https://cloud.umami.is/script.js" data-website-id="c8dfc471-6512-4344-8e1b-25566e1a93cd"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles/base.css?v=20260830-typography-v1">
-    <link rel="stylesheet" href="styles/components.css?v=20260830-typography-v1">
-    <link rel="stylesheet" href="styles/pages.css?v=20260830-typography-v1">
+    <link rel="stylesheet" href="styles/base.css?v=20260829-smart-navbar-v2">
+    <link rel="stylesheet" href="styles/components.css?v=20260827-legal-footer">
+    <link rel="stylesheet" href="styles/pages.css?v=20260804-feedback-consistency">
     <link rel="stylesheet" href="styles/themes.css?v=20260804-feedback-consistency">
 </head>
 
@@ -50,12 +50,12 @@
     </nav>
 
     <main class="tracks-page key-finder-page">
-        <h1 class="type-page-title" data-i18n="pages.keyFinder.title">Song Key Finder</h1>
+        <h1 data-i18n="pages.keyFinder.title">Song Key Finder</h1>
         <p class="hero-tagline signature-slogan" data-i18n="pages.keyFinder.tagline">Listen deeper. Find the tonal center.</p>
 
         <section class="key-finder-panel" aria-labelledby="keyFinderTitle">
             <div class="tool-section-heading compact-heading">
-                <h2 id="keyFinderTitle" class="section-title type-section-heading" data-i18n="pages.keyFinder.analyzeTitle">Analyze a Song</h2>
+                <h2 id="keyFinderTitle" class="section-title" data-i18n="pages.keyFinder.analyzeTitle">Analyze a Song</h2>
                 <p data-i18n="pages.keyFinder.intro">Upload an audio file for the most reliable key estimate. YouTube link analysis is available as a secondary option when cloud access or the local helper can reach the video.</p>
             </div>
 
@@ -111,7 +111,7 @@
                 <span data-i18n="pages.keyFinder.youtubeDivider">Optional: YouTube link</span>
             </div>
             <div class="key-finder-form key-finder-link-form">
-                <input class="type-form-input" id="youtubeKeyUrl" type="url" placeholder="https://youtu.be/..." data-i18n-placeholder="pages.keyFinder.youtubePlaceholder" autocomplete="off" aria-label="YouTube link" data-i18n-aria-label="pages.keyFinder.youtubeLink">
+                <input id="youtubeKeyUrl" type="url" placeholder="https://youtu.be/..." data-i18n-placeholder="pages.keyFinder.youtubePlaceholder" autocomplete="off" aria-label="YouTube link" data-i18n-aria-label="pages.keyFinder.youtubeLink">
                 <button id="analyzeKeyButton" class="secondary-button" type="button" data-i18n="pages.keyFinder.analyzeLink">Analyze Link</button>
                 <button id="cancelAnalyzeButton" class="secondary-button" type="button" hidden data-i18n="common.cancel">Cancel</button>
             </div>
@@ -146,7 +146,7 @@
 
             <div class="analysis-history" id="analysisHistory" hidden>
                 <div class="history-heading">
-                    <h3 class="type-subsection-heading" data-i18n="pages.keyFinder.recentAnalyses">Recent analyses</h3>
+                    <h3 data-i18n="pages.keyFinder.recentAnalyses">Recent analyses</h3>
                     <button id="clearHistoryButton" class="text-button" type="button" data-i18n="common.clear">Clear</button>
                 </div>
                 <ul id="analysisHistoryList"></ul>

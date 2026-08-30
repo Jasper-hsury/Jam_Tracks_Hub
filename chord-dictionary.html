@@ -28,9 +28,9 @@
     <script src="scripts/i18n-init.js?v=20260804-no-language-flash"></script>
     <script defer src="https://cloud.umami.is/script.js" data-website-id="c8dfc471-6512-4344-8e1b-25566e1a93cd"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles/base.css?v=20260830-typography-v1">
-    <link rel="stylesheet" href="styles/components.css?v=20260830-typography-v1">
-    <link rel="stylesheet" href="styles/pages.css?v=20260830-typography-v1">
+    <link rel="stylesheet" href="styles/base.css?v=20260829-smart-navbar-v2">
+    <link rel="stylesheet" href="styles/components.css?v=20260827-legal-footer">
+    <link rel="stylesheet" href="styles/pages.css?v=20260804-feedback-consistency">
     <link rel="stylesheet" href="styles/themes.css?v=20260804-feedback-consistency">
     <link rel="stylesheet" href="styles/chord-dictionary.css?v=20260728-mobile-polish">
 </head>
@@ -53,7 +53,7 @@
     <main class="tracks-page chord-dictionary-page">
         <header class="dictionary-heading">
             <p class="home-eyebrow" data-i18n="pages.chordDictionary.eyebrow">Chord tones &middot; formulas &middot; guitar shapes</p>
-            <h1 class="type-page-title" data-i18n="pages.chordDictionary.title">Chord Dictionary</h1>
+            <h1 data-i18n="pages.chordDictionary.title">Chord Dictionary</h1>
             <p class="hero-tagline signature-slogan" data-i18n="pages.chordDictionary.tagline">Name the harmony. See the notes. Find a shape.</p>
         </header>
 
@@ -62,11 +62,11 @@
                 <div class="dictionary-browser-heading">
                     <div>
                         <p class="dictionary-kicker" data-i18n="pages.chordDictionary.step">Step 1</p>
-                        <h2 class="type-subsection-heading" id="dictionaryBrowseTitle" data-i18n="pages.chordDictionary.browseTitle">Choose a root and chord type</h2>
+                        <h2 id="dictionaryBrowseTitle" data-i18n="pages.chordDictionary.browseTitle">Choose a root and chord type</h2>
                     </div>
                     <label class="dictionary-search" for="chordSearch">
                         <span data-i18n="pages.chordDictionary.searchLabel">Chord symbol or type</span>
-                        <input class="type-form-input" id="chordSearch" type="search" placeholder="Try Cm7, CM7, C7, suspended..." data-i18n-placeholder="pages.chordDictionary.searchPlaceholder" autocomplete="off">
+                        <input id="chordSearch" type="search" placeholder="Try Cm7, CM7, C7, suspended..." data-i18n-placeholder="pages.chordDictionary.searchPlaceholder" autocomplete="off">
                     </label>
                 </div>
 
@@ -123,7 +123,7 @@
 
                 <div class="dictionary-shape-heading">
                     <div>
-                        <h3 class="type-subsection-heading" data-i18n="pages.chordDictionary.availableShapes">Available guitar shapes</h3>
+                        <h3 data-i18n="pages.chordDictionary.availableShapes">Available guitar shapes</h3>
                         <p data-i18n="pages.chordDictionary.shapeHelp">Standard tuning E A D G B E. Shapes use at most four adjacent frets. X means mute; O means open.</p>
                     </div>
                     <span id="shapeCount" data-i18n="pages.chordDictionary.findingShapes">Finding shapes</span>
