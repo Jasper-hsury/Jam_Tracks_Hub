@@ -373,6 +373,38 @@ h1 {
     border-left-color: var(--teal);
 }
 
+/* Legal keeps the established site roles without inheriting an artistic hero tagline. */
+.legal-page-title {
+    font-family: "Noto Serif TC", serif;
+}
+
+.legal-page-metadata {
+    margin: 0 0 18px;
+    color: var(--muted);
+    font-family: "Noto Sans TC", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.6;
+}
+
+.legal-page-intro,
+.legal-policy-panel p {
+    font-family: "Noto Sans TC", sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+.legal-page-intro {
+    margin: 0;
+}
+
+.legal-policy-panel .result-section h2 {
+    font-family: "Noto Sans TC", sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
 .key-finder-copy,
 .tool-section-heading p {
     color: var(--muted);
