@@ -252,7 +252,7 @@ test("static build tracks CSP, browser restrictions, and bounded cache policy", 
     assert.doesNotMatch(headers, /script-src[^;]*(?:unsafe-inline|unsafe-eval)/);
     assert.match(headers, /frame-ancestors 'none'/);
     assert.match(headers, /X-Content-Type-Options: nosniff/);
-    assert.match(headers, /Referrer-Policy: no-referrer/);
+    assert.match(headers, /Referrer-Policy: strict-origin-when-cross-origin/);
     assert.match(headers, /Permissions-Policy:/);
     assert.match(headers, /\/\*\.html[\s\S]*max-age=0, must-revalidate/);
     assert.match(headers, /\/assets\/\*[\s\S]*max-age=86400, must-revalidate/);

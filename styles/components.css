@@ -2925,6 +2925,45 @@ html:not([data-theme="light"]) .progression-group-label {
 }
 
 @media (max-width: 720px) {
+    .footer {
+        padding: 28px 20px 88px;
+        font-size: clamp(12px, 3.25vw, 14px);
+    }
+
+    .footer > p {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+    }
+
+    .footer-rights,
+    .footer-legal-link,
+    .footer .social-links a {
+        font-size: inherit;
+        line-height: 1.45;
+    }
+
+    .footer-rights,
+    .footer-legal-link {
+        white-space: nowrap;
+    }
+
+    .footer-legal-separator {
+        display: none;
+    }
+
+    .footer .social-links {
+        gap: 8px 20px;
+    }
+
+    .footer .social-links a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+    }
+
     .progression-category-heading {
         align-items: flex-start;
         flex-direction: column;

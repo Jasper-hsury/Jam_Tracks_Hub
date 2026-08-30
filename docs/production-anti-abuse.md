@@ -152,7 +152,8 @@ The tracked `_headers` file applies:
 
 - a Content Security Policy without `unsafe-inline`/`unsafe-eval` for script execution;
 - `object-src 'none'`, `base-uri 'self'`, `form-action 'self'`, and `frame-ancestors 'none'`;
-- `Referrer-Policy: no-referrer`, `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, and a restrictive `Permissions-Policy`;
+- `Referrer-Policy: strict-origin-when-cross-origin` for static pages so the allowlisted YouTube embed receives origin-level client identification, while Song Workspace keeps its document-level `no-referrer` policy;
+- `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, and a restrictive `Permissions-Policy`;
 - cache revalidation for HTML, bounded caching for code/assets, and short caching for changing data/locales.
 
 The one inline service-waking script was moved to an external file so it works under the script policy. Inline CSS remains allowed because existing weekly slides and page presentation use it. This should be reduced only through a separately tested migration.
