@@ -53,6 +53,7 @@
     function animatePageEntrance() {
         const isTracksPage = Boolean(document.querySelector(".tracks-library-page"));
         const isDictionaryPage = Boolean(document.querySelector(".chord-dictionary-page"));
+        const isSongWorkspacePage = Boolean(document.querySelector(".song-workspace-page"));
         const homeTitle = document.querySelector(".home-hero h1");
         const homeSlogan = document.querySelector(".home-hero .signature-slogan");
         const shouldSplitHomeHero = Boolean(homeTitle && homeSlogan && hasGsap && hasSplitText);
@@ -69,7 +70,13 @@
             ".tracks-page > h1",
             ".tracks-page > .hero-tagline",
             ".key-finder-panel > .key-finder-copy",
-            ".key-finder-status-row"
+            ".key-finder-status-row",
+            ".song-workspace-hero > .result-kicker",
+            ".song-workspace-hero > h1",
+            ".song-workspace-hero > .signature-slogan",
+            ".song-workspace-hero > .song-workspace-lead",
+            ".song-workspace-promises > *",
+            ".workspace-create-area > .workspace-section-heading"
         ].join(", "));
         const navPieces = elements(".navbar .logo, .navbar .nav-links > li");
         const heroPiecesForEntrance = shouldSplitHomeHero
@@ -184,13 +191,15 @@
             ].join(", "))
             .filter(target => !target.closest(".home-hero"));
 
-        timeline.from(secondaryEntrancePieces, {
+        if (secondaryEntrancePieces.length) {
+            timeline.from(secondaryEntrancePieces, {
                 y: 12,
                 opacity: 0,
                 duration: 0.42,
                 stagger: 0.025,
                 clearProps: "transform,opacity"
             }, "-=0.24");
+        }
 
         if (isTracksPage) {
             timeline.from(".tracks-library-page .track-controls", {
@@ -223,6 +232,17 @@
             }, "-=0.22");
         }
 
+        if (isSongWorkspacePage) {
+            timeline.from(".workspace-entry-grid > .workspace-entry-card", {
+                y: 18,
+                opacity: 0,
+                duration: 0.48,
+                stagger: 0.065,
+                ease: "power3.out",
+                clearProps: "transform,opacity"
+            }, "-=0.34");
+        }
+
         document.documentElement.classList.add("animations-ready");
     }
 
@@ -241,7 +261,8 @@
             ".trainer-card"
         ].join(", "))
             .filter(target => !target.closest(".navbar"))
-            .filter(target => !target.closest(".trainer-page"));
+            .filter(target => !target.closest(".trainer-page"))
+            .filter(target => !target.closest(".song-workspace-page"));
 
         if (!hasGsap || !hasScrollTrigger) {
             if (!("IntersectionObserver" in window)) {
@@ -1367,7 +1388,7 @@
 
     ready(function() {
         const pageEntranceNeedsTranslations = Boolean(
-            document.querySelector(".home-hero") &&
+            document.querySelector(".home-hero, .song-workspace-hero") &&
             window.JasperI18n &&
             document.documentElement.dataset.i18nReady !== "true"
         );
