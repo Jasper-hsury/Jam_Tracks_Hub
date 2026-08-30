@@ -79,9 +79,10 @@
             ".workspace-create-area > .workspace-section-heading"
         ].join(", "));
         const navPieces = elements(".navbar .logo, .navbar .nav-links > li");
-        const heroPiecesForEntrance = shouldSplitHomeHero
+        const heroPiecesForEntrance = (shouldSplitHomeHero
             ? heroPieces.filter(target => target !== homeTitle && target !== homeSlogan)
-            : heroPieces;
+            : heroPieces)
+            .filter(target => !target.closest(".privacy-page"));
 
         if (!hasGsap) {
             applyCssEntrance([document.querySelector(".navbar"), ...navPieces, ...heroPieces].filter(Boolean));
@@ -90,7 +91,9 @@
 
         gsap.set(".navbar", { y: -16, opacity: 0 });
         gsap.set(navPieces, { y: -8, opacity: 0 });
-        gsap.set(heroPiecesForEntrance, { y: 22, opacity: 0 });
+        if (heroPiecesForEntrance.length) {
+            gsap.set(heroPiecesForEntrance, { y: 22, opacity: 0 });
+        }
 
         const titleSplit = shouldSplitHomeHero
             ? createSplitText(homeTitle, {
@@ -175,12 +178,14 @@
                 ? [...heroPiecesForEntrance, homeTitle, homeSlogan].filter(Boolean)
                 : heroPiecesForEntrance;
 
-            timeline.to(fallbackHeroPieces, {
+            if (fallbackHeroPieces.length) {
+                timeline.to(fallbackHeroPieces, {
                     y: 0,
                     opacity: 1,
                     duration: 0.64,
                     stagger: isTracksPage ? 0.1 : 0.07
                 }, "-=0.18");
+            }
         }
 
         const secondaryEntrancePieces = elements([
@@ -262,7 +267,8 @@
         ].join(", "))
             .filter(target => !target.closest(".navbar"))
             .filter(target => !target.closest(".trainer-page"))
-            .filter(target => !target.closest(".song-workspace-page"));
+            .filter(target => !target.closest(".song-workspace-page"))
+            .filter(target => !target.closest(".privacy-page"));
 
         if (!hasGsap || !hasScrollTrigger) {
             if (!("IntersectionObserver" in window)) {

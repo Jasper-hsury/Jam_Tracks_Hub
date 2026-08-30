@@ -7,6 +7,7 @@ const root = path.resolve(__dirname, "..");
 const read = relativePath => fs.readFileSync(path.join(root, relativePath), "utf8");
 const indexHtml = read("index.html");
 const legalHtml = read("legal.html");
+const privacyHtml = read("privacy-policy.html");
 const workspaceHtml = read("song-workspace.html");
 const i18nJs = read("scripts/i18n.js");
 const animationsJs = read("scripts/site-animations.js");
@@ -48,6 +49,24 @@ test("Legal uses the established display and body font roles without artistic ta
     assert.match(pagesCss, /\.legal-page-title\s*\{[^}]*font-family:\s*"Noto Serif TC", serif/s);
     assert.match(pagesCss, /\.legal-page-metadata\s*\{[^}]*font-family:\s*"Noto Sans TC", sans-serif[^}]*font-size:\s*14px[^}]*font-weight:\s*500[^}]*line-height:\s*1\.6/s);
     assert.match(pagesCss, /\.legal-policy-panel \.result-section h2\s*\{[^}]*font-family:\s*"Noto Sans TC", sans-serif[^}]*font-size:\s*24px[^}]*font-weight:\s*700[^}]*line-height:\s*1\.25/s);
+    assert.match(pagesCss, /\.legal-page \.legal-policy-panel:hover\s*\{[^}]*background:\s*var\(--panel-background\)[^}]*box-shadow:\s*0 10px 26px var\(--shadow-color\)[^}]*transform:\s*none/s);
+});
+
+test("Privacy uses stable policy typography without panel hover or title transform", () => {
+    assert.match(privacyHtml, /family=Noto\+Sans\+TC:wght@400;500;600;700&family=Noto\+Serif\+TC:wght@700/);
+    assert.match(privacyHtml, /class="tracks-page privacy-page"/);
+    assert.match(privacyHtml, /class="privacy-page-metadata"/);
+    assert.match(privacyHtml, /class="key-finder-panel privacy-policy-panel"/);
+    assert.doesNotMatch(privacyHtml, /class="hero-tagline"[^>]*data-i18n="privacy\.effectiveDate"/);
+    assert.match(pagesCss, /\.privacy-page-title\s*\{[^}]*font-family:\s*"Noto Serif TC", serif/s);
+    assert.match(pagesCss, /\.privacy-page-metadata\s*\{[^}]*font-family:\s*"Noto Sans TC", sans-serif[^}]*font-size:\s*14px[^}]*font-weight:\s*500[^}]*line-height:\s*1\.6/s);
+    assert.match(pagesCss, /\.privacy-policy-panel\s*\{[^}]*animation:\s*none/s);
+    assert.match(pagesCss, /\.privacy-policy-panel \.section-title,\s*\.privacy-policy-panel \.result-section h2\s*\{[^}]*font-family:\s*"Noto Sans TC", sans-serif[^}]*font-size:\s*24px[^}]*font-weight:\s*700[^}]*line-height:\s*1\.25/s);
+    assert.match(pagesCss, /\.privacy-page \.privacy-policy-panel:hover\s*\{[^}]*background:\s*var\(--panel-background\)[^}]*box-shadow:\s*0 10px 26px var\(--shadow-color\)[^}]*transform:\s*none/s);
+    assert.match(animationsJs, /heroPiecesForEntrance[\s\S]*\.filter\(target => !target\.closest\("\.privacy-page"\)\)/s);
+    assert.match(animationsJs, /if \(heroPiecesForEntrance\.length\) \{\s*gsap\.set\(heroPiecesForEntrance/s);
+    assert.match(animationsJs, /if \(fallbackHeroPieces\.length\) \{\s*timeline\.to\(fallbackHeroPieces/s);
+    assert.match(animationsJs, /revealTargets[\s\S]*\.filter\(target => !target\.closest\("\.privacy-page"\)\)/s);
 });
 
 test("Song Workspace reuses the shared page entrance without changing its application modules", () => {
