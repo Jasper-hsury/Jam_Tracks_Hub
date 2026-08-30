@@ -413,8 +413,10 @@ html[data-theme="default"] {
 .workspace-import-card h3 {
     margin: 7px 0 8px;
     color: var(--workspace-text);
-    font-family: Georgia, "Noto Serif TC", serif;
-    font-size: 1.25rem;
+    font-family: var(--font-body);
+    font-size: var(--type-card-title-size);
+    font-weight: 700;
+    line-height: var(--type-card-title-line-height);
 }
 
 .workspace-import-card > p,
@@ -521,6 +523,10 @@ html[data-theme="default"] {
     margin: 0;
     overflow-wrap: anywhere;
     color: var(--workspace-text);
+    font-family: var(--font-body);
+    font-size: var(--type-card-title-size);
+    font-weight: 700;
+    line-height: var(--type-card-title-line-height);
 }
 
 .workspace-song-card p {

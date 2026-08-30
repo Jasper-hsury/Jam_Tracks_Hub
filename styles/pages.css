@@ -1,6 +1,113 @@
 /* Pages: responsive layout, modals, product polish, and home sections
    Generated from the original stylesheet and kept in cascade order. */
 
+/* Shared semantic typography roles, derived from the homepage. */
+.type-page-title {
+    font-family: var(--font-display);
+    font-size: var(--type-page-title-size);
+    font-weight: 700;
+    line-height: var(--type-page-title-line-height);
+}
+
+.type-section-heading {
+    font-family: var(--font-display);
+    font-size: var(--type-section-heading-size);
+    font-weight: 700;
+    line-height: var(--type-section-heading-line-height);
+}
+
+.type-subsection-heading {
+    font-family: var(--font-body);
+    font-size: var(--type-subsection-heading-size);
+    font-weight: 700;
+    line-height: var(--type-subsection-heading-line-height);
+}
+
+.type-card-title {
+    font-family: var(--font-body);
+    font-size: var(--type-card-title-size);
+    font-weight: 700;
+    line-height: var(--type-card-title-line-height);
+}
+
+.type-body-copy {
+    font-family: var(--font-body);
+    font-size: var(--type-body-size);
+    font-weight: 500;
+    line-height: var(--type-body-line-height);
+}
+
+.type-secondary-text {
+    font-family: var(--font-body);
+    font-size: var(--type-secondary-size);
+    font-weight: 400;
+    line-height: var(--type-secondary-line-height);
+}
+
+.type-metadata {
+    font-family: var(--font-body);
+    font-size: var(--type-metadata-size);
+    font-weight: 400;
+    line-height: var(--type-metadata-line-height);
+}
+
+.type-form-input {
+    font-family: var(--font-body);
+    font-size: var(--type-form-input-size);
+    font-weight: 400;
+    line-height: normal;
+}
+
+.policy-page > .hero-tagline {
+    margin-bottom: 22px;
+}
+
+.policy-page > p:not(.hero-tagline),
+.policy-page .tool-section-heading p,
+.policy-page .result-section p {
+    font-family: var(--font-body);
+    font-size: var(--type-body-size);
+    font-weight: 500;
+    line-height: var(--type-body-line-height);
+}
+
+.policy-page .result-section h2,
+.policy-page .tool-section-heading h2 {
+    font-family: var(--font-body);
+    font-size: var(--type-subsection-heading-size);
+    font-weight: 700;
+    line-height: var(--type-subsection-heading-line-height);
+}
+
+.track-title-display {
+    font-family: var(--font-body);
+    font-size: var(--type-card-title-size);
+    font-weight: 700;
+    line-height: var(--type-card-title-line-height);
+}
+
+.feedback-field input,
+.feedback-field textarea,
+.key-finder-link-form input {
+    font-family: var(--font-body);
+    font-size: var(--type-form-input-size);
+    font-weight: 400;
+}
+
+@media (max-width: 768px) {
+    :root {
+        --type-page-title-size: clamp(42px, 12vw, 58px);
+        --type-page-title-line-height: 0.98;
+        --type-section-heading-size: 28px;
+    }
+}
+
+@media (max-width: 430px) {
+    :root {
+        --type-page-title-size: clamp(38px, 13vw, 50px);
+    }
+}
+
 /* ====================
    ??????(RWD)
    ==================== */
@@ -6092,4 +6199,41 @@ html[data-language="zh-TW"] .home-release-card .release-number {
         padding: 0;
         border-right: 0;
     }
+}
+
+/* Keep semantic roles authoritative after legacy page and responsive rules. */
+body h1.type-page-title[class] {
+    font-family: var(--font-display);
+    font-size: var(--type-page-title-size);
+    font-weight: 700;
+    line-height: var(--type-page-title-line-height);
+}
+
+body h2.type-section-heading[class] {
+    font-family: var(--font-display);
+    font-size: var(--type-section-heading-size);
+    font-weight: 700;
+    line-height: var(--type-section-heading-line-height);
+}
+
+body :is(h2, h3).type-subsection-heading[class] {
+    font-family: var(--font-body);
+    font-size: var(--type-subsection-heading-size);
+    font-weight: 700;
+    line-height: var(--type-subsection-heading-line-height);
+}
+
+body .track-title-display,
+body .tracks-library-page .track-title-display {
+    font-family: var(--font-body);
+    font-size: var(--type-card-title-size);
+    font-weight: 700;
+    line-height: var(--type-card-title-line-height);
+}
+
+body :is(input, select, textarea).type-form-input {
+    font-family: var(--font-body);
+    font-size: var(--type-form-input-size);
+    font-weight: 400;
+    line-height: normal;
 }
