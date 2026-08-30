@@ -26,9 +26,9 @@
     <script src="scripts/i18n-init.js?v=20260804-no-language-flash"></script>
     <script defer src="https://cloud.umami.is/script.js" data-website-id="c8dfc471-6512-4344-8e1b-25566e1a93cd"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles/base.css?v=20260829-smart-navbar-v2">
-    <link rel="stylesheet" href="styles/components.css?v=20260827-legal-footer">
-    <link rel="stylesheet" href="styles/pages.css?v=20260804-feedback-consistency">
+    <link rel="stylesheet" href="styles/base.css?v=20260830-typography-v1">
+    <link rel="stylesheet" href="styles/components.css?v=20260830-typography-v1">
+    <link rel="stylesheet" href="styles/pages.css?v=20260830-typography-v1">
     <link rel="stylesheet" href="styles/themes.css?v=20260804-feedback-consistency">
 </head>
 <body data-i18n-title="titles.feedback">
@@ -49,14 +49,14 @@
 
     <main class="tracks-page feedback-page" id="main-content">
         <p class="hero-eyebrow" data-i18n="pages.feedback.eyebrow">Feedback</p>
-        <h1 data-i18n="pages.feedback.title">Share a suggestion</h1>
+        <h1 class="type-page-title" data-i18n="pages.feedback.title">Share a suggestion</h1>
         <p class="hero-tagline signature-slogan" data-i18n="pages.feedback.lead">
             Tell me what topic you have in mind and how Jam Tracks Hub could work better for your practice.
         </p>
 
         <section class="key-finder-panel feedback-panel" aria-labelledby="feedbackFormTitle">
             <div class="tool-section-heading compact-heading">
-                <h2 id="feedbackFormTitle" class="section-title" data-i18n="pages.feedback.formTitle">Send feedback</h2>
+                <h2 id="feedbackFormTitle" class="section-title type-section-heading" data-i18n="pages.feedback.formTitle">Send feedback</h2>
                 <p data-i18n="pages.feedback.formCopy">
                     Short notes are perfect. I use these suggestions to plan new tools, fix confusing flows, and shape future backing tracks.
                 </p>
@@ -69,7 +69,7 @@
             >
                 <div class="feedback-field">
                     <label for="feedbackTopic" data-i18n="pages.feedback.topicLabel">Topic</label>
-                    <input
+                    <input class="type-form-input"
                         id="feedbackTopic"
                         name="topic"
                         type="text"
@@ -83,7 +83,7 @@
 
                 <div class="feedback-field">
                     <label for="feedbackSuggestion" data-i18n="pages.feedback.suggestionLabel">Improvement suggestion</label>
-                    <textarea
+                    <textarea class="type-form-input"
                         id="feedbackSuggestion"
                         name="suggestion"
                         maxlength="2400"

@@ -18,12 +18,12 @@
     <script src="scripts/theme-init.js?v=20260725-friendly-insect-switch"></script>
     <script src="scripts/i18n-init.js?v=20260826-song-workspace"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles/base.css?v=20260829-smart-navbar-v2">
-    <link rel="stylesheet" href="styles/components.css?v=20260827-legal-footer">
-    <link rel="stylesheet" href="styles/pages.css?v=20260826-song-workspace">
+    <link rel="stylesheet" href="styles/base.css?v=20260830-typography-v1">
+    <link rel="stylesheet" href="styles/components.css?v=20260830-typography-v1">
+    <link rel="stylesheet" href="styles/pages.css?v=20260830-typography-v1">
     <link rel="stylesheet" href="styles/themes.css?v=20260826-song-workspace">
     <link rel="stylesheet" href="styles/chord-dictionary.css?v=20260826-workspace-hardening">
-    <link rel="stylesheet" href="styles/song-workspace.css?v=20260829-library-text-v3">
+    <link rel="stylesheet" href="styles/song-workspace.css?v=20260830-typography-v1">
 </head>
 <body data-i18n-title="titles.songWorkspace">
     <nav class="navbar">
@@ -44,7 +44,7 @@
     <main class="song-workspace-page" id="songWorkspaceMain">
         <header class="song-workspace-hero">
             <p class="result-kicker" data-i18n="pages.songWorkspace.eyebrow">Local-first songbook • no login • private by design</p>
-            <h1 data-i18n="pages.songWorkspace.title">Song Workspace</h1>
+            <h1 class="type-page-title" data-i18n="pages.songWorkspace.title">Song Workspace</h1>
             <p class="hero-tagline signature-slogan" data-i18n="pages.songWorkspace.tagline">Shape the chart. Keep the song yours.</p>
             <p class="song-workspace-lead" data-i18n="pages.songWorkspace.intro">Create chord and lyric charts, transpose them, find comfortable capo positions, and keep every song in this browser.</p>
             <div class="song-workspace-promises" aria-label="Workspace benefits" data-i18n-aria-label="pages.songWorkspace.benefitsLabel">
@@ -62,7 +62,7 @@
                 <div class="workspace-section-heading">
                     <div>
                         <span class="result-kicker" data-i18n="pages.songWorkspace.startHere">Start here</span>
-                        <h2 id="createSongTitle" data-i18n="pages.songWorkspace.createSong">Create Song</h2>
+                        <h2 class="type-section-heading" id="createSongTitle" data-i18n="pages.songWorkspace.createSong">Create Song</h2>
                     </div>
                 </div>
 
@@ -95,7 +95,7 @@
                 <div class="workspace-section-heading">
                     <div>
                         <span class="result-kicker" data-i18n="pages.songWorkspace.importExistingData">Import existing data</span>
-                        <h2 id="otherImportTitle" data-i18n="pages.songWorkspace.otherImportOptions">Other Import Options</h2>
+                        <h2 class="type-section-heading" id="otherImportTitle" data-i18n="pages.songWorkspace.otherImportOptions">Other Import Options</h2>
                     </div>
                 </div>
                 <div class="workspace-import-grid">
@@ -125,7 +125,7 @@
                 <div class="workspace-section-heading">
                     <div>
                         <span class="result-kicker" data-i18n="pages.songWorkspace.onThisDevice">In this browser</span>
-                        <h2 id="mySongsTitle" data-i18n="pages.songWorkspace.mySongs">My Songs</h2>
+                        <h2 class="type-section-heading" id="mySongsTitle" data-i18n="pages.songWorkspace.mySongs">My Songs</h2>
                     </div>
                     <div class="workspace-library-actions">
                         <div class="workspace-file-actions">
@@ -314,7 +314,7 @@
                 <aside class="workspace-shapes-panel" id="chordShapesPanel" aria-labelledby="chordShapesTitle">
                     <div class="workspace-panel-heading">
                         <div>
-                            <h2 id="chordShapesTitle" data-i18n="pages.songWorkspace.chordShapes">Chord Shapes</h2>
+                            <h2 class="type-subsection-heading" id="chordShapesTitle" data-i18n="pages.songWorkspace.chordShapes">Chord Shapes</h2>
                         </div>
                         <button class="workspace-icon-button workspace-read-shapes-close" id="closeReadShapesButton" type="button" aria-label="Close chord shapes" data-i18n-aria-label="pages.songWorkspace.closeChordShapes">×</button>
                     </div>
@@ -330,7 +330,7 @@
             <div class="workspace-dialog-heading">
                 <div>
                     <span class="result-kicker" id="createModeLabel">Chords + Lyrics</span>
-                    <h2 data-i18n="pages.songWorkspace.createSong">Create Song</h2>
+                    <h2 class="type-subsection-heading" data-i18n="pages.songWorkspace.createSong">Create Song</h2>
                 </div>
                 <button class="workspace-icon-button" type="button" data-dialog-close aria-label="Close" data-i18n-aria-label="common.close">×</button>
             </div>
@@ -369,7 +369,7 @@
             <div class="progression-writer-shape-picker-header">
                 <div>
                     <span class="result-kicker" data-i18n="pages.songWorkspace.guitarVoicings">Guitar voicings</span>
-                    <h2 class="section-title" id="shapePickerTitle" data-i18n="pages.songWorkspace.availableShapes">Available guitar shapes</h2>
+                    <h2 class="section-title type-subsection-heading" id="shapePickerTitle" data-i18n="pages.songWorkspace.availableShapes">Available guitar shapes</h2>
                     <p data-i18n="pages.songWorkspace.shapeHelp">Standard tuning E A D G B E. X means mute; O means open.</p>
                 </div>
                 <button class="workspace-button workspace-button-secondary progression-writer-shape-picker-close" id="closeShapePickerButton" type="button" data-i18n="common.close">Close</button>
@@ -411,12 +411,12 @@
             <div class="workspace-dialog-heading">
                 <div>
                     <span class="result-kicker" id="globalAddStepLabel">Step 1 of 2</span>
-                    <h2 id="globalAddTitle" data-i18n="pages.songWorkspace.addToSong">Add to Song</h2>
+                    <h2 class="type-subsection-heading" id="globalAddTitle" data-i18n="pages.songWorkspace.addToSong">Add to Song</h2>
                 </div>
                 <button class="workspace-icon-button" type="button" data-dialog-close aria-label="Close" data-i18n-aria-label="common.close">×</button>
             </div>
             <section class="workspace-global-add-step" id="globalAddTypeStep" aria-labelledby="globalAddTypeTitle">
-                <h3 id="globalAddTypeTitle" data-i18n="pages.songWorkspace.chooseWhatToAdd">Choose what to add</h3>
+                <h3 class="type-subsection-heading" id="globalAddTypeTitle" data-i18n="pages.songWorkspace.chooseWhatToAdd">Choose what to add</h3>
                 <div class="workspace-global-add-types">
                     <button class="workspace-global-add-type" type="button" data-global-add-type="line"><strong data-i18n="pages.songWorkspace.line">Line</strong><span data-i18n="pages.songWorkspace.addLine">Add Line</span></button>
                     <button class="workspace-global-add-type" type="button" data-global-add-type="section"><strong data-i18n="pages.songWorkspace.section">Section</strong><span data-i18n="pages.songWorkspace.addSection">Add Section</span></button>
@@ -428,7 +428,7 @@
             </section>
             <section class="workspace-global-add-step" id="globalAddPositionStep" aria-labelledby="globalAddPositionTitle" hidden>
                 <div class="workspace-global-add-position-heading">
-                    <h3 id="globalAddPositionTitle" data-i18n="pages.songWorkspace.chooseWhereToInsert">Choose where to insert</h3>
+                    <h3 class="type-subsection-heading" id="globalAddPositionTitle" data-i18n="pages.songWorkspace.chooseWhereToInsert">Choose where to insert</h3>
                     <p id="globalAddPositionHint" data-i18n="pages.songWorkspace.positionPreviewHint">Choose a compact song boundary preview.</p>
                 </div>
                 <div class="workspace-global-add-positions" id="globalAddPositionList"></div>
@@ -445,7 +445,7 @@
             <div class="workspace-dialog-heading">
                 <div>
                     <span class="result-kicker" data-i18n="pages.songWorkspace.addSection">Add Section</span>
-                    <h2 data-i18n="pages.songWorkspace.sectionNamePrompt">Section name</h2>
+                    <h2 class="type-subsection-heading" data-i18n="pages.songWorkspace.sectionNamePrompt">Section name</h2>
                 </div>
                 <button class="workspace-icon-button" type="button" data-dialog-close aria-label="Close" data-i18n-aria-label="common.close">×</button>
             </div>
@@ -465,7 +465,7 @@
             <div class="workspace-dialog-heading">
                 <div>
                     <span class="result-kicker" data-i18n="pages.songWorkspace.addInstrumentalSection">Add Instrumental Section</span>
-                    <h2 data-i18n="pages.songWorkspace.instrumentalSectionPrompt">Create a chord-only section</h2>
+                    <h2 class="type-subsection-heading" data-i18n="pages.songWorkspace.instrumentalSectionPrompt">Create a chord-only section</h2>
                 </div>
                 <button class="workspace-icon-button" type="button" data-dialog-close aria-label="Close" data-i18n-aria-label="common.close">×</button>
             </div>
@@ -494,7 +494,7 @@
             <div class="workspace-dialog-heading">
                 <div class="workspace-line-dialog-heading-copy">
                     <span class="result-kicker" data-i18n="pages.songWorkspace.visualEditor">Visual chord editor</span>
-                    <h2 id="lineDialogTitle" data-i18n="pages.songWorkspace.editLine">Edit Line</h2>
+                    <h2 class="type-subsection-heading" id="lineDialogTitle" data-i18n="pages.songWorkspace.editLine">Edit Line</h2>
                     <p class="workspace-line-dialog-subtitle" id="lineDialogSubtitle" data-i18n="pages.songWorkspace.editLineSubtitle">Edit lyrics and chords for this line</p>
                 </div>
                 <button class="workspace-icon-button" type="button" data-dialog-close aria-label="Close" data-i18n-aria-label="common.close">×</button>

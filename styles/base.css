@@ -21,6 +21,27 @@ html {
     --teal: #7fb7ad;
     --wine: #a76f73;
     --radius: 8px;
+
+    /* Homepage-derived typography roles. */
+    --font-display: 'Noto Serif TC', serif;
+    --font-body: 'Noto Sans TC', sans-serif;
+    --type-page-title-size: 68px;
+    --type-page-title-line-height: 1;
+    --type-section-heading-size: 34px;
+    --type-section-heading-line-height: 1.2;
+    --type-subsection-heading-size: clamp(19px, 1.55vw, 24px);
+    --type-subsection-heading-line-height: 1.28;
+    --type-card-title-size: 18px;
+    --type-card-title-line-height: 1.35;
+    --type-body-size: 16px;
+    --type-body-line-height: 1.72;
+    --type-secondary-size: 13px;
+    --type-secondary-line-height: 1.6;
+    --type-metadata-size: 16px;
+    --type-metadata-line-height: normal;
+    --type-navigation-size: 16px;
+    --type-button-size: 16px;
+    --type-form-input-size: 14px;
 }
 
 /* ====================
@@ -49,6 +70,13 @@ body {
     font-family: 'Noto Sans TC', sans-serif;
     margin: 0;
     padding: 0;
+}
+
+button,
+input,
+select,
+textarea {
+    font-family: inherit;
 }
 
 h1 {

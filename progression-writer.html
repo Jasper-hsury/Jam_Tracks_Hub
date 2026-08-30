@@ -28,10 +28,10 @@
     <script src="scripts/i18n-init.js?v=20260804-no-language-flash"></script>
     <script defer src="https://cloud.umami.is/script.js" data-website-id="c8dfc471-6512-4344-8e1b-25566e1a93cd"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles/base.css?v=20260829-smart-navbar-v2">
-    <link rel="stylesheet" href="styles/components.css?v=20260827-legal-footer">
+    <link rel="stylesheet" href="styles/base.css?v=20260830-typography-v1">
+    <link rel="stylesheet" href="styles/components.css?v=20260830-typography-v1">
     <link rel="stylesheet" href="styles/chord-dictionary.css?v=20260728-mobile-polish">
-    <link rel="stylesheet" href="styles/pages.css?v=20260804-feedback-consistency">
+    <link rel="stylesheet" href="styles/pages.css?v=20260830-typography-v1">
     <link rel="stylesheet" href="styles/themes.css?v=20260804-feedback-consistency">
 </head>
 
@@ -53,7 +53,7 @@
     <main class="tracks-page progression-writer-page">
         <div class="page-heading-row progression-writer-heading">
             <div>
-                <h1 data-i18n="pages.progressionWriter.title">Write Your Own Progression</h1>
+                <h1 class="type-page-title" data-i18n="pages.progressionWriter.title">Write Your Own Progression</h1>
                 <p class="hero-tagline signature-slogan" data-i18n="pages.progressionWriter.tagline">Capture the Feeling. Compose the Meaning.</p>
             </div>
         </div>
@@ -61,7 +61,7 @@
         <section class="progression-writer-panel" aria-labelledby="progressionWriterModeTitle">
             <div class="tool-section-heading progression-writer-copy">
                 <span class="result-kicker" data-i18n="pages.progressionWriter.format">Progression format</span>
-                <h2 id="progressionWriterModeTitle" class="section-title" data-i18n="pages.progressionWriter.modeTitle">Chord Progression</h2>
+                <h2 id="progressionWriterModeTitle" class="section-title type-section-heading" data-i18n="pages.progressionWriter.modeTitle">Chord Progression</h2>
             </div>
 
             <div class="progression-writer-mode-control">
@@ -113,7 +113,7 @@
                 <div class="progression-writer-entry-heading">
                     <div>
                         <span class="result-kicker" data-i18n="pages.progressionWriter.customChords">Custom chords</span>
-                        <h2 id="singleProgressionTitle" class="section-title" data-i18n="pages.progressionWriter.progression">Progression</h2>
+                        <h2 id="singleProgressionTitle" class="section-title type-subsection-heading" data-i18n="pages.progressionWriter.progression">Progression</h2>
                     </div>
                     <div class="progression-writer-chord-actions">
                         <button class="secondary-button progression-writer-add-button" type="button" data-add-chord="single" data-i18n="pages.progressionWriter.addChord">Add Chord</button>
@@ -146,7 +146,7 @@
                     <div class="progression-writer-entry-heading">
                         <div>
                             <span class="result-kicker" data-i18n="pages.progressionWriter.sectionOne">Section one</span>
-                            <h2 id="verseProgressionTitle" class="section-title" data-i18n="pages.progressionWriter.verse">Verse</h2>
+                            <h2 id="verseProgressionTitle" class="section-title type-subsection-heading" data-i18n="pages.progressionWriter.verse">Verse</h2>
                         </div>
                         <div class="progression-writer-chord-actions">
                             <button class="secondary-button progression-writer-add-button" type="button" data-add-chord="verse" data-i18n="pages.progressionWriter.addChord">Add Chord</button>
@@ -178,7 +178,7 @@
                     <div class="progression-writer-entry-heading">
                         <div>
                             <span class="result-kicker" data-i18n="pages.progressionWriter.sectionTwo">Section two</span>
-                            <h2 id="chorusProgressionTitle" class="section-title" data-i18n="pages.progressionWriter.chorus">Chorus</h2>
+                            <h2 id="chorusProgressionTitle" class="section-title type-subsection-heading" data-i18n="pages.progressionWriter.chorus">Chorus</h2>
                         </div>
                         <div class="progression-writer-chord-actions">
                             <button class="secondary-button progression-writer-add-button" type="button" data-add-chord="chorus" data-i18n="pages.progressionWriter.addChord">Add Chord</button>
@@ -234,7 +234,7 @@
                 <div class="progression-writer-shape-picker-header">
                     <div>
                         <span class="result-kicker" data-i18n="pages.progressionWriter.guitarVoicings">Guitar voicings</span>
-                        <h2 id="progressionShapePickerTitle" class="section-title" data-i18n="pages.progressionWriter.availableShapes">Available guitar shapes</h2>
+                        <h2 id="progressionShapePickerTitle" class="section-title type-subsection-heading" data-i18n="pages.progressionWriter.availableShapes">Available guitar shapes</h2>
                         <p data-i18n="pages.progressionWriter.shapeHelp">Standard tuning E A D G B E. X means mute; O means open.</p>
                     </div>
                     <button class="secondary-button progression-writer-shape-picker-close" type="button" data-close-shape-picker data-i18n="common.close">Close</button>
@@ -274,7 +274,7 @@
         <section class="progression-writer-saved" aria-labelledby="savedWriterProgressionsTitle">
             <div class="progression-writer-saved-heading">
                 <div>
-                    <h2 id="savedWriterProgressionsTitle" class="section-title" data-i18n="pages.progressionWriter.savedProgression">Saved Progression</h2>
+                    <h2 id="savedWriterProgressionsTitle" class="section-title type-subsection-heading" data-i18n="pages.progressionWriter.savedProgression">Saved Progression</h2>
                 </div>
                 <span class="progression-writer-saved-count" id="writerSavedProgressionCount" data-i18n="pages.progressionWriter.noSaved">No saved progressions</span>
             </div>
