@@ -279,6 +279,7 @@
             ) {
                 paragraph.removeAttribute("data-i18n");
                 const rights = document.createElement("span");
+                rights.className = "footer-rights";
                 rights.dataset.i18n = "footer.rights";
                 rights.textContent = paragraph.textContent.trim();
                 const separator = document.createElement("span");
@@ -292,6 +293,32 @@
                 legalLink.textContent = "Legal & Usage Policy";
                 paragraph.replaceChildren(rights, separator, legalLink);
             }
+        });
+
+        document.querySelectorAll(".footer").forEach(function(footer) {
+            if (footer.querySelector(".social-links")) {
+                return;
+            }
+
+            const socialLinks = document.createElement("div");
+            socialLinks.className = "social-links";
+
+            const youtubeLink = document.createElement("a");
+            youtubeLink.href = "https://youtube.com/@weekly_backing_track?si=-Rp6XDvP0A8fclp3";
+            youtubeLink.target = "_blank";
+            youtubeLink.rel = "noopener noreferrer";
+            youtubeLink.setAttribute("aria-label", "Visit Jam Tracks Hub YouTube channel");
+            youtubeLink.textContent = "YouTube";
+
+            const instagramLink = document.createElement("a");
+            instagramLink.href = "https://www.instagram.com/reyu_jasper?igsh=dmVsazFvb2pwMmsw&utm_source=qr";
+            instagramLink.target = "_blank";
+            instagramLink.rel = "noopener noreferrer";
+            instagramLink.setAttribute("aria-label", "Visit Jam Tracks Hub Instagram profile");
+            instagramLink.textContent = "Instagram";
+
+            socialLinks.append(youtubeLink, instagramLink);
+            footer.appendChild(socialLinks);
         });
     }
 
