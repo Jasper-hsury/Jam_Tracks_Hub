@@ -249,6 +249,7 @@ test("static build tracks CSP, browser restrictions, and bounded cache policy", 
     assert.match(build, /"_headers"/);
     assert.match(headers, /Content-Security-Policy:/);
     assert.match(headers, /script-src 'self' https:\/\/cloud\.umami\.is/);
+    assert.match(headers, /connect-src 'self' https:\/\/cloud\.umami\.is https:\/\/gateway\.umami\.is https:\/\/api\.jamtrackshub\.com/);
     assert.doesNotMatch(headers, /script-src[^;]*(?:unsafe-inline|unsafe-eval)/);
     assert.match(headers, /frame-ancestors 'none'/);
     assert.match(headers, /X-Content-Type-Options: nosniff/);

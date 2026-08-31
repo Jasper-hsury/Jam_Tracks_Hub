@@ -102,7 +102,7 @@ No custom WAF rule was added: the provider baseline is active, the pre-change vi
 
 Public HTML includes the homepage, Tracks, Song Workspace/My Songs, Chord Dictionary, Scale Explorer, Key Finder, Chord Progressions, Progression Writer, Fretboard Trainer, Feedback, privacy/legal pages, service/error pages, and weekly slide pages. Public static data includes scripts, styles, images, fonts, locale JSON, track data, downloads, and slide assets.
 
-Third-party browser origins currently allow only the sources required by production behavior: Google Fonts, Umami on non-Song-Workspace pages, YouTube media/frame content, YouTube thumbnails, and the Cloudflare-proxied Key Finder API origin. Song Workspace itself does not load Umami or another third-party executable script.
+Third-party browser origins currently allow only the sources required by production behavior: Google Fonts, Umami page-level analytics, YouTube media/frame content, YouTube thumbnails, and the Cloudflare-proxied Key Finder API origin. Song Workspace uses the existing Umami tracker with search/hash exclusion, a fixed localized title, `no-referrer`, and no custom events, properties, identity, performance, replay, recorder, or heatmap integration.
 
 ### Endpoint matrix
 
