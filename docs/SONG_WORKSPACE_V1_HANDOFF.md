@@ -190,11 +190,11 @@ Repository evidence:
 
 V1 has no user-song database, account requirement, or cloud synchronization. Analytics and error reporting must never receive lyrics, raw pasted content, raw ChordPro, Song JSON, or user notes. Any future telemetry must be event-only (for example `song_workspace_opened`, `transpose_used`, or `capo_used`) with content-free metadata.
 
-The 2026-08-27 disclosure audit traced Create, ChordPro, JTH JSON, autosave, backup, restore, and export data through in-memory parsing, browser File APIs, IndexedDB/localStorage, and local Blob/Object URL downloads. The bounded analytics/error-log follow-up is now **RESOLVED**:
+The 2026-08-27 disclosure audit traced Create, ChordPro, JTH JSON, autosave, backup, restore, and export data through in-memory parsing, browser File APIs, IndexedDB/localStorage, and local Blob/Object URL downloads. The bounded analytics/error-log follow-up, updated by the 2026-08-31 page-level Umami integration, is **RESOLVED**:
 
 - repository-wide inventory found Umami as the only browser analytics service and found no Sentry, LogRocket, PostHog, Mixpanel, Segment, remote console collector, global error forwarder, or custom Song Workspace event tracking;
-- Umami's tracker automatically collects URL, fixed page title, and referrer and observes `history.replaceState`, so it was removed from `song-workspace.html` only; other site pages retain ordinary Umami analytics;
-- Song Workspace now has no third-party executable script and therefore no session replay or DOM-capture path. The Google Fonts stylesheet remains presentation-only, and the page sets `no-referrer`;
+- Song Workspace reuses the existing site Umami script and website configuration for a page-level view only. `data-exclude-search` and `data-exclude-hash` sanitize initial and `history.replaceState` URLs before transmission, while the page keeps a fixed localized title and `no-referrer`;
+- no custom Umami event, property, identity, performance, replay, recorder, or heatmap integration is configured; the production Song Workspace modules still contain no analytics or remote transport path;
 - the localized browser title remains fixed. Imported JTH JSON and backup songs receive new internal opaque IDs before storage/navigation, and unsafe URL IDs are discarded;
 - production parser/import errors are generic and contain no raw Song Document, ChordPro, lyrics, or metadata; Song Workspace modules have no console or remote error forwarding;
 - `tests/song-workspace-observability.test.js` exercises synthetic canaries across analytics, title, URL, imported IDs, parser errors, console/telemetry primitives, and transport boundaries;
@@ -802,7 +802,7 @@ Read Mode is ephemeral presentation state. It hides the page hero and all editor
 | Public searchable song library | N/A | Product boundary | Must not be built without new review. |
 | Copyright/local-only user-facing wording | RESOLVED | Workspace UI, locale files, `privacy-policy.html`, disclosure tests, responsive browser acceptance | Browser-local scope, import rights, storage-loss, export content, and no false legal guarantee are covered. |
 | Footer Legal & Usage Policy | RESOLVED | shared i18n footer annotation, `legal.html`, locale files, build/final-layout tests | Terms, local storage, copyright/user content, export, external services, and bounded disclaimer; human legal review recommended before commercial-scale release. |
-| Analytics/error payload privacy audit | RESOLVED | `song-workspace.html`, core/app URL and import hardening, `tests/song-workspace-observability.test.js`, static inventory, synthetic browser canaries | Workspace has no analytics/third-party executable script, custom event, remote logger, raw-input console path, or song transport; site-wide Umami remains elsewhere. |
+| Analytics/error payload privacy audit | RESOLVED | bounded page-level Umami configuration, core/app URL and import hardening, `tests/song-workspace-observability.test.js`, static inventory, synthetic browser canaries | Search/hash are excluded, the localized title is fixed, and there is no custom event/property/identity, remote logger, raw-input console path, or song transport. |
 | Anti-abuse review | DEFERRED POST-v1.0.0 | Explicit Song Workspace-only release decision | Cloudflare/CDN/API/WAF/rate limits remain future provider hardening. |
 | macOS Safari shape-picker zero-jump acceptance | PASS | Product-owner manual acceptance | No visible jump reported. |
 | iPhone/iOS hardware acceptance | PENDING / POST-RELEASE VALIDATION | No iPhone/iOS evidence | Known unverified platform; explicitly non-blocking for Song Workspace-only v1.0.0. |
@@ -824,7 +824,7 @@ Bounded future work, clearly outside current implementation:
 - **RESOLVED**: BPM-linked, bounded, refresh-rate-independent Performance Auto Scroll with a retained user multiplier.
 - **RESOLVED**: Song Workspace button semantics and interaction states aligned with shared Jam Tracks Hub theme tokens.
 - **RESOLVED**: add/review browser-local, import-rights, storage-loss, export-content, and bounded user-content/copyright wording.
-- **RESOLVED**: analytics/error-log no-song-content-egress inventory, Umami isolation, URL/title/import-ID hardening, generic import errors, automated canaries, and browser network/console acceptance.
+- **RESOLVED**: analytics/error-log no-song-content-egress inventory, bounded page-level Umami with search/hash exclusion, URL/title/import-ID hardening, generic import errors, automated canaries, and browser network/console acceptance.
 - **RESOLVED**: Song Workspace picker parity with Write Your Own Progression using shared styles/card rendering and real voicing filters.
 - **RESOLVED**: Create/ChordPro visible scrollbar removal while retaining bounded keyboard/wheel scrolling and footer reachability.
 - **RESOLVED**: canonical single-song JTH JSON import orchestration, fresh opaque IDs, IndexedDB persistence, collection refresh, generic errors, and reload acceptance.

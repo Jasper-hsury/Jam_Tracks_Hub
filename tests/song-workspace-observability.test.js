@@ -19,10 +19,17 @@ const LYRIC_CANARY = "LYRIC_CANARY_NEVER_SEND";
 const TITLE_CANARY = "TITLE_CANARY_NEVER_SEND";
 const CHORDPRO_CANARY = "CHORDPRO_CANARY_NEVER_SEND";
 
-test("keeps third-party analytics off Song Workspace without removing site-wide Umami", () => {
-    assert.doesNotMatch(workspaceHtml, /cloud\.umami\.is|data-website-id|data-umami-event/i);
+test("uses bounded page-level Umami without exposing Song Workspace content", () => {
+    const websiteIdPattern = /data-website-id=["']([^"']+)["']/;
+    const workspaceWebsiteId = workspaceHtml.match(websiteIdPattern)?.[1];
+    const siteWebsiteId = indexHtml.match(websiteIdPattern)?.[1];
+
+    assert.match(workspaceHtml, /<script[^>]+src=["']https:\/\/cloud\.umami\.is\/script\.js["'][^>]*>/i);
+    assert.equal(workspaceWebsiteId, siteWebsiteId);
+    assert.match(workspaceHtml, /data-exclude-search=["']true["']/i);
+    assert.match(workspaceHtml, /data-exclude-hash=["']true["']/i);
+    assert.doesNotMatch(workspaceHtml, /data-umami-event/i);
     assert.doesNotMatch(workspaceJs, /\bumami\.(?:track|identify)\s*\(|analytics\.track\s*\(/i);
-    assert.doesNotMatch(workspaceHtml, /<script[^>]+src=["']https?:\/\//i);
     assert.match(workspaceHtml, /<meta name="referrer" content="no-referrer">/);
     assert.match(indexHtml, /cloud\.umami\.is\/script\.js/);
 });
