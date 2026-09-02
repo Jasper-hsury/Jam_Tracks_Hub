@@ -96,11 +96,11 @@ document.addEventListener("DOMContentLoaded", function() {
         navbar.setAttribute("aria-label", "Primary navigation");
         navLinks.id = navLinks.id || "primaryNavigation";
         const currentPage = window.location.pathname.split("/").pop() || "index.html";
-        let workspaceLink = navLinks.querySelector('a[href="song-workspace.html"]');
+        let workspaceLink = navLinks.querySelector('a[href="song-workspace.html"], a[href="/song-workspace.html"]');
         if (!workspaceLink) {
             const workspaceItem = document.createElement("li");
             workspaceLink = document.createElement("a");
-            workspaceLink.href = "song-workspace.html";
+            workspaceLink.href = "/song-workspace.html";
             workspaceLink.dataset.i18n = "nav.songWorkspace";
             workspaceLink.textContent = "Song Workspace";
             workspaceItem.appendChild(workspaceLink);
@@ -143,7 +143,7 @@ document.addEventListener("DOMContentLoaded", function() {
         compactMenu.className = "nav-compact-tools-menu";
         compactToolLinks.forEach(function(link) {
             const anchor = document.createElement("a");
-            anchor.href = link.href;
+            anchor.href = `/${link.href}`;
             anchor.dataset.i18n = link.i18nKey;
             anchor.textContent = link.label;
             if (currentPage === link.href) {

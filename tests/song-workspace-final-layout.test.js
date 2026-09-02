@@ -113,7 +113,7 @@ test("one localized hero badge owns neutral, saving, saved, and unavailable stat
 
 test("shared localized footer access points to a bookmarkable legal page", () => {
     assert.match(i18nJs, /className = "footer-legal-link"/);
-    assert.match(i18nJs, /legalLink\.href = "legal\.html"/);
+    assert.match(i18nJs, /legalLink\.href = "\/legal\.html"/);
     assert.match(i18nJs, /legalLink\.dataset\.i18n = "footer\.legal"/);
     assert.match(componentsCss, /\.footer-legal-link/);
     assert.match(i18nInit, /"legal\.html": "titles\.legal"/);

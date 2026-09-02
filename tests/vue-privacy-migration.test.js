@@ -64,12 +64,12 @@ test("renders the established Privacy structure from canonical locale resources"
   assert.equal(Object.keys(english.privacy.body).length, 25);
 });
 
-test("keeps Privacy static and the migration bounded and version-neutral", () => {
+test("keeps Privacy static and its migration bounded at the current patch version", () => {
   const packageJson = JSON.parse(read("package.json"));
   const pagesCss = read("styles/pages.css");
   const verifier = read("tools/scripts/verify-cloudflare-build.js");
 
-  assert.equal(packageJson.version, "2.0.2");
+  assert.equal(packageJson.version, "2.0.3");
   assert.match(pagesCss, /\.privacy-policy-panel\s*\{[^}]*animation:\s*none/s);
   assert.match(verifier, /const viteOwnedRootHtml = new Set\(\["404\.html", "legal\.html", "privacy-policy\.html"\]\)/);
   assert.match(verifier, /Privacy canonical metadata differs/);

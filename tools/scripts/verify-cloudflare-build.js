@@ -7,6 +7,7 @@ const maxWorkerAssetBytes = 24 * 1024 * 1024;
 const renderAssetBaseUrl = "https://api.jamtrackshub.com";
 const copiedDirectories = ["assets", "data", "downloads", "locales", "scripts", "slides", "styles"];
 const viteOwnedRootHtml = new Set(["404.html", "legal.html", "privacy-policy.html"]);
+const workerConfig = JSON.parse(fs.readFileSync(path.join(root, "wrangler.jsonc"), "utf8"));
 
 function fail(message) {
   throw new Error(`Cloudflare build verification failed: ${message}`);
@@ -39,6 +40,16 @@ function expectedSlideHtml(source) {
 
 if (!fs.existsSync(dist)) fail("dist/ does not exist");
 
+if (workerConfig.assets?.not_found_handling !== "404-page") {
+  fail("static assets do not use the native 404-page fallback");
+}
+if (workerConfig.assets?.html_handling !== undefined) {
+  fail("HTML handling changed from the established default");
+}
+if (JSON.stringify(workerConfig.assets?.run_worker_first) !== JSON.stringify(["/api", "/api/*"])) {
+  fail("Worker-first routing is not limited to API paths");
+}
+
 const rootHtml = fs.readdirSync(root, { withFileTypes: true })
   .filter(entry => entry.isFile() && entry.name.endsWith(".html"))
   .map(entry => entry.name)
@@ -67,13 +78,19 @@ if (!/<script type="module" crossorigin src="\/assets\/vue\/404-[^"]+\.js"><\/sc
   fail("404 compiled Vue entry is missing");
 }
 if (/src\/entries\/404\.js/.test(migrated404)) fail("404 source entry leaked into production HTML");
+Array.from(migrated404.matchAll(/(?:href|src)="([^"]+)"/g), match => match[1])
+  .filter(reference => !/^(?:https?:|data:|#)/.test(reference))
+  .forEach(function(reference) {
+    if (!reference.startsWith("/")) fail(`404 local reference is not root-relative: ${reference}`);
+  });
 [
+  "scripts/i18n-init.js?v=20260902-404-route-root",
   "styles/base.css?v=20260829-smart-navbar-v2",
   "styles/components.css?v=20260827-legal-footer",
   "styles/pages.css?v=20260804-feedback-consistency",
   "styles/themes.css?v=20260804-feedback-consistency",
-  "scripts/site.js?v=20260829-smart-navbar-v2",
-  "scripts/i18n.js?v=20260827-legal-footer",
+  "scripts/site.js?v=20260902-404-route-root",
+  "scripts/i18n.js?v=20260902-404-route-root",
   "scripts/site-animations.js?v=20260718-trainer-dropdown-hover"
 ].forEach(function(asset) {
   if (!migrated404.includes(asset)) fail(`404 legacy asset path differs: ${asset}`);

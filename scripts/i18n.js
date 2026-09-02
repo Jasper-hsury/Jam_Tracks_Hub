@@ -78,7 +78,7 @@
             }
         }
 
-        const fallbackPromise = fetch(`locales/${DEFAULT_LANGUAGE}/common.json`, { cache: "no-store" })
+        const fallbackPromise = fetch(`/locales/${DEFAULT_LANGUAGE}/common.json`, { cache: "no-store" })
             .then(function(response) {
                 if (!response.ok) {
                     throw new Error(`Missing ${DEFAULT_LANGUAGE} locale`);
@@ -92,7 +92,7 @@
 
         const [fallback, selected] = await Promise.all([
             fallbackPromise,
-            fetch(`locales/${language}/common.json`, { cache: "no-store" })
+            fetch(`/locales/${language}/common.json`, { cache: "no-store" })
                 .then(function(response) {
                     if (!response.ok) {
                         throw new Error(`Missing ${language} locale`);
@@ -241,7 +241,7 @@
 
     function annotateSharedNavigation() {
         document.querySelectorAll(".nav-links a[href]").forEach(function(link) {
-            const href = link.getAttribute("href");
+            const href = link.getAttribute("href")?.replace(/^\/+/, "");
             const key = NAV_KEYS_BY_HREF[href];
             if (key && !link.dataset.i18n) {
                 link.dataset.i18n = key;
@@ -254,7 +254,8 @@
         }
 
         document.querySelectorAll(".nav-compact-tools-menu a[href]").forEach(function(link) {
-            const key = NAV_KEYS_BY_HREF[link.getAttribute("href")];
+            const href = link.getAttribute("href")?.replace(/^\/+/, "");
+            const key = NAV_KEYS_BY_HREF[href];
             if (key && !link.dataset.i18n) {
                 link.dataset.i18n = key;
             }
@@ -288,7 +289,7 @@
                 separator.textContent = " · ";
                 const legalLink = document.createElement("a");
                 legalLink.className = "footer-legal-link";
-                legalLink.href = "legal.html";
+                legalLink.href = "/legal.html";
                 legalLink.dataset.i18n = "footer.legal";
                 legalLink.textContent = "Legal & Usage Policy";
                 paragraph.replaceChildren(rights, separator, legalLink);
