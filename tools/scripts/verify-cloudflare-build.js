@@ -6,6 +6,7 @@ const dist = path.join(root, "dist");
 const maxWorkerAssetBytes = 24 * 1024 * 1024;
 const renderAssetBaseUrl = "https://api.jamtrackshub.com";
 const copiedDirectories = ["assets", "data", "downloads", "locales", "scripts", "slides", "styles"];
+const viteOwnedRootHtml = new Set(["404.html"]);
 
 function fail(message) {
   throw new Error(`Cloudflare build verification failed: ${message}`);
@@ -49,8 +50,35 @@ rootHtml.forEach(function(relativePath) {
   const source = path.join(root, relativePath);
   const target = path.join(dist, relativePath);
   if (!fs.existsSync(target)) fail(`missing root HTML entry ${relativePath}`);
+  if (viteOwnedRootHtml.has(relativePath)) return;
   if (!read(source).equals(read(target))) fail(`root HTML is not byte-identical: ${relativePath}`);
 });
+
+const migrated404 = fs.readFileSync(path.join(dist, "404.html"), "utf8");
+if (!/<meta name="robots" content="noindex">/.test(migrated404)) fail("404 noindex metadata is missing");
+if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/404\.html">/.test(migrated404)) {
+  fail("404 canonical metadata differs");
+}
+if (!/<div id="vue-404-root"><\/div>/.test(migrated404)) fail("404 Vue mount target is missing");
+if (!/<script defer src="https:\/\/cloud\.umami\.is\/script\.js" data-website-id="[^"]+"><\/script>/.test(migrated404)) {
+  fail("404 Umami loader differs");
+}
+if (!/<script type="module" crossorigin src="\/assets\/vue\/404-[^"]+\.js"><\/script>/.test(migrated404)) {
+  fail("404 compiled Vue entry is missing");
+}
+if (/src\/entries\/404\.js/.test(migrated404)) fail("404 source entry leaked into production HTML");
+[
+  "styles/base.css?v=20260829-smart-navbar-v2",
+  "styles/components.css?v=20260827-legal-footer",
+  "styles/pages.css?v=20260804-feedback-consistency",
+  "styles/themes.css?v=20260804-feedback-consistency",
+  "scripts/site.js?v=20260829-smart-navbar-v2",
+  "scripts/i18n.js?v=20260827-legal-footer",
+  "scripts/site-animations.js?v=20260718-trainer-dropdown-hover"
+].forEach(function(asset) {
+  if (!migrated404.includes(asset)) fail(`404 legacy asset path differs: ${asset}`);
+});
+if (/assets\/vue\/404-[^"]+\.css/.test(migrated404)) fail("404 shared CSS was incorrectly rebundled");
 
 const sourceHeaders = path.join(root, "_headers");
 const distHeaders = path.join(dist, "_headers");
@@ -98,17 +126,29 @@ if (!vueJavaScript.length) fail("missing compiled Vue foundation JavaScript");
 
 vueJavaScript.forEach(function(filePath) {
   const source = fs.readFileSync(filePath, "utf8");
-  if (!source.trim()) fail(`empty Vue foundation bundle: ${path.basename(filePath)}`);
-  if (!source.includes("data-vue-foundation-smoke")) {
-    fail(`compiled smoke marker missing from ${path.basename(filePath)}`);
-  }
+  if (!source.trim()) fail(`empty Vue bundle: ${path.basename(filePath)}`);
   if (/\beval\s*\(|new\s+Function\s*\(/.test(source)) fail(`CSP-incompatible runtime code in ${path.basename(filePath)}`);
 });
+
+const foundationBundle = vueJavaScript.find(filePath => path.basename(filePath).startsWith("vue-foundation-"));
+if (!foundationBundle) fail("missing compiled Vue foundation entry");
+if (!fs.readFileSync(foundationBundle, "utf8").includes("data-vue-foundation-smoke")) {
+  fail("compiled Vue foundation smoke marker is missing");
+}
+
+const migrated404Bundle = vueJavaScript.find(filePath => path.basename(filePath).startsWith("404-"));
+if (!migrated404Bundle) fail("missing compiled Vue 404 entry");
+if (!fs.readFileSync(migrated404Bundle, "utf8").includes("vue-404-root")) {
+  fail("compiled Vue 404 mount marker is missing");
+}
 
 rootHtml.forEach(function(relativePath) {
   const html = fs.readFileSync(path.join(dist, relativePath), "utf8");
   if (/vue-foundation|src\/entries\/vue-foundation/i.test(html)) {
     fail(`production HTML references the Vue foundation: ${relativePath}`);
+  }
+  if (relativePath !== "404.html" && /assets\/vue\/404-|src\/entries\/404\.js/i.test(html)) {
+    fail(`unmigrated production HTML references the Vue 404 entry: ${relativePath}`);
   }
 });
 
@@ -126,4 +166,5 @@ listFiles(dist).forEach(function(filePath) {
 
 console.log(`Cloudflare build verification passed: ${rootHtml.length} root HTML entries`);
 console.log(`Track slide parity passed: ${sourceSlides.length} slide HTML entries`);
-console.log(`Vue foundation assets passed: ${vueJavaScript.length} JavaScript bundle(s)`);
+console.log(`Vue assets passed: ${vueJavaScript.length} JavaScript bundle(s)`);
+console.log(`Vite-owned root HTML passed: ${Array.from(viteOwnedRootHtml).join(", ")}`);
