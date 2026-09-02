@@ -78,7 +78,13 @@ Legal and Privacy remain independent views because their semantic structures and
 
 ## Versioning
 
-`package.json.version` is initialized to the current public release, `2.0.2`, as the machine-readable baseline. Every future feature or fix must run a semantic Versioning Gate before commit. Git tags and GitHub Releases always require separate user authorization.
+`package.json.version` is `2.0.3`. This patch version records the public routing fix that serves the existing Vue 404 document, with an HTTP 404 status and the requested URL preserved, for unmatched navigation routes. Git tags and GitHub Releases always require separate user authorization.
+
+## Phase 2B Routing Hotfix
+
+Cloudflare Static Assets uses its native `404-page` fallback for unmatched routes. Worker-first routing is restricted to `/api` and `/api/*`, preserving the existing Worker and D1 API boundary without sending ordinary static traffic through Worker code. The project remains a Vite multi-page application; it does not use an SPA fallback.
+
+The 404 document's local resources and navigation links are root-relative so the same Vue 404 page remains functional when Cloudflare serves it for a nested unknown URL.
 
 ## Next Phase
 

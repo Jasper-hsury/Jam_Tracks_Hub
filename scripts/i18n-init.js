@@ -95,8 +95,8 @@
         ].join(",") + "{visibility:hidden;}";
         document.head.appendChild(loadingStyle);
         document.documentElement.dataset.i18nLoading = "true";
-        resources.fallback = syncLoadJson("locales/en/common.json") || {};
-        resources.selected = syncLoadJson(`locales/${initialLanguage}/common.json`) || {};
+        resources.fallback = syncLoadJson("/locales/en/common.json") || {};
+        resources.selected = syncLoadJson(`/locales/${initialLanguage}/common.json`) || {};
     }
 
     const titleKey = TITLE_KEYS_BY_PAGE[(window.location.pathname.split("/").pop() || "index.html")];

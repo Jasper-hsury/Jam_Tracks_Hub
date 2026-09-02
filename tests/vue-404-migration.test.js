@@ -32,8 +32,8 @@ test("preserves the public 404 metadata and action contract", () => {
   const view = read("src/views/NotFoundView.vue");
   assert.match(view, /<main id="main-content" class="status-page">/);
   assert.match(view, /<p class="status-page-code">404<\/p>/);
-  assert.match(view, /class="primary-button" href="index\.html"/);
-  assert.match(view, /class="secondary-button" href="key-finder\.html"/);
+  assert.match(view, /class="primary-button" href="\/index\.html"/);
+  assert.match(view, /class="secondary-button" href="\/key-finder\.html"/);
   assert.doesNotMatch(view, /umami|analytics|data-umami-event/i);
 });
 
@@ -89,7 +89,7 @@ test("does not expand the Vue application architecture", () => {
     assert.equal(packageJson.dependencies?.[name], undefined);
     assert.equal(packageJson.devDependencies?.[name], undefined);
   });
-  assert.equal(packageJson.version, "2.0.2");
+  assert.equal(packageJson.version, "2.0.3");
 });
 
 test("keeps the complete Phase 2A responsive matrix on established shared breakpoints", () => {
