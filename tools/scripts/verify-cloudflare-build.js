@@ -6,7 +6,7 @@ const dist = path.join(root, "dist");
 const maxWorkerAssetBytes = 24 * 1024 * 1024;
 const renderAssetBaseUrl = "https://api.jamtrackshub.com";
 const copiedDirectories = ["assets", "data", "downloads", "locales", "scripts", "slides", "styles"];
-const viteOwnedRootHtml = new Set(["404.html"]);
+const viteOwnedRootHtml = new Set(["404.html", "legal.html"]);
 
 function fail(message) {
   throw new Error(`Cloudflare build verification failed: ${message}`);
@@ -80,6 +80,30 @@ if (/src\/entries\/404\.js/.test(migrated404)) fail("404 source entry leaked int
 });
 if (/assets\/vue\/404-[^"]+\.css/.test(migrated404)) fail("404 shared CSS was incorrectly rebundled");
 
+const migratedLegal = fs.readFileSync(path.join(dist, "legal.html"), "utf8");
+if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/legal\.html">/.test(migratedLegal)) {
+  fail("Legal canonical metadata differs");
+}
+if (!/<div id="vue-legal-root"><\/div>/.test(migratedLegal)) fail("Legal Vue mount target is missing");
+if (!/<script defer src="https:\/\/cloud\.umami\.is\/script\.js" data-website-id="[^"]+"><\/script>/.test(migratedLegal)) {
+  fail("Legal Umami loader differs");
+}
+if (!/<script type="module" crossorigin src="\/assets\/vue\/legal-[^"]+\.js"><\/script>/.test(migratedLegal)) {
+  fail("Legal compiled Vue entry is missing");
+}
+if (/src\/entries\/legal\.js/.test(migratedLegal)) fail("Legal source entry leaked into production HTML");
+[
+  "styles/base.css?v=20260829-smart-navbar-v2",
+  "styles/components.css?v=20260827-legal-footer",
+  "styles/pages.css?v=20260830-legal-static-panel",
+  "styles/themes.css?v=20260804-feedback-consistency",
+  "scripts/site.js?v=20260829-smart-navbar-v2",
+  "scripts/i18n.js?v=20260827-legal-footer"
+].forEach(function(asset) {
+  if (!migratedLegal.includes(asset)) fail(`Legal legacy asset path differs: ${asset}`);
+});
+if (/assets\/vue\/legal-[^"]+\.css/.test(migratedLegal)) fail("Legal shared CSS was incorrectly rebundled");
+
 const sourceHeaders = path.join(root, "_headers");
 const distHeaders = path.join(dist, "_headers");
 if (!fs.existsSync(distHeaders)) fail("missing _headers");
@@ -142,6 +166,12 @@ if (!fs.readFileSync(migrated404Bundle, "utf8").includes("vue-404-root")) {
   fail("compiled Vue 404 mount marker is missing");
 }
 
+const migratedLegalBundle = vueJavaScript.find(filePath => path.basename(filePath).startsWith("legal-"));
+if (!migratedLegalBundle) fail("missing compiled Vue Legal entry");
+if (!fs.readFileSync(migratedLegalBundle, "utf8").includes("vue-legal-root")) {
+  fail("compiled Vue Legal mount marker is missing");
+}
+
 rootHtml.forEach(function(relativePath) {
   const html = fs.readFileSync(path.join(dist, relativePath), "utf8");
   if (/vue-foundation|src\/entries\/vue-foundation/i.test(html)) {
@@ -149,6 +179,9 @@ rootHtml.forEach(function(relativePath) {
   }
   if (relativePath !== "404.html" && /assets\/vue\/404-|src\/entries\/404\.js/i.test(html)) {
     fail(`unmigrated production HTML references the Vue 404 entry: ${relativePath}`);
+  }
+  if (relativePath !== "legal.html" && /assets\/vue\/legal-|src\/entries\/legal\.js/i.test(html)) {
+    fail(`unmigrated production HTML references the Vue Legal entry: ${relativePath}`);
   }
 });
 

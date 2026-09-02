@@ -4,13 +4,15 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 
 const root = fileURLToPath(new URL(".", import.meta.url));
-const legacy404Assets = [
+const viteOwnedHtml = new Set(["/404.html", "/legal.html"]);
+const legacyHtmlAssets = [
   "assets/images/icon.png",
   "scripts/theme-init.js?v=20260725-friendly-insect-switch",
   "scripts/i18n-init.js?v=20260804-no-language-flash",
   "styles/base.css?v=20260829-smart-navbar-v2",
   "styles/components.css?v=20260827-legal-footer",
   "styles/pages.css?v=20260804-feedback-consistency",
+  "styles/pages.css?v=20260830-legal-static-panel",
   "styles/themes.css?v=20260804-feedback-consistency",
   "scripts/site.js?v=20260829-smart-navbar-v2",
   "scripts/i18n.js?v=20260827-legal-footer",
@@ -20,9 +22,10 @@ const legacy404Assets = [
 ];
 const legacyAssetSentinel = "https://vite-preserved-legacy.invalid/";
 
-function preserveLegacy404Assets() {
-  function is404(context) {
-    return context.path === "/404.html" || context.filename?.endsWith("/404.html");
+function preserveLegacyHtmlAssets() {
+  function isViteOwned(context) {
+    return viteOwnedHtml.has(context.path)
+      || Array.from(viteOwnedHtml).some(page => context.filename?.endsWith(page));
   }
 
   return [
@@ -32,8 +35,8 @@ function preserveLegacy404Assets() {
       transformIndexHtml: {
         order: "pre",
         handler(html, context) {
-          if (!is404(context)) return html;
-          return legacy404Assets.reduce(
+          if (!isViteOwned(context)) return html;
+          return legacyHtmlAssets.reduce(
             (result, asset) => result.replaceAll(asset, `${legacyAssetSentinel}${asset}`),
             html
           );
@@ -45,7 +48,7 @@ function preserveLegacy404Assets() {
       transformIndexHtml: {
         order: "post",
         handler(html, context) {
-          return is404(context) ? html.replaceAll(legacyAssetSentinel, "") : html;
+          return isViteOwned(context) ? html.replaceAll(legacyAssetSentinel, "") : html;
         }
       }
     }
@@ -55,7 +58,7 @@ function preserveLegacy404Assets() {
 export default defineConfig({
   base: "/",
   publicDir: false,
-  plugins: [...preserveLegacy404Assets(), vue()],
+  plugins: [...preserveLegacyHtmlAssets(), vue()],
   build: {
     outDir: "dist",
     emptyOutDir: true,
@@ -64,6 +67,7 @@ export default defineConfig({
       preserveEntrySignatures: "strict",
       input: {
         "404": resolve(root, "404.html"),
+        legal: resolve(root, "legal.html"),
         "vue-foundation": resolve(root, "src/entries/vue-foundation.js")
       },
       output: {

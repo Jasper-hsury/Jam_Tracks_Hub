@@ -7,6 +7,7 @@ const root = path.resolve(__dirname, "..");
 const read = relativePath => fs.readFileSync(path.join(root, relativePath), "utf8");
 const indexHtml = read("index.html");
 const legalHtml = read("legal.html");
+const legalView = read("src/views/LegalView.vue");
 const privacyHtml = read("privacy-policy.html");
 const workspaceHtml = read("song-workspace.html");
 const i18nJs = read("scripts/i18n.js");
@@ -43,9 +44,9 @@ test("homepage animation retains its reduced-motion fallback", () => {
 
 test("Legal uses the established display and body font roles without artistic tagline styling", () => {
     assert.match(legalHtml, /family=Noto\+Sans\+TC:wght@400;500;600;700&family=Noto\+Serif\+TC:wght@700/);
-    assert.match(legalHtml, /class="tracks-page legal-page"/);
-    assert.match(legalHtml, /class="legal-page-metadata"/);
-    assert.doesNotMatch(legalHtml, /class="hero-tagline"[^>]*data-i18n="legal\.effectiveDate"/);
+    assert.match(legalView, /class="tracks-page legal-page"/);
+    assert.match(legalView, /class="legal-page-metadata"/);
+    assert.doesNotMatch(legalView, /class="hero-tagline"/);
     assert.match(pagesCss, /\.legal-page-title\s*\{[^}]*font-family:\s*"Noto Serif TC", serif/s);
     assert.match(pagesCss, /\.legal-page-metadata\s*\{[^}]*font-family:\s*"Noto Sans TC", sans-serif[^}]*font-size:\s*14px[^}]*font-weight:\s*500[^}]*line-height:\s*1\.6/s);
     assert.match(pagesCss, /\.legal-policy-panel \.result-section h2\s*\{[^}]*font-family:\s*"Noto Sans TC", sans-serif[^}]*font-size:\s*24px[^}]*font-weight:\s*700[^}]*line-height:\s*1\.25/s);
