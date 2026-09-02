@@ -4,7 +4,7 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 
 const root = fileURLToPath(new URL(".", import.meta.url));
-const viteOwnedHtml = new Set(["/404.html", "/legal.html", "/privacy-policy.html"]);
+const viteOwnedHtml = new Set(["/404.html", "/legal.html", "/privacy-policy.html", "/service-waking.html"]);
 const legacyHtmlAssets = [
   "assets/images/icon.png",
   "scripts/theme-init.js?v=20260725-friendly-insect-switch",
@@ -18,6 +18,7 @@ const legacyHtmlAssets = [
   "styles/themes.css?v=20260804-feedback-consistency",
   "scripts/site.js?v=20260829-smart-navbar-v2",
   "scripts/site.js?v=20260902-404-route-root",
+  "scripts/site-config.js?v=20260729-youtube-key-api",
   "scripts/i18n.js?v=20260827-legal-footer",
   "scripts/i18n.js?v=20260902-404-route-root",
   "assets/vendor/gsap/gsap.min.js",
@@ -82,6 +83,7 @@ export default defineConfig({
         "404": resolve(root, "404.html"),
         legal: resolve(root, "legal.html"),
         privacy: resolve(root, "privacy-policy.html"),
+        "service-waking": resolve(root, "service-waking.html"),
         "vue-foundation": resolve(root, "src/entries/vue-foundation.js")
       },
       output: {

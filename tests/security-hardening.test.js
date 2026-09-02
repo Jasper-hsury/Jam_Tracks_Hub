@@ -259,7 +259,8 @@ test("static build tracks CSP, browser restrictions, and bounded cache policy", 
     assert.match(headers, /\/assets\/\*[\s\S]*max-age=86400, must-revalidate/);
     assert.doesNotMatch(headers, /immutable|Strict-Transport-Security/);
     assert.doesNotMatch(waking, /<script>\s*[\s\S]+?<\/script>/);
-    assert.match(waking, /scripts\/service-waking\.js/);
+    assert.match(waking, /src\/entries\/service-waking\.js/);
+    assert.doesNotMatch(read("src/views/ServiceWakingView.vue"), /v-html|innerHTML|analytics|data-umami-event/i);
 });
 
 test("security hardening does not add Song Workspace transport or content telemetry", () => {
