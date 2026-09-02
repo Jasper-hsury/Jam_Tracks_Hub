@@ -39,6 +39,10 @@ function copyFile(relativePath) {
     return;
   }
   const target = path.join(dist, relativePath);
+  if (relativePath.endsWith(".html") && !relativePath.startsWith("slides/") && fs.existsSync(target)) {
+    console.log(`Preserved Vite-owned HTML entry: ${relativePath}`);
+    return;
+  }
   fs.mkdirSync(path.dirname(target), { recursive: true });
   if (relativePath.startsWith("slides/") && relativePath.endsWith(".html")) {
     const html = fs.readFileSync(source, "utf8").replace(
@@ -67,8 +71,9 @@ function copyDirectory(relativePath) {
   }
 }
 
-fs.rmSync(dist, { recursive: true, force: true });
-fs.mkdirSync(dist, { recursive: true });
+if (!fs.existsSync(dist)) {
+  throw new Error("Missing dist/. Run the Vite build before preparing Cloudflare assets.");
+}
 
 rootFiles.forEach(copyFile);
 directories.forEach(copyDirectory);
