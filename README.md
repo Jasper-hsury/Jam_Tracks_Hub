@@ -25,6 +25,8 @@
 
 Jam Tracks Hub combines original practice tracks with practical tools for understanding harmony, mapping guitar shapes, finding keys, and exporting custom chord progression diagrams. The goal is simple: less menu hunting, more focused practice and songwriting.
 
+The repository includes a [Vue/Vite migration foundation](docs/VUE_MIGRATION.md). Current production pages still use the established HTML, CSS, and JavaScript implementation; Vue is not mounted into a public page yet.
+
 <p align="center">
   <img src="assets/readme/tool-overview.svg" alt="Jam Tracks Hub tool overview" width="100%" />
 </p>
@@ -142,9 +144,11 @@ Jasper-music-main/
     vendor/
   slides/
   downloads/
+  src/
   api-server/
   docs/
   tools/
+  vite.config.mjs
   .github/workflows/
 ```
 
@@ -165,6 +169,12 @@ Key files:
 | `data/tracks.json` | Backing track data source. |
 
 ## Local Development
+
+Use Node 22 as specified by `.nvmrc`, then install the locked dependencies:
+
+```bash
+npm ci
+```
 
 Static pages can be opened directly. The Key Finder needs the FastAPI backend.
 
@@ -200,9 +210,10 @@ Run the unit, JavaScript, and build checks before committing:
 npm test
 npm run check
 npm run build:cloudflare
+npm run verify:cloudflare
 ```
 
-`npm run build:cloudflare` prepares a static `dist/` folder and skips oversized slide PDFs that are too large for Cloudflare Workers.
+`npm run build:cloudflare` compiles the non-visible Vue foundation, preserves the current legacy pages and static paths in `dist/`, skips oversized slide PDFs, and verifies output parity for Cloudflare Workers.
 
 ## Key Finder API
 
