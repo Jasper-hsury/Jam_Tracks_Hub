@@ -9,6 +9,7 @@ const workspaceHtml = read("song-workspace.html");
 const workspaceJs = read("scripts/song-workspace.js");
 const storageJs = read("scripts/song-workspace-storage.js");
 const privacyHtml = read("privacy-policy.html");
+const privacyView = read("src/views/PrivacyView.vue");
 const en = JSON.parse(read("locales/en/common.json"));
 const zh = JSON.parse(read("locales/zh-TW/common.json"));
 
@@ -76,10 +77,10 @@ test("English and zh-TW copy covers storage, upload, rights, clearing, and expor
 });
 
 test("extends the existing privacy page with bounded user-content policy wording", () => {
-    assert.match(privacyHtml, /id="song-workspace-local-storage"/);
-    assert.match(privacyHtml, /id="user-content"/);
+    assert.match(privacyView, /id="song-workspace-local-storage"/);
+    assert.match(privacyView, /id="user-content"/);
     ["18", "19", "20", "21", "22", "23", "24", "25"].forEach(key => {
-        assert.match(privacyHtml, new RegExp(`privacy\\.body\\.${key}`));
+        assert.match(privacyView, new RegExp(`privacy\\.body\\["${key}"\\]`));
         assert.equal(typeof en.privacy.body[key], "string");
         assert.equal(typeof zh.privacy.body[key], "string");
     });

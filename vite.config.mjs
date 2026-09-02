@@ -4,7 +4,7 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 
 const root = fileURLToPath(new URL(".", import.meta.url));
-const viteOwnedHtml = new Set(["/404.html", "/legal.html"]);
+const viteOwnedHtml = new Set(["/404.html", "/legal.html", "/privacy-policy.html"]);
 const legacyHtmlAssets = [
   "assets/images/icon.png",
   "scripts/theme-init.js?v=20260725-friendly-insect-switch",
@@ -13,12 +13,14 @@ const legacyHtmlAssets = [
   "styles/components.css?v=20260827-legal-footer",
   "styles/pages.css?v=20260804-feedback-consistency",
   "styles/pages.css?v=20260830-legal-static-panel",
+  "styles/pages.css?v=20260830-policy-static-panels",
   "styles/themes.css?v=20260804-feedback-consistency",
   "scripts/site.js?v=20260829-smart-navbar-v2",
   "scripts/i18n.js?v=20260827-legal-footer",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20260718-trainer-dropdown-hover"
+  "scripts/site-animations.js?v=20260718-trainer-dropdown-hover",
+  "scripts/site-animations.js?v=20260830-privacy-static-policy"
 ];
 const legacyAssetSentinel = "https://vite-preserved-legacy.invalid/";
 
@@ -68,6 +70,7 @@ export default defineConfig({
       input: {
         "404": resolve(root, "404.html"),
         legal: resolve(root, "legal.html"),
+        privacy: resolve(root, "privacy-policy.html"),
         "vue-foundation": resolve(root, "src/entries/vue-foundation.js")
       },
       output: {

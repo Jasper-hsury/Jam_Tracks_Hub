@@ -12,10 +12,11 @@ test("makes Legal the second production Vue-owned MPA entry", () => {
   const entry = read("src/entries/legal.js");
 
   assert.match(config, /legal:\s*resolve\(root,\s*"legal\.html"\)/);
-  assert.match(config, /viteOwnedHtml = new Set\(\["\/404\.html", "\/legal\.html"\]\)/);
+  assert.match(config, /viteOwnedHtml = new Set\(\["\/404\.html", "\/legal\.html", "\/privacy-policy\.html"\]\)/);
   assert.match(html, /<div id="vue-legal-root"><\/div>/);
   assert.match(html, /<script type="module" src="\/src\/entries\/legal\.js"><\/script>/);
   assert.match(entry, /createApp\(LegalView\)\.mount\(mountTarget\)/);
+  assert.match(entry, /restoreInitialFragment\(\)/);
 });
 
 test("preserves Legal metadata, analytics, theme, locale, and shared shell", () => {
@@ -57,7 +58,7 @@ test("keeps the migration bounded and version-neutral", () => {
 
   assert.equal(packageJson.version, "2.0.2");
   assert.equal(packageJson.dependencies.vue, "3.5.42");
-  assert.match(verifier, /const viteOwnedRootHtml = new Set\(\["404\.html", "legal\.html"\]\)/);
+  assert.match(verifier, /const viteOwnedRootHtml = new Set\(\["404\.html", "legal\.html", "privacy-policy\.html"\]\)/);
   assert.match(verifier, /Legal canonical metadata differs/);
   assert.match(verifier, /compiled Vue Legal mount marker is missing/);
 });

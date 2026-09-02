@@ -46,124 +46,7 @@
         </ul>
     </nav>
 
-    <main class="tracks-page privacy-page" id="main-content">
-        <h1 class="privacy-page-title" data-i18n="privacy.title">Jam Tracks Hub Privacy &amp; User Content</h1>
-        <p class="privacy-page-metadata" data-i18n="privacy.effectiveDate">Effective date: August 27, 2026</p>
-
-        <section class="key-finder-panel privacy-policy-panel">
-            <div class="tool-section-heading">
-                <h2 class="section-title" data-i18n="privacy.body.01">What the extension does</h2>
-                <p data-i18n="privacy.body.02">
-                    Jam Tracks Hub Song Key Finder estimates the musical key of an audio file or a
-                    YouTube video selected by the user.
-                </p>
-            </div>
-
-            <div class="result-section">
-                <h2 data-i18n="privacy.body.03">Data processed</h2>
-                <p data-i18n="privacy.body.04">
-                    When you choose an audio file, the extension sends that file to
-                    <code>https://jamtrackshub.com</code> for musical-key analysis.
-                    When you submit a YouTube link, the extension sends that URL to the same
-                    service so its audio can be retrieved and analyzed.
-                </p>
-                <p data-i18n="privacy.body.05">
-                    The extension may read the URL of the currently active browser tab only
-                    when you open the extension, so it can prefill the form when that tab is
-                    a YouTube video.
-                </p>
-            </div>
-
-            <div class="result-section">
-                <h2 data-i18n="privacy.body.06">Storage and retention</h2>
-                <p data-i18n="privacy.body.07">
-                    Uploaded and downloaded audio is stored temporarily while the analysis
-                    job runs and is deleted when processing finishes. The service may retain
-                    the submitted YouTube URL and analysis result in operational analysis
-                    history for reliability and troubleshooting.
-                </p>
-                <p data-i18n="privacy.body.08">
-                    Recent results and interface preferences are stored locally in your
-                    browser. You can clear recent results from the extension.
-                </p>
-                <p data-i18n="privacy.body.09">
-                    If you join the email list, your email address is stored so Jam Tracks
-                    Hub can send updates about new backing tracks and related site news.
-                    You may request removal by contacting the site owner.
-                </p>
-            </div>
-
-            <div class="result-section">
-                <h2 data-i18n="privacy.body.10">How data is used</h2>
-                <p data-i18n="privacy.body.11">
-                    Data is used only to provide musical-key analysis, maintain service
-                    reliability, send requested email updates, and troubleshoot failures.
-                    It is not sold, used for advertising, or used to determine
-                    creditworthiness.
-                </p>
-            </div>
-
-            <div class="result-section">
-                <h2 data-i18n="privacy.body.12">Sharing and security</h2>
-                <p data-i18n="privacy.body.13">
-                    Data is processed by the hosting and infrastructure providers required
-                    to operate the analysis service. Reasonable technical measures are used
-                    to protect data in transit and during temporary processing.
-                </p>
-            </div>
-
-            <div class="result-section">
-                <h2 data-i18n="privacy.body.14">Your choices</h2>
-                <p data-i18n="privacy.body.15">
-                    You may use file upload or YouTube analysis only when you choose to do
-                    so. You can clear locally stored analysis history at any time or
-                    uninstall the extension to remove its local data.
-                </p>
-            </div>
-
-            <div class="result-section" id="song-workspace-local-storage">
-                <h2 data-i18n="privacy.body.18">Song Workspace and local storage</h2>
-                <p data-i18n="privacy.body.19">
-                    Song Workspace processes song titles, lyrics, chords, ChordPro text, and
-                    Jam Tracks Hub Song Documents locally in your browser. This song content
-                    is not uploaded to Jam Tracks Hub.
-                </p>
-                <p data-i18n="privacy.body.20">
-                    Song Workspace does not provide cloud song storage or browser-to-browser
-                    synchronization. Clearing browser or site data may remove locally stored
-                    songs, so use Backup All or export files when you need a portable copy.
-                </p>
-                <p data-i18n="privacy.body.21">
-                    Exported files may contain lyrics or other content you entered. Use or
-                    share them only where you have the necessary rights or legal permission.
-                </p>
-            </div>
-
-            <div class="result-section" id="user-content">
-                <h2 data-i18n="privacy.body.22">User-provided content and copyright</h2>
-                <p data-i18n="privacy.body.23">
-                    Jam Tracks Hub provides tools for users to work with content they provide.
-                    Song Workspace is not intended to create a Jam Tracks Hub-hosted lyrics library.
-                </p>
-                <p data-i18n="privacy.body.24">
-                    Users are responsible for ensuring they have the rights or legal permission
-                    necessary for content they import, use, export, or share.
-                </p>
-                <p data-i18n="privacy.body.25">
-                    Whether a particular use is permitted depends on the content and applicable
-                    law; local processing alone does not make a use lawful.
-                </p>
-            </div>
-
-            <div class="result-section">
-                <h2 data-i18n="privacy.body.16">Contact</h2>
-                <p data-i18n="privacy.body.17">
-                    For privacy questions, contact the developer through the support contact
-                    shown on the Chrome Web Store listing.
-                </p>
-            </div>
-        </section>
-    </main>
+    <div id="vue-privacy-root"></div>
 
     <footer class="footer">
         <p>&copy; 2026 Jam Tracks Hub. All rights reserved.</p>
@@ -173,5 +56,6 @@
     <script src="assets/vendor/gsap/gsap.min.js"></script>
     <script src="assets/vendor/gsap/ScrollTrigger.min.js"></script>
     <script src="scripts/site-animations.js?v=20260830-privacy-static-policy"></script>
+    <script type="module" src="/src/entries/privacy.js"></script>
 </body>
 </html>

@@ -6,7 +6,7 @@ const dist = path.join(root, "dist");
 const maxWorkerAssetBytes = 24 * 1024 * 1024;
 const renderAssetBaseUrl = "https://api.jamtrackshub.com";
 const copiedDirectories = ["assets", "data", "downloads", "locales", "scripts", "slides", "styles"];
-const viteOwnedRootHtml = new Set(["404.html", "legal.html"]);
+const viteOwnedRootHtml = new Set(["404.html", "legal.html", "privacy-policy.html"]);
 
 function fail(message) {
   throw new Error(`Cloudflare build verification failed: ${message}`);
@@ -104,6 +104,33 @@ if (/src\/entries\/legal\.js/.test(migratedLegal)) fail("Legal source entry leak
 });
 if (/assets\/vue\/legal-[^"]+\.css/.test(migratedLegal)) fail("Legal shared CSS was incorrectly rebundled");
 
+const migratedPrivacy = fs.readFileSync(path.join(dist, "privacy-policy.html"), "utf8");
+if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/privacy-policy\.html">/.test(migratedPrivacy)) {
+  fail("Privacy canonical metadata differs");
+}
+if (!/<div id="vue-privacy-root"><\/div>/.test(migratedPrivacy)) fail("Privacy Vue mount target is missing");
+if (!/<script defer src="https:\/\/cloud\.umami\.is\/script\.js" data-website-id="[^"]+"><\/script>/.test(migratedPrivacy)) {
+  fail("Privacy Umami loader differs");
+}
+if (!/<script type="module" crossorigin src="\/assets\/vue\/privacy-[^"]+\.js"><\/script>/.test(migratedPrivacy)) {
+  fail("Privacy compiled Vue entry is missing");
+}
+if (/src\/entries\/privacy\.js/.test(migratedPrivacy)) fail("Privacy source entry leaked into production HTML");
+[
+  "styles/base.css?v=20260829-smart-navbar-v2",
+  "styles/components.css?v=20260827-legal-footer",
+  "styles/pages.css?v=20260830-policy-static-panels",
+  "styles/themes.css?v=20260804-feedback-consistency",
+  "scripts/site.js?v=20260829-smart-navbar-v2",
+  "scripts/i18n.js?v=20260827-legal-footer",
+  "assets/vendor/gsap/gsap.min.js",
+  "assets/vendor/gsap/ScrollTrigger.min.js",
+  "scripts/site-animations.js?v=20260830-privacy-static-policy"
+].forEach(function(asset) {
+  if (!migratedPrivacy.includes(asset)) fail(`Privacy legacy asset path differs: ${asset}`);
+});
+if (/assets\/vue\/privacy-[^"]+\.css/.test(migratedPrivacy)) fail("Privacy shared CSS was incorrectly rebundled");
+
 const sourceHeaders = path.join(root, "_headers");
 const distHeaders = path.join(dist, "_headers");
 if (!fs.existsSync(distHeaders)) fail("missing _headers");
@@ -172,6 +199,12 @@ if (!fs.readFileSync(migratedLegalBundle, "utf8").includes("vue-legal-root")) {
   fail("compiled Vue Legal mount marker is missing");
 }
 
+const migratedPrivacyBundle = vueJavaScript.find(filePath => path.basename(filePath).startsWith("privacy-"));
+if (!migratedPrivacyBundle) fail("missing compiled Vue Privacy entry");
+if (!fs.readFileSync(migratedPrivacyBundle, "utf8").includes("vue-privacy-root")) {
+  fail("compiled Vue Privacy mount marker is missing");
+}
+
 rootHtml.forEach(function(relativePath) {
   const html = fs.readFileSync(path.join(dist, relativePath), "utf8");
   if (/vue-foundation|src\/entries\/vue-foundation/i.test(html)) {
@@ -182,6 +215,9 @@ rootHtml.forEach(function(relativePath) {
   }
   if (relativePath !== "legal.html" && /assets\/vue\/legal-|src\/entries\/legal\.js/i.test(html)) {
     fail(`unmigrated production HTML references the Vue Legal entry: ${relativePath}`);
+  }
+  if (relativePath !== "privacy-policy.html" && /assets\/vue\/privacy-|src\/entries\/privacy\.js/i.test(html)) {
+    fail(`unmigrated production HTML references the Vue Privacy entry: ${relativePath}`);
   }
 });
 
