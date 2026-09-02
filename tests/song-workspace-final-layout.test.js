@@ -14,6 +14,7 @@ const i18nJs = read("scripts/i18n.js");
 const i18nInit = read("scripts/i18n-init.js");
 const componentsCss = read("styles/components.css");
 const legalHtml = read("legal.html");
+const legalView = read("src/views/LegalView.vue");
 const buildScript = read("tools/scripts/build-cloudflare.js");
 const en = JSON.parse(read("locales/en/common.json"));
 const zh = JSON.parse(read("locales/zh-TW/common.json"));
@@ -125,11 +126,11 @@ test("shared localized footer access points to a bookmarkable legal page", () =>
 
 test("legal page covers terms, local storage, copyright, exports, privacy, and bounded limitations", () => {
     ["terms", "song-workspace", "copyright", "exports", "privacy", "limitations"].forEach(anchor => {
-        assert.match(legalHtml, new RegExp(`id="${anchor}"`));
+        assert.match(legalView, new RegExp(`id="${anchor}"`));
     });
-    assert.match(legalHtml, /href="privacy-policy\.html"/);
+    assert.match(legalView, /href="privacy-policy\.html"/);
     assert.match(legalHtml, /data-i18n-title="titles\.legal"/);
-    assert.doesNotMatch(legalHtml, /class="skip-link"/);
+    assert.doesNotMatch(legalView, /class="skip-link"/);
     [en.legal, zh.legal].forEach(locale => {
         [
             "termsTitle", "workspaceTitle", "storageCopy", "copyrightTitle", "lawCopy",

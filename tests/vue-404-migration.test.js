@@ -12,7 +12,7 @@ test("makes 404.html the first production Vue-owned MPA input", () => {
 
   assert.match(config, /"404":\s*resolve\(root,\s*"404\.html"\)/);
   assert.match(config, /"vue-foundation":\s*resolve\(root,\s*"src\/entries\/vue-foundation\.js"\)/);
-  assert.match(config, /preserveLegacy404Assets/);
+  assert.match(config, /preserveLegacyHtmlAssets/);
   assert.match(config, /vite-preserved-legacy\.invalid/);
   assert.match(html, /<div id="vue-404-root"><\/div>/);
   assert.match(html, /<script type="module" src="\/src\/entries\/404\.js"><\/script>/);
@@ -65,9 +65,9 @@ test("keeps Vue and legacy i18n DOM ownership separate", () => {
   });
 });
 
-test("keeps every other production HTML entry legacy-owned", () => {
+test("keeps every production HTML entry outside the declared Vue set legacy-owned", () => {
   const htmlFiles = fs.readdirSync(root)
-    .filter(fileName => fileName.endsWith(".html") && fileName !== "404.html");
+    .filter(fileName => fileName.endsWith(".html") && !["404.html", "legal.html", "privacy-policy.html"].includes(fileName));
 
   assert.ok(htmlFiles.length > 0);
   htmlFiles.forEach(fileName => {
@@ -76,7 +76,7 @@ test("keeps every other production HTML entry legacy-owned", () => {
   });
 
   const verifier = read("tools/scripts/verify-cloudflare-build.js");
-  assert.match(verifier, /const viteOwnedRootHtml = new Set\(\["404\.html"\]\)/);
+  assert.match(verifier, /const viteOwnedRootHtml = new Set\(\["404\.html", "legal\.html", "privacy-policy\.html"\]\)/);
   assert.match(verifier, /if \(viteOwnedRootHtml\.has\(relativePath\)\) return;/);
   assert.match(verifier, /root HTML is not byte-identical/);
   assert.match(verifier, /track slide HTML inventory differs/);

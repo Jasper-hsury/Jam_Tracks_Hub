@@ -68,6 +68,14 @@ The 404 view reads the existing English and Traditional Chinese locale JSON thro
 
 The Cloudflare verifier treats only `404.html` as Vite-owned. Every other root HTML entry must remain byte-identical to its legacy source, and all static assets and track slide pages retain their existing parity checks. No shared legacy system is authorized for removal in this phase.
 
+## Phase 2B: Legal and Privacy Pages
+
+`legal.html` and `privacy-policy.html` are the second and third production HTML entries owned by Vite and Vue. Their page-specific `<main>` content is rendered by `LegalView.vue` and `PrivacyView.vue`; the established metadata, navigation, footer, early theme/language bootstrap, Umami loader, shared styles, and legacy animation assets remain in each HTML shell.
+
+Both views use the existing English and Traditional Chinese locale JSON through the same bounded `jasper:language-change` adapter as the 404 page. Vue-owned policy content contains no `data-i18n` attributes, so the legacy translator and Vue retain separate DOM ownership. The Cloudflare verifier now treats exactly `404.html`, `legal.html`, and `privacy-policy.html` as Vite-owned and continues to require every other root HTML entry to remain byte-identical.
+
+Legal and Privacy remain independent views because their semantic structures and content ordering differ; introducing a shared policy component would add indirection without removing a meaningful repeated contract. No legacy shared system is removed in Phase 2B.
+
 ## Versioning
 
 `package.json.version` is initialized to the current public release, `2.0.2`, as the machine-readable baseline. Every future feature or fix must run a semantic Versioning Gate before commit. Git tags and GitHub Releases always require separate user authorization.
