@@ -60,10 +60,18 @@ A page is not migrated merely because Vue exists in the repository. Each page ne
 
 Legacy code may be removed only after the Vue replacement passes those gates and has zero legacy imports, DOM dependencies, CSS dependencies, and runtime callers.
 
+## Phase 2A: 404 Page
+
+`404.html` is the first production HTML entry owned by Vite and Vue. Its page-specific `<main>` is rendered by `src/views/NotFoundView.vue`, while the existing early theme and language bootstrap, navigation, footer, shared styles, Umami loader, metadata, and shared site scripts remain in place.
+
+The 404 view reads the existing English and Traditional Chinese locale JSON through a bounded adapter that follows the site's `jasper:language-change` event. Vue-owned content does not use `data-i18n`, so the legacy translator and Vue never mutate the same page-specific nodes.
+
+The Cloudflare verifier treats only `404.html` as Vite-owned. Every other root HTML entry must remain byte-identical to its legacy source, and all static assets and track slide pages retain their existing parity checks. No shared legacy system is authorized for removal in this phase.
+
 ## Versioning
 
 `package.json.version` is initialized to the current public release, `2.0.2`, as the machine-readable baseline. Every future feature or fix must run a semantic Versioning Gate before commit. Git tags and GitHub Releases always require separate user authorization.
 
 ## Next Phase
 
-The next phase may migrate bounded low-risk support pages one at a time. It must not start automatically and must preserve the strangler build so legacy and Vue-owned entries can coexist.
+Any later page migration requires separate authorization and the same page-specific parity gates. It must not start automatically and must preserve the strangler build so legacy and Vue-owned entries can coexist.
