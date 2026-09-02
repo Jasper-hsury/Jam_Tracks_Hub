@@ -6,7 +6,7 @@ const dist = path.join(root, "dist");
 const maxWorkerAssetBytes = 24 * 1024 * 1024;
 const renderAssetBaseUrl = "https://api.jamtrackshub.com";
 const copiedDirectories = ["assets", "data", "downloads", "locales", "scripts", "slides", "styles"];
-const viteOwnedRootHtml = new Set(["404.html", "legal.html", "privacy-policy.html", "service-waking.html"]);
+const viteOwnedRootHtml = new Set(["404.html", "legal.html", "privacy-policy.html", "service-waking.html", "feedback.html"]);
 const workerConfig = JSON.parse(fs.readFileSync(path.join(root, "wrangler.jsonc"), "utf8"));
 
 function fail(message) {
@@ -187,6 +187,41 @@ if (/assets\/vue\/service-waking-[^"]+\.css/.test(migratedServiceWaking)) {
   fail("Service Waking shared CSS was incorrectly rebundled");
 }
 
+const migratedFeedback = fs.readFileSync(path.join(dist, "feedback.html"), "utf8");
+if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/feedback\.html">/.test(migratedFeedback)) {
+  fail("Feedback canonical metadata differs");
+}
+if (!/<div id="vue-feedback-root"><\/div>/.test(migratedFeedback)) {
+  fail("Feedback Vue mount target is missing");
+}
+if (!/<script defer src="https:\/\/cloud\.umami\.is\/script\.js" data-website-id="[^"]+"><\/script>/.test(migratedFeedback)) {
+  fail("Feedback Umami loader differs");
+}
+if (!/<script type="module" crossorigin src="\/assets\/vue\/feedback-[^"]+\.js"><\/script>/.test(migratedFeedback)) {
+  fail("Feedback compiled Vue entry is missing");
+}
+if (/src\/entries\/feedback\.js/.test(migratedFeedback)) {
+  fail("Feedback source entry leaked into production HTML");
+}
+[
+  "scripts/theme-init.js?v=20260725-friendly-insect-switch",
+  "scripts/i18n-init.js?v=20260804-no-language-flash",
+  "styles/base.css?v=20260829-smart-navbar-v2",
+  "styles/components.css?v=20260827-legal-footer",
+  "styles/pages.css?v=20260804-feedback-consistency",
+  "styles/themes.css?v=20260804-feedback-consistency",
+  "scripts/site.js?v=20260829-smart-navbar-v2",
+  "scripts/i18n.js?v=20260827-legal-footer",
+  "assets/vendor/gsap/gsap.min.js",
+  "assets/vendor/gsap/ScrollTrigger.min.js",
+  "scripts/site-animations.js?v=20260718-trainer-dropdown-hover"
+].forEach(function(asset) {
+  if (!migratedFeedback.includes(asset)) fail(`Feedback legacy asset path differs: ${asset}`);
+});
+if (/assets\/vue\/feedback-[^"]+\.css/.test(migratedFeedback)) {
+  fail("Feedback shared CSS was incorrectly rebundled");
+}
+
 const sourceHeaders = path.join(root, "_headers");
 const distHeaders = path.join(dist, "_headers");
 if (!fs.existsSync(distHeaders)) fail("missing _headers");
@@ -267,6 +302,12 @@ if (!fs.readFileSync(migratedServiceWakingBundle, "utf8").includes("vue-service-
   fail("compiled Vue Service Waking mount marker is missing");
 }
 
+const migratedFeedbackBundle = vueJavaScript.find(filePath => path.basename(filePath).startsWith("feedback-"));
+if (!migratedFeedbackBundle) fail("missing compiled Vue Feedback entry");
+if (!fs.readFileSync(migratedFeedbackBundle, "utf8").includes("vue-feedback-root")) {
+  fail("compiled Vue Feedback mount marker is missing");
+}
+
 rootHtml.forEach(function(relativePath) {
   const html = fs.readFileSync(path.join(dist, relativePath), "utf8");
   if (/vue-foundation|src\/entries\/vue-foundation/i.test(html)) {
@@ -283,6 +324,9 @@ rootHtml.forEach(function(relativePath) {
   }
   if (relativePath !== "service-waking.html" && /assets\/vue\/service-waking-|src\/entries\/service-waking\.js/i.test(html)) {
     fail(`unmigrated production HTML references the Vue Service Waking entry: ${relativePath}`);
+  }
+  if (relativePath !== "feedback.html" && /assets\/vue\/feedback-|src\/entries\/feedback\.js/i.test(html)) {
+    fail(`unmigrated production HTML references the Vue Feedback entry: ${relativePath}`);
   }
 });
 

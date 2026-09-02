@@ -4,7 +4,7 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 
 const root = fileURLToPath(new URL(".", import.meta.url));
-const viteOwnedHtml = new Set(["/404.html", "/legal.html", "/privacy-policy.html", "/service-waking.html"]);
+const viteOwnedHtml = new Set(["/404.html", "/legal.html", "/privacy-policy.html", "/service-waking.html", "/feedback.html"]);
 const legacyHtmlAssets = [
   "assets/images/icon.png",
   "scripts/theme-init.js?v=20260725-friendly-insect-switch",
@@ -84,6 +84,7 @@ export default defineConfig({
         legal: resolve(root, "legal.html"),
         privacy: resolve(root, "privacy-policy.html"),
         "service-waking": resolve(root, "service-waking.html"),
+        feedback: resolve(root, "feedback.html"),
         "vue-foundation": resolve(root, "src/entries/vue-foundation.js")
       },
       output: {

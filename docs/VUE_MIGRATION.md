@@ -86,6 +86,14 @@ Cloudflare Static Assets uses its native `404-page` fallback for unmatched route
 
 The 404 document's local resources and navigation links are root-relative so the same Vue 404 page remains functional when Cloudflare serves it for a nested unknown URL.
 
+## Phase 2C: Service Waking and Feedback
+
+`service-waking.html` and `feedback.html` are the fourth and fifth production HTML entries owned by Vite and Vue. Vue owns only each page's `<main>` content and page-specific state; navigation, footer, early theme/language bootstrap, Umami, shared styles, and shared animation scripts remain legacy-owned.
+
+Service Waking preserves the established API base resolution from `site-config.js`, the same `/api/health` request, timeout and polling limits, translated loading/failure states, and the successful return to `key-finder.html`. Feedback preserves the same-origin `POST /api/feedback` contract, field names and limits, honeypot, payload, loading lock, focus behavior, and translated success/error states. Its client API behavior is tested with controlled fetch implementations only: Phase 2C performs no production feedback submission, D1 mutation, or email send.
+
+The Cloudflare verifier now treats exactly five visible pages as Vue-owned: 404, Legal, Privacy, Service Waking, and Feedback. All other root HTML remains byte-identical in the transitional build. Worker routing, D1, the Key Finder backend, and Song Workspace remain unchanged.
+
 ## Next Phase
 
 Any later page migration requires separate authorization and the same page-specific parity gates. It must not start automatically and must preserve the strangler build so legacy and Vue-owned entries can coexist.
