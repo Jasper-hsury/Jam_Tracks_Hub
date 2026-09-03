@@ -10,7 +10,7 @@ test("pins the minimal private Vue and Vite foundation", () => {
   const packageJson = JSON.parse(read("package.json"));
 
   assert.equal(packageJson.name, "jam-tracks-hub");
-  assert.equal(packageJson.version, "2.0.3");
+  assert.equal(packageJson.version, "2.0.4");
   assert.equal(packageJson.private, true);
   assert.equal(packageJson.engines.node, ">=22.12.0");
   assert.deepEqual(packageJson.dependencies, { vue: "3.5.42" });

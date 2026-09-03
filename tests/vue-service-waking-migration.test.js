@@ -94,7 +94,7 @@ test("keeps Service Waking bounded and preserves remaining legacy output", () =>
   const packageJson = JSON.parse(read("package.json"));
   const verifier = read("tools/scripts/verify-cloudflare-build.js");
 
-  assert.equal(packageJson.version, "2.0.3");
+  assert.equal(packageJson.version, "2.0.4");
   assert.equal(packageJson.dependencies.vue, "3.5.42");
   assert.match(verifier, /const viteOwnedRootHtml = new Set\(\["index\.html", "404\.html", "legal\.html", "privacy-policy\.html", "service-waking\.html", "feedback\.html", "tracks\.html"\]\)/);
   assert.match(verifier, /Service Waking canonical metadata differs/);

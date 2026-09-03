@@ -78,7 +78,7 @@ Legal and Privacy remain independent views because their semantic structures and
 
 ## Versioning
 
-`package.json.version` is `2.0.3`. This patch version records the public routing fix that serves the existing Vue 404 document, with an HTTP 404 status and the requested URL preserved, for unmatched navigation routes. Git tags and GitHub Releases always require separate user authorization.
+`package.json.version` is `2.0.4`. This patch version records the backward-compatible public download fix that normalizes W2-W8 to the established static ZIP package model used by W10 and later. Git tags and GitHub Releases always require separate user authorization.
 
 ## Phase 2B Routing Hotfix
 
