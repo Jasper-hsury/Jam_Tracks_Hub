@@ -6,7 +6,7 @@ const dist = path.join(root, "dist");
 const maxWorkerAssetBytes = 24 * 1024 * 1024;
 const renderAssetBaseUrl = "https://api.jamtrackshub.com";
 const copiedDirectories = ["assets", "data", "downloads", "locales", "scripts", "slides", "styles"];
-const viteOwnedRootHtml = new Set(["index.html", "404.html", "legal.html", "privacy-policy.html", "service-waking.html", "feedback.html"]);
+const viteOwnedRootHtml = new Set(["index.html", "404.html", "legal.html", "privacy-policy.html", "service-waking.html", "feedback.html", "tracks.html"]);
 const workerConfig = JSON.parse(fs.readFileSync(path.join(root, "wrangler.jsonc"), "utf8"));
 
 function fail(message) {
@@ -246,13 +246,54 @@ if (/assets\/vue\/feedback-[^"]+\.css/.test(migratedFeedback)) {
   fail("Feedback shared CSS was incorrectly rebundled");
 }
 
+const migratedTracks = fs.readFileSync(path.join(dist, "tracks.html"), "utf8");
+if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/tracks\.html">/.test(migratedTracks)) {
+  fail("Tracks canonical metadata differs");
+}
+if (!/<meta name="description" content="Browse original weekly guitar backing tracks by key, mood, and release order, then download slide decks for focused practice\.">/.test(migratedTracks)) {
+  fail("Tracks description metadata differs");
+}
+if (!/<div id="vue-tracks-root"><\/div>/.test(migratedTracks)) {
+  fail("Tracks Vue mount target is missing");
+}
+if (!/<script defer src="https:\/\/cloud\.umami\.is\/script\.js" data-website-id="[^"]+"><\/script>/.test(migratedTracks)) {
+  fail("Tracks Umami loader differs");
+}
+if (!/<script type="module" crossorigin src="\/assets\/vue\/tracks-[^"]+\.js"><\/script>/.test(migratedTracks)) {
+  fail("Tracks compiled Vue entry is missing");
+}
+if (/src\/entries\/tracks\.js/.test(migratedTracks)) {
+  fail("Tracks source entry leaked into production HTML");
+}
+[
+  "scripts/theme-init.js?v=20260725-friendly-insect-switch",
+  "scripts/i18n-init.js?v=20260804-no-language-flash",
+  "styles/base.css?v=20260829-smart-navbar-v2",
+  "styles/components.css?v=20260827-legal-footer",
+  "styles/pages.css?v=20260804-feedback-consistency",
+  "styles/themes.css?v=20260804-feedback-consistency",
+  "assets/vendor/gsap/gsap.min.js",
+  "assets/vendor/gsap/Flip.min.js",
+  "assets/vendor/gsap/ScrollTrigger.min.js",
+  "scripts/site-animations.js?v=20260720-track-windmill-heartless"
+].forEach(function(asset) {
+  if (!migratedTracks.includes(asset)) fail(`Tracks legacy asset path differs: ${asset}`);
+});
+if (/assets\/vue\/tracks-[^"]+\.css/.test(migratedTracks)) {
+  fail("Tracks shared CSS was incorrectly rebundled");
+}
+if (/scripts\/(?:site|i18n|tracks)\.js/.test(migratedTracks)) {
+  fail("Tracks still loads a legacy page runtime");
+}
+
 [
   ["Homepage", migratedHome],
   ["404", migrated404],
   ["Legal", migratedLegal],
   ["Privacy", migratedPrivacy],
   ["Service Waking", migratedServiceWaking],
-  ["Feedback", migratedFeedback]
+  ["Feedback", migratedFeedback],
+  ["Tracks", migratedTracks]
 ].forEach(function([pageName, html]) {
   if (/<nav class="navbar"|<footer class="footer"|class="skip-link"/.test(html)) {
     fail(`${pageName} still contains legacy shell markup`);
@@ -354,6 +395,12 @@ if (!fs.readFileSync(migratedHomeBundle, "utf8").includes("vue-home-root")) {
   fail("compiled Vue Homepage mount marker is missing");
 }
 
+const migratedTracksBundle = vueJavaScript.find(filePath => path.basename(filePath).startsWith("tracks-"));
+if (!migratedTracksBundle) fail("missing compiled Vue Tracks entry");
+if (!fs.readFileSync(migratedTracksBundle, "utf8").includes("vue-tracks-root")) {
+  fail("compiled Vue Tracks mount marker is missing");
+}
+
 const sharedShellBundle = vueJavaScript.find(filePath => path.basename(filePath).startsWith("mountSitePage-"));
 if (!sharedShellBundle) fail("missing compiled shared Vue shell");
 const sharedShellSource = fs.readFileSync(sharedShellBundle, "utf8");
@@ -383,6 +430,9 @@ rootHtml.forEach(function(relativePath) {
   }
   if (relativePath !== "index.html" && /assets\/vue\/home-|src\/entries\/home\.js/i.test(html)) {
     fail(`unmigrated production HTML references the Vue Homepage entry: ${relativePath}`);
+  }
+  if (relativePath !== "tracks.html" && /assets\/vue\/tracks-|src\/entries\/tracks\.js/i.test(html)) {
+    fail(`unmigrated production HTML references the Vue Tracks entry: ${relativePath}`);
   }
 });
 

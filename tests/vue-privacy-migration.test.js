@@ -12,7 +12,7 @@ test("makes Privacy the third production Vue-owned MPA entry", () => {
   const entry = read("src/entries/privacy.js");
 
   assert.match(config, /privacy:\s*resolve\(root,\s*"privacy-policy\.html"\)/);
-  assert.match(config, /viteOwnedHtml = new Set\(\["\/", "\/index\.html", "\/404\.html", "\/legal\.html", "\/privacy-policy\.html", "\/service-waking\.html", "\/feedback\.html"\]\)/);
+  assert.match(config, /viteOwnedHtml = new Set\(\["\/", "\/index\.html", "\/404\.html", "\/legal\.html", "\/privacy-policy\.html", "\/service-waking\.html", "\/feedback\.html", "\/tracks", "\/tracks\.html"\]\)/);
   assert.match(html, /<div id="vue-privacy-root"><\/div>/);
   assert.match(html, /<script type="module" src="\/src\/entries\/privacy\.js"><\/script>/);
   assert.match(entry, /mountSitePage\(\{[\s\S]*mountId: "vue-privacy-root"[\s\S]*view: PrivacyView/);
@@ -73,7 +73,7 @@ test("keeps Privacy static and its migration bounded at the current patch versio
 
   assert.equal(packageJson.version, "2.0.3");
   assert.match(pagesCss, /\.privacy-policy-panel\s*\{[^}]*animation:\s*none/s);
-  assert.match(verifier, /const viteOwnedRootHtml = new Set\(\["index\.html", "404\.html", "legal\.html", "privacy-policy\.html", "service-waking\.html", "feedback\.html"\]\)/);
+  assert.match(verifier, /const viteOwnedRootHtml = new Set\(\["index\.html", "404\.html", "legal\.html", "privacy-policy\.html", "service-waking\.html", "feedback\.html", "tracks\.html"\]\)/);
   assert.match(verifier, /Privacy canonical metadata differs/);
   assert.match(verifier, /compiled Vue Privacy mount marker is missing/);
 });
