@@ -24,6 +24,7 @@ const sortMode = ref("newest");
 const filterOpen = ref(false);
 const loading = ref(true);
 const loadFailed = ref(false);
+const controls = ref(null);
 const grid = ref(null);
 let activeFlip = null;
 let updateGeneration = 0;
@@ -184,7 +185,7 @@ function setSortMode(oldestFirst) {
 }
 
 function closeFilterFromOutside(event) {
-  if (!event.composedPath().some(node => node?.id === "trackKeyPills")) filterOpen.value = false;
+  if (!event.composedPath().includes(controls.value)) filterOpen.value = false;
 }
 
 function closeFilterFromKeyboard(event) {
@@ -226,7 +227,7 @@ onBeforeUnmount(() => {
       </div>
     </div>
 
-    <section class="track-controls track-toolbar" :aria-label="messages.filtersLabel">
+    <section ref="controls" class="track-controls track-toolbar" :aria-label="messages.filtersLabel">
       <div class="track-toolbar-group">
         <span class="track-toolbar-label">{{ messages.filtersLabel }}</span>
         <label class="track-native-filter track-native-filter-hidden">

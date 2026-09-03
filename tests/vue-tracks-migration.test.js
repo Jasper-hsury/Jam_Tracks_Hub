@@ -127,6 +127,7 @@ test("keeps Vue-owned filters, card links, localization, and rapid-safe Flip lif
   assert.match(view, /prefers-reduced-motion: reduce/);
   assert.match(view, /duration: 0\.74/);
   assert.match(view, /window\.dispatchEvent\(new CustomEvent\("tracks:rendered"\)\)/);
+  assert.match(view, /event\.composedPath\(\)\.includes\(controls\.value\)/);
   assert.match(card, /window\.open\(props\.track\.youtubeUrl, "_blank", "noopener,noreferrer"\)/);
   assert.match(card, /:href="track\.downloadUrl"/);
   assert.match(card, /download/);
