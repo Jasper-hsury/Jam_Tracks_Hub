@@ -144,7 +144,7 @@ test("keeps migrated page views on Vue locale ownership without legacy DOM trans
 
 test("keeps the Phase 3B version and dependency boundary unchanged", () => {
   const packageJson = JSON.parse(read("package.json"));
-  assert.equal(packageJson.version, "2.0.3");
+  assert.equal(packageJson.version, "2.0.4");
   assert.deepEqual(packageJson.dependencies, { vue: "3.5.42" });
   ["vue-router", "pinia", "vue-i18n", "@vueuse/core"].forEach(name => {
     assert.equal(packageJson.dependencies[name], undefined);

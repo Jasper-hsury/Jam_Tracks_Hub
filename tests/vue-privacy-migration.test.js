@@ -71,7 +71,7 @@ test("keeps Privacy static and its migration bounded at the current patch versio
   const pagesCss = read("styles/pages.css");
   const verifier = read("tools/scripts/verify-cloudflare-build.js");
 
-  assert.equal(packageJson.version, "2.0.3");
+  assert.equal(packageJson.version, "2.0.4");
   assert.match(pagesCss, /\.privacy-policy-panel\s*\{[^}]*animation:\s*none/s);
   assert.match(verifier, /const viteOwnedRootHtml = new Set\(\["index\.html", "404\.html", "legal\.html", "privacy-policy\.html", "service-waking\.html", "feedback\.html", "tracks\.html"\]\)/);
   assert.match(verifier, /Privacy canonical metadata differs/);

@@ -7,6 +7,32 @@ const { pathToFileURL } = require("node:url");
 
 const root = path.resolve(__dirname, "..");
 const read = relativePath => fs.readFileSync(path.join(root, relativePath), "utf8");
+const sha256 = bytes => crypto.createHash("sha256").update(bytes).digest("hex");
+
+function zipEntries(bytes) {
+  const endSignature = 0x06054b50;
+  let endOffset = -1;
+  for (let offset = bytes.length - 22; offset >= Math.max(0, bytes.length - 65557); offset -= 1) {
+    if (bytes.readUInt32LE(offset) === endSignature) {
+      endOffset = offset;
+      break;
+    }
+  }
+  assert.notEqual(endOffset, -1, "ZIP end-of-central-directory record is missing");
+
+  const entryCount = bytes.readUInt16LE(endOffset + 10);
+  let offset = bytes.readUInt32LE(endOffset + 16);
+  const entries = [];
+  for (let index = 0; index < entryCount; index += 1) {
+    assert.equal(bytes.readUInt32LE(offset), 0x02014b50, "ZIP central-directory entry is malformed");
+    const nameLength = bytes.readUInt16LE(offset + 28);
+    const extraLength = bytes.readUInt16LE(offset + 30);
+    const commentLength = bytes.readUInt16LE(offset + 32);
+    entries.push(bytes.subarray(offset + 46, offset + 46 + nameLength).toString("utf8"));
+    offset += 46 + nameLength + extraLength + commentLength;
+  }
+  return entries;
+}
 
 async function tracksService() {
   return import(pathToFileURL(path.join(root, "src/services/tracksData.mjs")).href);
@@ -44,17 +70,66 @@ test("preserves Tracks SEO, analytics, CSS, and GSAP dependencies", () => {
   assert.doesNotMatch(html, /data-umami-event|unsafe-eval|unsafe-inline/);
 });
 
-test("keeps canonical track data byte-identical, complete, and free of W9", () => {
+test("keeps canonical track content metadata unchanged, complete, and free of W9", () => {
   const bytes = fs.readFileSync(path.join(root, "data/tracks.json"));
   const tracks = JSON.parse(bytes);
+  const contentMetadata = tracks.map(({ downloadUrl, ...track }) => track);
 
-  assert.equal(crypto.createHash("sha256").update(bytes).digest("hex"), "9084c5d939445c1352c652ea80f0eb1f94708fe6a4ca094585ac9a53d002cbc8");
+  assert.equal(sha256(bytes), "cf51c260c2e134b9d4ded56f2bc98a376a11fc9f225bfda70566803a8ca72e82");
+  assert.equal(sha256(JSON.stringify(contentMetadata)), "b175e8e89845af601520a96c340669f00bbec4529d425bafb692483c1d79b80f");
   assert.equal(tracks.length, 18);
   assert.deepEqual(tracks.map(track => track.id), [
     "W1", "W2", "W3", "W4", "W5", "W6", "W7", "W8", "W10",
     "W11", "W12", "W13", "W14", "W15", "W16", "W17", "W18", "W19"
   ]);
   assert.equal(tracks.some(track => track.id === "W9"), false);
+});
+
+test("normalizes W2 through W8 to the established static ZIP download architecture", () => {
+  const tracks = JSON.parse(read("data/tracks.json"));
+  const byId = Object.fromEntries(tracks.map(track => [track.id, track]));
+  const expectedPackages = {
+    W2: { pages: 24, bytes: 5730027, sha256: "b931be814d3234453d7da08cb3ca392d9252497412b3405e63c55fb88a199aae" },
+    W3: { pages: 25, bytes: 6201779, sha256: "95a46a6bdbc0a82d60a84d0da1d1e14eb13f837617e7bf128ba7624c8a78872c" },
+    W4: { pages: 25, bytes: 7203264, sha256: "ba3cd25eeef7677bb7b3c25bc936bf7b3ad99be94c78d0f5ade413506b184460" },
+    W5: { pages: 25, bytes: 4152871, sha256: "a13f64207a343ad218bb84c8f4841a8f9ca3c5835660e0e2139e9b2911d85837" },
+    W6: { pages: 21, bytes: 4469219, sha256: "5f3548907a2395cc694102714b65e2fc28a88f75144ac6712209b3db92fae87b" },
+    W7: { pages: 21, bytes: 4909744, sha256: "295b89431c342d81b1c2bd239b6e9088b4784bc866560b7a2446c1ac0b4ebce6" },
+    W8: { pages: 11, bytes: 4869279, sha256: "8252eff67966fcf8d4ebd6b1602fead2ff38506520199d22b11625048939771a" }
+  };
+  const maxWorkerAssetBytes = 24 * 1024 * 1024;
+
+  Object.entries(expectedPackages).forEach(([trackId, expected]) => {
+    const relativePath = `downloads/tracks/${trackId}.zip`;
+    const bytes = fs.readFileSync(path.join(root, relativePath));
+    const fileEntries = zipEntries(bytes).filter(entry => !entry.endsWith("/"));
+    const expectedEntries = Array.from({ length: expected.pages }, (_, index) => (
+      `${trackId}/${trackId}.${String(index + 1).padStart(3, "0")}.jpeg`
+    ));
+
+    assert.equal(byId[trackId].downloadUrl, relativePath);
+    assert.equal(bytes.length, expected.bytes);
+    assert.equal(sha256(bytes), expected.sha256);
+    assert.ok(bytes.length <= maxWorkerAssetBytes);
+    assert.deepEqual(fileEntries, expectedEntries);
+  });
+});
+
+test("keeps all 18 downloads valid with W1 direct PDF and W2+ static ZIP packages", () => {
+  const tracks = JSON.parse(read("data/tracks.json"));
+  const maxWorkerAssetBytes = 24 * 1024 * 1024;
+
+  assert.equal(tracks.length, 18);
+  tracks.forEach(track => {
+    const expectedPath = track.id === "W1"
+      ? "slides/W1_Lyrical_Backing_Track_in_C.pdf"
+      : `downloads/tracks/${track.id}.zip`;
+    const source = path.join(root, expectedPath);
+
+    assert.equal(track.downloadUrl, expectedPath);
+    assert.ok(fs.statSync(source).isFile());
+    assert.ok(fs.statSync(source).size <= maxWorkerAssetBytes);
+  });
 });
 
 test("preserves deterministic newest, oldest, single-group, multi-group, and empty results", async () => {
@@ -137,12 +212,12 @@ test("keeps Vue-owned filters, card links, localization, and rapid-safe Flip lif
   assert.doesNotMatch(view + card, /v-html|innerHTML|data-umami-event|window\.umami|analytics/i);
 });
 
-test("keeps Phase 3C bounded at version 2.0.3 and preserves non-Tracks runtimes", () => {
+test("records the download bug fix as version 2.0.4 and preserves non-Tracks runtimes", () => {
   const packageJson = JSON.parse(read("package.json"));
   const keyFinder = read("key-finder.html");
   const workspace = read("song-workspace.html");
 
-  assert.equal(packageJson.version, "2.0.3");
+  assert.equal(packageJson.version, "2.0.4");
   assert.deepEqual(packageJson.dependencies, { vue: "3.5.42" });
   assert.match(keyFinder, /scripts\/key-finder\.js/);
   assert.match(workspace, /scripts\/song-workspace\.js/);

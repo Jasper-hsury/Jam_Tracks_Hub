@@ -333,6 +333,32 @@ copiedDirectories.forEach(function(relativeDirectory) {
   });
 });
 
+const canonicalTracks = JSON.parse(fs.readFileSync(path.join(root, "data", "tracks.json"), "utf8"));
+const canonicalTrackIds = canonicalTracks.map(track => String(track.id || "").trim());
+if (canonicalTracks.length !== 18) fail(`expected 18 track downloads, found ${canonicalTracks.length}`);
+if (new Set(canonicalTrackIds).size !== canonicalTracks.length) fail("duplicate track download records found");
+if (canonicalTrackIds.includes("W9")) fail("invented W9 track download found");
+
+canonicalTracks.forEach(function(track) {
+  const trackId = String(track.id || "").trim();
+  const downloadPath = String(track.downloadUrl || "").trim();
+  const expectedPath = trackId === "W1"
+    ? "slides/W1_Lyrical_Backing_Track_in_C.pdf"
+    : `downloads/tracks/${trackId}.zip`;
+
+  if (downloadPath !== expectedPath) fail(`${trackId} download architecture differs: ${downloadPath}`);
+  if (downloadPath.includes("?") || downloadPath.includes("#") || path.posix.normalize(downloadPath) !== downloadPath) {
+    fail(`${trackId} download path is not a canonical static path: ${downloadPath}`);
+  }
+
+  const source = path.join(root, downloadPath);
+  const target = path.join(dist, downloadPath);
+  if (!fs.existsSync(source) || !fs.statSync(source).isFile()) fail(`${trackId} source download is missing: ${downloadPath}`);
+  if (fs.statSync(source).size > maxWorkerAssetBytes) fail(`${trackId} download exceeds the static asset policy: ${downloadPath}`);
+  if (!fs.existsSync(target)) fail(`${trackId} deployed download is missing: ${downloadPath}`);
+  if (!read(source).equals(read(target))) fail(`${trackId} deployed download differs: ${downloadPath}`);
+});
+
 const sourceSlides = listFiles(path.join(root, "slides"))
   .map(relativeFromRoot)
   .filter(relativePath => relativePath.endsWith(".html"))
