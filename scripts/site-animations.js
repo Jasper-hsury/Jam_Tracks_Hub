@@ -6,6 +6,10 @@
     const hasSplitText = Boolean(window.SplitText);
     const hasDrawSvg = Boolean(window.DrawSVGPlugin);
     const hasMotionPath = Boolean(window.MotionPathPlugin);
+    let homeHeroTimeline = null;
+    let homeHeroSplits = [];
+    let homeStepIntroTimeline = null;
+    let homeTextAnimationGeneration = 0;
 
     if (reduceMotion) {
         document.documentElement.classList.add("motion-reduced");
@@ -48,6 +52,121 @@
             console.warn("SplitText animation skipped:", error);
             return null;
         }
+    }
+
+    function nextAnimationFrame() {
+        return new Promise(resolve => window.requestAnimationFrame(resolve));
+    }
+
+    async function waitForHomeAnimationLayout() {
+        if (document.fonts?.ready) {
+            try {
+                await document.fonts.ready;
+            } catch (error) {
+                // Font loading failure must not hide or block Homepage content.
+            }
+        }
+        await nextAnimationFrame();
+        await nextAnimationFrame();
+    }
+
+    function disposeHomeTextAnimation() {
+        homeHeroTimeline?.kill?.();
+        homeHeroTimeline = null;
+        homeHeroSplits.forEach(split => split?.revert?.());
+        homeHeroSplits = [];
+        homeStepIntroTimeline?.scrollTrigger?.kill?.();
+        homeStepIntroTimeline?.kill?.();
+        homeStepIntroTimeline = null;
+
+        elements(".home-step-card").forEach(card => {
+            card._homeStepText?.split?.revert?.();
+            delete card._homeStepText;
+            delete card._homeStepTextReady;
+        });
+
+        if (hasGsap) {
+            gsap.set([
+                ".home-hero h1",
+                ".home-hero .signature-slogan",
+                ".home-hero h1 .home-split-char",
+                ".home-hero .signature-slogan .home-split-word"
+            ], { clearProps: "transform,opacity,filter" });
+        }
+    }
+
+    function animateHomeHeroText() {
+        const homeTitle = document.querySelector(".home-hero h1");
+        const homeSlogan = document.querySelector(".home-hero .signature-slogan");
+        if (!homeTitle || !homeSlogan || !hasGsap || !hasSplitText) {
+            return;
+        }
+
+        const titleSplit = createSplitText(homeTitle, {
+            type: "words,chars",
+            wordsClass: "home-split-word",
+            charsClass: "home-split-char"
+        });
+        const sloganSplit = createSplitText(homeSlogan, {
+            type: "words",
+            wordsClass: "home-split-word"
+        });
+        const titleChars = titleSplit?.chars || [];
+        const sloganWords = sloganSplit?.words || [];
+        homeHeroSplits = [titleSplit, sloganSplit].filter(Boolean);
+
+        if (!titleChars.length || !sloganWords.length) {
+            gsap.set([homeTitle, homeSlogan], { clearProps: "transform,opacity" });
+            return;
+        }
+
+        gsap.set([homeTitle, homeSlogan], { opacity: 1 });
+        homeHeroTimeline = gsap.timeline({ defaults: { ease: "power3.out" } })
+            .fromTo(titleChars, {
+                yPercent: 112,
+                opacity: 0,
+                rotateX: -24
+            }, {
+                yPercent: 0,
+                opacity: 1,
+                rotateX: 0,
+                duration: 0.72,
+                stagger: 0.026,
+                ease: "back.out(1.24)",
+                clearProps: "transform,opacity"
+            })
+            .fromTo(sloganWords, {
+                y: 16,
+                opacity: 0,
+                rotateX: -12
+            }, {
+                y: 0,
+                opacity: 1,
+                rotateX: 0,
+                duration: 0.48,
+                stagger: 0.075,
+                ease: "power3.out",
+                clearProps: "transform,opacity"
+            }, "-=0.28");
+    }
+
+    function rebuildHomeTextAnimation() {
+        if (!document.querySelector('[data-vue-page="home"] .home-hero')) {
+            return;
+        }
+
+        const generation = ++homeTextAnimationGeneration;
+        disposeHomeTextAnimation();
+        Promise.resolve()
+            .then(waitForHomeAnimationLayout)
+            .then(() => {
+                if (generation !== homeTextAnimationGeneration) {
+                    return;
+                }
+                animateHomeHeroText();
+                rebuildHomeStepTextAnimation();
+                window.ScrollTrigger?.refresh?.();
+            });
     }
 
     function animatePageEntrance() {
@@ -111,6 +230,9 @@
         const titleChars = titleSplit?.chars || [];
         const sloganWords = sloganSplit?.words || [];
         const splitReady = shouldSplitHomeHero && titleChars.length && sloganWords.length;
+        if (shouldSplitHomeHero) {
+            homeHeroSplits = [titleSplit, sloganSplit].filter(Boolean);
+        }
 
         if (splitReady) {
             gsap.set([homeTitle, homeSlogan], { opacity: 1 });
@@ -120,6 +242,9 @@
         }
 
         const timeline = gsap.timeline({ defaults: { ease: "power3.out" } });
+        if (shouldSplitHomeHero) {
+            homeHeroTimeline = timeline;
+        }
         timeline
             .to(".navbar", { y: 0, opacity: 1, duration: 0.52 })
             .to(navPieces, {
@@ -754,6 +879,40 @@
         });
     }
 
+    function createHomeStepIntroTimeline(section, cards) {
+        cards.forEach(card => prepareHomeStepCardText(card));
+
+        const introTimeline = gsap.timeline({
+            scrollTrigger: {
+                trigger: section,
+                start: "top 82%",
+                once: true
+            }
+        });
+        homeStepIntroTimeline = introTimeline;
+
+        introTimeline.from(cards, {
+            y: 18,
+            opacity: 0,
+            duration: 0.56,
+            stagger: 0.08,
+            ease: "power3.out",
+            clearProps: "transform,opacity"
+        });
+        animateHomeStepCardText(cards, introTimeline);
+    }
+
+    function rebuildHomeStepTextAnimation() {
+        const section = document.querySelector(".home-tools");
+        const track = section?.querySelector(".home-step-track");
+        const cards = track ? elements(".start-card", track) : [];
+        if (!section || !cards.length || !hasGsap || !hasScrollTrigger) {
+            return;
+        }
+
+        createHomeStepIntroTimeline(section, cards);
+    }
+
     function animateHomeStepCardHover(card) {
         if (!hasGsap || !card?.classList.contains("home-step-card")) {
             return;
@@ -802,25 +961,7 @@
 
         gsap.registerPlugin(ScrollTrigger);
 
-        cards.forEach(card => prepareHomeStepCardText(card));
-
-        const introTimeline = gsap.timeline({
-            scrollTrigger: {
-                trigger: section,
-                start: "top 82%",
-                once: true
-            }
-        });
-
-        introTimeline.from(cards, {
-            y: 18,
-            opacity: 0,
-            duration: 0.56,
-            stagger: 0.08,
-            ease: "power3.out",
-            clearProps: "transform,opacity"
-        });
-        animateHomeStepCardText(cards, introTimeline);
+        createHomeStepIntroTimeline(section, cards);
 
         function travelDistance() {
             return Math.max(0, track.scrollWidth - rail.clientWidth);
@@ -1392,7 +1533,10 @@
         });
     }
 
-    ready(function() {
+    ready(async function() {
+        if (document.querySelector('[data-vue-page="home"]')) {
+            await waitForHomeAnimationLayout();
+        }
         const pageEntranceNeedsTranslations = Boolean(
             document.querySelector(".home-hero, .song-workspace-hero") &&
             window.JasperI18n &&
@@ -1412,5 +1556,6 @@
         observeChordShapes();
         bindFilterFeedback();
         bindThemeCrossfade();
+        window.addEventListener("jasper:language-change", rebuildHomeTextAnimation);
     });
 })();

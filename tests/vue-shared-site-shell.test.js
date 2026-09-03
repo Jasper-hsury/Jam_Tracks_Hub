@@ -6,6 +6,7 @@ const path = require("node:path");
 const root = path.resolve(__dirname, "..");
 const read = relativePath => fs.readFileSync(path.join(root, relativePath), "utf8");
 const vuePages = [
+  ["index.html", "src/entries/home.js", "vue-home-root"],
   ["404.html", "src/entries/404.js", "vue-404-root"],
   ["legal.html", "src/entries/legal.js", "vue-legal-root"],
   ["privacy-policy.html", "src/entries/privacy.js", "vue-privacy-root"],
@@ -13,7 +14,6 @@ const vuePages = [
   ["feedback.html", "src/entries/feedback.js", "vue-feedback-root"]
 ];
 const legacyPages = [
-  "index.html",
   "tracks.html",
   "chord-progressions.html",
   "chord-dictionary.html",
@@ -36,7 +36,7 @@ test("provides one reusable Vue-owned site shell composition", () => {
   assert.match(mountHelper, /default: \(\) => h\(view\)/);
 });
 
-test("moves shared shell ownership off the five Vue HTML documents", () => {
+test("moves shared shell ownership off the six Vue HTML documents", () => {
   vuePages.forEach(([htmlPath, entryPath, mountId]) => {
     const html = read(htmlPath);
     const entry = read(entryPath);
@@ -56,7 +56,7 @@ test("retains early bootstrap, Umami, and animation compatibility assets per pag
     assert.match(html, /https:\/\/cloud\.umami\.is\/script\.js/);
   });
 
-  ["404.html", "privacy-policy.html", "service-waking.html", "feedback.html"].forEach(htmlPath => {
+  ["index.html", "404.html", "privacy-policy.html", "service-waking.html", "feedback.html"].forEach(htmlPath => {
     assert.match(read(htmlPath), /scripts\/site-animations\.js/);
   });
 });
@@ -142,7 +142,7 @@ test("keeps migrated page views on Vue locale ownership without legacy DOM trans
   });
 });
 
-test("keeps the Phase 3A version and dependency boundary unchanged", () => {
+test("keeps the Phase 3B version and dependency boundary unchanged", () => {
   const packageJson = JSON.parse(read("package.json"));
   assert.equal(packageJson.version, "2.0.3");
   assert.deepEqual(packageJson.dependencies, { vue: "3.5.42" });

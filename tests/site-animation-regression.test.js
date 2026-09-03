@@ -16,10 +16,10 @@ const animationsJs = read("scripts/site-animations.js");
 const pagesCss = read("styles/pages.css");
 
 test("homepage keeps the established Tracks Hub SplitText entrance", () => {
-    assert.match(indexHtml, /<h1 data-i18n="home\.hero\.title">Tracks Hub<\/h1>/);
+    assert.match(indexHtml, /<div id="vue-home-root"><\/div>/);
     assert.match(indexHtml, /assets\/vendor\/gsap\/SplitText\.min\.js/);
-    assert.match(indexHtml, /scripts\/i18n\.js\?v=20260828-home-entrance/);
-    assert.match(indexHtml, /scripts\/site-animations\.js\?v=20260828-home-entrance/);
+    assert.doesNotMatch(indexHtml, /scripts\/i18n\.js/);
+    assert.match(indexHtml, /scripts\/site-animations\.js\?v=20260903-vue-home-lifecycle/);
     assert.match(animationsJs, /const homeTitle = document\.querySelector\("\.home-hero h1"\)/);
     assert.match(animationsJs, /charsClass:\s*"home-split-char"/);
     assert.match(animationsJs, /\.fromTo\(titleChars,[\s\S]*stagger:\s*0\.026/s);
@@ -35,6 +35,10 @@ test("same-value localization does not destroy animation-owned child nodes", () 
         animationsJs,
         /pageEntranceNeedsTranslations[\s\S]*document\.documentElement\.dataset\.i18nReady !== "true"[\s\S]*addEventListener\("jasper:language-change", animatePageEntrance, \{ once: true \}\)/s
     );
+    assert.match(animationsJs, /function disposeHomeTextAnimation\(\)/);
+    assert.match(animationsJs, /homeHeroSplits\.forEach\(split => split\?\.revert\?\.\(\)\)/);
+    assert.match(animationsJs, /waitForHomeAnimationLayout/);
+    assert.match(animationsJs, /window\.addEventListener\("jasper:language-change", rebuildHomeTextAnimation\)/);
 });
 
 test("homepage animation retains its reduced-motion fallback", () => {

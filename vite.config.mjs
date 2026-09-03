@@ -4,7 +4,7 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 
 const root = fileURLToPath(new URL(".", import.meta.url));
-const viteOwnedHtml = new Set(["/404.html", "/legal.html", "/privacy-policy.html", "/service-waking.html", "/feedback.html"]);
+const viteOwnedHtml = new Set(["/", "/index.html", "/404.html", "/legal.html", "/privacy-policy.html", "/service-waking.html", "/feedback.html"]);
 const legacyHtmlAssets = [
   "assets/images/icon.png",
   "scripts/theme-init.js?v=20260725-friendly-insect-switch",
@@ -23,7 +23,9 @@ const legacyHtmlAssets = [
   "scripts/i18n.js?v=20260902-404-route-root",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
+  "assets/vendor/gsap/SplitText.min.js",
   "scripts/site-animations.js?v=20260718-trainer-dropdown-hover",
+  "scripts/site-animations.js?v=20260903-vue-home-lifecycle",
   "scripts/site-animations.js?v=20260830-privacy-static-policy"
 ];
 const legacyAssetSentinel = "https://vite-preserved-legacy.invalid/";
@@ -80,6 +82,7 @@ export default defineConfig({
     rollupOptions: {
       preserveEntrySignatures: "strict",
       input: {
+        home: resolve(root, "index.html"),
         "404": resolve(root, "404.html"),
         legal: resolve(root, "legal.html"),
         privacy: resolve(root, "privacy-policy.html"),

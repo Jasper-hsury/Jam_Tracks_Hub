@@ -36,7 +36,7 @@ test("mobile footer renders copyright, legal, and social content as three balanc
 });
 
 test("homepage YouTube embed preserves client identity without widening CSP", () => {
-    const home = read("index.html");
+    const home = read("src/views/HomeView.vue");
     const headers = read("_headers");
     const workspace = read("song-workspace.html");
     const iframe = home.slice(
@@ -47,7 +47,7 @@ test("homepage YouTube embed preserves client identity without widening CSP", ()
     assert.match(iframe, /src="https:\/\/www\.youtube\.com\/embed\/[A-Za-z0-9_-]{11}"/);
     assert.match(iframe, /referrerpolicy="strict-origin-when-cross-origin"/);
     assert.match(iframe, /allowfullscreen/);
-    assert.match(home, /href="https:\/\/youtu\.be\/nNlJNDU-Xgw"/);
+    assert.match(home, /youtube:\s*"https:\/\/youtu\.be\/nNlJNDU-Xgw"/);
     assert.match(headers, /Referrer-Policy: strict-origin-when-cross-origin/);
     assert.match(headers, /frame-src https:\/\/www\.youtube\.com https:\/\/api\.jamtrackshub\.com;/);
     assert.doesNotMatch(headers, /frame-src[^;]*\*/);
