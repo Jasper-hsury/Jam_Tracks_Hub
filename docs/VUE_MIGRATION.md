@@ -118,6 +118,12 @@ The active production contract has no playback, save, export, transpose, or pers
 
 The visible fretboard remains the established CSS Grid/DOM renderer and continues to use `styles/scale.css`; Canvas remains limited to the canonical PNG export. The existing Web Audio sequence, PNG filename/content model, iOS preview behavior, English and Traditional Chinese copy, early theme/language bootstrap, page-level Umami, metadata, GSAP assets, URL contract, and shared SiteShell are preserved. Scale selections remain session-only except when initialized from the existing `key`, `root`, or `type` query parameters. No other music tool is migrated in this phase.
 
+## Phase 4D: Chord Dictionary
+
+`chord-dictionary.html` is the eleventh visible Vue-owned MPA entry. `ChordDictionaryView.vue` owns the searchable catalog, selected chord, filters, pagination, rendering lifecycle, and shared shell integration; `useChordDictionary.js` owns reactive application state; and `chordDictionary.mjs` preserves the exact legacy 12-root by 33-chord domain, note spelling, parser aliases, generated voicings, ranking, duplicate elimination, filter composition, diagram data, related-tool URLs, and direct-link initialization.
+
+The page retains its established DOM/CSS diagram renderer and GSAP/Flip hooks without changing shared chord CSS. Chord playback is isolated in `chordDictionaryAudio.mjs` with the legacy oscillator frequencies, timing, gain envelope, overlap guard, and lifecycle cleanup. The shared `scripts/chord-shapes.js` contract used by Progression Writer and Song Workspace, Chord Progressions dictionary-link generation, Scale Explorer links, Key Finder links, Worker/D1 boundaries, metadata, Umami loader, CSP, and public URLs remain unchanged. The exclusively page-owned `scripts/chord-dictionary.js` runtime is removed only after deterministic fixtures cover all 396 root/chord combinations and the complete representative filter matrix.
+
 ## Next Phase
 
-Phase 4D or any later page migration requires separate authorization and the same page-specific parity gates. It must not start automatically and must preserve the strangler build so legacy and Vue-owned entries can coexist.
+Phase 4E or any later page migration requires separate authorization and the same page-specific parity gates. It must not start automatically and must preserve the strangler build so legacy and Vue-owned entries can coexist.
