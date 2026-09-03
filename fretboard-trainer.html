@@ -35,112 +35,12 @@
     <link rel="stylesheet" href="styles/fretboard-trainer.css?v=20260718-fretboard-trainer-polish">
 </head>
 
-<body data-i18n-title="titles.fretboardTrainer">
-    <nav class="navbar">
-        <a href="index.html#home" class="logo">Jam Tracks Hub</a>
-        <ul class="nav-links">
-            <li><a href="index.html#home">Home</a></li>
-            <li><a href="tracks.html">Tracks</a></li>
-            <li><a href="chord-dictionary.html">Chord Dictionary</a></li>
-            <li><a href="scale.html">Scale Explorer</a></li>
-            <li><a href="key-finder.html">Key Finder</a></li>
-            <li><a href="chord-progressions.html">Chord Progressions</a></li>
-            <li><a href="fretboard-trainer.html" class="active" aria-current="page">Fretboard Trainer</a></li>
-            <li><a href="index.html#about">About</a></li>
-        </ul>
-    </nav>
+<body data-i18n-title="titles.fretboardTrainer" data-vue-page="fretboard-trainer">
+    <div id="vue-fretboard-trainer-root"></div>
 
-    <main class="tracks-page trainer-page">
-        <header class="trainer-heading">
-            <p class="home-eyebrow" data-i18n="pages.fretboardTrainer.eyebrow">Fretboard memory &middot; note names &middot; daily drill</p>
-            <h1 data-i18n="pages.fretboardTrainer.title">Fretboard Trainer</h1>
-            <p class="hero-tagline signature-slogan" data-i18n="pages.fretboardTrainer.tagline">Find the note. Build the map.</p>
-            <p class="trainer-lead" data-i18n="pages.fretboardTrainer.lead">
-                Answer random guitar string and fret questions in standard tuning. String 1 is the high E string;
-                string 6 is the low E string.
-            </p>
-        </header>
-
-        <section class="trainer-workspace" aria-labelledby="trainerQuestionTitle">
-            <div class="trainer-card trainer-question-card">
-                <div class="trainer-question-topline">
-                    <p class="trainer-kicker" data-i18n="pages.fretboardTrainer.currentQuestion">Current question</p>
-                    <span id="trainerProgress">0 answered</span>
-                </div>
-                <h2 id="trainerQuestionTitle" data-i18n="pages.fretboardTrainer.questionTitle">What note is this?</h2>
-                <div class="trainer-question-display">
-                    <div>
-                        <span data-i18n="pages.fretboardTrainer.string">String</span>
-                        <strong id="questionString">5</strong>
-                        <small id="questionStringName">A string</small>
-                    </div>
-                    <div>
-                        <span data-i18n="pages.fretboardTrainer.fret">Fret</span>
-                        <strong id="questionFret">7</strong>
-                        <small id="questionFretHint" data-i18n="pages.fretboardTrainer.standardTuning">standard tuning</small>
-                    </div>
-                </div>
-
-                <div class="trainer-feedback" id="trainerFeedback" aria-live="polite" data-i18n="pages.fretboardTrainer.chooseNote">
-                    Choose the note name below.
-                </div>
-            </div>
-
-            <div class="trainer-card trainer-answer-card">
-                <div class="trainer-answer-heading">
-                    <div>
-                        <p class="trainer-kicker" data-i18n="pages.fretboardTrainer.answer">Answer</p>
-                        <h2 data-i18n="pages.fretboardTrainer.pickNote">Pick a note</h2>
-                    </div>
-                    <div class="trainer-score" aria-label="Current score" data-i18n-aria-label="pages.fretboardTrainer.currentScore">
-                        <strong id="scoreCorrect">0</strong>
-                        <span>/</span>
-                        <strong id="scoreTotal">0</strong>
-                    </div>
-                </div>
-
-                <div class="note-answer-grid" id="noteAnswerGrid" aria-label="Choose the note name" data-i18n-aria-label="pages.fretboardTrainer.chooseNoteName"></div>
-
-                <div class="trainer-actions">
-                    <button class="secondary-button" id="revealAnswerButton" type="button" data-i18n="pages.fretboardTrainer.reveal">Reveal answer</button>
-                    <button class="primary-button" id="nextQuestionButton" type="button" data-i18n="pages.fretboardTrainer.next">Next question</button>
-                    <button class="secondary-button" id="resetTrainerButton" type="button" data-i18n="pages.fretboardTrainer.reset">Reset score</button>
-                </div>
-            </div>
-
-            <aside class="trainer-card trainer-reference" aria-labelledby="trainerReferenceTitle">
-                <p class="trainer-kicker" data-i18n="pages.fretboardTrainer.reference">Reference</p>
-                <h2 id="trainerReferenceTitle" data-i18n="pages.fretboardTrainer.standardTuningTitle">Standard tuning</h2>
-                <div class="string-reference-grid">
-                    <span><strong>6</strong> <span data-i18n="pages.fretboardTrainer.lowE">Low E</span></span>
-                    <span><strong>5</strong> A</span>
-                    <span><strong>4</strong> D</span>
-                    <span><strong>3</strong> G</span>
-                    <span><strong>2</strong> B</span>
-                    <span><strong>1</strong> <span data-i18n="pages.fretboardTrainer.highE">High E</span></span>
-                </div>
-                <p data-i18n="pages.fretboardTrainer.referenceExample">
-                    Example: string 5, fret 7 is E because the fifth string starts on A and moves up seven semitones.
-                </p>
-            </aside>
-        </section>
-    </main>
-
-    <footer class="footer">
-        <p>&copy; 2026 Jam Tracks Hub. All rights reserved.</p>
-        <div class="social-links">
-            <a href="https://youtube.com/@weekly_backing_track?si=-Rp6XDvP0A8fclp3" target="_blank" rel="noopener noreferrer" aria-label="Visit Jam Tracks Hub YouTube channel">YouTube</a>
-            <a href="https://www.instagram.com/reyu_jasper?igsh=dmVsazFvb2pwMmsw&utm_source=qr" target="_blank" rel="noopener noreferrer" aria-label="Visit Jam Tracks Hub Instagram profile">Instagram</a>
-        </div>
-    </footer>
-
-    <button id="backToTopBtn" type="button" aria-label="Back to top" data-i18n-aria-label="common.backToTop">&uarr;</button>
-
-    <script src="scripts/site.js?v=20260829-smart-navbar-v2"></script>
-    <script src="scripts/i18n.js?v=20260827-legal-footer"></script>
-    <script src="scripts/fretboard-trainer.js?v=20260626-note-trainer"></script>
     <script src="assets/vendor/gsap/gsap.min.js"></script>
     <script src="assets/vendor/gsap/ScrollTrigger.min.js"></script>
     <script src="scripts/site-animations.js?v=20260718-trainer-dropdown-hover"></script>
+    <script type="module" src="/src/entries/fretboard-trainer.js"></script>
 </body>
 </html>
