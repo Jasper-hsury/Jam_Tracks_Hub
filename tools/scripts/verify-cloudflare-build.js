@@ -6,7 +6,7 @@ const dist = path.join(root, "dist");
 const maxWorkerAssetBytes = 24 * 1024 * 1024;
 const renderAssetBaseUrl = "https://api.jamtrackshub.com";
 const copiedDirectories = ["assets", "data", "downloads", "locales", "scripts", "slides", "styles"];
-const viteOwnedRootHtml = new Set(["index.html", "404.html", "legal.html", "privacy-policy.html", "service-waking.html", "feedback.html", "tracks.html", "fretboard-trainer.html"]);
+const viteOwnedRootHtml = new Set(["index.html", "404.html", "legal.html", "privacy-policy.html", "service-waking.html", "feedback.html", "tracks.html", "fretboard-trainer.html", "chord-progressions.html"]);
 const workerConfig = JSON.parse(fs.readFileSync(path.join(root, "wrangler.jsonc"), "utf8"));
 
 function fail(message) {
@@ -326,6 +326,45 @@ if (/scripts\/(?:site|i18n|fretboard-trainer)\.js/.test(migratedFretboardTrainer
   fail("Fretboard Trainer still loads a legacy page runtime");
 }
 
+const migratedChordProgressions = fs.readFileSync(path.join(dist, "chord-progressions.html"), "utf8");
+if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/chord-progressions\.html">/.test(migratedChordProgressions)) {
+  fail("Chord Progressions canonical metadata differs");
+}
+if (!/<meta name="description" content="Explore common major and minor chord progressions by key with guitar-friendly chord shapes\.">/.test(migratedChordProgressions)) {
+  fail("Chord Progressions description metadata differs");
+}
+if (!/<div id="vue-chord-progressions-root"><\/div>/.test(migratedChordProgressions)) {
+  fail("Chord Progressions Vue mount target is missing");
+}
+if (!/<script defer src="https:\/\/cloud\.umami\.is\/script\.js" data-website-id="[^"]+"><\/script>/.test(migratedChordProgressions)) {
+  fail("Chord Progressions Umami loader differs");
+}
+if (!/<script type="module" crossorigin src="\/assets\/vue\/chord-progressions-[^"]+\.js"><\/script>/.test(migratedChordProgressions)) {
+  fail("Chord Progressions compiled Vue entry is missing");
+}
+if (/src\/entries\/chord-progressions\.js/.test(migratedChordProgressions)) {
+  fail("Chord Progressions source entry leaked into production HTML");
+}
+[
+  "scripts/theme-init.js?v=20260725-friendly-insect-switch",
+  "scripts/i18n-init.js?v=20260804-no-language-flash",
+  "styles/base.css?v=20260829-smart-navbar-v2",
+  "styles/components.css?v=20260827-legal-footer",
+  "styles/pages.css?v=20260804-feedback-consistency",
+  "styles/themes.css?v=20260804-feedback-consistency",
+  "assets/vendor/gsap/gsap.min.js",
+  "assets/vendor/gsap/ScrollTrigger.min.js",
+  "scripts/site-animations.js?v=20260718-trainer-dropdown-hover"
+].forEach(function(asset) {
+  if (!migratedChordProgressions.includes(asset)) fail(`Chord Progressions legacy asset path differs: ${asset}`);
+});
+if (/assets\/vue\/chord-progressions-[^"]+\.css/.test(migratedChordProgressions)) {
+  fail("Chord Progressions shared CSS was incorrectly rebundled");
+}
+if (/scripts\/(?:site|i18n|chords)\.js/.test(migratedChordProgressions)) {
+  fail("Chord Progressions still loads a legacy page runtime");
+}
+
 [
   ["Homepage", migratedHome],
   ["404", migrated404],
@@ -334,7 +373,8 @@ if (/scripts\/(?:site|i18n|fretboard-trainer)\.js/.test(migratedFretboardTrainer
   ["Service Waking", migratedServiceWaking],
   ["Feedback", migratedFeedback],
   ["Tracks", migratedTracks],
-  ["Fretboard Trainer", migratedFretboardTrainer]
+  ["Fretboard Trainer", migratedFretboardTrainer],
+  ["Chord Progressions", migratedChordProgressions]
 ].forEach(function([pageName, html]) {
   if (/<nav class="navbar"|<footer class="footer"|class="skip-link"/.test(html)) {
     fail(`${pageName} still contains legacy shell markup`);
@@ -474,6 +514,12 @@ if (!fs.readFileSync(migratedFretboardTrainerBundle, "utf8").includes("vue-fretb
   fail("compiled Vue Fretboard Trainer mount marker is missing");
 }
 
+const migratedChordProgressionsBundle = vueJavaScript.find(filePath => path.basename(filePath).startsWith("chord-progressions-"));
+if (!migratedChordProgressionsBundle) fail("missing compiled Vue Chord Progressions entry");
+if (!fs.readFileSync(migratedChordProgressionsBundle, "utf8").includes("vue-chord-progressions-root")) {
+  fail("compiled Vue Chord Progressions mount marker is missing");
+}
+
 const sharedShellBundle = vueJavaScript.find(filePath => path.basename(filePath).startsWith("mountSitePage-"));
 if (!sharedShellBundle) fail("missing compiled shared Vue shell");
 const sharedShellSource = fs.readFileSync(sharedShellBundle, "utf8");
@@ -509,6 +555,9 @@ rootHtml.forEach(function(relativePath) {
   }
   if (relativePath !== "fretboard-trainer.html" && /assets\/vue\/fretboard-trainer-|src\/entries\/fretboard-trainer\.js/i.test(html)) {
     fail(`unmigrated production HTML references the Vue Fretboard Trainer entry: ${relativePath}`);
+  }
+  if (relativePath !== "chord-progressions.html" && /assets\/vue\/chord-progressions-|src\/entries\/chord-progressions\.js/i.test(html)) {
+    fail(`unmigrated production HTML references the Vue Chord Progressions entry: ${relativePath}`);
   }
 });
 

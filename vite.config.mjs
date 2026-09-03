@@ -4,7 +4,7 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 
 const root = fileURLToPath(new URL(".", import.meta.url));
-const viteOwnedHtml = new Set(["/", "/index.html", "/404.html", "/legal.html", "/privacy-policy.html", "/service-waking.html", "/feedback.html", "/tracks", "/tracks.html", "/fretboard-trainer", "/fretboard-trainer.html"]);
+const viteOwnedHtml = new Set(["/", "/index.html", "/404.html", "/legal.html", "/privacy-policy.html", "/service-waking.html", "/feedback.html", "/tracks", "/tracks.html", "/fretboard-trainer", "/fretboard-trainer.html", "/chord-progressions", "/chord-progressions.html"]);
 const legacyHtmlAssets = [
   "assets/images/icon.png",
   "scripts/theme-init.js?v=20260725-friendly-insect-switch",
@@ -93,6 +93,7 @@ export default defineConfig({
         feedback: resolve(root, "feedback.html"),
         tracks: resolve(root, "tracks.html"),
         "fretboard-trainer": resolve(root, "fretboard-trainer.html"),
+        "chord-progressions": resolve(root, "chord-progressions.html"),
         "vue-foundation": resolve(root, "src/entries/vue-foundation.js")
       },
       output: {

@@ -12,7 +12,7 @@ test("makes Legal the second production Vue-owned MPA entry", () => {
   const entry = read("src/entries/legal.js");
 
   assert.match(config, /legal:\s*resolve\(root,\s*"legal\.html"\)/);
-  assert.match(config, /viteOwnedHtml = new Set\(\["\/", "\/index\.html", "\/404\.html", "\/legal\.html", "\/privacy-policy\.html", "\/service-waking\.html", "\/feedback\.html", "\/tracks", "\/tracks\.html", "\/fretboard-trainer", "\/fretboard-trainer\.html"\]\)/);
+  assert.match(config, /viteOwnedHtml = new Set\(\["\/", "\/index\.html", "\/404\.html", "\/legal\.html", "\/privacy-policy\.html", "\/service-waking\.html", "\/feedback\.html", "\/tracks", "\/tracks\.html", "\/fretboard-trainer", "\/fretboard-trainer\.html", "\/chord-progressions", "\/chord-progressions\.html"\]\)/);
   assert.match(html, /<div id="vue-legal-root"><\/div>/);
   assert.match(html, /<script type="module" src="\/src\/entries\/legal\.js"><\/script>/);
   assert.match(entry, /mountSitePage\(\{[\s\S]*mountId: "vue-legal-root"[\s\S]*view: LegalView/);
@@ -59,7 +59,7 @@ test("keeps the Legal migration bounded at the current patch version", () => {
 
   assert.equal(packageJson.version, "2.0.4");
   assert.equal(packageJson.dependencies.vue, "3.5.42");
-  assert.match(verifier, /const viteOwnedRootHtml = new Set\(\["index\.html", "404\.html", "legal\.html", "privacy-policy\.html", "service-waking\.html", "feedback\.html", "tracks\.html", "fretboard-trainer\.html"\]\)/);
+  assert.match(verifier, /const viteOwnedRootHtml = new Set\(\["index\.html", "404\.html", "legal\.html", "privacy-policy\.html", "service-waking\.html", "feedback\.html", "tracks\.html", "fretboard-trainer\.html", "chord-progressions\.html"\]\)/);
   assert.match(verifier, /Legal canonical metadata differs/);
   assert.match(verifier, /compiled Vue Legal mount marker is missing/);
 });

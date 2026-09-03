@@ -106,6 +106,12 @@ Tracks continues to read the canonical local `data/tracks.json` payload. Its fil
 
 The migration preserves the 6-string, 0-through-12-fret question space, exact consecutive-repeat guard, enharmonic labels, scoring, reveal, next-question, and reset semantics. The existing Trainer CSS, early theme/language bootstrap, page-level Umami loader, metadata, and shared GSAP entrance behavior remain unchanged. The page adds no persistence, audio, router, network service, custom analytics event, or backend dependency. Its former page-owned imperative runtime is removed only after the Vue replacement and focused regression tests account for its behavior.
 
+## Phase 4B: Chord Progressions
+
+`chord-progressions.html` is the ninth visible Vue-owned MPA entry. `ChordProgressionsView.vue` owns its selection and rendering state, `useChordProgressions.js` owns the reactive key and extension choices, and `chordProgressions.mjs` preserves the exact legacy key spellings, progression catalog, chord grammar, dictionary links, and deterministic root-position guitar voicings.
+
+The active production contract has no playback, save, export, transpose, or persistence controls. Historical implementations for those unreachable controls were removed with the page-owned legacy runtime instead of being reintroduced as new behavior. The existing sample files remain unchanged and are not requested by the Vue page. Shared CSS, early theme/language bootstrap, page-level Umami, metadata, GSAP assets, URLs, and the Vue SiteShell contract remain in place.
+
 ## Next Phase
 
-Phase 4B or any later page migration requires separate authorization and the same page-specific parity gates. It must not start automatically and must preserve the strangler build so legacy and Vue-owned entries can coexist.
+Phase 4C or any later page migration requires separate authorization and the same page-specific parity gates. It must not start automatically and must preserve the strangler build so legacy and Vue-owned entries can coexist.
