@@ -6,7 +6,7 @@ const dist = path.join(root, "dist");
 const maxWorkerAssetBytes = 24 * 1024 * 1024;
 const renderAssetBaseUrl = "https://api.jamtrackshub.com";
 const copiedDirectories = ["assets", "data", "downloads", "locales", "scripts", "slides", "styles"];
-const viteOwnedRootHtml = new Set(["index.html", "404.html", "legal.html", "privacy-policy.html", "service-waking.html", "feedback.html", "tracks.html"]);
+const viteOwnedRootHtml = new Set(["index.html", "404.html", "legal.html", "privacy-policy.html", "service-waking.html", "feedback.html", "tracks.html", "fretboard-trainer.html"]);
 const workerConfig = JSON.parse(fs.readFileSync(path.join(root, "wrangler.jsonc"), "utf8"));
 
 function fail(message) {
@@ -286,6 +286,46 @@ if (/scripts\/(?:site|i18n|tracks)\.js/.test(migratedTracks)) {
   fail("Tracks still loads a legacy page runtime");
 }
 
+const migratedFretboardTrainer = fs.readFileSync(path.join(dist, "fretboard-trainer.html"), "utf8");
+if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/fretboard-trainer\.html">/.test(migratedFretboardTrainer)) {
+  fail("Fretboard Trainer canonical metadata differs");
+}
+if (!/<meta name="description" content="Practice guitar fretboard note names with random string and fret questions across standard tuning\.">/.test(migratedFretboardTrainer)) {
+  fail("Fretboard Trainer description metadata differs");
+}
+if (!/<div id="vue-fretboard-trainer-root"><\/div>/.test(migratedFretboardTrainer)) {
+  fail("Fretboard Trainer Vue mount target is missing");
+}
+if (!/<script defer src="https:\/\/cloud\.umami\.is\/script\.js" data-website-id="[^"]+"><\/script>/.test(migratedFretboardTrainer)) {
+  fail("Fretboard Trainer Umami loader differs");
+}
+if (!/<script type="module" crossorigin src="\/assets\/vue\/fretboard-trainer-[^"]+\.js"><\/script>/.test(migratedFretboardTrainer)) {
+  fail("Fretboard Trainer compiled Vue entry is missing");
+}
+if (/src\/entries\/fretboard-trainer\.js/.test(migratedFretboardTrainer)) {
+  fail("Fretboard Trainer source entry leaked into production HTML");
+}
+[
+  "scripts/theme-init.js?v=20260725-friendly-insect-switch",
+  "scripts/i18n-init.js?v=20260804-no-language-flash",
+  "styles/base.css?v=20260829-smart-navbar-v2",
+  "styles/components.css?v=20260827-legal-footer",
+  "styles/pages.css?v=20260804-feedback-consistency",
+  "styles/themes.css?v=20260804-feedback-consistency",
+  "styles/fretboard-trainer.css?v=20260718-fretboard-trainer-polish",
+  "assets/vendor/gsap/gsap.min.js",
+  "assets/vendor/gsap/ScrollTrigger.min.js",
+  "scripts/site-animations.js?v=20260718-trainer-dropdown-hover"
+].forEach(function(asset) {
+  if (!migratedFretboardTrainer.includes(asset)) fail(`Fretboard Trainer legacy asset path differs: ${asset}`);
+});
+if (/assets\/vue\/fretboard-trainer-[^"]+\.css/.test(migratedFretboardTrainer)) {
+  fail("Fretboard Trainer shared CSS was incorrectly rebundled");
+}
+if (/scripts\/(?:site|i18n|fretboard-trainer)\.js/.test(migratedFretboardTrainer)) {
+  fail("Fretboard Trainer still loads a legacy page runtime");
+}
+
 [
   ["Homepage", migratedHome],
   ["404", migrated404],
@@ -293,7 +333,8 @@ if (/scripts\/(?:site|i18n|tracks)\.js/.test(migratedTracks)) {
   ["Privacy", migratedPrivacy],
   ["Service Waking", migratedServiceWaking],
   ["Feedback", migratedFeedback],
-  ["Tracks", migratedTracks]
+  ["Tracks", migratedTracks],
+  ["Fretboard Trainer", migratedFretboardTrainer]
 ].forEach(function([pageName, html]) {
   if (/<nav class="navbar"|<footer class="footer"|class="skip-link"/.test(html)) {
     fail(`${pageName} still contains legacy shell markup`);
@@ -427,6 +468,12 @@ if (!fs.readFileSync(migratedTracksBundle, "utf8").includes("vue-tracks-root")) 
   fail("compiled Vue Tracks mount marker is missing");
 }
 
+const migratedFretboardTrainerBundle = vueJavaScript.find(filePath => path.basename(filePath).startsWith("fretboard-trainer-"));
+if (!migratedFretboardTrainerBundle) fail("missing compiled Vue Fretboard Trainer entry");
+if (!fs.readFileSync(migratedFretboardTrainerBundle, "utf8").includes("vue-fretboard-trainer-root")) {
+  fail("compiled Vue Fretboard Trainer mount marker is missing");
+}
+
 const sharedShellBundle = vueJavaScript.find(filePath => path.basename(filePath).startsWith("mountSitePage-"));
 if (!sharedShellBundle) fail("missing compiled shared Vue shell");
 const sharedShellSource = fs.readFileSync(sharedShellBundle, "utf8");
@@ -459,6 +506,9 @@ rootHtml.forEach(function(relativePath) {
   }
   if (relativePath !== "tracks.html" && /assets\/vue\/tracks-|src\/entries\/tracks\.js/i.test(html)) {
     fail(`unmigrated production HTML references the Vue Tracks entry: ${relativePath}`);
+  }
+  if (relativePath !== "fretboard-trainer.html" && /assets\/vue\/fretboard-trainer-|src\/entries\/fretboard-trainer\.js/i.test(html)) {
+    fail(`unmigrated production HTML references the Vue Fretboard Trainer entry: ${relativePath}`);
   }
 });
 

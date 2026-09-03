@@ -94,6 +94,18 @@ Service Waking preserves the established API base resolution from `site-config.j
 
 The Cloudflare verifier now treats exactly five visible pages as Vue-owned: 404, Legal, Privacy, Service Waking, and Feedback. All other root HTML remains byte-identical in the transitional build. Worker routing, D1, the Key Finder backend, and Song Workspace remain unchanged.
 
+## Phase 3: Shared Shell, Homepage, and Tracks
+
+The migrated pages now share one Vue-owned site shell for navigation, language and theme controls, smart-navbar behavior, the skip link, footer, and back-to-top control. Homepage and Tracks are independent Vite MPA entries that retain their existing URLs, metadata, Umami pageviews, GSAP behavior, content, and responsive layouts.
+
+Tracks continues to read the canonical local `data/tracks.json` payload. Its filtering, sorting, relative-key groups, URL initialization, card navigation, and download actions remain separate contracts. The W2-W8 public download repair is represented by the same deployable static ZIP model used by W10-W19, while W1 retains its direct PDF behavior.
+
+## Phase 4A: Fretboard Trainer
+
+`fretboard-trainer.html` is the eighth visible Vue-owned MPA entry. `FretboardTrainerView.vue` owns its rendering and event handlers, `useFretboardTrainer.js` owns its reactive session state, and `fretboardTrainer.mjs` preserves the standard-tuning note domain as pure deterministic functions.
+
+The migration preserves the 6-string, 0-through-12-fret question space, exact consecutive-repeat guard, enharmonic labels, scoring, reveal, next-question, and reset semantics. The existing Trainer CSS, early theme/language bootstrap, page-level Umami loader, metadata, and shared GSAP entrance behavior remain unchanged. The page adds no persistence, audio, router, network service, custom analytics event, or backend dependency. Its former page-owned imperative runtime is removed only after the Vue replacement and focused regression tests account for its behavior.
+
 ## Next Phase
 
-Any later page migration requires separate authorization and the same page-specific parity gates. It must not start automatically and must preserve the strangler build so legacy and Vue-owned entries can coexist.
+Phase 4B or any later page migration requires separate authorization and the same page-specific parity gates. It must not start automatically and must preserve the strangler build so legacy and Vue-owned entries can coexist.

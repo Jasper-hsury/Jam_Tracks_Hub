@@ -4,7 +4,7 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 
 const root = fileURLToPath(new URL(".", import.meta.url));
-const viteOwnedHtml = new Set(["/", "/index.html", "/404.html", "/legal.html", "/privacy-policy.html", "/service-waking.html", "/feedback.html", "/tracks", "/tracks.html"]);
+const viteOwnedHtml = new Set(["/", "/index.html", "/404.html", "/legal.html", "/privacy-policy.html", "/service-waking.html", "/feedback.html", "/tracks", "/tracks.html", "/fretboard-trainer", "/fretboard-trainer.html"]);
 const legacyHtmlAssets = [
   "assets/images/icon.png",
   "scripts/theme-init.js?v=20260725-friendly-insect-switch",
@@ -16,6 +16,7 @@ const legacyHtmlAssets = [
   "styles/pages.css?v=20260830-legal-static-panel",
   "styles/pages.css?v=20260830-policy-static-panels",
   "styles/themes.css?v=20260804-feedback-consistency",
+  "styles/fretboard-trainer.css?v=20260718-fretboard-trainer-polish",
   "scripts/site.js?v=20260829-smart-navbar-v2",
   "scripts/site.js?v=20260902-404-route-root",
   "scripts/site-config.js?v=20260729-youtube-key-api",
@@ -91,6 +92,7 @@ export default defineConfig({
         "service-waking": resolve(root, "service-waking.html"),
         feedback: resolve(root, "feedback.html"),
         tracks: resolve(root, "tracks.html"),
+        "fretboard-trainer": resolve(root, "fretboard-trainer.html"),
         "vue-foundation": resolve(root, "src/entries/vue-foundation.js")
       },
       output: {

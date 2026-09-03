@@ -76,7 +76,7 @@ test("keeps every production HTML entry outside the declared Vue set legacy-owne
   });
 
   const verifier = read("tools/scripts/verify-cloudflare-build.js");
-  assert.match(verifier, /const viteOwnedRootHtml = new Set\(\["index\.html", "404\.html", "legal\.html", "privacy-policy\.html", "service-waking\.html", "feedback\.html", "tracks\.html"\]\)/);
+  assert.match(verifier, /const viteOwnedRootHtml = new Set\(\["index\.html", "404\.html", "legal\.html", "privacy-policy\.html", "service-waking\.html", "feedback\.html", "tracks\.html", "fretboard-trainer\.html"\]\)/);
   assert.match(verifier, /if \(viteOwnedRootHtml\.has\(relativePath\)\) return;/);
   assert.match(verifier, /root HTML is not byte-identical/);
   assert.match(verifier, /track slide HTML inventory differs/);

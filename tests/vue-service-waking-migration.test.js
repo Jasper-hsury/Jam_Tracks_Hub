@@ -96,7 +96,7 @@ test("keeps Service Waking bounded and preserves remaining legacy output", () =>
 
   assert.equal(packageJson.version, "2.0.4");
   assert.equal(packageJson.dependencies.vue, "3.5.42");
-  assert.match(verifier, /const viteOwnedRootHtml = new Set\(\["index\.html", "404\.html", "legal\.html", "privacy-policy\.html", "service-waking\.html", "feedback\.html", "tracks\.html"\]\)/);
+  assert.match(verifier, /const viteOwnedRootHtml = new Set\(\["index\.html", "404\.html", "legal\.html", "privacy-policy\.html", "service-waking\.html", "feedback\.html", "tracks\.html", "fretboard-trainer\.html"\]\)/);
   assert.match(verifier, /Service Waking canonical metadata differs/);
   assert.match(verifier, /compiled Vue Service Waking mount marker is missing/);
   assert.match(verifier, /root HTML is not byte-identical/);
