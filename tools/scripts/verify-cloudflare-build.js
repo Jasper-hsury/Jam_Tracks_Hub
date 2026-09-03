@@ -6,7 +6,7 @@ const dist = path.join(root, "dist");
 const maxWorkerAssetBytes = 24 * 1024 * 1024;
 const renderAssetBaseUrl = "https://api.jamtrackshub.com";
 const copiedDirectories = ["assets", "data", "downloads", "locales", "scripts", "slides", "styles"];
-const viteOwnedRootHtml = new Set(["404.html", "legal.html", "privacy-policy.html", "service-waking.html", "feedback.html"]);
+const viteOwnedRootHtml = new Set(["index.html", "404.html", "legal.html", "privacy-policy.html", "service-waking.html", "feedback.html"]);
 const workerConfig = JSON.parse(fs.readFileSync(path.join(root, "wrangler.jsonc"), "utf8"));
 
 function fail(message) {
@@ -64,6 +64,40 @@ rootHtml.forEach(function(relativePath) {
   if (viteOwnedRootHtml.has(relativePath)) return;
   if (!read(source).equals(read(target))) fail(`root HTML is not byte-identical: ${relativePath}`);
 });
+
+const migratedHome = fs.readFileSync(path.join(dist, "index.html"), "utf8");
+if (!/<link\s+rel="canonical"\s+href="https:\/\/jamtrackshub\.com\/"\s*\/?\s*>/.test(migratedHome)) {
+  fail("Homepage canonical metadata differs");
+}
+if (!/<meta\s+name="description"\s+content="Original weekly backing tracks and focused guitar tools for chords, scales, keys, fretboard practice, and custom progression diagrams\."\s*\/?\s*>/.test(migratedHome)) {
+  fail("Homepage description metadata differs");
+}
+if (!/<meta\s+property="og:url"\s+content="https:\/\/jamtrackshub\.com\/"\s*\/?\s*>/.test(migratedHome)) {
+  fail("Homepage Open Graph URL differs");
+}
+if (!/<div id="vue-home-root"><\/div>/.test(migratedHome)) fail("Homepage Vue mount target is missing");
+if (!/<script defer src="https:\/\/cloud\.umami\.is\/script\.js" data-website-id="[^"]+"><\/script>/.test(migratedHome)) {
+  fail("Homepage Umami loader differs");
+}
+if (!/<script type="module" crossorigin src="\/assets\/vue\/home-[^"]+\.js"><\/script>/.test(migratedHome)) {
+  fail("Homepage compiled Vue entry is missing");
+}
+if (/src\/entries\/home\.js/.test(migratedHome)) fail("Homepage source entry leaked into production HTML");
+[
+  "scripts/theme-init.js?v=20260725-friendly-insect-switch",
+  "scripts/i18n-init.js?v=20260804-no-language-flash",
+  "styles/base.css?v=20260829-smart-navbar-v2",
+  "styles/components.css?v=20260827-legal-footer",
+  "styles/pages.css?v=20260804-feedback-consistency",
+  "styles/themes.css?v=20260804-feedback-consistency",
+  "assets/vendor/gsap/gsap.min.js",
+  "assets/vendor/gsap/ScrollTrigger.min.js",
+  "assets/vendor/gsap/SplitText.min.js",
+  "scripts/site-animations.js?v=20260903-vue-home-lifecycle"
+].forEach(function(asset) {
+  if (!migratedHome.includes(asset)) fail(`Homepage legacy asset path differs: ${asset}`);
+});
+if (/assets\/vue\/home-[^"]+\.css/.test(migratedHome)) fail("Homepage shared CSS was incorrectly rebundled");
 
 const migrated404 = fs.readFileSync(path.join(dist, "404.html"), "utf8");
 if (!/<meta name="robots" content="noindex">/.test(migrated404)) fail("404 noindex metadata is missing");
@@ -213,6 +247,7 @@ if (/assets\/vue\/feedback-[^"]+\.css/.test(migratedFeedback)) {
 }
 
 [
+  ["Homepage", migratedHome],
   ["404", migrated404],
   ["Legal", migratedLegal],
   ["Privacy", migratedPrivacy],
@@ -313,6 +348,12 @@ if (!fs.readFileSync(migratedFeedbackBundle, "utf8").includes("vue-feedback-root
   fail("compiled Vue Feedback mount marker is missing");
 }
 
+const migratedHomeBundle = vueJavaScript.find(filePath => path.basename(filePath).startsWith("home-"));
+if (!migratedHomeBundle) fail("missing compiled Vue Homepage entry");
+if (!fs.readFileSync(migratedHomeBundle, "utf8").includes("vue-home-root")) {
+  fail("compiled Vue Homepage mount marker is missing");
+}
+
 const sharedShellBundle = vueJavaScript.find(filePath => path.basename(filePath).startsWith("mountSitePage-"));
 if (!sharedShellBundle) fail("missing compiled shared Vue shell");
 const sharedShellSource = fs.readFileSync(sharedShellBundle, "utf8");
@@ -339,6 +380,9 @@ rootHtml.forEach(function(relativePath) {
   }
   if (relativePath !== "feedback.html" && /assets\/vue\/feedback-|src\/entries\/feedback\.js/i.test(html)) {
     fail(`unmigrated production HTML references the Vue Feedback entry: ${relativePath}`);
+  }
+  if (relativePath !== "index.html" && /assets\/vue\/home-|src\/entries\/home\.js/i.test(html)) {
+    fail(`unmigrated production HTML references the Vue Homepage entry: ${relativePath}`);
   }
 });
 
