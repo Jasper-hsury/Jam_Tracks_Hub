@@ -1,0 +1,86 @@
+{
+  "baselineSha": "3cd24dbd5f8d522b46ef6d427a74353005d73387",
+  "keyDefinitions": [
+    { "majorLabel": "C", "majorKey": "C major", "majorNotes": ["C", "D", "E", "F", "G", "A", "B"], "minorLabel": "Cm", "minorKey": "C minor", "minorNotes": ["C", "D", "Eb", "F", "G", "Ab", "Bb"] },
+    { "majorLabel": "Db", "majorKey": "Db major", "majorNotes": ["Db", "Eb", "F", "Gb", "Ab", "Bb", "C"], "minorLabel": "C#m", "minorKey": "C# minor", "minorNotes": ["C#", "D#", "E", "F#", "G#", "A", "B"] },
+    { "majorLabel": "D", "majorKey": "D major", "majorNotes": ["D", "E", "F#", "G", "A", "B", "C#"], "minorLabel": "Dm", "minorKey": "D minor", "minorNotes": ["D", "E", "F", "G", "A", "Bb", "C"] },
+    { "majorLabel": "Eb", "majorKey": "Eb major", "majorNotes": ["Eb", "F", "G", "Ab", "Bb", "C", "D"], "minorLabel": "Ebm", "minorKey": "Eb minor", "minorNotes": ["Eb", "F", "Gb", "Ab", "Bb", "Cb", "Db"] },
+    { "majorLabel": "E", "majorKey": "E major", "majorNotes": ["E", "F#", "G#", "A", "B", "C#", "D#"], "minorLabel": "Em", "minorKey": "E minor", "minorNotes": ["E", "F#", "G", "A", "B", "C", "D"] },
+    { "majorLabel": "F", "majorKey": "F major", "majorNotes": ["F", "G", "A", "Bb", "C", "D", "E"], "minorLabel": "Fm", "minorKey": "F minor", "minorNotes": ["F", "G", "Ab", "Bb", "C", "Db", "Eb"] },
+    { "majorLabel": "Gb", "majorKey": "Gb major", "majorNotes": ["Gb", "Ab", "Bb", "Cb", "Db", "Eb", "F"], "minorLabel": "F#m", "minorKey": "F# minor", "minorNotes": ["F#", "G#", "A", "B", "C#", "D", "E"] },
+    { "majorLabel": "G", "majorKey": "G major", "majorNotes": ["G", "A", "B", "C", "D", "E", "F#"], "minorLabel": "Gm", "minorKey": "G minor", "minorNotes": ["G", "A", "Bb", "C", "D", "Eb", "F"] },
+    { "majorLabel": "Ab", "majorKey": "Ab major", "majorNotes": ["Ab", "Bb", "C", "Db", "Eb", "F", "G"], "minorLabel": "Abm", "minorKey": "Ab minor", "minorNotes": ["Ab", "Bb", "Cb", "Db", "Eb", "Fb", "Gb"] },
+    { "majorLabel": "A", "majorKey": "A major", "majorNotes": ["A", "B", "C#", "D", "E", "F#", "G#"], "minorLabel": "Am", "minorKey": "A minor", "minorNotes": ["A", "B", "C", "D", "E", "F", "G"] },
+    { "majorLabel": "Bb", "majorKey": "Bb major", "majorNotes": ["Bb", "C", "D", "Eb", "F", "G", "A"], "minorLabel": "Bbm", "minorKey": "Bb minor", "minorNotes": ["Bb", "C", "Db", "Eb", "F", "Gb", "Ab"] },
+    { "majorLabel": "B", "majorKey": "B major", "majorNotes": ["B", "C#", "D#", "E", "F#", "G#", "A#"], "minorLabel": "Bm", "minorKey": "B minor", "minorNotes": ["B", "C#", "D", "E", "F#", "G", "A"] }
+  ],
+  "majorProgressions": [
+    { "numerals": ["I", "V", "vi", "IV"], "style": "Pop / Rock / Worship", "category": "Pop staples", "description": "A direct four-chord loop for modern songs and big choruses." },
+    { "numerals": ["vi", "IV", "I", "V"], "style": "Emotional Pop", "category": "Pop staples", "description": "Starts on the relative minor for a more wistful version of the pop loop." },
+    { "numerals": ["I", "vi", "IV", "V"], "style": "50s Progression / Ballad", "category": "Pop staples", "description": "Classic circular movement for ballads, oldies, and gentle songwriting." },
+    { "numerals": ["I", "IV", "V", "I"], "style": "Classic / Folk Foundation", "category": "Songwriting basics", "description": "The plain-language foundation for folk, rock, country, and simple melodies." },
+    { "numerals": ["I", "I", "I", "I", "IV", "IV", "I", "I", "V", "IV", "I", "V"], "style": "12 Bar Blues", "category": "12 bar blues", "description": "Twelve-bar form with the turnaround on the last bar." },
+    { "numerals": ["ii", "V", "I"], "style": "Jazz / Smooth Turnaround", "category": "Jazz essentials", "description": "The core jazz cadence. Aim melodic lines toward the third and seventh of each chord." },
+    { "numerals": ["I", "vi", "ii", "V"], "style": "Jazz / Pop Turnaround", "category": "Jazz essentials", "description": "A warm loop that can sound old-school, jazz-pop, or city-pop." },
+    { "numerals": ["I", "iii", "vi", "ii", "V"], "style": "Neo Soul / Jazz", "category": "Neo soul / jazz colors", "description": "A smooth chain of diatonic movement that works well with seventh chords." },
+    { "numerals": ["IV", "iii", "vi", "ii", "V", "I"], "style": "Neo Soul / R&B Resolution", "category": "Neo soul / jazz colors", "description": "Starts away from home, then gradually pulls the harmony back to I." }
+  ],
+  "minorProgressions": [
+    { "numerals": ["i", "VI", "III", "VII"], "style": "Emotional / Pop Rock", "category": "Minor pop staples", "description": "A strong minor-key loop for emotional rock, pop, and cinematic writing." },
+    { "numerals": ["i", "VII", "VI", "VII"], "style": "Rock / Dramatic", "category": "Minor pop staples", "description": "A descending minor color with a lift back into the loop." },
+    { "numerals": ["i", "iv", "VII", "III"], "style": "Dark Pop / Cinematic", "category": "Minor pop staples", "description": "Keeps the home chord dark, then opens up through the relative major area." },
+    { "numerals": ["i", "iv", "v", "i"], "style": "Natural Minor / Traditional", "category": "Songwriting basics", "description": "A plain natural-minor movement with no raised leading tone." },
+    { "numerals": ["i", "i", "i", "i", "iv", "iv", "i", "i", "V", "iv", "i", "V"], "style": "Minor 12 Bar Blues", "category": "12 bar blues", "description": "Minor blues form with a dominant V turnaround for stronger pull." },
+    { "numerals": ["iiø", "V", "i"], "style": "Minor Jazz Cadence", "category": "Jazz essentials", "description": "The minor-key version of ii - V - I, with a half-diminished ii chord." },
+    { "numerals": ["i", "VI", "iiø", "V"], "style": "Minor Jazz Turnaround", "category": "Jazz essentials", "description": "A compact minor loop that moves from stable minor color into dominant tension." },
+    { "numerals": ["i", "iv", "VII", "III", "VI", "iiø", "V", "i"], "style": "Neo Soul / Jazz Minor", "category": "Neo soul / jazz colors", "description": "A longer minor path with a clear jazz cadence at the end." },
+    { "numerals": ["i", "VI", "iv", "V"], "style": "Harmonic Minor Flavor", "category": "Neo soul / jazz colors", "description": "The major V adds a raised leading tone and a stronger pull back to i." }
+  ],
+  "chordMaps": [
+    { "key": "C major", "extension": "triads", "expected": { "I": "C", "ii": "Dm", "iii": "Em", "IV": "F", "V": "G", "vi": "Am", "vii": "Bdim" } },
+    { "key": "C major", "extension": "sevenths", "expected": { "I": "Cmaj7", "ii": "Dm7", "iii": "Em7", "IV": "Fmaj7", "V": "G7", "vi": "Am7", "vii": "Bm7b5" } },
+    { "key": "Db major", "extension": "triads", "expected": { "I": "Db", "ii": "Ebm", "iii": "Fm", "IV": "Gb", "V": "Ab", "vi": "Bbm", "vii": "Cdim" } },
+    { "key": "A minor", "extension": "triads", "expected": { "i": "Am", "iiø": "Bdim", "iidim": "Bdim", "III": "C", "iv": "Dm", "v": "Em", "V": "E", "VI": "F", "VII": "G" } },
+    { "key": "F# minor", "extension": "sevenths", "expected": { "i": "F#m7", "iiø": "G#m7b5", "iidim": "G#m7b5", "III": "Amaj7", "iv": "Bm7", "v": "C#m7", "V": "C#7", "VI": "Dmaj7", "VII": "E7" } }
+  ],
+  "dictionaryUrls": {
+    "C": "chord-dictionary.html?root=C&chord=major",
+    "Bb": "chord-dictionary.html?root=Bb&chord=major",
+    "F#m": "chord-dictionary.html?root=F%23&chord=minor",
+    "G7": "chord-dictionary.html?root=G&chord=dominant7",
+    "Cmaj7": "chord-dictionary.html?root=C&chord=major7",
+    "Am7": "chord-dictionary.html?root=A&chord=minor7",
+    "Bdim": "chord-dictionary.html?root=B&chord=diminished",
+    "Bm7b5": "chord-dictionary.html?root=B&chord=halfDiminished7",
+    "C/E": "chord-dictionary.html"
+  },
+  "voicings": {
+    "C": [8, 7, 5, 0, 8, 0],
+    "G": [3, 2, 0, 0, 0, 3],
+    "Am": [5, 3, 2, 2, 5, 0],
+    "F": [1, 0, 3, 5, 1, 1],
+    "Cmaj7": [8, 7, 9, 0, 0, 0],
+    "G7": [3, 2, 0, 0, 6, 3],
+    "Am7": [5, 3, 5, 0, 5, 0],
+    "Fmaj7": [1, 0, 2, 5, 1, 0]
+  },
+  "parserRejected": ["", "C/E", "Csus4", "Caug", "C9", "H"],
+  "queryCases": [
+    { "query": "Db major", "expectedKey": "Db major", "expectedMode": "major" },
+    { "query": "F# minor", "expectedKey": "F# minor", "expectedMode": "minor" },
+    { "query": "not-a-key", "expectedKey": null, "expectedMode": "major" }
+  ],
+  "visibleContract": {
+    "majorProgressionCount": 9,
+    "minorProgressionCount": 9,
+    "majorCategoryCounts": [3, 1, 1, 2, 2],
+    "minorCategoryCounts": [3, 1, 1, 2, 2],
+    "firstCategoryOpen": true,
+    "audioControls": 0,
+    "persistenceControls": 0,
+    "exportControls": 0,
+    "transposeControls": 0,
+    "storageReads": 0,
+    "audioRequests": 0
+  }
+}

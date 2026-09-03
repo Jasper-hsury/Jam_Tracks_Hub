@@ -164,7 +164,8 @@ Key files:
 | `scripts/site.js` | Shared navigation, theme switch, and site-level behavior. |
 | `scripts/theme-init.js` | Early theme loading before page paint. |
 | `scripts/tracks.js` | Track filtering, sorting, and download behavior. |
-| `scripts/chords.js` | Chord progression explorer logic. |
+| `src/music/chordProgressions.mjs` | Deterministic chord progression and guitar-voicing domain logic. |
+| `src/views/ChordProgressionsView.vue` | Vue-owned Chord Progressions page UI and interactions. |
 | `scripts/progression-writer.js` | Custom progression writer and export logic. |
 | `data/tracks.json` | Backing track data source. |
 
