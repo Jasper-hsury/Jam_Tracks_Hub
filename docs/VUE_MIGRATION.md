@@ -112,6 +112,12 @@ The migration preserves the 6-string, 0-through-12-fret question space, exact co
 
 The active production contract has no playback, save, export, transpose, or persistence controls. Historical implementations for those unreachable controls were removed with the page-owned legacy runtime instead of being reintroduced as new behavior. The existing sample files remain unchanged and are not requested by the Vue page. Shared CSS, early theme/language bootstrap, page-level Umami, metadata, GSAP assets, URLs, and the Vue SiteShell contract remain in place.
 
+## Phase 4C: Scale Explorer
+
+`scale.html` is the tenth visible Vue-owned MPA entry. `ScaleExplorerView.vue` owns its controls and rendering, `useScaleExplorer.js` owns reactive root, scale, fret-range, and label state, and `scaleExplorer.mjs` preserves the complete 12-root by 8-scale domain, enharmonic spelling, standard tuning, interval/degree relationships, URL initialization, and every fretboard position.
+
+The visible fretboard remains the established CSS Grid/DOM renderer and continues to use `styles/scale.css`; Canvas remains limited to the canonical PNG export. The existing Web Audio sequence, PNG filename/content model, iOS preview behavior, English and Traditional Chinese copy, early theme/language bootstrap, page-level Umami, metadata, GSAP assets, URL contract, and shared SiteShell are preserved. Scale selections remain session-only except when initialized from the existing `key`, `root`, or `type` query parameters. No other music tool is migrated in this phase.
+
 ## Next Phase
 
-Phase 4C or any later page migration requires separate authorization and the same page-specific parity gates. It must not start automatically and must preserve the strangler build so legacy and Vue-owned entries can coexist.
+Phase 4D or any later page migration requires separate authorization and the same page-specific parity gates. It must not start automatically and must preserve the strangler build so legacy and Vue-owned entries can coexist.

@@ -6,7 +6,7 @@ const dist = path.join(root, "dist");
 const maxWorkerAssetBytes = 24 * 1024 * 1024;
 const renderAssetBaseUrl = "https://api.jamtrackshub.com";
 const copiedDirectories = ["assets", "data", "downloads", "locales", "scripts", "slides", "styles"];
-const viteOwnedRootHtml = new Set(["index.html", "404.html", "legal.html", "privacy-policy.html", "service-waking.html", "feedback.html", "tracks.html", "fretboard-trainer.html", "chord-progressions.html"]);
+const viteOwnedRootHtml = new Set(["index.html", "404.html", "legal.html", "privacy-policy.html", "service-waking.html", "feedback.html", "tracks.html", "fretboard-trainer.html", "chord-progressions.html", "scale.html"]);
 const workerConfig = JSON.parse(fs.readFileSync(path.join(root, "wrangler.jsonc"), "utf8"));
 
 function fail(message) {
@@ -365,6 +365,46 @@ if (/scripts\/(?:site|i18n|chords)\.js/.test(migratedChordProgressions)) {
   fail("Chord Progressions still loads a legacy page runtime");
 }
 
+const migratedScaleExplorer = fs.readFileSync(path.join(dist, "scale.html"), "utf8");
+if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/scale\.html">/.test(migratedScaleExplorer)) {
+  fail("Scale Explorer canonical metadata differs");
+}
+if (!/<meta name="description" content="Build printable guitar scale diagrams by root note, scale type, fret range, and note or degree labels\.">/.test(migratedScaleExplorer)) {
+  fail("Scale Explorer description metadata differs");
+}
+if (!/<div id="vue-scale-explorer-root"><\/div>/.test(migratedScaleExplorer)) {
+  fail("Scale Explorer Vue mount target is missing");
+}
+if (!/<script defer src="https:\/\/cloud\.umami\.is\/script\.js" data-website-id="[^"]+"><\/script>/.test(migratedScaleExplorer)) {
+  fail("Scale Explorer Umami loader differs");
+}
+if (!/<script type="module" crossorigin src="\/assets\/vue\/scale-explorer-[^"]+\.js"><\/script>/.test(migratedScaleExplorer)) {
+  fail("Scale Explorer compiled Vue entry is missing");
+}
+if (/src\/entries\/scale-explorer\.js/.test(migratedScaleExplorer)) {
+  fail("Scale Explorer source entry leaked into production HTML");
+}
+[
+  "scripts/theme-init.js?v=20260725-friendly-insect-switch",
+  "scripts/i18n-init.js?v=20260804-no-language-flash",
+  "styles/base.css?v=20260829-smart-navbar-v2",
+  "styles/components.css?v=20260827-legal-footer",
+  "styles/pages.css?v=20260804-feedback-consistency",
+  "styles/themes.css?v=20260804-feedback-consistency",
+  "styles/scale.css?v=20260718-scale-original",
+  "assets/vendor/gsap/gsap.min.js",
+  "assets/vendor/gsap/ScrollTrigger.min.js",
+  "scripts/site-animations.js?v=20260718-trainer-dropdown-hover"
+].forEach(function(asset) {
+  if (!migratedScaleExplorer.includes(asset)) fail(`Scale Explorer legacy asset path differs: ${asset}`);
+});
+if (/assets\/vue\/scale-explorer-[^"]+\.css/.test(migratedScaleExplorer)) {
+  fail("Scale Explorer shared CSS was incorrectly rebundled");
+}
+if (/scripts\/(?:site|i18n|scale)\.js/.test(migratedScaleExplorer)) {
+  fail("Scale Explorer still loads a legacy page runtime");
+}
+
 [
   ["Homepage", migratedHome],
   ["404", migrated404],
@@ -374,7 +414,8 @@ if (/scripts\/(?:site|i18n|chords)\.js/.test(migratedChordProgressions)) {
   ["Feedback", migratedFeedback],
   ["Tracks", migratedTracks],
   ["Fretboard Trainer", migratedFretboardTrainer],
-  ["Chord Progressions", migratedChordProgressions]
+  ["Chord Progressions", migratedChordProgressions],
+  ["Scale Explorer", migratedScaleExplorer]
 ].forEach(function([pageName, html]) {
   if (/<nav class="navbar"|<footer class="footer"|class="skip-link"/.test(html)) {
     fail(`${pageName} still contains legacy shell markup`);
@@ -520,6 +561,12 @@ if (!fs.readFileSync(migratedChordProgressionsBundle, "utf8").includes("vue-chor
   fail("compiled Vue Chord Progressions mount marker is missing");
 }
 
+const migratedScaleExplorerBundle = vueJavaScript.find(filePath => path.basename(filePath).startsWith("scale-explorer-"));
+if (!migratedScaleExplorerBundle) fail("missing compiled Vue Scale Explorer entry");
+if (!fs.readFileSync(migratedScaleExplorerBundle, "utf8").includes("vue-scale-explorer-root")) {
+  fail("compiled Vue Scale Explorer mount marker is missing");
+}
+
 const sharedShellBundle = vueJavaScript.find(filePath => path.basename(filePath).startsWith("mountSitePage-"));
 if (!sharedShellBundle) fail("missing compiled shared Vue shell");
 const sharedShellSource = fs.readFileSync(sharedShellBundle, "utf8");
@@ -558,6 +605,9 @@ rootHtml.forEach(function(relativePath) {
   }
   if (relativePath !== "chord-progressions.html" && /assets\/vue\/chord-progressions-|src\/entries\/chord-progressions\.js/i.test(html)) {
     fail(`unmigrated production HTML references the Vue Chord Progressions entry: ${relativePath}`);
+  }
+  if (relativePath !== "scale.html" && /assets\/vue\/scale-explorer-|src\/entries\/scale-explorer\.js/i.test(html)) {
+    fail(`unmigrated production HTML references the Vue Scale Explorer entry: ${relativePath}`);
   }
 });
 

@@ -14,11 +14,11 @@ const vuePages = [
   ["feedback.html", "src/entries/feedback.js", "vue-feedback-root"],
   ["tracks.html", "src/entries/tracks.js", "vue-tracks-root"],
   ["fretboard-trainer.html", "src/entries/fretboard-trainer.js", "vue-fretboard-trainer-root"],
-  ["chord-progressions.html", "src/entries/chord-progressions.js", "vue-chord-progressions-root"]
+  ["chord-progressions.html", "src/entries/chord-progressions.js", "vue-chord-progressions-root"],
+  ["scale.html", "src/entries/scale-explorer.js", "vue-scale-explorer-root"]
 ];
 const legacyPages = [
   "chord-dictionary.html",
-  "scale.html",
   "progression-writer.html",
   "key-finder.html",
   "song-workspace.html"
@@ -36,7 +36,7 @@ test("provides one reusable Vue-owned site shell composition", () => {
   assert.match(mountHelper, /default: \(\) => h\(view\)/);
 });
 
-test("moves shared shell ownership off the nine Vue HTML documents", () => {
+test("moves shared shell ownership off the ten Vue HTML documents", () => {
   vuePages.forEach(([htmlPath, entryPath, mountId]) => {
     const html = read(htmlPath);
     const entry = read(entryPath);
@@ -130,19 +130,19 @@ test("keeps every legacy page on the legacy shell with no Vue mount", () => {
     assert.match(html, /<footer class="footer"/i, htmlPath);
     assert.match(html, /scripts\/site\.js/, htmlPath);
     assert.match(html, /scripts\/i18n\.js/, htmlPath);
-    assert.doesNotMatch(html, /src\/entries\/(?:404|legal|privacy|service-waking|feedback|fretboard-trainer|chord-progressions)\.js|vue-(?:404|legal|privacy|service-waking|feedback|fretboard-trainer|chord-progressions)-root/i, htmlPath);
+    assert.doesNotMatch(html, /src\/entries\/(?:404|legal|privacy|service-waking|feedback|fretboard-trainer|chord-progressions|scale-explorer)\.js|vue-(?:404|legal|privacy|service-waking|feedback|fretboard-trainer|chord-progressions|scale-explorer)-root/i, htmlPath);
   });
 });
 
 test("keeps migrated page views on Vue locale ownership without legacy DOM translation", () => {
-  ["ChordProgressionsView.vue", "FeedbackView.vue", "FretboardTrainerView.vue", "LegalView.vue", "NotFoundView.vue", "PrivacyView.vue", "ServiceWakingView.vue", "TracksView.vue"].forEach(fileName => {
+  ["ChordProgressionsView.vue", "FeedbackView.vue", "FretboardTrainerView.vue", "LegalView.vue", "NotFoundView.vue", "PrivacyView.vue", "ScaleExplorerView.vue", "ServiceWakingView.vue", "TracksView.vue"].forEach(fileName => {
     const view = read(`src/views/${fileName}`);
     assert.match(view, /useSiteLocale/);
     assert.doesNotMatch(view, /useLegacyLocale|data-i18n|v-html/);
   });
 });
 
-test("keeps the Phase 4B version and dependency boundary unchanged", () => {
+test("keeps the Phase 4C version and dependency boundary unchanged", () => {
   const packageJson = JSON.parse(read("package.json"));
   assert.equal(packageJson.version, "2.0.4");
   assert.deepEqual(packageJson.dependencies, { vue: "3.5.42" });
