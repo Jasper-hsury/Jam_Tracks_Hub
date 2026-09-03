@@ -1,12 +1,9 @@
-import { createApp } from "vue";
+import { mountSitePage } from "../app/mountSitePage.js";
 import LegalView from "../views/LegalView.vue";
 import { restoreInitialFragment } from "../utils/restoreInitialFragment.js";
 
-const mountTarget = document.getElementById("vue-legal-root");
-
-if (!mountTarget) {
-  throw new Error("Missing Vue Legal mount target.");
-}
-
-createApp(LegalView).mount(mountTarget);
+mountSitePage({
+  mountId: "vue-legal-root",
+  view: LegalView
+});
 restoreInitialFragment();

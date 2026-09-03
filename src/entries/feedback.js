@@ -1,10 +1,8 @@
-import { createApp } from "vue";
+import { mountSitePage } from "../app/mountSitePage.js";
 import FeedbackView from "../views/FeedbackView.vue";
 
-const mountTarget = document.getElementById("vue-feedback-root");
-
-if (!mountTarget) {
-  throw new Error("Missing Vue Feedback mount target.");
-}
-
-createApp(FeedbackView).mount(mountTarget);
+mountSitePage({
+  mountId: "vue-feedback-root",
+  showBackToTop: true,
+  view: FeedbackView
+});

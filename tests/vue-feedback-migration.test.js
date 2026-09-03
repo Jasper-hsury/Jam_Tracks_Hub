@@ -16,7 +16,7 @@ test("makes Feedback the fifth production Vue-owned MPA entry", () => {
   assert.match(html, /<div id="vue-feedback-root"><\/div>/);
   assert.match(html, /<script type="module" src="\/src\/entries\/feedback\.js"><\/script>/);
   assert.doesNotMatch(html, /scripts\/feedback\.js/);
-  assert.match(entry, /createApp\(FeedbackView\)\.mount\(mountTarget\)/);
+  assert.match(entry, /mountSitePage\(\{[\s\S]*mountId: "vue-feedback-root"[\s\S]*showBackToTop: true[\s\S]*view: FeedbackView/);
   assert.equal(fs.existsSync(path.join(root, "scripts/feedback.js")), false);
 });
 
@@ -29,9 +29,10 @@ test("preserves Feedback metadata, analytics, shell, and page route", () => {
   assert.match(html, /<meta property="og:url" content="https:\/\/jamtrackshub\.com\/feedback\.html">/);
   assert.match(html, /<body data-i18n-title="titles\.feedback">/);
   assert.match(html, /<script defer src="https:\/\/cloud\.umami\.is\/script\.js" data-website-id="[^"]+"><\/script>/);
-  assert.match(html, /<nav class="navbar" aria-label="Primary navigation">/);
-  assert.match(html, /<footer class="footer">/);
-  assert.match(html, /id="backToTopBtn"/);
+  assert.doesNotMatch(html, /<nav class="navbar"/);
+  assert.doesNotMatch(html, /<footer class="footer">/);
+  assert.doesNotMatch(html, /id="backToTopBtn"/);
+  assert.doesNotMatch(html, /scripts\/(?:site|i18n)\.js/);
 });
 
 test("preserves the Feedback field and accessibility contract", () => {
@@ -132,7 +133,7 @@ test("preserves Feedback loading, success, error, reset, and locale ownership", 
   assert.match(view, /finally \{\s*submitting\.value = false/);
   assert.match(view, /topic\.value = ""[\s\S]*?suggestion\.value = ""[\s\S]*?website\.value = ""/);
   assert.match(view, /page: window\.location\.pathname \|\| "\/feedback\.html"/);
-  assert.match(view, /useLegacyLocale\(\)/);
+  assert.match(view, /useSiteLocale\(\)/);
   assert.doesNotMatch(view, /data-i18n|v-html|innerHTML|console\.|localStorage|data-umami-event|analytics/i);
 });
 

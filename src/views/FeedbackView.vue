@@ -2,7 +2,7 @@
 import { computed, ref } from "vue";
 import { pages as englishPages } from "../../locales/en/common.json";
 import { pages as traditionalChinesePages } from "../../locales/zh-TW/common.json";
-import { useLegacyLocale } from "../i18n/useLegacyLocale.js";
+import { useSiteLocale } from "../i18n/useSiteLocale.js";
 import {
   submitFeedback,
   validateFeedbackFields
@@ -13,7 +13,7 @@ const messages = {
   "zh-TW": traditionalChinesePages.feedback
 };
 
-const { language } = useLegacyLocale();
+const { language } = useSiteLocale();
 const feedback = computed(() => messages[language.value] || messages.en);
 const feedbackForm = ref(null);
 const topicInput = ref(null);

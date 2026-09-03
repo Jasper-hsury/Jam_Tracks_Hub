@@ -2,13 +2,13 @@
 import { computed } from "vue";
 import { legal as englishLegal } from "../../locales/en/common.json";
 import { legal as traditionalChineseLegal } from "../../locales/zh-TW/common.json";
-import { useLegacyLocale } from "../i18n/useLegacyLocale.js";
+import { useSiteLocale } from "../i18n/useSiteLocale.js";
 
 const messages = {
   en: englishLegal,
   "zh-TW": traditionalChineseLegal
 };
-const { language } = useLegacyLocale();
+const { language } = useSiteLocale();
 const legal = computed(() => messages[language.value] || messages.en);
 </script>
 

@@ -89,8 +89,6 @@ Array.from(migrated404.matchAll(/(?:href|src)="([^"]+)"/g), match => match[1])
   "styles/components.css?v=20260827-legal-footer",
   "styles/pages.css?v=20260804-feedback-consistency",
   "styles/themes.css?v=20260804-feedback-consistency",
-  "scripts/site.js?v=20260902-404-route-root",
-  "scripts/i18n.js?v=20260902-404-route-root",
   "scripts/site-animations.js?v=20260718-trainer-dropdown-hover"
 ].forEach(function(asset) {
   if (!migrated404.includes(asset)) fail(`404 legacy asset path differs: ${asset}`);
@@ -113,9 +111,7 @@ if (/src\/entries\/legal\.js/.test(migratedLegal)) fail("Legal source entry leak
   "styles/base.css?v=20260829-smart-navbar-v2",
   "styles/components.css?v=20260827-legal-footer",
   "styles/pages.css?v=20260830-legal-static-panel",
-  "styles/themes.css?v=20260804-feedback-consistency",
-  "scripts/site.js?v=20260829-smart-navbar-v2",
-  "scripts/i18n.js?v=20260827-legal-footer"
+  "styles/themes.css?v=20260804-feedback-consistency"
 ].forEach(function(asset) {
   if (!migratedLegal.includes(asset)) fail(`Legal legacy asset path differs: ${asset}`);
 });
@@ -138,8 +134,6 @@ if (/src\/entries\/privacy\.js/.test(migratedPrivacy)) fail("Privacy source entr
   "styles/components.css?v=20260827-legal-footer",
   "styles/pages.css?v=20260830-policy-static-panels",
   "styles/themes.css?v=20260804-feedback-consistency",
-  "scripts/site.js?v=20260829-smart-navbar-v2",
-  "scripts/i18n.js?v=20260827-legal-footer",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
   "scripts/site-animations.js?v=20260830-privacy-static-policy"
@@ -175,8 +169,6 @@ if (/src\/entries\/service-waking\.js/.test(migratedServiceWaking)) {
   "styles/pages.css?v=20260804-feedback-consistency",
   "styles/themes.css?v=20260804-feedback-consistency",
   "scripts/site-config.js?v=20260729-youtube-key-api",
-  "scripts/site.js?v=20260829-smart-navbar-v2",
-  "scripts/i18n.js?v=20260827-legal-footer",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
   "scripts/site-animations.js?v=20260718-trainer-dropdown-hover"
@@ -210,8 +202,6 @@ if (/src\/entries\/feedback\.js/.test(migratedFeedback)) {
   "styles/components.css?v=20260827-legal-footer",
   "styles/pages.css?v=20260804-feedback-consistency",
   "styles/themes.css?v=20260804-feedback-consistency",
-  "scripts/site.js?v=20260829-smart-navbar-v2",
-  "scripts/i18n.js?v=20260827-legal-footer",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
   "scripts/site-animations.js?v=20260718-trainer-dropdown-hover"
@@ -221,6 +211,21 @@ if (/src\/entries\/feedback\.js/.test(migratedFeedback)) {
 if (/assets\/vue\/feedback-[^"]+\.css/.test(migratedFeedback)) {
   fail("Feedback shared CSS was incorrectly rebundled");
 }
+
+[
+  ["404", migrated404],
+  ["Legal", migratedLegal],
+  ["Privacy", migratedPrivacy],
+  ["Service Waking", migratedServiceWaking],
+  ["Feedback", migratedFeedback]
+].forEach(function([pageName, html]) {
+  if (/<nav class="navbar"|<footer class="footer"|class="skip-link"/.test(html)) {
+    fail(`${pageName} still contains legacy shell markup`);
+  }
+  if (/scripts\/(?:site|i18n)\.js/.test(html)) {
+    fail(`${pageName} still loads a legacy shell runtime`);
+  }
+});
 
 const sourceHeaders = path.join(root, "_headers");
 const distHeaders = path.join(dist, "_headers");
@@ -307,6 +312,13 @@ if (!migratedFeedbackBundle) fail("missing compiled Vue Feedback entry");
 if (!fs.readFileSync(migratedFeedbackBundle, "utf8").includes("vue-feedback-root")) {
   fail("compiled Vue Feedback mount marker is missing");
 }
+
+const sharedShellBundle = vueJavaScript.find(filePath => path.basename(filePath).startsWith("mountSitePage-"));
+if (!sharedShellBundle) fail("missing compiled shared Vue shell");
+const sharedShellSource = fs.readFileSync(sharedShellBundle, "utf8");
+["primaryNavigation", "footer-rights", "skip-link", "jasperMusicLanguage", "jasperMusicTheme"].forEach(function(marker) {
+  if (!sharedShellSource.includes(marker)) fail(`compiled shared Vue shell marker is missing: ${marker}`);
+});
 
 rootHtml.forEach(function(relativePath) {
   const html = fs.readFileSync(path.join(dist, relativePath), "utf8");
