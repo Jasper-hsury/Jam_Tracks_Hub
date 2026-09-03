@@ -67,7 +67,7 @@ test("keeps Vue and legacy i18n DOM ownership separate", () => {
 
 test("keeps every production HTML entry outside the declared Vue set legacy-owned", () => {
   const htmlFiles = fs.readdirSync(root)
-    .filter(fileName => fileName.endsWith(".html") && !["404.html", "legal.html", "privacy-policy.html"].includes(fileName));
+    .filter(fileName => fileName.endsWith(".html") && !["404.html", "legal.html", "privacy-policy.html", "service-waking.html", "feedback.html"].includes(fileName));
 
   assert.ok(htmlFiles.length > 0);
   htmlFiles.forEach(fileName => {
@@ -76,7 +76,7 @@ test("keeps every production HTML entry outside the declared Vue set legacy-owne
   });
 
   const verifier = read("tools/scripts/verify-cloudflare-build.js");
-  assert.match(verifier, /const viteOwnedRootHtml = new Set\(\["404\.html", "legal\.html", "privacy-policy\.html"\]\)/);
+  assert.match(verifier, /const viteOwnedRootHtml = new Set\(\["404\.html", "legal\.html", "privacy-policy\.html", "service-waking\.html", "feedback\.html"\]\)/);
   assert.match(verifier, /if \(viteOwnedRootHtml\.has\(relativePath\)\) return;/);
   assert.match(verifier, /root HTML is not byte-identical/);
   assert.match(verifier, /track slide HTML inventory differs/);

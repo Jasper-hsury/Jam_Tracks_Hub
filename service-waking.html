@@ -47,22 +47,7 @@
         </ul>
     </nav>
 
-    <main class="status-page" id="main-content">
-        <span class="jh-loader status-page-spinner" aria-hidden="true">
-            <span class="jh-loader-dot"></span>
-            <span class="jh-loader-dot"></span>
-            <span class="jh-loader-dot"></span>
-        </span>
-        <p class="status-page-code" data-i18n="service.keyFinder">KEY FINDER</p>
-        <h1 data-i18n="service.wakingAnalyzer">Waking the analyzer</h1>
-        <p id="wakeMessage" role="status" aria-live="polite" data-i18n="service.starting">
-            The service is starting. This can take a short moment after it has been idle.
-        </p>
-        <div class="status-page-actions">
-            <button class="primary-button" id="retryWakeButton" type="button" data-i18n="service.checkAgain">Check Again</button>
-            <a class="secondary-button" href="key-finder.html" data-i18n="service.backToKeyFinder">Back to Key Finder</a>
-        </div>
-    </main>
+    <div id="vue-service-waking-root"></div>
 
     <footer class="footer">
         <p>&copy; 2026 Jam Tracks Hub. All rights reserved.</p>
@@ -78,6 +63,6 @@
     <script src="assets/vendor/gsap/gsap.min.js"></script>
     <script src="assets/vendor/gsap/ScrollTrigger.min.js"></script>
     <script src="scripts/site-animations.js?v=20260718-trainer-dropdown-hover"></script>
-    <script src="scripts/service-waking.js?v=20260829-security-phase-1"></script>
+    <script type="module" src="/src/entries/service-waking.js"></script>
 </body>
 </html>

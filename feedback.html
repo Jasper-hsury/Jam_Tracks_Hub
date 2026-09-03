@@ -47,72 +47,7 @@
         </ul>
     </nav>
 
-    <main class="tracks-page feedback-page" id="main-content">
-        <p class="hero-eyebrow" data-i18n="pages.feedback.eyebrow">Feedback</p>
-        <h1 data-i18n="pages.feedback.title">Share a suggestion</h1>
-        <p class="hero-tagline signature-slogan" data-i18n="pages.feedback.lead">
-            Tell me what topic you have in mind and how Jam Tracks Hub could work better for your practice.
-        </p>
-
-        <section class="key-finder-panel feedback-panel" aria-labelledby="feedbackFormTitle">
-            <div class="tool-section-heading compact-heading">
-                <h2 id="feedbackFormTitle" class="section-title" data-i18n="pages.feedback.formTitle">Send feedback</h2>
-                <p data-i18n="pages.feedback.formCopy">
-                    Short notes are perfect. I use these suggestions to plan new tools, fix confusing flows, and shape future backing tracks.
-                </p>
-            </div>
-
-            <form
-                class="feedback-form"
-                id="feedbackForm"
-                data-feedback-endpoint="/api/feedback"
-            >
-                <div class="feedback-field">
-                    <label for="feedbackTopic" data-i18n="pages.feedback.topicLabel">Topic</label>
-                    <input
-                        id="feedbackTopic"
-                        name="topic"
-                        type="text"
-                        maxlength="120"
-                        autocomplete="off"
-                        placeholder="Navigation, track downloads, chord tools..."
-                        data-i18n-placeholder="pages.feedback.topicPlaceholder"
-                        required
-                    >
-                </div>
-
-                <div class="feedback-field">
-                    <label for="feedbackSuggestion" data-i18n="pages.feedback.suggestionLabel">Improvement suggestion</label>
-                    <textarea
-                        id="feedbackSuggestion"
-                        name="suggestion"
-                        maxlength="2400"
-                        rows="8"
-                        placeholder="What would make this page or tool more useful?"
-                        data-i18n-placeholder="pages.feedback.suggestionPlaceholder"
-                        required
-                    ></textarea>
-                </div>
-
-                <input
-                    class="home-subscribe-honeypot"
-                    name="website"
-                    type="text"
-                    tabindex="-1"
-                    autocomplete="off"
-                    aria-hidden="true"
-                >
-
-                <div class="feedback-actions">
-                    <a class="secondary-button" href="index.html#home" data-i18n="pages.feedback.backToHome">Back to Home</a>
-                    <button class="primary-button" type="submit">
-                        <span data-i18n="pages.feedback.submit">Send Feedback</span>
-                    </button>
-                </div>
-                <p class="feedback-status" id="feedbackStatus" aria-live="polite"></p>
-            </form>
-        </section>
-    </main>
+    <div id="vue-feedback-root"></div>
 
     <footer class="footer">
         <p>&copy; 2026 Jam Tracks Hub. All rights reserved.</p>
@@ -128,9 +63,9 @@
 
     <script src="scripts/site.js?v=20260829-smart-navbar-v2"></script>
     <script src="scripts/i18n.js?v=20260827-legal-footer"></script>
-    <script src="scripts/feedback.js?v=20260804-feedback-consistency"></script>
     <script src="assets/vendor/gsap/gsap.min.js"></script>
     <script src="assets/vendor/gsap/ScrollTrigger.min.js"></script>
     <script src="scripts/site-animations.js?v=20260718-trainer-dropdown-hover"></script>
+    <script type="module" src="/src/entries/feedback.js"></script>
 </body>
 </html>
