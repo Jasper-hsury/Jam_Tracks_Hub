@@ -36,7 +36,7 @@ The repository includes a [Vue/Vite migration foundation](docs/VUE_MIGRATION.md)
 
 Daily Umami analytics snapshot for Jam Tracks Hub.
 
-Last updated: Sep 2, 2026, 8:12 AM
+Last updated: Sep 3, 2026, 8:14 AM
 
 <p align="center">
   <img src="assets/analytics/umami-dashboard.png" alt="Umami analytics dashboard" width="100%" />
