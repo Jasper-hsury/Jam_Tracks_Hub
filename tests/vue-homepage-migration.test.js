@@ -172,14 +172,15 @@ test("owns SplitText lifecycle after Vue locale render and font readiness", () =
   assert.match(animations, /window\.addEventListener\("jasper:language-change", rebuildHomeTextAnimation\)/);
 });
 
-test("keeps Tracks and other legacy pages outside the Homepage Vue scope", () => {
+test("keeps Tracks independently Vue-owned and other legacy pages outside the Homepage Vue scope", () => {
   const packageJson = JSON.parse(read("package.json"));
   const tracksHtml = read("tracks.html");
   const keyFinderHtml = read("key-finder.html");
   const workspaceHtml = read("song-workspace.html");
 
   assert.equal(packageJson.version, "2.0.3");
-  assert.match(tracksHtml, /scripts\/tracks\.js/);
+  assert.match(tracksHtml, /src\/entries\/tracks\.js/);
+  assert.doesNotMatch(tracksHtml, /scripts\/tracks\.js/);
   assert.match(keyFinderHtml, /scripts\/key-finder\.js/);
   assert.match(workspaceHtml, /scripts\/song-workspace\.js/);
   [tracksHtml, keyFinderHtml, workspaceHtml].forEach(html => {

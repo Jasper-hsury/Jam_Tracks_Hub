@@ -11,10 +11,10 @@ const vuePages = [
   ["legal.html", "src/entries/legal.js", "vue-legal-root"],
   ["privacy-policy.html", "src/entries/privacy.js", "vue-privacy-root"],
   ["service-waking.html", "src/entries/service-waking.js", "vue-service-waking-root"],
-  ["feedback.html", "src/entries/feedback.js", "vue-feedback-root"]
+  ["feedback.html", "src/entries/feedback.js", "vue-feedback-root"],
+  ["tracks.html", "src/entries/tracks.js", "vue-tracks-root"]
 ];
 const legacyPages = [
-  "tracks.html",
   "chord-progressions.html",
   "chord-dictionary.html",
   "scale.html",
@@ -36,7 +36,7 @@ test("provides one reusable Vue-owned site shell composition", () => {
   assert.match(mountHelper, /default: \(\) => h\(view\)/);
 });
 
-test("moves shared shell ownership off the six Vue HTML documents", () => {
+test("moves shared shell ownership off the seven Vue HTML documents", () => {
   vuePages.forEach(([htmlPath, entryPath, mountId]) => {
     const html = read(htmlPath);
     const entry = read(entryPath);
@@ -135,7 +135,7 @@ test("keeps every legacy page on the legacy shell with no Vue mount", () => {
 });
 
 test("keeps migrated page views on Vue locale ownership without legacy DOM translation", () => {
-  ["FeedbackView.vue", "LegalView.vue", "NotFoundView.vue", "PrivacyView.vue", "ServiceWakingView.vue"].forEach(fileName => {
+  ["FeedbackView.vue", "LegalView.vue", "NotFoundView.vue", "PrivacyView.vue", "ServiceWakingView.vue", "TracksView.vue"].forEach(fileName => {
     const view = read(`src/views/${fileName}`);
     assert.match(view, /useSiteLocale/);
     assert.doesNotMatch(view, /useLegacyLocale|data-i18n|v-html/);
