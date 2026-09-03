@@ -8,7 +8,7 @@ import {
   pages as traditionalChinesePages,
   service as traditionalChineseService
 } from "../../locales/zh-TW/common.json";
-import { useLegacyLocale } from "../i18n/useLegacyLocale.js";
+import { useSiteLocale } from "../i18n/useSiteLocale.js";
 import {
   checkServiceHealth,
   resolveServiceApiBase
@@ -30,7 +30,7 @@ const messages = {
   }
 };
 
-const { language } = useLegacyLocale();
+const { language } = useSiteLocale();
 const copy = computed(() => messages[language.value] || messages.en);
 const attempts = ref(0);
 const checking = ref(false);

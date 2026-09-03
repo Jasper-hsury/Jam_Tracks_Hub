@@ -15,7 +15,7 @@ test("makes Legal the second production Vue-owned MPA entry", () => {
   assert.match(config, /viteOwnedHtml = new Set\(\["\/404\.html", "\/legal\.html", "\/privacy-policy\.html", "\/service-waking\.html", "\/feedback\.html"\]\)/);
   assert.match(html, /<div id="vue-legal-root"><\/div>/);
   assert.match(html, /<script type="module" src="\/src\/entries\/legal\.js"><\/script>/);
-  assert.match(entry, /createApp\(LegalView\)\.mount\(mountTarget\)/);
+  assert.match(entry, /mountSitePage\(\{[\s\S]*mountId: "vue-legal-root"[\s\S]*view: LegalView/);
   assert.match(entry, /restoreInitialFragment\(\)/);
 });
 
@@ -29,8 +29,9 @@ test("preserves Legal metadata, analytics, theme, locale, and shared shell", () 
   assert.match(html, /scripts\/theme-init\.js\?v=20260725-friendly-insect-switch/);
   assert.match(html, /scripts\/i18n-init\.js\?v=20260827-legal-footer/);
   assert.match(html, /<script defer src="https:\/\/cloud\.umami\.is\/script\.js" data-website-id="[^"]+"><\/script>/);
-  assert.match(html, /<nav class="navbar" aria-label="Primary navigation">/);
-  assert.match(html, /<footer class="footer">/);
+  assert.doesNotMatch(html, /<nav class="navbar"/);
+  assert.doesNotMatch(html, /<footer class="footer">/);
+  assert.doesNotMatch(html, /scripts\/(?:site|i18n)\.js/);
 });
 
 test("renders the established Legal structure from canonical locale resources", () => {
@@ -40,7 +41,7 @@ test("renders the established Legal structure from canonical locale resources", 
 
   assert.match(view, /import \{ legal as englishLegal \} from "\.\.\/\.\.\/locales\/en\/common\.json"/);
   assert.match(view, /import \{ legal as traditionalChineseLegal \} from "\.\.\/\.\.\/locales\/zh-TW\/common\.json"/);
-  assert.match(view, /useLegacyLocale\(\)/);
+  assert.match(view, /useSiteLocale\(\)/);
   assert.match(view, /<main id="main-content" class="tracks-page legal-page">/);
   assert.match(view, /class="key-finder-panel legal-policy-panel"/);
   ["terms", "song-workspace", "copyright", "exports", "privacy", "limitations"].forEach(anchor => {

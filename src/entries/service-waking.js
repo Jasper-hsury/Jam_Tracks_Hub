@@ -1,10 +1,8 @@
-import { createApp } from "vue";
+import { mountSitePage } from "../app/mountSitePage.js";
 import ServiceWakingView from "../views/ServiceWakingView.vue";
 
-const mountTarget = document.getElementById("vue-service-waking-root");
-
-if (!mountTarget) {
-  throw new Error("Missing Vue Service Waking mount target.");
-}
-
-createApp(ServiceWakingView).mount(mountTarget);
+mountSitePage({
+  activePage: "key-finder",
+  mountId: "vue-service-waking-root",
+  view: ServiceWakingView
+});

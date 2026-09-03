@@ -16,7 +16,7 @@ test("makes Service Waking the fourth production Vue-owned MPA entry", () => {
   assert.match(html, /<div id="vue-service-waking-root"><\/div>/);
   assert.match(html, /<script type="module" src="\/src\/entries\/service-waking\.js"><\/script>/);
   assert.doesNotMatch(html, /scripts\/service-waking\.js/);
-  assert.match(entry, /createApp\(ServiceWakingView\)\.mount\(mountTarget\)/);
+  assert.match(entry, /mountSitePage\(\{[\s\S]*activePage: "key-finder"[\s\S]*mountId: "vue-service-waking-root"[\s\S]*view: ServiceWakingView/);
   assert.equal(fs.existsSync(path.join(root, "scripts/service-waking.js")), false);
 });
 
@@ -30,8 +30,9 @@ test("preserves Service Waking metadata, analytics, shell, and shared runtime", 
   assert.match(html, /<body data-i18n-title="service\.wakingAnalyzer">/);
   assert.match(html, /<script defer src="https:\/\/cloud\.umami\.is\/script\.js" data-website-id="[^"]+"><\/script>/);
   assert.match(html, /scripts\/site-config\.js\?v=20260729-youtube-key-api/);
-  assert.match(html, /<nav class="navbar">/);
-  assert.match(html, /<footer class="footer">/);
+  assert.doesNotMatch(html, /<nav class="navbar"/);
+  assert.doesNotMatch(html, /<footer class="footer">/);
+  assert.doesNotMatch(html, /scripts\/(?:site|i18n)\.js/);
 });
 
 test("preserves Service Waking API resolution and request contract with controlled fetch", async () => {
@@ -85,7 +86,7 @@ test("preserves Service Waking UI states, polling, navigation, and locale owners
   assert.match(view, /window\.location\.href = "key-finder\.html"/);
   assert.match(view, /<p id="wakeMessage" role="status" aria-live="polite">/);
   assert.match(view, /:disabled="checking"/);
-  assert.match(view, /useLegacyLocale\(\)/);
+  assert.match(view, /useSiteLocale\(\)/);
   assert.doesNotMatch(view, /data-i18n|umami|analytics|data-umami-event/i);
 });
 

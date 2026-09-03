@@ -2,13 +2,13 @@
 import { computed } from "vue";
 import { privacy as englishPrivacy } from "../../locales/en/common.json";
 import { privacy as traditionalChinesePrivacy } from "../../locales/zh-TW/common.json";
-import { useLegacyLocale } from "../i18n/useLegacyLocale.js";
+import { useSiteLocale } from "../i18n/useSiteLocale.js";
 
 const messages = {
   en: englishPrivacy,
   "zh-TW": traditionalChinesePrivacy
 };
-const { language } = useLegacyLocale();
+const { language } = useSiteLocale();
 const privacy = computed(() => messages[language.value] || messages.en);
 </script>
 

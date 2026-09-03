@@ -15,7 +15,7 @@ test("makes Privacy the third production Vue-owned MPA entry", () => {
   assert.match(config, /viteOwnedHtml = new Set\(\["\/404\.html", "\/legal\.html", "\/privacy-policy\.html", "\/service-waking\.html", "\/feedback\.html"\]\)/);
   assert.match(html, /<div id="vue-privacy-root"><\/div>/);
   assert.match(html, /<script type="module" src="\/src\/entries\/privacy\.js"><\/script>/);
-  assert.match(entry, /createApp\(PrivacyView\)\.mount\(mountTarget\)/);
+  assert.match(entry, /mountSitePage\(\{[\s\S]*mountId: "vue-privacy-root"[\s\S]*view: PrivacyView/);
   assert.match(entry, /restoreInitialFragment\(\)/);
 });
 
@@ -39,7 +39,9 @@ test("preserves Privacy metadata, analytics, theme, locale, shell, and animation
   assert.match(html, /scripts\/theme-init\.js\?v=20260725-friendly-insect-switch/);
   assert.match(html, /scripts\/i18n-init\.js\?v=20260804-no-language-flash/);
   assert.match(html, /<script defer src="https:\/\/cloud\.umami\.is\/script\.js" data-website-id="[^"]+"><\/script>/);
-  assert.match(html, /<nav class="navbar" aria-label="Primary navigation">/);
+  assert.doesNotMatch(html, /<nav class="navbar"/);
+  assert.doesNotMatch(html, /<footer class="footer">/);
+  assert.doesNotMatch(html, /scripts\/(?:site|i18n)\.js/);
   assert.match(html, /assets\/vendor\/gsap\/gsap\.min\.js/);
   assert.match(html, /scripts\/site-animations\.js\?v=20260830-privacy-static-policy/);
 });
@@ -51,7 +53,7 @@ test("renders the established Privacy structure from canonical locale resources"
 
   assert.match(view, /import \{ privacy as englishPrivacy \} from "\.\.\/\.\.\/locales\/en\/common\.json"/);
   assert.match(view, /import \{ privacy as traditionalChinesePrivacy \} from "\.\.\/\.\.\/locales\/zh-TW\/common\.json"/);
-  assert.match(view, /useLegacyLocale\(\)/);
+  assert.match(view, /useSiteLocale\(\)/);
   assert.match(view, /<main id="main-content" class="tracks-page privacy-page">/);
   assert.match(view, /class="key-finder-panel privacy-policy-panel"/);
   assert.match(view, /id="song-workspace-local-storage"/);

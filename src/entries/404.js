@@ -1,10 +1,7 @@
-import { createApp } from "vue";
+import { mountSitePage } from "../app/mountSitePage.js";
 import NotFoundView from "../views/NotFoundView.vue";
 
-const mountTarget = document.getElementById("vue-404-root");
-
-if (!mountTarget) {
-  throw new Error("Missing Vue 404 mount target.");
-}
-
-createApp(NotFoundView).mount(mountTarget);
+mountSitePage({
+  mountId: "vue-404-root",
+  view: NotFoundView
+});

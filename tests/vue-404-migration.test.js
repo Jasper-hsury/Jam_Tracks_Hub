@@ -40,17 +40,17 @@ test("preserves the public 404 metadata and action contract", () => {
 test("keeps Vue and legacy i18n DOM ownership separate", () => {
   const entry = read("src/entries/404.js");
   const view = read("src/views/NotFoundView.vue");
-  const localeBridge = read("src/i18n/useLegacyLocale.js");
+  const localeBridge = read("src/i18n/useSiteLocale.js");
   const english = JSON.parse(read("locales/en/common.json"));
   const traditionalChinese = JSON.parse(read("locales/zh-TW/common.json"));
 
-  assert.match(entry, /createApp\(NotFoundView\)\.mount\(mountTarget\)/);
+  assert.match(entry, /mountSitePage\(\{[\s\S]*mountId: "vue-404-root"[\s\S]*view: NotFoundView/);
   assert.doesNotMatch(view, /data-i18n/);
   assert.match(localeBridge, /jasper:language-change/);
   assert.match(localeBridge, /document\.documentElement\.dataset\.language/);
-  assert.match(localeBridge, /window\.JasperI18n\?\.getLanguage/);
-  assert.match(localeBridge, /window\.JasperI18n\?\.translate/);
-  assert.doesNotMatch(localeBridge, /locales\//);
+  assert.match(localeBridge, /jasperMusicLanguage/);
+  assert.match(localeBridge, /locales\/en\/common\.json/);
+  assert.match(localeBridge, /locales\/zh-TW\/common\.json/);
   assert.deepEqual(english.notFound, {
     title: "This page missed the downbeat.",
     copy: "The link may have moved, but the music is still here.",

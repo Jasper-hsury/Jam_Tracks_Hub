@@ -1,7 +1,7 @@
 <script setup>
-import { useLegacyLocale } from "../i18n/useLegacyLocale.js";
+import { useSiteLocale } from "../i18n/useSiteLocale.js";
 
-const { notFound } = useLegacyLocale();
+const { notFound } = useSiteLocale();
 </script>
 
 <template>
