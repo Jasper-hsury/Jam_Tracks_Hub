@@ -6,7 +6,7 @@ const dist = path.join(root, "dist");
 const maxWorkerAssetBytes = 24 * 1024 * 1024;
 const renderAssetBaseUrl = "https://api.jamtrackshub.com";
 const copiedDirectories = ["assets", "data", "downloads", "locales", "scripts", "slides", "styles"];
-const viteOwnedRootHtml = new Set(["index.html", "404.html", "legal.html", "privacy-policy.html", "service-waking.html", "feedback.html", "tracks.html", "fretboard-trainer.html", "chord-progressions.html", "scale.html"]);
+const viteOwnedRootHtml = new Set(["index.html", "404.html", "legal.html", "privacy-policy.html", "service-waking.html", "feedback.html", "tracks.html", "fretboard-trainer.html", "chord-progressions.html", "scale.html", "chord-dictionary.html"]);
 const workerConfig = JSON.parse(fs.readFileSync(path.join(root, "wrangler.jsonc"), "utf8"));
 
 function fail(message) {
@@ -405,6 +405,47 @@ if (/scripts\/(?:site|i18n|scale)\.js/.test(migratedScaleExplorer)) {
   fail("Scale Explorer still loads a legacy page runtime");
 }
 
+const migratedChordDictionary = fs.readFileSync(path.join(dist, "chord-dictionary.html"), "utf8");
+if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/chord-dictionary\.html">/.test(migratedChordDictionary)) {
+  fail("Chord Dictionary canonical metadata differs");
+}
+if (!/<meta name="description" content="Search guitar chords by symbol, formula, notes, and playable voicings with shape filters\.">/.test(migratedChordDictionary)) {
+  fail("Chord Dictionary description metadata differs");
+}
+if (!/<div id="vue-chord-dictionary-root"><\/div>/.test(migratedChordDictionary)) {
+  fail("Chord Dictionary Vue mount target is missing");
+}
+if (!/<script defer src="https:\/\/cloud\.umami\.is\/script\.js" data-website-id="[^"]+"><\/script>/.test(migratedChordDictionary)) {
+  fail("Chord Dictionary Umami loader differs");
+}
+if (!/<script type="module" crossorigin src="\/assets\/vue\/chord-dictionary-[^"]+\.js"><\/script>/.test(migratedChordDictionary)) {
+  fail("Chord Dictionary compiled Vue entry is missing");
+}
+if (/src\/entries\/chord-dictionary\.js/.test(migratedChordDictionary)) {
+  fail("Chord Dictionary source entry leaked into production HTML");
+}
+[
+  "scripts/theme-init.js?v=20260725-friendly-insect-switch",
+  "scripts/i18n-init.js?v=20260804-no-language-flash",
+  "styles/base.css?v=20260829-smart-navbar-v2",
+  "styles/components.css?v=20260827-legal-footer",
+  "styles/pages.css?v=20260804-feedback-consistency",
+  "styles/themes.css?v=20260804-feedback-consistency",
+  "styles/chord-dictionary.css?v=20260728-mobile-polish",
+  "assets/vendor/gsap/gsap.min.js",
+  "assets/vendor/gsap/Flip.min.js",
+  "assets/vendor/gsap/ScrollTrigger.min.js",
+  "scripts/site-animations.js?v=20260722-shape-entry-polish"
+].forEach(function(asset) {
+  if (!migratedChordDictionary.includes(asset)) fail(`Chord Dictionary legacy asset path differs: ${asset}`);
+});
+if (/assets\/vue\/chord-dictionary-[^"]+\.css/.test(migratedChordDictionary)) {
+  fail("Chord Dictionary shared CSS was incorrectly rebundled");
+}
+if (/scripts\/(?:site|i18n|chord-dictionary)\.js/.test(migratedChordDictionary)) {
+  fail("Chord Dictionary still loads a legacy page runtime");
+}
+
 [
   ["Homepage", migratedHome],
   ["404", migrated404],
@@ -415,7 +456,8 @@ if (/scripts\/(?:site|i18n|scale)\.js/.test(migratedScaleExplorer)) {
   ["Tracks", migratedTracks],
   ["Fretboard Trainer", migratedFretboardTrainer],
   ["Chord Progressions", migratedChordProgressions],
-  ["Scale Explorer", migratedScaleExplorer]
+  ["Scale Explorer", migratedScaleExplorer],
+  ["Chord Dictionary", migratedChordDictionary]
 ].forEach(function([pageName, html]) {
   if (/<nav class="navbar"|<footer class="footer"|class="skip-link"/.test(html)) {
     fail(`${pageName} still contains legacy shell markup`);
@@ -567,6 +609,12 @@ if (!fs.readFileSync(migratedScaleExplorerBundle, "utf8").includes("vue-scale-ex
   fail("compiled Vue Scale Explorer mount marker is missing");
 }
 
+const migratedChordDictionaryBundle = vueJavaScript.find(filePath => path.basename(filePath).startsWith("chord-dictionary-"));
+if (!migratedChordDictionaryBundle) fail("missing compiled Vue Chord Dictionary entry");
+if (!fs.readFileSync(migratedChordDictionaryBundle, "utf8").includes("vue-chord-dictionary-root")) {
+  fail("compiled Vue Chord Dictionary mount marker is missing");
+}
+
 const sharedShellBundle = vueJavaScript.find(filePath => path.basename(filePath).startsWith("mountSitePage-"));
 if (!sharedShellBundle) fail("missing compiled shared Vue shell");
 const sharedShellSource = fs.readFileSync(sharedShellBundle, "utf8");
@@ -608,6 +656,9 @@ rootHtml.forEach(function(relativePath) {
   }
   if (relativePath !== "scale.html" && /assets\/vue\/scale-explorer-|src\/entries\/scale-explorer\.js/i.test(html)) {
     fail(`unmigrated production HTML references the Vue Scale Explorer entry: ${relativePath}`);
+  }
+  if (relativePath !== "chord-dictionary.html" && /assets\/vue\/chord-dictionary-|src\/entries\/chord-dictionary\.js/i.test(html)) {
+    fail(`unmigrated production HTML references the Vue Chord Dictionary entry: ${relativePath}`);
   }
 });
 
