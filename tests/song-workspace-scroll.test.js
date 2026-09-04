@@ -4,7 +4,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const root = path.resolve(__dirname, "..");
-const workspaceJs = fs.readFileSync(path.join(root, "scripts/song-workspace.js"), "utf8");
+const workspaceJs = fs.readFileSync(path.join(root, "src/composables/useSongWorkspace.js"), "utf8");
 const workspaceCss = fs.readFileSync(path.join(root, "styles/song-workspace.css"), "utf8");
 
 function functionSource(name) {

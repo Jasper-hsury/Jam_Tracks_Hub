@@ -6,8 +6,9 @@ const Core = require("../scripts/song-workspace-core.js");
 const SongImport = require("../scripts/song-workspace-import.js");
 
 const root = path.resolve(__dirname, "..");
-const workspaceHtml = fs.readFileSync(path.join(root, "song-workspace.html"), "utf8");
-const workspaceJs = fs.readFileSync(path.join(root, "scripts/song-workspace.js"), "utf8");
+const workspaceHtml = fs.readFileSync(path.join(root, "song-workspace.html"), "utf8")
+    + fs.readFileSync(path.join(root, "src/views/SongWorkspaceView.vue"), "utf8");
+const workspaceJs = fs.readFileSync(path.join(root, "src/composables/useSongWorkspace.js"), "utf8");
 const workspaceCss = fs.readFileSync(path.join(root, "styles/song-workspace.css"), "utf8");
 const en = JSON.parse(fs.readFileSync(path.join(root, "locales/en/common.json"), "utf8")).pages.songWorkspace;
 const zh = JSON.parse(fs.readFileSync(path.join(root, "locales/zh-TW/common.json"), "utf8")).pages.songWorkspace;

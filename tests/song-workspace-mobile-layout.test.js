@@ -5,9 +5,9 @@ const path = require("node:path");
 
 const root = path.resolve(__dirname, "..");
 const read = relativePath => fs.readFileSync(path.join(root, relativePath), "utf8");
-const html = read("song-workspace.html");
+const html = read("song-workspace.html") + read("src/views/SongWorkspaceView.vue");
 const css = read("styles/song-workspace.css");
-const app = read("scripts/song-workspace.js");
+const app = read("src/composables/useSongWorkspace.js");
 const en = JSON.parse(read("locales/en/common.json"));
 const zh = JSON.parse(read("locales/zh-TW/common.json"));
 

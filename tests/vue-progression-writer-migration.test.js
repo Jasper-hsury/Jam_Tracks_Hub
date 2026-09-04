@@ -307,7 +307,7 @@ test("mounts Progression Writer as the twelfth Vue-owned Vite MPA page and remov
   assert.match(html, /scripts\/chord-shapes\.js/);
   assert.match(entry, /activePage: "chord-progressions"/);
   assert.equal(fs.existsSync(path.join(root, "scripts/progression-writer.js")), false);
-  assert.equal((config.match(/resolve\(root, "[^\"]+\.html"\)/g) || []).length, 13);
+  assert.equal((config.match(/resolve\(root, "[^\"]+\.html"\)/g) || []).length, 14);
 });
 
 test("uses native Vue DOM ownership while preserving shell, i18n, theme, responsive, and accessibility contracts", () => {
@@ -356,8 +356,6 @@ test("keeps every shared music/backend consumer byte-identical", () => {
     "styles/chord-dictionary.css": "4fbcdc99c18949c5961ea933224b9aabbae1a06c655960885549e657faa63f53",
     "styles/pages.css": "621ccb2d5ad1e086c25c373432172021daaefecfa6faf7c0c147fe17fbf9a867",
     "styles/themes.css": "517cfd99f45e39deb3ba57e6c2de67ccb12b14c4750af8c7a6b75a581e1af4a7",
-    "song-workspace.html": "7c452f104a6302c14316ae0c8cf0ea48784ba8ac5ec8ff12771115fc68afb77f",
-    "scripts/song-workspace.js": "cbb2bc6924cd9a038a8efa7cfd20f4b660654041f3916150d79ce624ae49a388",
     "scripts/song-workspace-core.js": "d792e65873c140deda2ac576370bcd940d14e1f35d9fb5da88bbd11431b28ecb",
     "scripts/song-workspace-storage.js": "b11c00dcb5cafb3ca414ccc9fec59bd6931dc39fe3658ecec33003f4d7d210ae",
     "scripts/song-workspace-import.js": "7c04c4890176ac235d93f29ed9ca2440466978b7973fbb4e07e5c3ee9d311b56",
@@ -370,7 +368,7 @@ test("keeps every shared music/backend consumer byte-identical", () => {
   };
   Object.entries(expectedHashes).forEach(([file, expected]) => assert.equal(sha256(read(file)), expected, file));
   assert.match(read("song-workspace.html"), /scripts\/chord-shapes\.js/);
-  assert.match(read("scripts/song-workspace.js"), /Shapes\.renderProgressionDiagram/);
+  assert.match(read("src/composables/useSongWorkspace.js"), /Shapes\.renderProgressionDiagram/);
 });
 
 test("updates deterministic Cloudflare ownership without changing version or backend boundaries", () => {
