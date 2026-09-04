@@ -6,8 +6,8 @@ const Shapes = require("../scripts/chord-shapes.js");
 
 const root = path.resolve(__dirname, "..");
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
-const html = read("song-workspace.html");
-const js = read("scripts/song-workspace.js");
+const html = read("song-workspace.html") + read("src/views/SongWorkspaceView.vue");
+const js = read("src/composables/useSongWorkspace.js");
 const css = read("styles/song-workspace.css");
 const en = JSON.parse(read("locales/en/common.json")).pages.songWorkspace;
 const zh = JSON.parse(read("locales/zh-TW/common.json")).pages.songWorkspace;

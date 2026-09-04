@@ -24,11 +24,9 @@
     "read-performance-state"
   ],
   "legacyRuntimeSha256": {
-    "song-workspace.html": "7c452f104a6302c14316ae0c8cf0ea48784ba8ac5ec8ff12771115fc68afb77f",
     "scripts/song-workspace-core.js": "d792e65873c140deda2ac576370bcd940d14e1f35d9fb5da88bbd11431b28ecb",
     "scripts/song-workspace-storage.js": "b11c00dcb5cafb3ca414ccc9fec59bd6931dc39fe3658ecec33003f4d7d210ae",
     "scripts/song-workspace-import.js": "7c04c4890176ac235d93f29ed9ca2440466978b7973fbb4e07e5c3ee9d311b56",
-    "scripts/song-workspace.js": "cbb2bc6924cd9a038a8efa7cfd20f4b660654041f3916150d79ce624ae49a388",
     "scripts/chord-shapes.js": "00189b548b9d6fe48daab6c3ea68fd2a2a2baf9e39d16d638df1b0e8d19c1c04",
     "styles/song-workspace.css": "0fa83f76ec2aa81fef81653809d855b0673a1dbde9224f757c10af50f9660a3d",
     "styles/chord-dictionary.css": "4fbcdc99c18949c5961ea933224b9aabbae1a06c655960885549e657faa63f53"

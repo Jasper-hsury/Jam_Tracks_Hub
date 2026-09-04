@@ -4,21 +4,26 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 
 const root = fileURLToPath(new URL(".", import.meta.url));
-const viteOwnedHtml = new Set(["/", "/index.html", "/404.html", "/legal.html", "/privacy-policy.html", "/service-waking.html", "/feedback.html", "/tracks", "/tracks.html", "/fretboard-trainer", "/fretboard-trainer.html", "/chord-progressions", "/chord-progressions.html", "/scale", "/scale.html", "/chord-dictionary", "/chord-dictionary.html", "/progression-writer", "/progression-writer.html", "/key-finder", "/key-finder.html"]);
+const viteOwnedHtml = new Set(["/", "/index.html", "/404.html", "/legal.html", "/privacy-policy.html", "/service-waking.html", "/feedback.html", "/tracks", "/tracks.html", "/fretboard-trainer", "/fretboard-trainer.html", "/chord-progressions", "/chord-progressions.html", "/scale", "/scale.html", "/chord-dictionary", "/chord-dictionary.html", "/progression-writer", "/progression-writer.html", "/key-finder", "/key-finder.html", "/song-workspace", "/song-workspace.html"]);
 const legacyHtmlAssets = [
   "assets/images/icon.png",
   "scripts/theme-init.js?v=20260725-friendly-insect-switch",
   "scripts/i18n-init.js?v=20260804-no-language-flash",
   "scripts/i18n-init.js?v=20260902-404-route-root",
+  "scripts/i18n-init.js?v=20260826-song-workspace",
   "styles/base.css?v=20260829-smart-navbar-v2",
   "styles/components.css?v=20260827-legal-footer",
   "styles/pages.css?v=20260804-feedback-consistency",
   "styles/pages.css?v=20260830-legal-static-panel",
   "styles/pages.css?v=20260830-policy-static-panels",
+  "styles/pages.css?v=20260826-song-workspace",
   "styles/themes.css?v=20260804-feedback-consistency",
+  "styles/themes.css?v=20260826-song-workspace",
   "styles/fretboard-trainer.css?v=20260718-fretboard-trainer-polish",
   "styles/scale.css?v=20260718-scale-original",
   "styles/chord-dictionary.css?v=20260728-mobile-polish",
+  "styles/chord-dictionary.css?v=20260826-workspace-hardening",
+  "styles/song-workspace.css?v=20260829-library-text-v3",
   "scripts/site.js?v=20260829-smart-navbar-v2",
   "scripts/site.js?v=20260902-404-route-root",
   "scripts/site-config.js?v=20260729-youtube-key-api",
@@ -32,7 +37,12 @@ const legacyHtmlAssets = [
   "scripts/site-animations.js?v=20260903-vue-home-lifecycle",
   "scripts/site-animations.js?v=20260830-privacy-static-policy",
   "scripts/site-animations.js?v=20260720-track-windmill-heartless",
-  "scripts/chord-shapes.js?v=20260826-workspace-hardening"
+  "scripts/chord-shapes.js?v=20260826-workspace-hardening",
+  "scripts/chord-shapes.js?v=20260827-picker-json-fix",
+  "scripts/song-workspace-core.js?v=20260827-picker-json-fix",
+  "scripts/song-workspace-storage.js?v=20260828-settings-ux",
+  "scripts/song-workspace-import.js?v=20260827-picker-json-fix",
+  "scripts/site-animations.js?v=20260830-workspace-entrance"
 ];
 const legacyAssetSentinel = "https://vite-preserved-legacy.invalid/";
 
@@ -101,6 +111,7 @@ export default defineConfig({
         "chord-dictionary": resolve(root, "chord-dictionary.html"),
         "progression-writer": resolve(root, "progression-writer.html"),
         "key-finder": resolve(root, "key-finder.html"),
+        "song-workspace": resolve(root, "song-workspace.html"),
         "vue-foundation": resolve(root, "src/entries/vue-foundation.js")
       },
       output: {

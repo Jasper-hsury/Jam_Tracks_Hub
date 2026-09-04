@@ -18,11 +18,10 @@ const vuePages = [
   ["scale.html", "src/entries/scale-explorer.js", "vue-scale-explorer-root"],
   ["chord-dictionary.html", "src/entries/chord-dictionary.js", "vue-chord-dictionary-root"],
   ["progression-writer.html", "src/entries/progression-writer.js", "vue-progression-writer-root"],
-  ["key-finder.html", "src/entries/key-finder.js", "vue-key-finder-root"]
+  ["key-finder.html", "src/entries/key-finder.js", "vue-key-finder-root"],
+  ["song-workspace.html", "src/entries/song-workspace.js", "vue-song-workspace-root"]
 ];
-const legacyPages = [
-  "song-workspace.html"
-];
+const legacyPages = [];
 
 test("provides one reusable Vue-owned site shell composition", () => {
   const shell = read("src/components/site/SiteShell.vue");
@@ -41,7 +40,7 @@ test("moves shared shell ownership off the thirteen Vue HTML documents", () => {
     const html = read(htmlPath);
     const entry = read(entryPath);
 
-    assert.match(html, new RegExp(`<div id="${mountId}"><\\/div>`), htmlPath);
+    assert.match(html, new RegExp(`<div id="${mountId}"`), htmlPath);
     assert.doesNotMatch(html, /<nav class="navbar"|<footer class="footer"|class="skip-link"/, htmlPath);
     assert.doesNotMatch(html, /scripts\/(?:site|i18n)\.js/, htmlPath);
     assert.match(entry, /mountSitePage\(\{/, entryPath);
@@ -123,14 +122,14 @@ test("preserves footer content and external-link safety", () => {
   assert.equal((footer.match(/rel="noopener noreferrer"/g) || []).length, 2);
 });
 
-test("keeps every legacy page on the legacy shell with no Vue mount", () => {
+test("keeps any remaining legacy pages on the legacy shell with no Vue mount", () => {
   legacyPages.forEach(htmlPath => {
     const html = read(htmlPath);
     assert.match(html, /<nav class="navbar"/i, htmlPath);
     assert.match(html, /<footer class="footer"/i, htmlPath);
     assert.match(html, /scripts\/site\.js/, htmlPath);
     assert.match(html, /scripts\/i18n\.js/, htmlPath);
-    assert.doesNotMatch(html, /src\/entries\/(?:404|legal|privacy|service-waking|feedback|fretboard-trainer|chord-progressions|scale-explorer|chord-dictionary|progression-writer|key-finder)\.js|vue-(?:404|legal|privacy|service-waking|feedback|fretboard-trainer|chord-progressions|scale-explorer|chord-dictionary|progression-writer|key-finder)-root/i, htmlPath);
+    assert.doesNotMatch(html, /src\/entries\/(?:404|legal|privacy|service-waking|feedback|fretboard-trainer|chord-progressions|scale-explorer|chord-dictionary|progression-writer|key-finder|song-workspace)\.js|vue-(?:404|legal|privacy|service-waking|feedback|fretboard-trainer|chord-progressions|scale-explorer|chord-dictionary|progression-writer|key-finder|song-workspace)-root/i, htmlPath);
   });
 });
 

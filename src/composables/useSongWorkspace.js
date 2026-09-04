@@ -1,11 +1,24 @@
-(function() {
-    "use strict";
+import { onBeforeUnmount, onMounted } from "vue";
+import { useSiteLocale } from "../i18n/useSiteLocale.js";
 
-    const Core = window.JamSongCore;
-    const Storage = window.JamSongStorage;
-    const SongImport = window.JamSongImport;
-    const Shapes = window.JamChordShapes;
-    if (!Core || !Storage || !SongImport || !Shapes) return;
+export function useSongWorkspace() {
+
+    const Core = globalThis.JamSongCore;
+    const Storage = globalThis.JamSongStorage;
+    const SongImport = globalThis.JamSongImport;
+    const Shapes = globalThis.JamChordShapes;
+    if (!Core || !Storage || !SongImport || !Shapes) {
+        throw new Error("Song Workspace domain modules are unavailable.");
+    }
+    const { language, translate } = useSiteLocale();
+    const globalDisposers = [];
+
+    function listenGlobal(target, type, listener, options) {
+        target.addEventListener(type, listener, options);
+        globalDisposers.push(function() {
+            target.removeEventListener(type, listener, options);
+        });
+    }
 
     const MAX_IMPORT_BYTES = 1024 * 1024;
     const MAX_BACKUP_SONGS = 500;
@@ -58,7 +71,10 @@
     };
 
     const $ = id => document.getElementById(id);
-    const elements = {
+    let elements = {};
+
+    function bindElements() {
+        elements = {
         home: $("workspaceHomeView"), editor: $("workspaceEditorView"), status: $("workspaceStatus"),
         list: $("songList"), empty: $("songEmptyState"),
         title: $("songTitleInput"), artist: $("songArtistInput"), originalKey: $("originalKeySelect"),
@@ -108,11 +124,45 @@
         readZoomIncrease: $("readZoomIncreaseButton"), readSpacingValue: $("readSpacingValue"),
         readSpacingDecrease: $("readSpacingDecreaseButton"), readSpacingIncrease: $("readSpacingIncreaseButton"),
         readShapes: $("readShapesButton"),
-        importInput: $("songImportInput"), restoreInput: $("songRestoreInput")
-    };
+            importInput: $("songImportInput"), restoreInput: $("songRestoreInput")
+        };
+    }
 
     function t(key, fallback, variables) {
-        return window.JasperI18n?.translate?.(key, fallback, variables) ?? fallback;
+        const message = translate(key, fallback) ?? fallback;
+        return Object.entries(variables || {}).reduce(function(result, [name, value]) {
+            return result.replaceAll(`{{${name}}}`, String(value));
+        }, String(message));
+    }
+
+    function translationVariables(element) {
+        return Object.fromEntries(
+            Array.from(element.attributes)
+                .filter(attribute => attribute.name.startsWith("data-i18n-var-"))
+                .map(attribute => [attribute.name.slice("data-i18n-var-".length), attribute.value])
+        );
+    }
+
+    function applyStaticTranslations() {
+        const root = document.getElementById("vue-song-workspace-root");
+        if (!root) return;
+        root.querySelectorAll("[data-i18n]").forEach(function(element) {
+            element.textContent = t(element.dataset.i18n, element.textContent, translationVariables(element));
+        });
+        root.querySelectorAll("[data-i18n-aria-label]").forEach(function(element) {
+            element.setAttribute("aria-label", t(
+                element.dataset.i18nAriaLabel,
+                element.getAttribute("aria-label") || "",
+                translationVariables(element)
+            ));
+        });
+        root.querySelectorAll("[data-i18n-placeholder]").forEach(function(element) {
+            element.setAttribute("placeholder", t(
+                element.dataset.i18nPlaceholder,
+                element.getAttribute("placeholder") || "",
+                translationVariables(element)
+            ));
+        });
     }
 
     function initializeChartZoomPreference() {
@@ -530,9 +580,8 @@
     }
 
     function formatDate(value) {
-        const language = window.JasperI18n?.getLanguage?.() || "en";
         try {
-            return new Intl.DateTimeFormat(language, { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
+            return new Intl.DateTimeFormat(language.value, { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
         } catch (error) {
             return String(value || "");
         }
@@ -2311,7 +2360,7 @@
                 elements.restoreInput.value = "";
             }
         });
-        document.addEventListener("click", function(event) {
+        listenGlobal(document, "click", function(event) {
             if (!event.target.closest("[data-setting-help-item]")) closeSettingHelp();
             if (state.activeSectionActions !== null && !event.target.closest(".workspace-section-heading-row")) {
                 state.activeSectionActions = null;
@@ -2329,7 +2378,7 @@
                 elements.list.querySelectorAll(".workspace-song-download-menu").forEach(menu => { menu.hidden = true; });
             }
         });
-        document.addEventListener("keydown", function(event) {
+        listenGlobal(document, "keydown", function(event) {
             if (event.key === "Escape" && state.activeSettingHelp) {
                 event.preventDefault();
                 closeSettingHelp({ restoreFocus: true });
@@ -2377,7 +2426,8 @@
             else if (event.key === "+" || event.key === "=") adjustChartZoom(Storage.CHART_ZOOM.step);
             else if (event.key === "-") adjustChartZoom(-Storage.CHART_ZOOM.step);
         });
-        window.addEventListener("jasper:language-change", function() {
+        listenGlobal(window, "jasper:language-change", function() {
+            applyStaticTranslations();
             updateReadingControlLabels();
             setSaveState(state.saveState);
             renderLibrary();
@@ -2430,8 +2480,8 @@
             }
             scheduleChordLayouts();
         });
-        window.addEventListener("jasper:theme-change", scheduleChordLayouts);
-        window.addEventListener("resize", function() {
+        listenGlobal(window, "jasper:theme-change", scheduleChordLayouts);
+        listenGlobal(window, "resize", function() {
             syncSettingsDisclosureViewport();
             scheduleChordLayouts();
             if (state.addMenuTrigger) {
@@ -2439,7 +2489,7 @@
                 if (menu) positionAddMenu(state.addMenuTrigger, menu);
             }
         });
-        window.addEventListener("scroll", function() {
+        listenGlobal(window, "scroll", function() {
             if (!state.addMenuTrigger) return;
             const menu = state.addMenuTrigger.closest(".workspace-add-control")?.querySelector(".workspace-add-menu");
             if (menu) positionAddMenu(state.addMenuTrigger, menu);
@@ -2452,7 +2502,7 @@
             state.resumeReadAfterPerformance = false;
             setReadMode(true, { trigger: state.readModeTrigger || $("readModeButton"), preserveScroll: true });
         });
-        document.addEventListener("visibilitychange", function() {
+        listenGlobal(document, "visibilitychange", function() {
             if (document.visibilityState === "hidden" && state.saveTimer) {
                 window.clearTimeout(state.saveTimer);
                 state.saveTimer = 0;
@@ -2462,6 +2512,8 @@
     }
 
     async function initialize() {
+        bindElements();
+        applyStaticTranslations();
         initializeSelects();
         state.viewMode = ["original", "balanced", "beginner", "roman", "nashville"].includes(state.preferences.viewMode) ? state.preferences.viewMode : "original";
         state.preferences.chordHints = Boolean(state.preferences.chordHints);
@@ -2482,5 +2534,16 @@
         document.fonts?.ready?.then(scheduleChordLayouts);
     }
 
-    document.addEventListener("DOMContentLoaded", initialize);
-})();
+    onMounted(function() {
+        initialize();
+    });
+
+    onBeforeUnmount(function() {
+        window.clearTimeout(state.saveTimer);
+        window.cancelAnimationFrame(state.chordLayoutFrame);
+        stopAutoScroll();
+        globalDisposers.splice(0).forEach(dispose => dispose());
+        document.body.classList.remove("workspace-dialog-open", "is-shape-picker-open");
+    });
+
+}

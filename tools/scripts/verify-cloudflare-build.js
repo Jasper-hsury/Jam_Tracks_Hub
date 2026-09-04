@@ -6,7 +6,7 @@ const dist = path.join(root, "dist");
 const maxWorkerAssetBytes = 24 * 1024 * 1024;
 const renderAssetBaseUrl = "https://api.jamtrackshub.com";
 const copiedDirectories = ["assets", "data", "downloads", "locales", "scripts", "slides", "styles"];
-const viteOwnedRootHtml = new Set(["index.html", "404.html", "legal.html", "privacy-policy.html", "service-waking.html", "feedback.html", "tracks.html", "fretboard-trainer.html", "chord-progressions.html", "scale.html", "chord-dictionary.html", "progression-writer.html", "key-finder.html"]);
+const viteOwnedRootHtml = new Set(["index.html", "404.html", "legal.html", "privacy-policy.html", "service-waking.html", "feedback.html", "tracks.html", "fretboard-trainer.html", "chord-progressions.html", "scale.html", "chord-dictionary.html", "progression-writer.html", "key-finder.html", "song-workspace.html"]);
 const workerConfig = JSON.parse(fs.readFileSync(path.join(root, "wrangler.jsonc"), "utf8"));
 
 function fail(message) {
@@ -526,6 +526,53 @@ if (/scripts\/(?:site|i18n|site-config|key-finder)\.js/.test(migratedKeyFinder))
   fail("Key Finder still loads a legacy page runtime");
 }
 
+const migratedSongWorkspace = fs.readFileSync(path.join(dist, "song-workspace.html"), "utf8");
+if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/song-workspace\.html">/.test(migratedSongWorkspace)) {
+  fail("Song Workspace canonical metadata differs");
+}
+if (!/<meta name="description" content="Create, transpose, simplify, save, and perform chord and lyric charts locally in your browser\.">/.test(migratedSongWorkspace)) {
+  fail("Song Workspace description metadata differs");
+}
+if (!/<meta name="referrer" content="no-referrer">/.test(migratedSongWorkspace)) {
+  fail("Song Workspace referrer policy differs");
+}
+if (!/<div id="vue-song-workspace-root"><\/div>/.test(migratedSongWorkspace)) {
+  fail("Song Workspace Vue mount target is missing");
+}
+if (!/<script defer src="https:\/\/cloud\.umami\.is\/script\.js" data-website-id="[^"]+" data-exclude-search="true" data-exclude-hash="true"><\/script>/.test(migratedSongWorkspace)) {
+  fail("Song Workspace privacy-preserving Umami loader differs");
+}
+if (!/<script type="module" crossorigin src="\/assets\/vue\/song-workspace-[^"]+\.js"><\/script>/.test(migratedSongWorkspace)) {
+  fail("Song Workspace compiled Vue entry is missing");
+}
+if (/src\/entries\/song-workspace\.js/.test(migratedSongWorkspace)) {
+  fail("Song Workspace source entry leaked into production HTML");
+}
+[
+  "scripts/theme-init.js?v=20260725-friendly-insect-switch",
+  "scripts/i18n-init.js?v=20260826-song-workspace",
+  "styles/base.css?v=20260829-smart-navbar-v2",
+  "styles/components.css?v=20260827-legal-footer",
+  "styles/pages.css?v=20260826-song-workspace",
+  "styles/themes.css?v=20260826-song-workspace",
+  "styles/chord-dictionary.css?v=20260826-workspace-hardening",
+  "styles/song-workspace.css?v=20260829-library-text-v3",
+  "scripts/chord-shapes.js?v=20260827-picker-json-fix",
+  "scripts/song-workspace-core.js?v=20260827-picker-json-fix",
+  "scripts/song-workspace-storage.js?v=20260828-settings-ux",
+  "scripts/song-workspace-import.js?v=20260827-picker-json-fix",
+  "assets/vendor/gsap/gsap.min.js",
+  "scripts/site-animations.js?v=20260830-workspace-entrance"
+].forEach(function(asset) {
+  if (!migratedSongWorkspace.includes(asset)) fail(`Song Workspace legacy-compatible asset path differs: ${asset}`);
+});
+if (/assets\/vue\/song-workspace-[^"]+\.css/.test(migratedSongWorkspace)) {
+  fail("Song Workspace shared CSS was incorrectly rebundled");
+}
+if (/scripts\/(?:site|i18n|song-workspace)\.js/.test(migratedSongWorkspace)) {
+  fail("Song Workspace still loads a legacy page controller or shell runtime");
+}
+
 [
   ["Homepage", migratedHome],
   ["404", migrated404],
@@ -539,7 +586,8 @@ if (/scripts\/(?:site|i18n|site-config|key-finder)\.js/.test(migratedKeyFinder))
   ["Scale Explorer", migratedScaleExplorer],
   ["Chord Dictionary", migratedChordDictionary],
   ["Progression Writer", migratedProgressionWriter],
-  ["Key Finder", migratedKeyFinder]
+  ["Key Finder", migratedKeyFinder],
+  ["Song Workspace", migratedSongWorkspace]
 ].forEach(function([pageName, html]) {
   if (/<nav class="navbar"|<footer class="footer"|class="skip-link"/.test(html)) {
     fail(`${pageName} still contains legacy shell markup`);
@@ -716,6 +764,16 @@ if (/onrender\.com/.test(migratedKeyFinderSource)) {
   fail("compiled Vue Key Finder contains a direct Render fallback");
 }
 
+const migratedSongWorkspaceBundle = vueJavaScript.find(filePath => path.basename(filePath).startsWith("song-workspace-"));
+if (!migratedSongWorkspaceBundle) fail("missing compiled Vue Song Workspace entry");
+const migratedSongWorkspaceSource = fs.readFileSync(migratedSongWorkspaceBundle, "utf8");
+if (!migratedSongWorkspaceSource.includes("vue-song-workspace-root")) {
+  fail("compiled Vue Song Workspace mount marker is missing");
+}
+if (/scripts\/song-workspace\.js|DOMContentLoaded/.test(migratedSongWorkspaceSource)) {
+  fail("compiled Vue Song Workspace contains the legacy page controller lifecycle");
+}
+
 const sharedShellBundle = vueJavaScript.find(filePath => path.basename(filePath).startsWith("mountSitePage-"));
 if (!sharedShellBundle) fail("missing compiled shared Vue shell");
 const sharedShellSource = fs.readFileSync(sharedShellBundle, "utf8");
@@ -766,6 +824,9 @@ rootHtml.forEach(function(relativePath) {
   }
   if (relativePath !== "key-finder.html" && /assets\/vue\/key-finder-|src\/entries\/key-finder\.js/i.test(html)) {
     fail(`unmigrated production HTML references the Vue Key Finder entry: ${relativePath}`);
+  }
+  if (relativePath !== "song-workspace.html" && /assets\/vue\/song-workspace-|src\/entries\/song-workspace\.js/i.test(html)) {
+    fail(`unmigrated production HTML references the Vue Song Workspace entry: ${relativePath}`);
   }
 });
 

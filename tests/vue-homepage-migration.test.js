@@ -183,7 +183,8 @@ test("keeps Tracks independently Vue-owned and other legacy pages outside the Ho
   assert.doesNotMatch(tracksHtml, /scripts\/tracks\.js/);
   assert.match(keyFinderHtml, /src\/entries\/key-finder\.js/);
   assert.doesNotMatch(keyFinderHtml, /scripts\/key-finder\.js/);
-  assert.match(workspaceHtml, /scripts\/song-workspace\.js/);
+  assert.match(workspaceHtml, /src\/entries\/song-workspace\.js/);
+  assert.doesNotMatch(workspaceHtml, /scripts\/song-workspace\.js/);
   [tracksHtml, keyFinderHtml, workspaceHtml].forEach(html => {
     assert.doesNotMatch(html, /vue-home-root|src\/entries\/home\.js/);
   });

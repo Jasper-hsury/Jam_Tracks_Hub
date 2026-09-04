@@ -323,14 +323,12 @@ test("uses Vue text bindings and adds no analytics, URL, console, router, or dir
   assert.doesNotMatch(read("_headers"), /unsafe-eval|connect-src[^\n]*\*/);
 });
 
-test("keeps backend, Song Workspace, established tools, CSS, and current version byte-identical", () => {
+test("keeps backend, established tools, CSS, and current version byte-identical", () => {
   backendFiles.forEach(file => {
     const hash = crypto.createHash("sha256").update(fs.readFileSync(path.join(root, file))).digest("hex");
     assert.equal(hash, backendHashes[file], file);
   });
   const frozen = {
-    "song-workspace.html": "7c452f104a6302c14316ae0c8cf0ea48784ba8ac5ec8ff12771115fc68afb77f",
-    "scripts/song-workspace.js": "cbb2bc6924cd9a038a8efa7cfd20f4b660654041f3916150d79ce624ae49a388",
     "styles/components.css": "aa3e2d0875be6e9ba2701064819dbc2c8fcccde4bbba489f33dcdb3ded75ce08",
     "styles/pages.css": "621ccb2d5ad1e086c25c373432172021daaefecfa6faf7c0c147fe17fbf9a867",
     "styles/themes.css": "517cfd99f45e39deb3ba57e6c2de67ccb12b14c4750af8c7a6b75a581e1af4a7"

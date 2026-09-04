@@ -6,8 +6,8 @@ const Core = require("../scripts/song-workspace-core.js");
 
 const root = path.resolve(__dirname, "..");
 const read = relativePath => fs.readFileSync(path.join(root, relativePath), "utf8");
-const workspaceHtml = read("song-workspace.html");
-const workspaceJs = read("scripts/song-workspace.js");
+const workspaceHtml = read("song-workspace.html") + read("src/views/SongWorkspaceView.vue");
+const workspaceJs = read("src/composables/useSongWorkspace.js");
 const workspaceCss = read("styles/song-workspace.css");
 const storageJs = read("scripts/song-workspace-storage.js");
 const coreJs = read("scripts/song-workspace-core.js");
@@ -67,7 +67,7 @@ test("mobile settings use a deterministic disclosure and keep zoom with line spa
     assert.match(workspaceCss, /@media \(max-width: 720px\)[\s\S]*?\.workspace-reading-controls\s*\{[^}]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/s);
     assert.match(workspaceCss, /@media \(min-width: 721px\)[\s\S]*?\.workspace-settings-disclosure > \.workspace-settings-panel\s*\{[^}]*display:\s*grid !important/s);
     assert.match(workspaceJs, /function syncSettingsDisclosureViewport\(\)[\s\S]*matchMedia\("\(max-width: 720px\)"\)[\s\S]*setSettingsDisclosureExpanded\(viewportMode === "wide", \{ animate: false \}\)/);
-    assert.match(workspaceJs, /window\.addEventListener\("resize", function\(\) \{\s*syncSettingsDisclosureViewport\(\)/);
+    assert.match(workspaceJs, /listenGlobal\(window, "resize", function\(\) \{\s*syncSettingsDisclosureViewport\(\)/);
     assert.match(workspaceCss, /@media \(max-width: 900px\) and \(min-width: 721px\)[\s\S]*?\.workspace-settings-nav\s*\{[^}]*repeat\(5, minmax\(0, 1fr\)\)[\s\S]*?\.workspace-reading-controls\s*\{[^}]*grid-column:\s*1 \/ -1[^}]*repeat\(2, minmax\(0, 1fr\)\)/s);
 });
 

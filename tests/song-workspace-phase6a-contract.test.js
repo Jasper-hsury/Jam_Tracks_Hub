@@ -12,8 +12,8 @@ const { createIsolatedIndexedDb } = require("./helpers/isolated-indexeddb.js");
 const root = path.resolve(__dirname, "..");
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
 const fixture = JSON.parse(read("tests/fixtures/song-workspace-phase6a-contract.json"));
-const workspaceHtml = read("song-workspace.html");
-const workspaceJs = read("scripts/song-workspace.js");
+const workspaceHtml = read("song-workspace.html") + read("src/views/SongWorkspaceView.vue");
+const workspaceJs = read("src/composables/useSongWorkspace.js");
 const workspaceCore = read("scripts/song-workspace-core.js");
 const workspaceStorage = read("scripts/song-workspace-storage.js");
 const workspaceImport = read("scripts/song-workspace-import.js");
@@ -30,14 +30,17 @@ function allLines(song) {
     return song.sections.flatMap(section => section.lines);
 }
 
-test("freezes the unchanged legacy runtime and keeps Song Workspace outside Vue ownership", () => {
+test("freezes unchanged Song domain resources while Vue owns the workspace runtime", () => {
     Object.entries(fixture.legacyRuntimeSha256).forEach(([file, expected]) => {
         const actual = crypto.createHash("sha256").update(read(file)).digest("hex");
         assert.equal(actual, expected, file);
     });
-    assert.doesNotMatch(workspaceHtml, /src\/entries\/song-workspace|data-v-app|id="app"/i);
-    assert.match(workspaceHtml, /scripts\/song-workspace\.js/);
-    assert.match(workspaceJs, /document\.addEventListener\("DOMContentLoaded", initialize\)/);
+    assert.match(workspaceHtml, /id="vue-song-workspace-root"/);
+    assert.match(workspaceHtml, /src="\/src\/entries\/song-workspace\.js"/);
+    assert.doesNotMatch(workspaceHtml, /scripts\/song-workspace\.js/);
+    assert.match(workspaceJs, /export function useSongWorkspace\(\)/);
+    assert.match(workspaceJs, /onMounted\(function\(\) \{\s*initialize\(\)/);
+    assert.doesNotMatch(workspaceJs, /DOMContentLoaded/);
 });
 
 test("defines a synthetic 20-category characterization corpus", () => {

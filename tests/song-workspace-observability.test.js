@@ -6,8 +6,8 @@ const Core = require("../scripts/song-workspace-core.js");
 
 const root = path.resolve(__dirname, "..");
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
-const workspaceHtml = read("song-workspace.html");
-const workspaceJs = read("scripts/song-workspace.js");
+const workspaceHtml = read("song-workspace.html") + read("src/views/SongWorkspaceView.vue");
+const workspaceJs = read("src/composables/useSongWorkspace.js");
 const workspaceCore = read("scripts/song-workspace-core.js");
 const workspaceStorage = read("scripts/song-workspace-storage.js");
 const workspaceImport = read("scripts/song-workspace-import.js");

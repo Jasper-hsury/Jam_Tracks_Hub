@@ -1,0 +1,537 @@
+<script setup>
+import { useSongWorkspace } from "../composables/useSongWorkspace.js";
+
+useSongWorkspace();
+</script>
+
+<template>
+    <main class="song-workspace-page" id="main-content">
+        <header class="song-workspace-hero">
+            <p class="result-kicker" data-i18n="pages.songWorkspace.eyebrow">Local-first songbook • no login • private by design</p>
+            <h1 data-i18n="pages.songWorkspace.title">Song Workspace</h1>
+            <p class="hero-tagline signature-slogan" data-i18n="pages.songWorkspace.tagline">Shape the chart. Keep the song yours.</p>
+            <p class="song-workspace-lead" data-i18n="pages.songWorkspace.intro">Create chord and lyric charts, transpose them, find comfortable capo positions, and keep every song in this browser.</p>
+            <div class="song-workspace-promises" aria-label="Workspace benefits" data-i18n-aria-label="pages.songWorkspace.benefitsLabel">
+                <span data-i18n="pages.songWorkspace.free">Free</span>
+                <span data-i18n="pages.songWorkspace.unlimited">Unlimited</span>
+                <span data-i18n="pages.songWorkspace.noLogin">No login required</span>
+                <span class="workspace-save-state" id="autosaveState" role="status" aria-live="polite" aria-atomic="true" data-state="neutral" data-i18n="pages.songWorkspace.savedLocally">Saved locally</span>
+            </div>
+        </header>
+
+        <div class="song-workspace-status" id="workspaceStatus" role="status" aria-live="polite"></div>
+
+        <section id="workspaceHomeView" class="workspace-view">
+            <section class="workspace-create-area" aria-labelledby="createSongTitle">
+                <div class="workspace-section-heading">
+                    <div>
+                        <span class="result-kicker" data-i18n="pages.songWorkspace.startHere">Start here</span>
+                        <h2 id="createSongTitle" data-i18n="pages.songWorkspace.createSong">Create Song</h2>
+                    </div>
+                </div>
+
+                <div class="workspace-entry-grid" data-primary-create-options>
+                    <button class="workspace-entry-card" type="button" data-create-mode="chords-lyrics">
+                        <span class="workspace-entry-index">01</span>
+                        <strong data-i18n="pages.songWorkspace.chordsLyrics">Chords + Lyrics</strong>
+                        <span data-i18n="pages.songWorkspace.chordsLyricsCopy">Paste a chord-and-lyric chart; the workspace will help align it.</span>
+                    </button>
+                    <button class="workspace-entry-card" type="button" data-create-mode="lyrics">
+                        <span class="workspace-entry-index">02</span>
+                        <strong data-i18n="pages.songWorkspace.lyricsOnly">Lyrics Only</strong>
+                        <span data-i18n="pages.songWorkspace.lyricsOnlyCopy">Paste lyrics, then add chords in the workspace.</span>
+                    </button>
+                    <button class="workspace-entry-card" type="button" data-create-mode="chords">
+                        <span class="workspace-entry-index">03</span>
+                        <strong data-i18n="pages.songWorkspace.chordsOnly">Chords Only</strong>
+                        <span data-i18n="pages.songWorkspace.chordsOnlyCopy">Create a chord progression or song structure without lyrics.</span>
+                    </button>
+                </div>
+                <aside class="workspace-disclosure workspace-main-disclosure" data-disclosure="local-first" role="note" aria-labelledby="localDisclosureTitle">
+                    <strong id="localDisclosureTitle" data-i18n="pages.songWorkspace.localDisclosureTitle">Stored locally in this browser</strong>
+                    <p data-i18n="pages.songWorkspace.localPrivacy">Your song content is stored locally in this browser and is not uploaded to Jam Tracks Hub.</p>
+                    <p data-i18n="pages.songWorkspace.rightsImport">Only import content you have the right or legal permission to use.</p>
+                    <a class="workspace-disclosure-link" href="privacy-policy.html#user-content" data-i18n="pages.songWorkspace.privacyUserContentLink">Privacy &amp; user content</a>
+                </aside>
+            </section>
+
+            <section class="workspace-import-area" aria-labelledby="otherImportTitle">
+                <div class="workspace-section-heading">
+                    <div>
+                        <span class="result-kicker" data-i18n="pages.songWorkspace.importExistingData">Import existing data</span>
+                        <h2 id="otherImportTitle" data-i18n="pages.songWorkspace.otherImportOptions">Other Import Options</h2>
+                    </div>
+                </div>
+                <div class="workspace-import-grid">
+                    <article class="workspace-import-card" data-import-option="chordpro">
+                        <span class="workspace-import-type" data-i18n="pages.songWorkspace.plainTextFormat">Plain-text format</span>
+                        <h3>ChordPro</h3>
+                        <p data-i18n="pages.songWorkspace.chordProCopy">Import text with chords placed directly before lyrics.</p>
+                        <code class="workspace-chordpro-example" data-i18n="pages.songWorkspace.chordProExample">[G]lyrics [D]lyrics</code>
+                        <details class="workspace-import-help">
+                            <summary data-i18n="pages.songWorkspace.whatIsChordPro">What is ChordPro?</summary>
+                            <p data-i18n="pages.songWorkspace.chordProHelp">ChordPro uses markers such as [G] and [Am7] to place chords directly before lyric positions.</p>
+                        </details>
+                        <p class="workspace-import-note" data-i18n="pages.songWorkspace.chordProLocalDisclosure">ChordPro content is parsed in this browser and is not uploaded to Jam Tracks Hub.</p>
+                        <button class="workspace-button workspace-button-secondary workspace-import-button" type="button" data-create-mode="chordpro" data-import-kind="chordpro" data-i18n="pages.songWorkspace.importChordPro">Import ChordPro</button>
+                    </article>
+                    <article class="workspace-import-card" data-import-option="jth-json">
+                        <span class="workspace-import-type" data-i18n="pages.songWorkspace.projectFormat">Complete project format</span>
+                        <h3 data-i18n="pages.songWorkspace.jthJson">Jam Tracks Hub JSON</h3>
+                        <p data-i18n="pages.songWorkspace.jthJsonCopy">Restore a single song project previously exported from Jam Tracks Hub.</p>
+                        <p class="workspace-import-note" data-i18n="pages.songWorkspace.jthJsonLocalDisclosure">Imported projects are stored in this browser.</p>
+                        <button class="workspace-button workspace-button-secondary workspace-import-button" type="button" id="importSongButton" data-import-kind="jth-json" data-i18n="pages.songWorkspace.importJthJson">Import Jam Tracks Hub JSON</button>
+                    </article>
+                </div>
+            </section>
+
+            <section class="workspace-library" aria-labelledby="mySongsTitle">
+                <div class="workspace-section-heading">
+                    <div>
+                        <span class="result-kicker" data-i18n="pages.songWorkspace.onThisDevice">In this browser</span>
+                        <h2 id="mySongsTitle" data-i18n="pages.songWorkspace.mySongs">My Songs</h2>
+                    </div>
+                    <div class="workspace-library-actions">
+                        <div class="workspace-file-actions">
+                            <button class="workspace-button workspace-button-secondary" type="button" id="backupSongsButton">
+                                <svg class="workspace-library-action-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 18H6a4 4 0 0 1-.7-7.94A7 7 0 0 1 18.7 8.3 4.5 4.5 0 0 1 18.5 17H17M12 11v10m-4-6 4-4 4 4"/></svg>
+                                <span data-i18n="pages.songWorkspace.backupAll">Backup All</span>
+                            </button>
+                            <button class="workspace-button workspace-button-secondary" type="button" id="restoreSongsButton">
+                                <svg class="workspace-library-action-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12a8 8 0 1 0 2.35-5.65L4 8.7M4 4v4.7h4.7M12 8v4l2.5 1.5"/></svg>
+                                <span data-i18n="pages.songWorkspace.restoreBackup">Restore Backup</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="workspace-song-grid" id="songList"></div>
+                <div class="workspace-empty" id="songEmptyState">
+                    <strong data-i18n="pages.songWorkspace.emptyTitle">Your local songbook is ready.</strong>
+                    <p data-i18n="pages.songWorkspace.emptyCopy">Choose a starting format above. Songs you save will stay in this browser.</p>
+                </div>
+                <div class="workspace-local-note" role="note">
+                    <strong data-i18n="pages.songWorkspace.localStorageReminder">Local storage reminder</strong>
+                    <p data-i18n="pages.songWorkspace.localWarning">Clearing browser/site data may remove locally saved songs. Use Backup All to keep a portable copy.</p>
+                </div>
+            </section>
+        </section>
+
+        <section id="workspaceEditorView" class="workspace-view workspace-editor" hidden>
+            <div class="workspace-editor-topbar">
+                <button class="workspace-button workspace-button-secondary" id="backToSongsButton" type="button">
+                    <svg class="workspace-action-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19 12H5m6-6-6 6 6 6"/></svg>
+                    <span data-i18n="pages.songWorkspace.backToSongs">My Songs</span>
+                </button>
+                <div class="workspace-editor-actions">
+                    <button class="workspace-button workspace-button-secondary" id="downloadMenuButton" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="downloadMenu" aria-describedby="exportDisclosure">
+                        <svg class="workspace-action-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v12m-5-5 5 5 5-5M5 19h14"/></svg>
+                        <span data-i18n="pages.songWorkspace.download">Download</span>
+                    </button>
+                    <button class="workspace-button workspace-button-secondary" id="readModeButton" type="button">
+                        <svg class="workspace-action-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5c2.7-.9 5.3-.4 8 1.5v12c-2.7-1.9-5.3-2.4-8-1.5v-12Zm16 0c-2.7-.9-5.3-.4-8 1.5v12c2.7-1.9 5.3-2.4 8-1.5v-12Z"/></svg>
+                        <span data-i18n="pages.songWorkspace.readMode">Read Mode</span>
+                    </button>
+                    <button class="workspace-button workspace-button-primary" id="performanceButton" type="button">
+                        <svg class="workspace-action-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 10v4m4-8v12m4-15v18m4-13v8m4-6v4"/></svg>
+                        <span data-i18n="pages.songWorkspace.performance">Performance Mode</span>
+                    </button>
+                </div>
+                <div class="workspace-download-menu" id="downloadMenu" role="menu" hidden>
+                    <button class="workspace-menu-action" type="button" role="menuitem" data-download="json">JSON</button>
+                    <button class="workspace-menu-action" type="button" role="menuitem" data-download="chordpro">ChordPro</button>
+                    <button class="workspace-menu-action" type="button" role="menuitem" data-download="txt">TXT</button>
+                    <button class="workspace-menu-action" type="button" role="menuitem" data-download="print" data-i18n="pages.songWorkspace.printPdf">Print / PDF</button>
+                    <p class="workspace-download-disclosure" id="exportDisclosure" role="note" data-i18n="pages.songWorkspace.exportDisclosure">Exported files may contain lyrics or other content you entered. Use or share them only where you have the necessary rights or legal permission.</p>
+                </div>
+            </div>
+
+            <details class="workspace-settings-disclosure" id="workspaceSettingsDisclosure" open>
+                <summary id="workspaceSettingsSummary" aria-expanded="true" aria-controls="workspaceSettingsPanel">
+                    <svg class="workspace-settings-summary-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h7m4 0h5M4 17h5m4 0h7M11 4v6m2 4v6"/><circle cx="13" cy="7" r="2"/><circle cx="11" cy="17" r="2"/></svg>
+                    <span class="workspace-settings-summary-copy">
+                        <span data-i18n="pages.songWorkspace.songSettings">Song settings</span>
+                        <small data-i18n="pages.songWorkspace.songSettingsHint">Tap to view keys and reading controls</small>
+                    </span>
+                    <span class="workspace-settings-summary-chevron" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" focusable="false"><path d="m7 9 5 5 5-5"/></svg>
+                    </span>
+                </summary>
+                <section class="workspace-settings-panel" id="workspaceSettingsPanel" aria-label="Song settings" data-i18n-aria-label="pages.songWorkspace.songSettings">
+                    <div class="workspace-settings-nav" data-settings-row="primary">
+                        <div class="workspace-field workspace-setting-item" data-setting-help-item>
+                            <div class="workspace-setting-label"><label for="originalKeySelect" data-i18n="pages.songWorkspace.originalKey">Original Key</label><button class="workspace-setting-help-trigger" type="button" data-setting-help aria-expanded="false" aria-controls="originalKeyHelp" aria-label="Original Key help" data-i18n-aria-label="pages.songWorkspace.originalKeyHelpLabel">?</button></div>
+                            <select id="originalKeySelect" aria-describedby="originalKeyHelp"></select>
+                            <div class="workspace-setting-popover" id="originalKeyHelp" role="tooltip"><strong data-i18n="pages.songWorkspace.originalKey">Original Key</strong><span data-i18n="pages.songWorkspace.originalKeyHelp">The key the song originally came from.</span></div>
+                        </div>
+                        <div class="workspace-field workspace-setting-item" data-setting-help-item>
+                            <div class="workspace-setting-label"><label for="targetKeySelect" data-i18n="pages.songWorkspace.targetKey">Target Key</label><button class="workspace-setting-help-trigger" type="button" data-setting-help aria-expanded="false" aria-controls="targetKeyHelp" aria-label="Target Key help" data-i18n-aria-label="pages.songWorkspace.targetKeyHelpLabel">?</button></div>
+                            <select id="targetKeySelect" aria-describedby="targetKeyHelp"></select>
+                            <div class="workspace-setting-popover" id="targetKeyHelp" role="tooltip"><strong data-i18n="pages.songWorkspace.targetKey">Target Key</strong><span data-i18n="pages.songWorkspace.targetKeyHelp">The concert key you want listeners to hear. Transposing mainly changes this key.</span></div>
+                        </div>
+                        <div class="workspace-field workspace-setting-item" data-setting-help-item>
+                            <div class="workspace-setting-label"><label for="capoSelect">Capo</label><button class="workspace-setting-help-trigger" type="button" data-setting-help aria-expanded="false" aria-controls="capoHelp" aria-label="Capo help" data-i18n-aria-label="pages.songWorkspace.capoHelpLabel">?</button></div>
+                            <select id="capoSelect" aria-describedby="capoHelp"></select>
+                            <div class="workspace-setting-popover" id="capoHelp" role="tooltip"><strong>Capo</strong><span data-i18n="pages.songWorkspace.capoHelp">Use a capo with the shape key to raise the sounding key to the target key.</span><small data-i18n="pages.songWorkspace.keyHelpExample">Example: Target A + Capo 2 = play G shapes and hear A.</small></div>
+                        </div>
+                        <div class="workspace-field workspace-readonly-field workspace-setting-item" data-setting-help-item tabindex="0" aria-describedby="shapeKeyHelp">
+                            <div class="workspace-setting-label"><span data-i18n="pages.songWorkspace.shapeKey">Shape Key</span><button class="workspace-setting-help-trigger" type="button" data-setting-help aria-expanded="false" aria-controls="shapeKeyHelp" aria-label="Shape Key help" data-i18n-aria-label="pages.songWorkspace.shapeKeyHelpLabel">?</button></div>
+                            <strong id="shapeKeyValue">C</strong>
+                            <div class="workspace-setting-popover" id="shapeKeyHelp" role="tooltip"><strong data-i18n="pages.songWorkspace.shapeKey">Shape Key</strong><span data-i18n="pages.songWorkspace.shapeKeyHelp">The chord shapes you play. Capo and Target Key determine these shapes.</span><small data-i18n="pages.songWorkspace.keyHelpExample">Example: Target A + Capo 2 = play G shapes and hear A.</small></div>
+                        </div>
+                        <label class="workspace-field">
+                            <span data-i18n="pages.songWorkspace.chordSpelling">Chord Spelling</span>
+                            <select id="chordSpellingSelect">
+                                <option value="theory" data-i18n="pages.songWorkspace.spellingTheory">Music Theory</option>
+                                <option value="preserve" data-i18n="pages.songWorkspace.spellingPreserve">Preserve Input</option>
+                            </select>
+                        </label>
+                        <div class="workspace-reading-controls">
+                            <div class="workspace-reading-control" role="group" aria-label="Chart zoom" data-i18n-aria-label="pages.songWorkspace.chartZoom">
+                                <span class="workspace-reading-control-label" data-i18n="pages.songWorkspace.zoom">Zoom</span>
+                                <div class="workspace-reading-stepper">
+                                    <button class="workspace-reading-step-button" id="chartZoomDecreaseButton" type="button" aria-label="Decrease zoom" data-i18n-aria-label="pages.songWorkspace.decreaseZoom">−</button>
+                                    <label class="workspace-reading-value">
+                                        <input id="chartZoomInput" type="number" min="50" max="150" step="1" value="100" inputmode="numeric" autocomplete="off" aria-label="Chart zoom" data-i18n-aria-label="pages.songWorkspace.chartZoom">
+                                        <span aria-hidden="true">%</span>
+                                    </label>
+                                    <button class="workspace-reading-step-button" id="chartZoomIncreaseButton" type="button" aria-label="Increase zoom" data-i18n-aria-label="pages.songWorkspace.increaseZoom">+</button>
+                                </div>
+                            </div>
+                            <div class="workspace-reading-control" role="group" aria-label="Line spacing" data-i18n-aria-label="pages.songWorkspace.lineSpacing">
+                                <span class="workspace-reading-control-label" data-i18n="pages.songWorkspace.lineSpacing">Line Spacing</span>
+                                <div class="workspace-reading-stepper">
+                                    <button class="workspace-reading-step-button" id="lineSpacingDecreaseButton" type="button" aria-label="Decrease line spacing" data-i18n-aria-label="pages.songWorkspace.decreaseLineSpacing">−</button>
+                                    <label class="workspace-reading-value">
+                                        <input id="lineSpacingInput" type="number" min="0" max="20" step="1" value="10" inputmode="numeric" autocomplete="off" aria-label="Line spacing" data-i18n-aria-label="pages.songWorkspace.lineSpacing">
+                                        <span aria-hidden="true">px</span>
+                                    </label>
+                                    <button class="workspace-reading-step-button" id="lineSpacingIncreaseButton" type="button" aria-label="Increase line spacing" data-i18n-aria-label="pages.songWorkspace.increaseLineSpacing">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </details>
+
+            <div class="workspace-modebar">
+                <div class="workspace-segmented" role="group" aria-label="Chord view" data-i18n-aria-label="pages.songWorkspace.chordView">
+                    <button type="button" class="is-selected" data-view-mode="original" aria-pressed="true" data-i18n="pages.songWorkspace.original">Original</button>
+                    <button type="button" data-view-mode="balanced" aria-pressed="false" data-i18n="pages.songWorkspace.easyBalanced">Easy: Balanced</button>
+                    <button type="button" data-view-mode="beginner" aria-pressed="false" data-i18n="pages.songWorkspace.easyBeginner">Easy: Beginner</button>
+                    <button type="button" data-view-mode="roman" aria-pressed="false" data-i18n="pages.songWorkspace.roman">Roman</button>
+                    <button type="button" data-view-mode="nashville" aria-pressed="false" data-i18n="pages.songWorkspace.nashville">Nashville</button>
+                </div>
+                <div class="workspace-mode-actions">
+                    <button class="workspace-button workspace-button-secondary" id="chordHintsButton" type="button" aria-pressed="false" data-i18n="pages.songWorkspace.chordChangeHints">Chord Change Hints</button>
+                    <button class="workspace-button workspace-button-primary" id="smartCapoButton" type="button" data-i18n="pages.songWorkspace.smartCapo">Smart Capo</button>
+                </div>
+            </div>
+            <div class="workspace-capo-results" id="capoResults" hidden></div>
+
+            <div class="workspace-read-toolbar" id="readModeToolbar" aria-label="Read mode controls" data-i18n-aria-label="pages.songWorkspace.readModeControls" hidden>
+                <button class="workspace-button workspace-button-primary workspace-button-compact" id="exitReadModeButton" type="button" data-i18n="pages.songWorkspace.exitReadMode">Exit Read Mode</button>
+                <span class="workspace-read-summary" id="readModeKeySummary"></span>
+                <div class="workspace-read-stepper" role="group" aria-label="Chart zoom" data-i18n-aria-label="pages.songWorkspace.chartZoom">
+                    <button type="button" id="readZoomDecreaseButton" aria-label="Decrease zoom" data-i18n-aria-label="pages.songWorkspace.decreaseZoom">−</button>
+                    <output id="readZoomValue">100%</output>
+                    <button type="button" id="readZoomIncreaseButton" aria-label="Increase zoom" data-i18n-aria-label="pages.songWorkspace.increaseZoom">+</button>
+                </div>
+                <div class="workspace-read-stepper" role="group" aria-label="Line spacing" data-i18n-aria-label="pages.songWorkspace.lineSpacing">
+                    <button type="button" id="readSpacingDecreaseButton" aria-label="Decrease line spacing" data-i18n-aria-label="pages.songWorkspace.decreaseLineSpacing">−</button>
+                    <output id="readSpacingValue">10px</output>
+                    <button type="button" id="readSpacingIncreaseButton" aria-label="Increase line spacing" data-i18n-aria-label="pages.songWorkspace.increaseLineSpacing">+</button>
+                </div>
+                <button class="workspace-button workspace-button-secondary workspace-button-compact" id="readShapesButton" type="button" aria-expanded="false" aria-controls="chordShapesPanel" data-i18n="pages.songWorkspace.showChordShapes">Show Chord Shapes</button>
+            </div>
+
+            <div class="workspace-editor-layout">
+                <section class="workspace-chart-panel" aria-labelledby="songChartTitle">
+                    <header class="workspace-score-header">
+                        <div class="workspace-score-identity">
+                            <div class="workspace-score-kicker-row">
+                                <span class="result-kicker" data-i18n="pages.songWorkspace.chart">Song chart</span>
+                                <button class="workspace-button workspace-button-subtle workspace-global-add-button" id="globalAddButton" type="button" aria-haspopup="dialog" aria-controls="globalAddDialog"><span aria-hidden="true">+</span><span data-i18n="pages.songWorkspace.add">Add</span></button>
+                            </div>
+                            <div class="workspace-title-view" id="songTitleView">
+                                <h2 id="songChartTitle"><button class="workspace-title-trigger" id="songTitleEditButton" type="button"><span id="songTitleDisplay"></span><small data-i18n="pages.songWorkspace.edit">Edit</small></button></h2>
+                            </div>
+                            <form class="workspace-title-edit" id="songTitleEditForm" hidden>
+                                <label class="workspace-field" for="songTitleInput"><span data-i18n="pages.songWorkspace.songTitle">Song title</span><input id="songTitleInput" type="text" maxlength="160" autocomplete="off" required></label>
+                                <div class="workspace-inline-actions"><button class="workspace-button workspace-button-secondary workspace-button-compact" id="cancelTitleEditButton" type="button" data-i18n="common.cancel">Cancel</button><button class="workspace-button workspace-button-primary workspace-button-compact" type="submit" data-i18n="common.save">Save</button></div>
+                            </form>
+                            <div class="workspace-metadata-view" id="songMetadataView">
+                                <p id="songMetadataSummary"></p>
+                                <button class="workspace-inline-edit-button" id="songMetadataEditButton" type="button" data-i18n="pages.songWorkspace.editDetails">Edit details</button>
+                            </div>
+                            <form class="workspace-metadata-edit" id="songMetadataEditForm" hidden>
+                                <label class="workspace-field"><span data-i18n="pages.songWorkspace.artist">Artist</span><input id="songArtistInput" type="text" maxlength="160" autocomplete="off"></label>
+                                <label class="workspace-field"><span>BPM</span><input id="bpmInput" type="number" min="20" max="320" inputmode="numeric"></label>
+                                <label class="workspace-field"><span data-i18n="pages.songWorkspace.timeSignature">Time Signature</span><input id="timeSignatureInput" type="text" maxlength="5" pattern="[0-9]{1,2}/[0-9]{1,2}" inputmode="numeric" required></label>
+                                <div class="workspace-inline-actions"><button class="workspace-button workspace-button-secondary workspace-button-compact" id="cancelMetadataEditButton" type="button" data-i18n="common.cancel">Cancel</button><button class="workspace-button workspace-button-primary workspace-button-compact" type="submit" data-i18n="common.save">Save</button></div>
+                            </form>
+                        </div>
+                        <span id="chartKeySummary"></span>
+                    </header>
+                    <div class="workspace-chart" id="songChart"></div>
+                </section>
+
+                <aside class="workspace-shapes-panel" id="chordShapesPanel" aria-labelledby="chordShapesTitle">
+                    <div class="workspace-panel-heading">
+                        <div>
+                            <h2 id="chordShapesTitle" data-i18n="pages.songWorkspace.chordShapes">Chord Shapes</h2>
+                        </div>
+                        <button class="workspace-icon-button workspace-read-shapes-close" id="closeReadShapesButton" type="button" aria-label="Close chord shapes" data-i18n-aria-label="pages.songWorkspace.closeChordShapes">×</button>
+                    </div>
+                    <div class="workspace-shape-cards" id="shapeCards"></div>
+                </aside>
+            </div>
+            <button class="workspace-read-shapes-backdrop" id="readShapesBackdrop" type="button" aria-label="Close chord shapes" data-i18n-aria-label="pages.songWorkspace.closeChordShapes" hidden></button>
+        </section>
+    </main>
+
+    <dialog class="workspace-dialog workspace-create-dialog" id="createSongDialog">
+        <form method="dialog" id="createSongForm">
+            <div class="workspace-dialog-heading">
+                <div>
+                    <span class="result-kicker" id="createModeLabel">Chords + Lyrics</span>
+                    <h2 data-i18n="pages.songWorkspace.createSong">Create Song</h2>
+                </div>
+                <button class="workspace-icon-button" type="button" data-dialog-close aria-label="Close" data-i18n-aria-label="common.close">×</button>
+            </div>
+            <div class="workspace-dialog-grid">
+                <label class="workspace-field">
+                    <span data-i18n="pages.songWorkspace.songTitle">Song title</span>
+                    <input id="createTitleInput" type="text" maxlength="160" required>
+                </label>
+                <label class="workspace-field">
+                    <span data-i18n="pages.songWorkspace.artist">Artist</span>
+                    <input id="createArtistInput" type="text" maxlength="160">
+                </label>
+                <label class="workspace-field">
+                    <span data-i18n="pages.songWorkspace.originalKey">Original Key</span>
+                    <select id="createKeySelect"></select>
+                </label>
+                <label class="workspace-field workspace-field-source">
+                    <span id="createSourceLabel" data-i18n="pages.songWorkspace.pasteChart">Paste chart</span>
+                    <textarea id="createSourceInput" rows="14" maxlength="200000" required aria-describedby="createLocalDisclosure createRightsDisclosure"></textarea>
+                </label>
+            </div>
+            <div class="workspace-dialog-disclosure" data-create-disclosure role="note">
+                <p id="createLocalDisclosure">The song content you paste is processed and stored locally in this browser.</p>
+                <p id="createRightsDisclosure" data-i18n="pages.songWorkspace.rightsImport">Only import content you have the right or legal permission to use.</p>
+            </div>
+            <p class="workspace-dialog-error" id="createDialogError" role="alert"></p>
+            <div class="workspace-dialog-actions">
+                <button class="workspace-button workspace-button-secondary" type="button" data-dialog-close data-i18n="common.cancel">Cancel</button>
+                <button class="workspace-button workspace-button-primary" id="confirmCreateButton" value="default" type="submit" data-i18n="pages.songWorkspace.create">Create</button>
+            </div>
+        </form>
+    </dialog>
+
+    <dialog class="workspace-dialog workspace-shape-dialog" id="shapePickerDialog" aria-labelledby="shapePickerTitle">
+        <div class="workspace-shape-dialog-shell progression-writer-shape-picker-dialog">
+            <div class="progression-writer-shape-picker-header">
+                <div>
+                    <span class="result-kicker" data-i18n="pages.songWorkspace.guitarVoicings">Guitar voicings</span>
+                    <h2 class="section-title" id="shapePickerTitle" data-i18n="pages.songWorkspace.availableShapes">Available guitar shapes</h2>
+                    <p data-i18n="pages.songWorkspace.shapeHelp">Standard tuning E A D G B E. X means mute; O means open.</p>
+                </div>
+                <button class="workspace-button workspace-button-secondary progression-writer-shape-picker-close" id="closeShapePickerButton" type="button" data-i18n="common.close">Close</button>
+            </div>
+
+            <div class="progression-writer-shape-picker-summary">
+                <strong id="shapePickerSymbol" data-i18n="pages.songWorkspace.chord">Chord</strong>
+                <span id="shapePickerCount" data-i18n="pages.songWorkspace.findingShapes">Finding shapes</span>
+            </div>
+
+            <div class="dictionary-position-filter progression-writer-shape-filter" id="shapePositionFilter" aria-label="Filter chord shapes by fret area" data-i18n-aria-label="pages.songWorkspace.position">
+                <span data-i18n="pages.songWorkspace.position">Position</span>
+                <button type="button" class="is-selected" data-shape-position="all" aria-pressed="true" data-i18n="common.all">All</button>
+                <button type="button" data-shape-position="0" aria-pressed="false" data-i18n="pages.songWorkspace.near" data-i18n-var-fret="0">Near 0</button>
+                <button type="button" data-shape-position="3" aria-pressed="false" data-i18n="pages.songWorkspace.near" data-i18n-var-fret="3">Near 3</button>
+                <button type="button" data-shape-position="5" aria-pressed="false" data-i18n="pages.songWorkspace.near" data-i18n-var-fret="5">Near 5</button>
+                <button type="button" data-shape-position="7" aria-pressed="false" data-i18n="pages.songWorkspace.near" data-i18n-var-fret="7">Near 7</button>
+                <button type="button" data-shape-position="9" aria-pressed="false" data-i18n="pages.songWorkspace.near" data-i18n-var-fret="9">Near 9</button>
+                <button type="button" data-shape-position="12" aria-pressed="false" data-i18n="pages.songWorkspace.near" data-i18n-var-fret="12">Near 12</button>
+            </div>
+
+            <div class="dictionary-position-filter progression-writer-shape-filter" id="shapeRootFilter" aria-label="Filter chord shapes by root string" data-i18n-aria-label="pages.songWorkspace.rootString">
+                <span data-i18n="pages.songWorkspace.rootString">Root string</span>
+                <button type="button" class="is-selected" data-shape-root-string="all" aria-pressed="true" data-i18n="common.all">All</button>
+                <button type="button" data-shape-root-string="6" aria-pressed="false">6th E</button>
+                <button type="button" data-shape-root-string="5" aria-pressed="false">5th A</button>
+                <button type="button" data-shape-root-string="4" aria-pressed="false">4th D</button>
+                <button type="button" data-shape-root-string="3" aria-pressed="false">3rd G</button>
+                <button type="button" data-shape-root-string="2" aria-pressed="false">2nd B</button>
+                <button type="button" data-shape-root-string="1" aria-pressed="false">1st e</button>
+            </div>
+
+            <div class="progression-writer-shape-picker-grid workspace-shape-picker-grid" id="shapePickerGrid"></div>
+        </div>
+    </dialog>
+
+    <dialog class="workspace-dialog workspace-global-add-dialog" id="globalAddDialog" aria-labelledby="globalAddTitle">
+        <div class="workspace-global-add-shell">
+            <div class="workspace-dialog-heading">
+                <div>
+                    <span class="result-kicker" id="globalAddStepLabel">Step 1 of 2</span>
+                    <h2 id="globalAddTitle" data-i18n="pages.songWorkspace.addToSong">Add to Song</h2>
+                </div>
+                <button class="workspace-icon-button" type="button" data-dialog-close aria-label="Close" data-i18n-aria-label="common.close">×</button>
+            </div>
+            <section class="workspace-global-add-step" id="globalAddTypeStep" aria-labelledby="globalAddTypeTitle">
+                <h3 id="globalAddTypeTitle" data-i18n="pages.songWorkspace.chooseWhatToAdd">Choose what to add</h3>
+                <div class="workspace-global-add-types">
+                    <button class="workspace-global-add-type" type="button" data-global-add-type="line"><strong data-i18n="pages.songWorkspace.line">Line</strong><span data-i18n="pages.songWorkspace.addLine">Add Line</span></button>
+                    <button class="workspace-global-add-type" type="button" data-global-add-type="section"><strong data-i18n="pages.songWorkspace.section">Section</strong><span data-i18n="pages.songWorkspace.addSection">Add Section</span></button>
+                    <button class="workspace-global-add-type" type="button" data-global-add-type="instrumental"><strong data-i18n="pages.songWorkspace.instrumentalChords">Instrumental Chords</strong><span data-i18n="pages.songWorkspace.addInstrumentalSection">Add Instrumental Section</span></button>
+                </div>
+                <div class="workspace-dialog-actions">
+                    <button class="workspace-button workspace-button-secondary" type="button" data-dialog-close data-i18n="common.cancel">Cancel</button>
+                </div>
+            </section>
+            <section class="workspace-global-add-step" id="globalAddPositionStep" aria-labelledby="globalAddPositionTitle" hidden>
+                <div class="workspace-global-add-position-heading">
+                    <h3 id="globalAddPositionTitle" data-i18n="pages.songWorkspace.chooseWhereToInsert">Choose where to insert</h3>
+                    <p id="globalAddPositionHint" data-i18n="pages.songWorkspace.positionPreviewHint">Choose a compact song boundary preview.</p>
+                </div>
+                <div class="workspace-global-add-positions" id="globalAddPositionList"></div>
+                <div class="workspace-dialog-actions">
+                    <button class="workspace-button workspace-button-secondary" id="globalAddBackButton" type="button" data-i18n="pages.songWorkspace.back">← Back</button>
+                    <button class="workspace-button workspace-button-secondary" type="button" data-dialog-close data-i18n="common.cancel">Cancel</button>
+                </div>
+            </section>
+        </div>
+    </dialog>
+
+    <dialog class="workspace-dialog workspace-section-dialog" id="sectionNameDialog">
+        <form method="dialog" id="sectionNameForm">
+            <div class="workspace-dialog-heading">
+                <div>
+                    <span class="result-kicker" data-i18n="pages.songWorkspace.addSection">Add Section</span>
+                    <h2 data-i18n="pages.songWorkspace.sectionNamePrompt">Section name</h2>
+                </div>
+                <button class="workspace-icon-button" type="button" data-dialog-close aria-label="Close" data-i18n-aria-label="common.close">×</button>
+            </div>
+            <label class="workspace-field workspace-field-source">
+                <span data-i18n="pages.songWorkspace.sectionName">Section name</span>
+                <input id="sectionNameInput" type="text" maxlength="80" autocomplete="off" required>
+            </label>
+            <div class="workspace-dialog-actions">
+                <button class="workspace-button workspace-button-secondary" type="button" data-dialog-close data-i18n="common.cancel">Cancel</button>
+                <button class="workspace-button workspace-button-primary" value="default" type="submit" data-i18n="pages.songWorkspace.addSection">Add Section</button>
+            </div>
+        </form>
+    </dialog>
+
+    <dialog class="workspace-dialog workspace-section-dialog" id="instrumentalSectionDialog">
+        <form method="dialog" id="instrumentalSectionForm">
+            <div class="workspace-dialog-heading">
+                <div>
+                    <span class="result-kicker" data-i18n="pages.songWorkspace.addInstrumentalSection">Add Instrumental Section</span>
+                    <h2 data-i18n="pages.songWorkspace.instrumentalSectionPrompt">Create a chord-only section</h2>
+                </div>
+                <button class="workspace-icon-button" type="button" data-dialog-close aria-label="Close" data-i18n-aria-label="common.close">×</button>
+            </div>
+            <p class="workspace-dialog-helper" data-i18n="pages.songWorkspace.instrumentalSectionHelp">For intros, interludes, outros, and other sections without lyrics.</p>
+            <div class="workspace-dialog-grid workspace-instrumental-section-fields">
+                <label class="workspace-field">
+                    <span data-i18n="pages.songWorkspace.sectionNameOptional">Section name (optional)</span>
+                    <input id="instrumentalSectionNameInput" type="text" maxlength="80" autocomplete="off" data-i18n-placeholder="pages.songWorkspace.instrumentalSectionPlaceholder" placeholder="e.g. Intro, Interlude, Solo, Outro">
+                </label>
+                <label class="workspace-field">
+                    <span data-i18n="pages.songWorkspace.numberOfBars">Number of Bars</span>
+                    <input id="instrumentalBarCountInput" type="number" min="1" max="64" step="1" value="4" inputmode="numeric" required>
+                </label>
+            </div>
+            <p class="workspace-dialog-error" id="instrumentalSectionDialogError" role="alert"></p>
+            <div class="workspace-dialog-actions">
+                <button class="workspace-button workspace-button-secondary" type="button" data-dialog-close data-i18n="common.cancel">Cancel</button>
+                <button class="workspace-button workspace-button-primary" value="default" type="submit" data-i18n="pages.songWorkspace.addInstrumentalSection">Add Instrumental Section</button>
+            </div>
+        </form>
+    </dialog>
+
+    <dialog class="workspace-dialog workspace-line-dialog" id="lineEditorDialog" aria-labelledby="lineDialogTitle" aria-describedby="lineDialogSubtitle">
+        <form method="dialog" id="lineEditorForm">
+            <span class="workspace-line-sheet-handle" aria-hidden="true"></span>
+            <div class="workspace-dialog-heading">
+                <div class="workspace-line-dialog-heading-copy">
+                    <span class="result-kicker" data-i18n="pages.songWorkspace.visualEditor">Visual chord editor</span>
+                    <h2 id="lineDialogTitle" data-i18n="pages.songWorkspace.editLine">Edit Line</h2>
+                    <p class="workspace-line-dialog-subtitle" id="lineDialogSubtitle" data-i18n="pages.songWorkspace.editLineSubtitle">Edit lyrics and chords for this line</p>
+                </div>
+                <button class="workspace-icon-button" type="button" data-dialog-close aria-label="Close" data-i18n-aria-label="common.close">×</button>
+            </div>
+            <section class="workspace-line-card workspace-line-text-card">
+                <label class="workspace-field workspace-field-source" id="lineTextField">
+                    <span data-i18n="pages.songWorkspace.lyricText">Lyric or section text</span>
+                    <span class="workspace-line-textarea-shell">
+                        <textarea id="lineTextInput" rows="3" maxlength="1000"></textarea>
+                        <output class="workspace-line-character-count" id="lineTextCharacterCount" for="lineTextInput" aria-live="polite">0 / 1000</output>
+                    </span>
+                </label>
+                <div class="workspace-anchor-preview" id="anchorPreview" aria-label="Choose a chord anchor" data-i18n-aria-label="pages.songWorkspace.chooseAnchor"></div>
+            </section>
+            <div class="workspace-anchor-controls">
+                <section class="workspace-line-card workspace-chord-symbol-card">
+                    <label class="workspace-field">
+                        <span data-i18n="pages.songWorkspace.chordSymbol">Chord symbol</span>
+                        <input id="anchorChordInput" type="text" maxlength="40" placeholder="G, D/F#, Em7, Cmaj9..." data-i18n-placeholder="pages.songWorkspace.chordInputPlaceholder">
+                    </label>
+                </section>
+                <section class="workspace-line-card workspace-anchor-position-card">
+                    <div class="workspace-anchor-position-row">
+                        <label class="workspace-field" id="anchorPositionField">
+                            <span data-i18n="pages.songWorkspace.anchorPosition">Anchor position</span>
+                            <input id="anchorPositionInput" type="number" min="1" value="1" inputmode="numeric">
+                        </label>
+                        <p class="workspace-anchor-position-help" data-i18n="pages.songWorkspace.anchorPositionHelp">The position where the chord appears in this line.</p>
+                        <button class="workspace-button workspace-button-secondary" id="addAnchorButton" type="button" data-i18n="pages.songWorkspace.addChord">Add Chord</button>
+                    </div>
+                    <div class="workspace-anchor-list-heading">
+                        <span data-i18n="pages.songWorkspace.chordsInThisLine">Chords in this line</span>
+                        <span id="anchorChordCount">0 chords</span>
+                    </div>
+                    <div class="workspace-anchor-list" id="anchorList"></div>
+                </section>
+            </div>
+            <p class="workspace-dialog-error" id="lineDialogError" role="alert"></p>
+            <div class="workspace-dialog-actions workspace-line-dialog-actions">
+                <button class="workspace-button workspace-button-primary" id="saveLineButton" value="default" type="submit" data-i18n="pages.songWorkspace.saveLine">Save Line</button>
+                <div class="workspace-line-secondary-actions">
+                    <button class="workspace-button workspace-button-secondary" id="cancelLineButton" type="button" data-dialog-close data-i18n="common.cancel">Cancel</button>
+                    <button class="workspace-button workspace-button-danger" id="deleteLineButton" type="button" data-i18n="pages.songWorkspace.deleteLine">Delete Line</button>
+                </div>
+            </div>
+        </form>
+    </dialog>
+
+    <dialog class="workspace-performance" id="performanceDialog">
+        <div class="performance-shell">
+            <header class="performance-header">
+                <div>
+                    <span class="result-kicker" data-i18n="pages.songWorkspace.performance">Performance Mode</span>
+                    <h2 id="performanceTitle"></h2>
+                    <p id="performanceMeta"></p>
+                </div>
+                <button class="workspace-icon-button" id="closePerformanceButton" type="button" aria-label="Exit performance mode" data-i18n-aria-label="pages.songWorkspace.exitPerformance">×</button>
+            </header>
+            <details class="performance-speed-help">
+                <summary data-i18n="pages.songWorkspace.performanceSpeedHelpTitle">How BPM affects auto-scroll</summary>
+                <p data-i18n="pages.songWorkspace.performanceSpeedHelp">Auto-scroll uses BPM as its starting pace, so a higher BPM generally moves the chart faster. Zoom and line spacing change the chart height, while song length, section height, and screen height change how far there is to scroll. Use Scroll Speed to fine-tune the feel.</p>
+            </details>
+            <div class="performance-chart" id="performanceChart"></div>
+            <footer class="performance-toolbar">
+                <button class="workspace-button workspace-button-primary workspace-button-compact" type="button" id="scrollToggleButton" data-i18n="pages.songWorkspace.startScroll">Start</button>
+                <button class="workspace-button workspace-button-secondary workspace-button-compact" type="button" id="scrollResetButton" data-i18n="pages.songWorkspace.resetScroll">Reset</button>
+                <label><span data-i18n="pages.songWorkspace.speed">Scroll Speed</span><input id="scrollSpeedInput" type="range" min="0.5" max="2" step="0.25" value="1"><output id="scrollSpeedValue" for="scrollSpeedInput">1.0×</output></label>
+                <button class="workspace-button workspace-button-secondary workspace-button-compact" type="button" id="fontDecreaseButton" aria-label="Decrease zoom" data-i18n-aria-label="pages.songWorkspace.decreaseZoom">A−</button>
+                <button class="workspace-button workspace-button-secondary workspace-button-compact" type="button" id="fontIncreaseButton" aria-label="Increase zoom" data-i18n-aria-label="pages.songWorkspace.increaseZoom">A+</button>
+            </footer>
+        </div>
+    </dialog>
+
+    <input id="songImportInput" type="file" accept="application/json,.json" hidden>
+    <input id="songRestoreInput" type="file" accept="application/json,.json" hidden>
+</template>

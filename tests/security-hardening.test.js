@@ -50,9 +50,9 @@ test("ChordPro, JSON, and chord inputs keep injection canaries non-executable", 
 });
 
 test("Song Workspace user text uses text DOM sinks and has no executable URL sink", () => {
-    const app = read("scripts/song-workspace.js");
+    const app = read("src/composables/useSongWorkspace.js");
     const core = read("scripts/song-workspace-core.js");
-    const html = read("song-workspace.html");
+    const html = read("song-workspace.html") + read("src/views/SongWorkspaceView.vue");
     assert.match(app, /function node\([\s\S]*?textContent/);
     assert.doesNotMatch(app, /insertAdjacentHTML|outerHTML|document\.write|javascript:/i);
     assert.equal((app.match(/\.innerHTML\s*=/g) || []).length, 1);
@@ -268,9 +268,9 @@ test("security hardening does not add Song Workspace transport or content teleme
         "scripts/song-workspace-core.js",
         "scripts/song-workspace-storage.js",
         "scripts/song-workspace-import.js",
-        "scripts/song-workspace.js"
+        "src/composables/useSongWorkspace.js"
     ].map(read).join("\n");
     assert.doesNotMatch(songSource, /\bfetch\s*\(|XMLHttpRequest|sendBeacon|WebSocket|EventSource|FormData|console\.(?:log|warn|error)/i);
     assert.doesNotMatch(songSource, /cloud\.umami\.is|sentry|posthog|telemetry/i);
-    assert.match(read("scripts/song-workspace.js"), /duplicateInFlight\.has\(song\.id\)/);
+    assert.match(read("src/composables/useSongWorkspace.js"), /duplicateInFlight\.has\(song\.id\)/);
 });
