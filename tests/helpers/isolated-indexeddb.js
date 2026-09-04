@@ -21,17 +21,18 @@ function createRequest(executor) {
 function createIsolatedIndexedDb(options) {
     const settings = options || {};
     const records = new Map();
-    let schemaCreated = false;
+    let storeCreated = false;
+    let indexCreated = false;
 
-    const indexNames = { contains(name) { return name === "updatedAt" && schemaCreated; } };
-    const objectStoreNames = { contains(name) { return name === "songs" && schemaCreated; } };
+    const indexNames = { contains(name) { return name === "updatedAt" && indexCreated; } };
+    const objectStoreNames = { contains(name) { return name === "songs" && storeCreated; } };
 
     function store() {
         return {
             indexNames,
             createIndex(name) {
                 if (name !== "updatedAt") throw new Error("Unexpected synthetic index.");
-                schemaCreated = true;
+                indexCreated = true;
             },
             getAll(_query, count) {
                 return createRequest(function() {
@@ -67,7 +68,7 @@ function createIsolatedIndexedDb(options) {
             if (name !== "songs" || configuration?.keyPath !== "id") {
                 throw new Error("Unexpected synthetic object store.");
             }
-            schemaCreated = true;
+            storeCreated = true;
             return store();
         },
         transaction(name, mode) {
@@ -114,7 +115,7 @@ function createIsolatedIndexedDb(options) {
                     request.onerror?.();
                     return;
                 }
-                if (!schemaCreated) request.onupgradeneeded?.();
+                if (!storeCreated || !indexCreated) request.onupgradeneeded?.();
                 request.onsuccess?.();
             });
             return request;
