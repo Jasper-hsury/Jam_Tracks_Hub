@@ -1,0 +1,55 @@
+{
+  "baselineSha": "1d24593a5a7854150bbce262f08f52ed2eb220ba",
+  "roots": ["A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab"],
+  "chordTypeCount": 34,
+  "validChordCombinationCount": 408,
+  "catalogHash": "51b22379abdaa26236af47dfed135ab0e530c94c03668ffd2329118e9f284c96",
+  "voicingCorpusHash": "0e5dc323482693511762b12510434b3563eb00431e05d3379ecc83bbfc3da446",
+  "parserCases": [
+    { "input": "C", "symbol": "C" },
+    { "input": "cMAJ7", "symbol": "Cmaj7" },
+    { "input": "F♯sus4", "symbol": "F#sus4" },
+    { "input": "B♭maj9", "symbol": "Bbmaj9" },
+    { "input": "G/B", "symbol": "G/B" },
+    { "input": "C#m7b5", "symbol": "C#m7b5" },
+    { "input": "A7(b13)", "symbol": "A7(b13)" },
+    { "input": "C7#9", "symbol": "C7#9" },
+    { "input": "Dbm(maj7)", "symbol": "Dbm(maj7)" },
+    { "input": "H7", "symbol": null },
+    { "input": "C<script>", "symbol": null },
+    { "input": "C major", "symbol": null }
+  ],
+  "shapeFixtures": [
+    { "symbol": "C", "count": 78, "hash": "e1132f7188237fcde5d6beae7cb217a37f7422b1dbe0f47e6d566808f0170afe", "first": [-1, 3, 2, 0, 1, 0], "last": [-1, -1, 14, 12, 13, -1] },
+    { "symbol": "Cmaj7", "count": 103, "hash": "ec4ed3dba74ead656935f8155d23ee0269103959218511e112fcdfd0f1e5cd3b", "first": [-1, 3, 2, 0, 0, 0], "last": [-1, 10, 10, 9, 12, -1] },
+    { "symbol": "G/B", "count": 26, "hash": "f6ae82fdf7ff44a9fcb5b29e7f79ee060fa59253498d626d9d431ba6dfa0d72b", "first": [-1, 2, 0, 0, 0, 3], "last": [-1, 14, 12, 12, -1, -1] },
+    { "symbol": "F#sus4", "count": 65, "hash": "640979046ff7fb9e1dae50487d2b761c6a449965c2361c4f3362f4195005c491", "first": [2, 2, 4, 4, 2, 2], "last": [-1, 14, 11, 11, -1, -1] },
+    { "symbol": "Bbmaj9", "count": 180, "hash": "801df3adf1d03affbd7983582d78817d371a0fc364db50b56df1f9147035d4d6", "first": [-1, 1, 0, 2, 1, 1], "last": [5, 8, 8, 5, 6, 5] },
+    { "symbol": "A7(b13)", "count": 180, "hash": "d6ad923159e86988bf0cb77468cf7da11c583e71fd83ab7ec731b2ffc1ca7a07", "first": [-1, 0, 3, 0, 2, 0], "last": [3, 4, 3, 2, 2, -1] }
+  ],
+  "pickerFixture": {
+    "symbol": "Cmaj7",
+    "position": "3",
+    "rootString": "5",
+    "count": 8,
+    "firstIndex": 10,
+    "firstFrets": [-1, 3, 5, 4, 5, 3]
+  },
+  "defaultState": {
+    "mode": "single",
+    "keyRoot": "A",
+    "keyQuality": "major",
+    "songName": "",
+    "bpm": "",
+    "separateDownload": false,
+    "fieldCounts": { "single": 4, "verse": 4, "chorus": 4 }
+  },
+  "legacySavedRecord": {
+    "id": "legacy-1",
+    "createdAt": "2026-07-01T00:00:00.000Z",
+    "songName": "Legacy Fixture",
+    "key": "Bb Minor",
+    "bpm": 92,
+    "chords": ["C", { "chord": "G7", "shapeIndex": 3 }]
+  }
+}
