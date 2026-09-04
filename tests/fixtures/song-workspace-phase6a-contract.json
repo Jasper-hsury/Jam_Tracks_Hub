@@ -1,0 +1,222 @@
+{
+  "fixtureVersion": 1,
+  "syntheticOnly": true,
+  "characterizationCategories": [
+    "english-song",
+    "traditional-chinese-song",
+    "mixed-english-cjk-song",
+    "chord-only-instrumental-section",
+    "repeated-lyric-tokens",
+    "punctuation-heavy-line",
+    "multiple-chord-anchors",
+    "natural-key",
+    "sharp-key",
+    "flat-key",
+    "capo-shape-key",
+    "smart-capo",
+    "roman-mode",
+    "nashville-mode",
+    "chordpro-import",
+    "jth-json-v2-round-trip",
+    "malformed-import",
+    "corrupted-storage",
+    "storage-boundary",
+    "read-performance-state"
+  ],
+  "legacyRuntimeSha256": {
+    "song-workspace.html": "7c452f104a6302c14316ae0c8cf0ea48784ba8ac5ec8ff12771115fc68afb77f",
+    "scripts/song-workspace-core.js": "d792e65873c140deda2ac576370bcd940d14e1f35d9fb5da88bbd11431b28ecb",
+    "scripts/song-workspace-storage.js": "b11c00dcb5cafb3ca414ccc9fec59bd6931dc39fe3658ecec33003f4d7d210ae",
+    "scripts/song-workspace-import.js": "7c04c4890176ac235d93f29ed9ca2440466978b7973fbb4e07e5c3ee9d311b56",
+    "scripts/song-workspace.js": "cbb2bc6924cd9a038a8efa7cfd20f4b660654041f3916150d79ce624ae49a388",
+    "scripts/chord-shapes.js": "00189b548b9d6fe48daab6c3ea68fd2a2a2baf9e39d16d638df1b0e8d19c1c04",
+    "styles/song-workspace.css": "0fa83f76ec2aa81fef81653809d855b0673a1dbde9224f757c10af50f9660a3d",
+    "styles/chord-dictionary.css": "4fbcdc99c18949c5961ea933224b9aabbae1a06c655960885549e657faa63f53"
+  },
+  "canonicalSong": {
+    "schema": "jamtrackshub-song",
+    "version": 2,
+    "id": "song-11111111-1111-4111-8111-111111111111",
+    "title": "Synthetic Contract Song",
+    "artist": "Phase 6A Artist",
+    "originalKey": "C",
+    "targetKey": "C",
+    "chordSpelling": "theory",
+    "capo": 0,
+    "bpm": 120,
+    "timeSignature": "4/4",
+    "sections": [
+      {
+        "id": "section-verse",
+        "type": "verse",
+        "title": "Verse",
+        "lines": [
+          {
+            "id": "line-en",
+            "type": "lyric",
+            "text": "  Pulse   moves, don't-stop 42!  ",
+            "chords": [
+              { "id": "chord-en-1", "symbol": "Cmaj9", "anchorPosition": 0 },
+              { "id": "chord-en-2", "symbol": "G/B", "anchorPosition": 2 }
+            ]
+          },
+          {
+            "id": "line-cjk",
+            "type": "lyric",
+            "text": "測試，節奏開始了。",
+            "chords": [
+              { "id": "chord-cjk-1", "symbol": "Am7", "anchorPosition": 0 },
+              { "id": "chord-cjk-2", "symbol": "Fadd9", "anchorPosition": 4 }
+            ]
+          },
+          {
+            "id": "line-mix",
+            "type": "lyric",
+            "text": "Count 2，然後 go! 🎸",
+            "chords": [
+              { "id": "chord-mix-1", "symbol": "C", "anchorPosition": 0 },
+              { "id": "chord-mix-2", "symbol": "G7", "anchorPosition": 4 }
+            ]
+          },
+          {
+            "id": "line-repeat",
+            "type": "lyric",
+            "text": "echo echo echo",
+            "chords": [
+              { "id": "chord-repeat", "symbol": "Dm7", "anchorPosition": 1 }
+            ]
+          },
+          {
+            "id": "line-punct",
+            "type": "lyric",
+            "text": "…！？ —",
+            "chords": []
+          }
+        ]
+      },
+      {
+        "id": "section-inst",
+        "type": "instrumental",
+        "title": "Instrumental",
+        "lines": [
+          {
+            "id": "line-bar-1",
+            "type": "instrumental",
+            "text": "",
+            "chords": [
+              { "id": "chord-bar-1", "symbol": "C", "anchorPosition": 0 },
+              { "id": "chord-bar-2", "symbol": "G/B", "anchorPosition": 1 }
+            ]
+          },
+          {
+            "id": "line-bar-2",
+            "type": "instrumental",
+            "text": "",
+            "chords": [
+              { "id": "chord-bar-3", "symbol": "Am7", "anchorPosition": 0 },
+              { "id": "chord-bar-4", "symbol": "Fadd9", "anchorPosition": 1 }
+            ]
+          }
+        ]
+      }
+    ],
+    "createdAt": "2026-09-04T00:00:00.000Z",
+    "updatedAt": "2026-09-04T00:00:00.000Z"
+  },
+  "tokenization": [
+    {
+      "id": "english",
+      "source": "alpha  beta, don't-stop 42!",
+      "meaningful": ["alpha", "beta,", "don't-stop", "42!"],
+      "kinds": ["word", "space", "word", "space", "word", "space", "word"]
+    },
+    {
+      "id": "cjk",
+      "source": "測試，節奏開始了。",
+      "meaningful": ["測", "試", "節", "奏", "開", "始", "了"],
+      "kinds": ["cjk", "cjk", "punctuation", "cjk", "cjk", "cjk", "cjk", "cjk", "punctuation"]
+    },
+    {
+      "id": "mixed",
+      "source": "Count 2，然後 go! 🎸",
+      "meaningful": ["Count", "2，", "然", "後", "go!"],
+      "kinds": ["word", "space", "word", "cjk", "cjk", "space", "word", "space", "punctuation"]
+    },
+    {
+      "id": "repeated",
+      "source": "echo echo echo",
+      "meaningful": ["echo", "echo", "echo"],
+      "kinds": ["word", "space", "word", "space", "word"]
+    },
+    {
+      "id": "punctuation-only",
+      "source": "…！？ —",
+      "meaningful": [],
+      "kinds": ["punctuation", "space", "punctuation"]
+    },
+    {
+      "id": "spaced-letters",
+      "source": "s l o w",
+      "meaningful": ["s", "l", "o", "w"],
+      "kinds": ["word", "space", "word", "space", "word", "space", "word"]
+    }
+  ],
+  "displayModes": {
+    "source": ["Cmaj9", "G/B", "Am7", "Fadd9"],
+    "original": ["Cmaj9", "G/B", "Am7", "Fadd9"],
+    "balanced": ["Cmaj7", "G/B", "Am7", "F"],
+    "beginner": ["C", "G", "Am", "F"],
+    "roman": ["Imaj9", "V/VII", "vi7", "IVadd9"],
+    "nashville": ["1maj9", "5/7", "6m7", "4add9"]
+  },
+  "autoScroll": [
+    { "bpm": null, "multiplier": 1, "milliseconds": 1000, "distance": 48 },
+    { "bpm": 60, "multiplier": 0.5, "milliseconds": 1000, "distance": 12 },
+    { "bpm": 180, "multiplier": 1.5, "milliseconds": 250, "distance": 27 }
+  ],
+  "chordProCases": [
+    {
+      "id": "metadata-and-sections",
+      "source": "{title: Fixture Title}\n{artist: Fixture Artist}\n{key: G}\n{tempo: 96}\n{time: 6/8}\n{start_of_verse: Verse}\n[G]Synthetic [D]line",
+      "title": "Fixture Title",
+      "artist": "Fixture Artist",
+      "key": "G",
+      "bpm": 96,
+      "timeSignature": "6/8",
+      "text": "Synthetic line",
+      "chords": ["G", "D"]
+    },
+    {
+      "id": "traditional-chinese",
+      "source": "{start_of_chorus: 副歌}\n[C]測試，[G]繼續。",
+      "text": "測試，繼續。",
+      "chords": ["C", "G"]
+    },
+    {
+      "id": "mixed-language",
+      "source": "[Am]Count 2，然後 [F]go!",
+      "text": "Count 2，然後 go!",
+      "chords": ["Am", "F"]
+    },
+    {
+      "id": "instrumental",
+      "source": "{start_of_tab: Solo}\n[C][G/B][Am7][Fadd9]",
+      "lineType": "instrumental",
+      "text": "",
+      "chords": ["C", "G/B", "Am7", "Fadd9"]
+    },
+    {
+      "id": "unsupported-and-malformed",
+      "source": "{comment: ignored}\n[C<script>]literal [G]safe",
+      "text": "[C<script>]literal safe",
+      "chords": ["G"]
+    }
+  ],
+  "privacyCanaries": {
+    "title": "PHASE6A_TITLE_CANARY_7F4B",
+    "artist": "PHASE6A_ARTIST_CANARY_2C91",
+    "lyric": "PHASE6A_LYRIC_CANARY_8D30",
+    "section": "PHASE6A_SECTION_CANARY_5A62",
+    "chordPro": "PHASE6A_CHORDPRO_CANARY_1E77"
+  }
+}
