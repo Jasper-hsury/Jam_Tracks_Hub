@@ -4,7 +4,7 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 
 const root = fileURLToPath(new URL(".", import.meta.url));
-const viteOwnedHtml = new Set(["/", "/index.html", "/404.html", "/legal.html", "/privacy-policy.html", "/service-waking.html", "/feedback.html", "/tracks", "/tracks.html", "/fretboard-trainer", "/fretboard-trainer.html", "/chord-progressions", "/chord-progressions.html", "/scale", "/scale.html", "/chord-dictionary", "/chord-dictionary.html"]);
+const viteOwnedHtml = new Set(["/", "/index.html", "/404.html", "/legal.html", "/privacy-policy.html", "/service-waking.html", "/feedback.html", "/tracks", "/tracks.html", "/fretboard-trainer", "/fretboard-trainer.html", "/chord-progressions", "/chord-progressions.html", "/scale", "/scale.html", "/chord-dictionary", "/chord-dictionary.html", "/progression-writer", "/progression-writer.html"]);
 const legacyHtmlAssets = [
   "assets/images/icon.png",
   "scripts/theme-init.js?v=20260725-friendly-insect-switch",
@@ -31,7 +31,8 @@ const legacyHtmlAssets = [
   "scripts/site-animations.js?v=20260718-trainer-dropdown-hover",
   "scripts/site-animations.js?v=20260903-vue-home-lifecycle",
   "scripts/site-animations.js?v=20260830-privacy-static-policy",
-  "scripts/site-animations.js?v=20260720-track-windmill-heartless"
+  "scripts/site-animations.js?v=20260720-track-windmill-heartless",
+  "scripts/chord-shapes.js?v=20260826-workspace-hardening"
 ];
 const legacyAssetSentinel = "https://vite-preserved-legacy.invalid/";
 
@@ -98,6 +99,7 @@ export default defineConfig({
         "chord-progressions": resolve(root, "chord-progressions.html"),
         "scale-explorer": resolve(root, "scale.html"),
         "chord-dictionary": resolve(root, "chord-dictionary.html"),
+        "progression-writer": resolve(root, "progression-writer.html"),
         "vue-foundation": resolve(root, "src/entries/vue-foundation.js")
       },
       output: {

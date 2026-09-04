@@ -6,7 +6,7 @@ const dist = path.join(root, "dist");
 const maxWorkerAssetBytes = 24 * 1024 * 1024;
 const renderAssetBaseUrl = "https://api.jamtrackshub.com";
 const copiedDirectories = ["assets", "data", "downloads", "locales", "scripts", "slides", "styles"];
-const viteOwnedRootHtml = new Set(["index.html", "404.html", "legal.html", "privacy-policy.html", "service-waking.html", "feedback.html", "tracks.html", "fretboard-trainer.html", "chord-progressions.html", "scale.html", "chord-dictionary.html"]);
+const viteOwnedRootHtml = new Set(["index.html", "404.html", "legal.html", "privacy-policy.html", "service-waking.html", "feedback.html", "tracks.html", "fretboard-trainer.html", "chord-progressions.html", "scale.html", "chord-dictionary.html", "progression-writer.html"]);
 const workerConfig = JSON.parse(fs.readFileSync(path.join(root, "wrangler.jsonc"), "utf8"));
 
 function fail(message) {
@@ -446,6 +446,47 @@ if (/scripts\/(?:site|i18n|chord-dictionary)\.js/.test(migratedChordDictionary))
   fail("Chord Dictionary still loads a legacy page runtime");
 }
 
+const migratedProgressionWriter = fs.readFileSync(path.join(dist, "progression-writer.html"), "utf8");
+if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/progression-writer\.html">/.test(migratedProgressionWriter)) {
+  fail("Progression Writer canonical metadata differs");
+}
+if (!/<meta name="description" content="Write custom chord progressions, choose guitar voicings, save drafts, and export clean printable chord diagrams\.">/.test(migratedProgressionWriter)) {
+  fail("Progression Writer description metadata differs");
+}
+if (!/<div id="vue-progression-writer-root"><\/div>/.test(migratedProgressionWriter)) {
+  fail("Progression Writer Vue mount target is missing");
+}
+if (!/<script defer src="https:\/\/cloud\.umami\.is\/script\.js" data-website-id="[^"]+"><\/script>/.test(migratedProgressionWriter)) {
+  fail("Progression Writer Umami loader differs");
+}
+if (!/<script type="module" crossorigin src="\/assets\/vue\/progression-writer-[^"]+\.js"><\/script>/.test(migratedProgressionWriter)) {
+  fail("Progression Writer compiled Vue entry is missing");
+}
+if (/src\/entries\/progression-writer\.js/.test(migratedProgressionWriter)) {
+  fail("Progression Writer source entry leaked into production HTML");
+}
+[
+  "scripts/theme-init.js?v=20260725-friendly-insect-switch",
+  "scripts/i18n-init.js?v=20260804-no-language-flash",
+  "styles/base.css?v=20260829-smart-navbar-v2",
+  "styles/components.css?v=20260827-legal-footer",
+  "styles/chord-dictionary.css?v=20260728-mobile-polish",
+  "styles/pages.css?v=20260804-feedback-consistency",
+  "styles/themes.css?v=20260804-feedback-consistency",
+  "scripts/chord-shapes.js?v=20260826-workspace-hardening",
+  "assets/vendor/gsap/gsap.min.js",
+  "assets/vendor/gsap/ScrollTrigger.min.js",
+  "scripts/site-animations.js?v=20260718-trainer-dropdown-hover"
+].forEach(function(asset) {
+  if (!migratedProgressionWriter.includes(asset)) fail(`Progression Writer legacy asset path differs: ${asset}`);
+});
+if (/assets\/vue\/progression-writer-[^"]+\.css/.test(migratedProgressionWriter)) {
+  fail("Progression Writer shared CSS was incorrectly rebundled");
+}
+if (/scripts\/(?:site|i18n|progression-writer)\.js/.test(migratedProgressionWriter)) {
+  fail("Progression Writer still loads a legacy page runtime");
+}
+
 [
   ["Homepage", migratedHome],
   ["404", migrated404],
@@ -457,7 +498,8 @@ if (/scripts\/(?:site|i18n|chord-dictionary)\.js/.test(migratedChordDictionary))
   ["Fretboard Trainer", migratedFretboardTrainer],
   ["Chord Progressions", migratedChordProgressions],
   ["Scale Explorer", migratedScaleExplorer],
-  ["Chord Dictionary", migratedChordDictionary]
+  ["Chord Dictionary", migratedChordDictionary],
+  ["Progression Writer", migratedProgressionWriter]
 ].forEach(function([pageName, html]) {
   if (/<nav class="navbar"|<footer class="footer"|class="skip-link"/.test(html)) {
     fail(`${pageName} still contains legacy shell markup`);
@@ -615,6 +657,12 @@ if (!fs.readFileSync(migratedChordDictionaryBundle, "utf8").includes("vue-chord-
   fail("compiled Vue Chord Dictionary mount marker is missing");
 }
 
+const migratedProgressionWriterBundle = vueJavaScript.find(filePath => path.basename(filePath).startsWith("progression-writer-"));
+if (!migratedProgressionWriterBundle) fail("missing compiled Vue Progression Writer entry");
+if (!fs.readFileSync(migratedProgressionWriterBundle, "utf8").includes("vue-progression-writer-root")) {
+  fail("compiled Vue Progression Writer mount marker is missing");
+}
+
 const sharedShellBundle = vueJavaScript.find(filePath => path.basename(filePath).startsWith("mountSitePage-"));
 if (!sharedShellBundle) fail("missing compiled shared Vue shell");
 const sharedShellSource = fs.readFileSync(sharedShellBundle, "utf8");
@@ -659,6 +707,9 @@ rootHtml.forEach(function(relativePath) {
   }
   if (relativePath !== "chord-dictionary.html" && /assets\/vue\/chord-dictionary-|src\/entries\/chord-dictionary\.js/i.test(html)) {
     fail(`unmigrated production HTML references the Vue Chord Dictionary entry: ${relativePath}`);
+  }
+  if (relativePath !== "progression-writer.html" && /assets\/vue\/progression-writer-|src\/entries\/progression-writer\.js/i.test(html)) {
+    fail(`unmigrated production HTML references the Vue Progression Writer entry: ${relativePath}`);
   }
 });
 

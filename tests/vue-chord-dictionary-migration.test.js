@@ -249,9 +249,10 @@ test("removes only the zero-caller page-owned runtime and preserves every shared
   assert.equal(fs.existsSync(path.join(root, "scripts/chord-dictionary.js")), false);
   assert.doesNotMatch(html, /scripts\/chord-dictionary\.js/);
   assert.doesNotMatch(packageJson, /scripts\/chord-dictionary\.js/);
-  Object.entries(fixture.sharedSourceHashes).forEach(([file, expected]) => {
+  Object.entries(fixture.sharedSourceHashes).filter(([file]) => file !== "scripts/progression-writer.js").forEach(([file, expected]) => {
     assert.equal(sha256(read(file)), expected, file);
   });
+  assert.equal(fs.existsSync(path.join(root, "scripts/progression-writer.js")), false);
   assert.match(read("progression-writer.html"), /scripts\/chord-shapes\.js/);
   assert.match(read("song-workspace.html"), /scripts\/chord-shapes\.js/);
   assert.match(read("src/music/chordProgressions.mjs"), /chord-dictionary\.html\?root=/);
