@@ -181,7 +181,8 @@ test("keeps Tracks independently Vue-owned and other legacy pages outside the Ho
   assert.equal(packageJson.version, "2.0.4");
   assert.match(tracksHtml, /src\/entries\/tracks\.js/);
   assert.doesNotMatch(tracksHtml, /scripts\/tracks\.js/);
-  assert.match(keyFinderHtml, /scripts\/key-finder\.js/);
+  assert.match(keyFinderHtml, /src\/entries\/key-finder\.js/);
+  assert.doesNotMatch(keyFinderHtml, /scripts\/key-finder\.js/);
   assert.match(workspaceHtml, /scripts\/song-workspace\.js/);
   [tracksHtml, keyFinderHtml, workspaceHtml].forEach(html => {
     assert.doesNotMatch(html, /vue-home-root|src\/entries\/home\.js/);

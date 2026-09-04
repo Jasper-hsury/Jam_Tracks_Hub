@@ -249,7 +249,7 @@ test("removes only the zero-caller page-owned runtime and preserves every shared
   assert.equal(fs.existsSync(path.join(root, "scripts/chord-dictionary.js")), false);
   assert.doesNotMatch(html, /scripts\/chord-dictionary\.js/);
   assert.doesNotMatch(packageJson, /scripts\/chord-dictionary\.js/);
-  Object.entries(fixture.sharedSourceHashes).filter(([file]) => file !== "scripts/progression-writer.js").forEach(([file, expected]) => {
+  Object.entries(fixture.sharedSourceHashes).filter(([file]) => !["scripts/progression-writer.js", "scripts/key-finder.js"].includes(file)).forEach(([file, expected]) => {
     assert.equal(sha256(read(file)), expected, file);
   });
   assert.equal(fs.existsSync(path.join(root, "scripts/progression-writer.js")), false);
@@ -257,7 +257,7 @@ test("removes only the zero-caller page-owned runtime and preserves every shared
   assert.match(read("song-workspace.html"), /scripts\/chord-shapes\.js/);
   assert.match(read("src/music/chordProgressions.mjs"), /chord-dictionary\.html\?root=/);
   assert.match(read("src/music/scaleExplorer.mjs"), /chord-dictionary\.html\?root=/);
-  assert.match(read("scripts/key-finder.js"), /chord-dictionary\.html\?root=/);
+  assert.match(read("src/music/keyFinder.mjs"), /chord-dictionary\.html\?root=/);
 });
 
 test("extends deterministic Cloudflare ownership without changing backend or version boundaries", () => {
