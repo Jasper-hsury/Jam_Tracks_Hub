@@ -307,7 +307,7 @@ test("mounts Progression Writer as the twelfth Vue-owned Vite MPA page and remov
   assert.match(html, /scripts\/chord-shapes\.js/);
   assert.match(entry, /activePage: "chord-progressions"/);
   assert.equal(fs.existsSync(path.join(root, "scripts/progression-writer.js")), false);
-  assert.equal((config.match(/resolve\(root, "[^\"]+\.html"\)/g) || []).length, 12);
+  assert.equal((config.match(/resolve\(root, "[^\"]+\.html"\)/g) || []).length, 13);
 });
 
 test("uses native Vue DOM ownership while preserving shell, i18n, theme, responsive, and accessibility contracts", () => {
@@ -365,7 +365,6 @@ test("keeps every shared music/backend consumer byte-identical", () => {
     "src/views/ChordProgressionsView.vue": "80f12c439cd04d88000b26527787e02c9ecf606884b3bcc3a1c4a9ef191b70a0",
     "src/views/ScaleExplorerView.vue": "e8dc3cf9beff6e408a8b0453d342a28bf53db975c610d1b4a6f8bf470826b1cf",
     "src/views/FretboardTrainerView.vue": "4ac89644ed35a42e63a96d62476454efeaec24fb7081e1ba0c48dd0e95cb3ff6",
-    "scripts/key-finder.js": "d5e9df6f3fc7d038c69365d516ba5836705270f552a6c9fc8d89b1b795a5eb25",
     "worker.js": "38bb981a849874c0c4421c00c73aef2bf0e2fbfa857f3a85dc63f145af7f970c",
     "wrangler.jsonc": "fcd1a460b0bee67ad6f0b33076234c682c22580d48ee3f4ffbe339d2a88145db"
   };

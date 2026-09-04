@@ -1,0 +1,61 @@
+{
+  "requests": {
+    "health": { "method": "GET", "path": "/api/health", "cache": "no-store" },
+    "youtubeCreate": { "method": "POST", "path": "/api/analyze/jobs", "contentType": "application/json", "body": { "url": "https://youtu.be/fixture" } },
+    "youtubePoll": { "method": "GET", "path": "/api/analyze/jobs/job-youtube", "cache": "no-store" },
+    "fileCreate": { "method": "POST", "path": "/api/analyze-file/jobs", "field": "file" },
+    "filePoll": { "method": "GET", "path": "/api/analyze-file/jobs/job-file", "cache": "no-store" }
+  },
+  "responses": {
+    "health": { "status": "ok", "model_version": "fixture", "analysis_queue": { "active_jobs": 0, "max_workers": 1 } },
+    "queued": { "job_id": "job-youtube", "filename": "youtube:fixture", "status": "queued", "stage": "Waiting for YouTube downloader", "progress": 8, "cached": false },
+    "processing": { "job_id": "job-youtube", "filename": "youtube:fixture", "status": "processing", "stage": "Extracting musical features", "progress": 58, "cached": false },
+    "completed": {
+      "job_id": "job-youtube",
+      "filename": "youtube:fixture",
+      "status": "completed",
+      "stage": "Complete",
+      "progress": 100,
+      "cached": false,
+      "result": {
+        "final_key": "F# Minor",
+        "source": "machine learning",
+        "confidence": 73.4,
+        "confidence_label": "ML direct-key confidence",
+        "ml_confidence": 73.4,
+        "rule_confidence": 91.2,
+        "rule_gap": 20.1,
+        "priority_gap": 18.8,
+        "certainty": "high",
+        "uncertain": false,
+        "confidence_note": "The main evidence sources are clearly separated from the alternatives.",
+        "rule_key": "F# Minor",
+        "priority_key": "F# Minor",
+        "key_family": "A Major / F# Minor",
+        "main_notes": ["F#", "A", "C#"],
+        "strongest_notes": [{ "note": "F#", "strength": 96.1 }],
+        "possible_keys": [{ "key": "A Major", "relative_score": 82.5 }],
+        "overall_ranking": [{ "key": "F# Minor", "relative_score": 100 }],
+        "priority_ranking": [{ "key": "F# Minor", "relative_score": 100 }],
+        "family_ranking": [{ "family": "A Major / F# Minor", "relative_score": 100 }],
+        "priority_family_ranking": [{ "family": "A Major / F# Minor", "relative_score": 100 }],
+        "mode_resolution": "minor",
+        "conflict_resolution": "agreement",
+        "ml_details": {
+          "family": { "prediction": "A Major / F# Minor", "confidence": 78.2 },
+          "mode": { "prediction": "minor", "confidence": 81.3 },
+          "key": { "prediction": "F# Minor", "confidence": 73.4 },
+          "basis": "fixture"
+        },
+        "model_version": "fixture-v1",
+        "input_type": "youtube"
+      }
+    },
+    "failed": { "job_id": "job-youtube", "status": "failed", "stage": "YouTube analysis failed", "progress": 100, "error": "Synthetic backend failure" },
+    "validationError": { "detail": "Only YouTube links are supported." },
+    "notFound": { "detail": "Analysis job was not found or has expired." },
+    "rateLimited": { "detail": "Rate limit exceeded." },
+    "unavailableText": "upstream unavailable",
+    "malformed": "not-json"
+  }
+}

@@ -6,7 +6,7 @@ const dist = path.join(root, "dist");
 const maxWorkerAssetBytes = 24 * 1024 * 1024;
 const renderAssetBaseUrl = "https://api.jamtrackshub.com";
 const copiedDirectories = ["assets", "data", "downloads", "locales", "scripts", "slides", "styles"];
-const viteOwnedRootHtml = new Set(["index.html", "404.html", "legal.html", "privacy-policy.html", "service-waking.html", "feedback.html", "tracks.html", "fretboard-trainer.html", "chord-progressions.html", "scale.html", "chord-dictionary.html", "progression-writer.html"]);
+const viteOwnedRootHtml = new Set(["index.html", "404.html", "legal.html", "privacy-policy.html", "service-waking.html", "feedback.html", "tracks.html", "fretboard-trainer.html", "chord-progressions.html", "scale.html", "chord-dictionary.html", "progression-writer.html", "key-finder.html"]);
 const workerConfig = JSON.parse(fs.readFileSync(path.join(root, "wrangler.jsonc"), "utf8"));
 
 function fail(message) {
@@ -487,6 +487,45 @@ if (/scripts\/(?:site|i18n|progression-writer)\.js/.test(migratedProgressionWrit
   fail("Progression Writer still loads a legacy page runtime");
 }
 
+const migratedKeyFinder = fs.readFileSync(path.join(dist, "key-finder.html"), "utf8");
+if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/key-finder\.html">/.test(migratedKeyFinder)) {
+  fail("Key Finder canonical metadata differs");
+}
+if (!/<meta name="description" content="Upload audio files to estimate song keys, with optional YouTube link analysis when cloud access is available\.">/.test(migratedKeyFinder)) {
+  fail("Key Finder description metadata differs");
+}
+if (!/<div id="vue-key-finder-root"><\/div>/.test(migratedKeyFinder)) {
+  fail("Key Finder Vue mount target is missing");
+}
+if (!/<script defer src="https:\/\/cloud\.umami\.is\/script\.js" data-website-id="[^"]+"><\/script>/.test(migratedKeyFinder)) {
+  fail("Key Finder Umami loader differs");
+}
+if (!/<script type="module" crossorigin src="\/assets\/vue\/key-finder-[^"]+\.js"><\/script>/.test(migratedKeyFinder)) {
+  fail("Key Finder compiled Vue entry is missing");
+}
+if (/src\/entries\/key-finder\.js/.test(migratedKeyFinder)) {
+  fail("Key Finder source entry leaked into production HTML");
+}
+[
+  "scripts/theme-init.js?v=20260725-friendly-insect-switch",
+  "scripts/i18n-init.js?v=20260804-no-language-flash",
+  "styles/base.css?v=20260829-smart-navbar-v2",
+  "styles/components.css?v=20260827-legal-footer",
+  "styles/pages.css?v=20260804-feedback-consistency",
+  "styles/themes.css?v=20260804-feedback-consistency",
+  "assets/vendor/gsap/gsap.min.js",
+  "assets/vendor/gsap/ScrollTrigger.min.js",
+  "scripts/site-animations.js?v=20260718-trainer-dropdown-hover"
+].forEach(function(asset) {
+  if (!migratedKeyFinder.includes(asset)) fail(`Key Finder legacy asset path differs: ${asset}`);
+});
+if (/assets\/vue\/key-finder-[^"]+\.css/.test(migratedKeyFinder)) {
+  fail("Key Finder shared CSS was incorrectly rebundled");
+}
+if (/scripts\/(?:site|i18n|site-config|key-finder)\.js/.test(migratedKeyFinder)) {
+  fail("Key Finder still loads a legacy page runtime");
+}
+
 [
   ["Homepage", migratedHome],
   ["404", migrated404],
@@ -499,7 +538,8 @@ if (/scripts\/(?:site|i18n|progression-writer)\.js/.test(migratedProgressionWrit
   ["Chord Progressions", migratedChordProgressions],
   ["Scale Explorer", migratedScaleExplorer],
   ["Chord Dictionary", migratedChordDictionary],
-  ["Progression Writer", migratedProgressionWriter]
+  ["Progression Writer", migratedProgressionWriter],
+  ["Key Finder", migratedKeyFinder]
 ].forEach(function([pageName, html]) {
   if (/<nav class="navbar"|<footer class="footer"|class="skip-link"/.test(html)) {
     fail(`${pageName} still contains legacy shell markup`);
@@ -663,6 +703,19 @@ if (!fs.readFileSync(migratedProgressionWriterBundle, "utf8").includes("vue-prog
   fail("compiled Vue Progression Writer mount marker is missing");
 }
 
+const migratedKeyFinderBundle = vueJavaScript.find(filePath => path.basename(filePath).startsWith("key-finder-"));
+if (!migratedKeyFinderBundle) fail("missing compiled Vue Key Finder entry");
+const migratedKeyFinderSource = fs.readFileSync(migratedKeyFinderBundle, "utf8");
+if (!migratedKeyFinderSource.includes("vue-key-finder-root")) {
+  fail("compiled Vue Key Finder mount marker is missing");
+}
+if (!migratedKeyFinderSource.includes("https://api.jamtrackshub.com")) {
+  fail("compiled Vue Key Finder canonical API origin is missing");
+}
+if (/onrender\.com/.test(migratedKeyFinderSource)) {
+  fail("compiled Vue Key Finder contains a direct Render fallback");
+}
+
 const sharedShellBundle = vueJavaScript.find(filePath => path.basename(filePath).startsWith("mountSitePage-"));
 if (!sharedShellBundle) fail("missing compiled shared Vue shell");
 const sharedShellSource = fs.readFileSync(sharedShellBundle, "utf8");
@@ -710,6 +763,9 @@ rootHtml.forEach(function(relativePath) {
   }
   if (relativePath !== "progression-writer.html" && /assets\/vue\/progression-writer-|src\/entries\/progression-writer\.js/i.test(html)) {
     fail(`unmigrated production HTML references the Vue Progression Writer entry: ${relativePath}`);
+  }
+  if (relativePath !== "key-finder.html" && /assets\/vue\/key-finder-|src\/entries\/key-finder\.js/i.test(html)) {
+    fail(`unmigrated production HTML references the Vue Key Finder entry: ${relativePath}`);
   }
 });
 

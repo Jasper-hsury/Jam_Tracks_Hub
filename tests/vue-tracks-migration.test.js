@@ -219,7 +219,8 @@ test("records the download bug fix as version 2.0.4 and preserves non-Tracks run
 
   assert.equal(packageJson.version, "2.0.4");
   assert.deepEqual(packageJson.dependencies, { vue: "3.5.42" });
-  assert.match(keyFinder, /scripts\/key-finder\.js/);
+  assert.match(keyFinder, /src\/entries\/key-finder\.js/);
+  assert.doesNotMatch(keyFinder, /scripts\/key-finder\.js/);
   assert.match(workspace, /scripts\/song-workspace\.js/);
   assert.doesNotMatch(keyFinder + workspace, /vue-tracks-root|src\/entries\/tracks\.js/);
 });

@@ -144,7 +144,7 @@ test("keeps Feedback bounded, mutation-free in tests, and preserves legacy outpu
 
   assert.equal(packageJson.version, "2.0.4");
   assert.equal(packageJson.dependencies.vue, "3.5.42");
-  assert.match(verifier, /const viteOwnedRootHtml = new Set\(\["index\.html", "404\.html", "legal\.html", "privacy-policy\.html", "service-waking\.html", "feedback\.html", "tracks\.html", "fretboard-trainer\.html", "chord-progressions\.html", "scale\.html", "chord-dictionary\.html", "progression-writer\.html"\]\)/);
+  assert.match(verifier, /const viteOwnedRootHtml = new Set\([^)]*"key-finder\.html"/);
   assert.match(verifier, /Feedback canonical metadata differs/);
   assert.match(verifier, /compiled Vue Feedback mount marker is missing/);
   assert.doesNotMatch(testSource, /https:\/\/jamtrackshub\.com\/api\/feedback/);

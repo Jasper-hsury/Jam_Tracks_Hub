@@ -17,10 +17,10 @@ const vuePages = [
   ["chord-progressions.html", "src/entries/chord-progressions.js", "vue-chord-progressions-root"],
   ["scale.html", "src/entries/scale-explorer.js", "vue-scale-explorer-root"],
   ["chord-dictionary.html", "src/entries/chord-dictionary.js", "vue-chord-dictionary-root"],
-  ["progression-writer.html", "src/entries/progression-writer.js", "vue-progression-writer-root"]
+  ["progression-writer.html", "src/entries/progression-writer.js", "vue-progression-writer-root"],
+  ["key-finder.html", "src/entries/key-finder.js", "vue-key-finder-root"]
 ];
 const legacyPages = [
-  "key-finder.html",
   "song-workspace.html"
 ];
 
@@ -36,7 +36,7 @@ test("provides one reusable Vue-owned site shell composition", () => {
   assert.match(mountHelper, /default: \(\) => h\(view\)/);
 });
 
-test("moves shared shell ownership off the twelve Vue HTML documents", () => {
+test("moves shared shell ownership off the thirteen Vue HTML documents", () => {
   vuePages.forEach(([htmlPath, entryPath, mountId]) => {
     const html = read(htmlPath);
     const entry = read(entryPath);
@@ -56,7 +56,7 @@ test("retains early bootstrap, Umami, and animation compatibility assets per pag
     assert.match(html, /https:\/\/cloud\.umami\.is\/script\.js/);
   });
 
-  ["index.html", "404.html", "privacy-policy.html", "service-waking.html", "feedback.html", "fretboard-trainer.html", "chord-progressions.html", "chord-dictionary.html", "progression-writer.html"].forEach(htmlPath => {
+  ["index.html", "404.html", "privacy-policy.html", "service-waking.html", "feedback.html", "fretboard-trainer.html", "chord-progressions.html", "chord-dictionary.html", "progression-writer.html", "key-finder.html"].forEach(htmlPath => {
     assert.match(read(htmlPath), /scripts\/site-animations\.js/);
   });
 });
@@ -130,12 +130,12 @@ test("keeps every legacy page on the legacy shell with no Vue mount", () => {
     assert.match(html, /<footer class="footer"/i, htmlPath);
     assert.match(html, /scripts\/site\.js/, htmlPath);
     assert.match(html, /scripts\/i18n\.js/, htmlPath);
-    assert.doesNotMatch(html, /src\/entries\/(?:404|legal|privacy|service-waking|feedback|fretboard-trainer|chord-progressions|scale-explorer|chord-dictionary|progression-writer)\.js|vue-(?:404|legal|privacy|service-waking|feedback|fretboard-trainer|chord-progressions|scale-explorer|chord-dictionary|progression-writer)-root/i, htmlPath);
+    assert.doesNotMatch(html, /src\/entries\/(?:404|legal|privacy|service-waking|feedback|fretboard-trainer|chord-progressions|scale-explorer|chord-dictionary|progression-writer|key-finder)\.js|vue-(?:404|legal|privacy|service-waking|feedback|fretboard-trainer|chord-progressions|scale-explorer|chord-dictionary|progression-writer|key-finder)-root/i, htmlPath);
   });
 });
 
 test("keeps migrated page views on Vue locale ownership without legacy DOM translation", () => {
-  ["ChordDictionaryView.vue", "ChordProgressionsView.vue", "FeedbackView.vue", "FretboardTrainerView.vue", "LegalView.vue", "NotFoundView.vue", "PrivacyView.vue", "ProgressionWriterView.vue", "ScaleExplorerView.vue", "ServiceWakingView.vue", "TracksView.vue"].forEach(fileName => {
+  ["ChordDictionaryView.vue", "ChordProgressionsView.vue", "FeedbackView.vue", "FretboardTrainerView.vue", "KeyFinderView.vue", "LegalView.vue", "NotFoundView.vue", "PrivacyView.vue", "ProgressionWriterView.vue", "ScaleExplorerView.vue", "ServiceWakingView.vue", "TracksView.vue"].forEach(fileName => {
     const view = read(`src/views/${fileName}`);
     assert.match(view, /useSiteLocale/);
     assert.doesNotMatch(view, /useLegacyLocale|data-i18n|v-html/);

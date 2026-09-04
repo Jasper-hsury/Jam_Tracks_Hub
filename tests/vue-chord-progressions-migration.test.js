@@ -194,7 +194,7 @@ test("extends deterministic Cloudflare verification without changing backend bou
   assert.match(verifier, /Chord Progressions still loads a legacy page runtime/);
   assert.match(verifier, /compiled Vue Chord Progressions mount marker is missing/);
   assert.doesNotMatch(read("chord-progressions.html"), /site-config\.js|\/api\//);
-  ["worker.js", "wrangler.jsonc", "functions/api/feedback.js", "functions/api/subscribe.js", "scripts/key-finder.js", "scripts/song-workspace.js"].forEach(file => {
+  ["worker.js", "wrangler.jsonc", "functions/api/feedback.js", "functions/api/subscribe.js", "scripts/song-workspace.js"].forEach(file => {
     assert.ok(fs.existsSync(path.join(root, file)), file);
   });
 });
