@@ -182,8 +182,8 @@ test("removes the exclusively page-owned legacy runtime after zero-caller review
   assert.equal(fs.existsSync(path.join(root, "scripts/chords.js")), false);
   assert.doesNotMatch(html, /scripts\/chords\.js/);
   assert.doesNotMatch(packageJson, /scripts\/chords\.js/);
-  assert.ok(fs.existsSync(path.join(root, "scripts/site.js")));
-  assert.ok(fs.existsSync(path.join(root, "scripts/i18n.js")));
+  assert.ok(fs.existsSync(path.join(root, "src/components/site/SiteShell.vue")));
+  assert.ok(fs.existsSync(path.join(root, "src/i18n/useSiteLocale.js")));
 });
 
 test("extends deterministic Cloudflare verification without changing backend boundaries", () => {

@@ -11,7 +11,7 @@ const legalView = read("src/views/LegalView.vue");
 const privacyHtml = read("privacy-policy.html");
 const privacyView = read("src/views/PrivacyView.vue");
 const workspaceHtml = read("song-workspace.html") + read("src/views/SongWorkspaceView.vue");
-const i18nJs = read("scripts/i18n.js");
+const locale = read("src/i18n/useSiteLocale.js");
 const animationsJs = read("scripts/site-animations.js");
 const pagesCss = read("styles/pages.css");
 
@@ -25,16 +25,11 @@ test("homepage keeps the established Tracks Hub SplitText entrance", () => {
     assert.match(animationsJs, /\.fromTo\(titleChars,[\s\S]*stagger:\s*0\.026/s);
 });
 
-test("same-value localization does not destroy animation-owned child nodes", () => {
-    assert.match(
-        i18nJs,
-        /if \(typeof value === "string" && element\.textContent !== value\) \{\s*element\.textContent = value;/s
-    );
-    assert.match(i18nJs, /document\.documentElement\.dataset\.i18nReady = "true"/);
-    assert.match(
-        animationsJs,
-        /pageEntranceNeedsTranslations[\s\S]*document\.documentElement\.dataset\.i18nReady !== "true"[\s\S]*addEventListener\("jasper:language-change", animatePageEntrance, \{ once: true \}\)/s
-    );
+test("Vue localization preserves the animation-owned SplitText lifecycle", () => {
+    assert.match(locale, /document\.documentElement\.dataset\.i18nReady = "true"/);
+    assert.doesNotMatch(locale, /querySelectorAll\([^\n]*data-i18n|element\.textContent = value/);
+    assert.match(animationsJs, /await waitForHomeAnimationLayout\(\);[\s\S]*animatePageEntrance\(\);/s);
+    assert.doesNotMatch(animationsJs, /pageEntranceNeedsTranslations|window\.JasperI18n/);
     assert.match(animationsJs, /function disposeHomeTextAnimation\(\)/);
     assert.match(animationsJs, /homeHeroSplits\.forEach\(split => split\?\.revert\?\.\(\)\)/);
     assert.match(animationsJs, /waitForHomeAnimationLayout/);
@@ -83,5 +78,5 @@ test("Song Workspace reuses the shared page entrance without changing its applic
     assert.match(animationsJs, /if \(isSongWorkspacePage\) \{[\s\S]*\.workspace-entry-grid > \.workspace-entry-card[\s\S]*stagger:\s*0\.065/s);
     assert.match(animationsJs, /if \(secondaryEntrancePieces\.length\) \{[\s\S]*timeline\.from\(secondaryEntrancePieces/s);
     assert.match(animationsJs, /\.filter\(target => !target\.closest\("\.song-workspace-page"\)\)/);
-    assert.match(animationsJs, /document\.querySelector\("\.home-hero, \.song-workspace-hero"\)/);
+    assert.match(animationsJs, /ready\(async function\(\) \{[\s\S]*animatePageEntrance\(\);/s);
 });

@@ -1537,16 +1537,7 @@
         if (document.querySelector('[data-vue-page="home"]')) {
             await waitForHomeAnimationLayout();
         }
-        const pageEntranceNeedsTranslations = Boolean(
-            document.querySelector(".home-hero, .song-workspace-hero") &&
-            window.JasperI18n &&
-            document.documentElement.dataset.i18nReady !== "true"
-        );
-        if (pageEntranceNeedsTranslations) {
-            window.addEventListener("jasper:language-change", animatePageEntrance, { once: true });
-        } else {
-            animatePageEntrance();
-        }
+        animatePageEntrance();
         animateScrollReveals();
         animateAboutSection();
         animateHomeStepRail();

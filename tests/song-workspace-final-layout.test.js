@@ -10,7 +10,8 @@ const read = relativePath => fs.readFileSync(path.join(root, relativePath), "utf
 const workspaceHtml = read("song-workspace.html") + read("src/views/SongWorkspaceView.vue");
 const workspaceJs = read("src/composables/useSongWorkspace.js");
 const workspaceCss = read("styles/song-workspace.css");
-const i18nJs = read("scripts/i18n.js");
+const siteFooter = read("src/components/site/SiteFooter.vue");
+const siteLocale = read("src/i18n/useSiteLocale.js");
 const i18nInit = read("scripts/i18n-init.js");
 const componentsCss = read("styles/components.css");
 const legalHtml = read("legal.html");
@@ -112,16 +113,15 @@ test("one localized hero badge owns neutral, saving, saved, and unavailable stat
 });
 
 test("shared localized footer access points to a bookmarkable legal page", () => {
-    assert.match(i18nJs, /className = "footer-legal-link"/);
-    assert.match(i18nJs, /legalLink\.href = "\/legal\.html"/);
-    assert.match(i18nJs, /legalLink\.dataset\.i18n = "footer\.legal"/);
+    assert.match(siteFooter, /class="footer-legal-link" href="\/legal\.html"/);
+    assert.match(siteFooter, /translate\("footer\.legal", "Legal & Usage Policy"\)/);
     assert.match(componentsCss, /\.footer-legal-link/);
     assert.match(i18nInit, /"legal\.html": "titles\.legal"/);
     assert.equal(en.footer.legal, "Legal & Usage Policy");
     assert.equal(zh.footer.legal, "法律與使用規範");
     assert.match(buildScript, /"legal\.html"/);
-    assert.match(i18nJs, /const hasPreloadedResources = Boolean/);
-    assert.doesNotMatch(i18nJs, /language === DEFAULT_LANGUAGE \|\| resources\.selected \|\| resources\.fallback/);
+    assert.match(siteLocale, /globalThis\.JasperI18nPreload\?\.language/);
+    assert.match(siteLocale, /import englishMessages from "\.\.\/\.\.\/locales\/en\/common\.json"/);
 });
 
 test("legal page covers terms, local storage, copyright, exports, privacy, and bounded limitations", () => {

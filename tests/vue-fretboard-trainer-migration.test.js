@@ -218,8 +218,8 @@ test("removes only the page-owned legacy trainer runtime at version 2.0.4", () =
 
   assert.equal(fs.existsSync(path.join(root, "scripts/fretboard-trainer.js")), false);
   assert.doesNotMatch(html, /scripts\/fretboard-trainer\.js/);
-  assert.match(read("scripts/site.js"), /fretboard-trainer\.html/);
-  assert.match(read("scripts/i18n.js"), /fretboard-trainer\.html/);
+  assert.match(read("src/components/site/SiteHeader.vue"), /fretboard-trainer\.html/);
+  assert.match(read("src/i18n/useSiteLocale.js"), /jasper:language-change/);
   assert.match(read("scripts/site-animations.js"), /\.trainer-heading/);
   assert.equal(packageJson.version, "2.0.4");
   assert.equal(packageJson.dependencies.vue, "3.5.42");
