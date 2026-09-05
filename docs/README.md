@@ -15,7 +15,7 @@
     <a href="https://jamtrackshub.com">
       <img alt="Website" src="https://img.shields.io/badge/site-jamtrackshub.com-2a837c" />
     </a>
-    <img alt="Static site" src="https://img.shields.io/badge/frontend-static%20HTML%20CSS%20JS-94633f" />
+    <img alt="Vue multi-page app" src="https://img.shields.io/badge/frontend-Vue%203%20MPA-42b883" />
   </p>
 </div>
 
@@ -24,6 +24,8 @@
 </p>
 
 Jam Tracks Hub combines original practice tracks with practical tools for understanding harmony, mapping guitar shapes, finding keys, and exporting custom chord progression diagrams. The goal is simple: less menu hunting, more focused practice and songwriting.
+
+All 14 visible product pages are Vue 3 multi-page entries built with Vite. Root HTML files continue to own stable URLs, metadata, analytics loaders, early theme/locale prepaint, and explicitly retained classic-script bridges.
 
 <p align="center">
   <img src="../assets/readme/tool-overview.svg" alt="Jam Tracks Hub tool overview" width="100%" />
@@ -140,6 +142,7 @@ Jasper-music-main/
     vendor/
   slides/
   downloads/
+  src/
   api-server/
   docs/
   tools/
@@ -155,17 +158,26 @@ Key files:
 | `styles/pages.css`              | Page-specific sections and tool layouts.                  |
 | `styles/themes.css`             | Light/dark theme variables and theme overrides.           |
 | `styles/chord-dictionary.css`   | Chord diagram and chord dictionary-specific styling.      |
-| `scripts/site.js`               | Shared navigation, theme switch, and site-level behavior. |
 | `scripts/theme-init.js`         | Early theme loading before page paint.                    |
-| `scripts/tracks.js`             | Track filtering, sorting, and download behavior.          |
+| `scripts/i18n-init.js`          | Early locale selection and no-flash preload.              |
+| `src/components/site/SiteShell.vue` | Shared Vue site-shell composition.                    |
+| `src/views/TracksView.vue`      | Vue-owned Track filtering, sorting, and download UI.      |
 | `src/music/chordProgressions.mjs` | Deterministic chord progression and guitar-voicing logic. |
 | `src/views/ChordProgressionsView.vue` | Vue-owned Chord Progressions UI and interactions.      |
-| `scripts/progression-writer.js` | Custom progression writer and export logic.               |
+| `src/views/ProgressionWriterView.vue` | Vue-owned custom progression writer UI.              |
+| `src/services/progressionWriterExport.mjs` | Progression and shape export logic.               |
 | `data/tracks.json`              | Backing track data source.                                |
 
 ## Local Development
 
-Static pages can be opened directly. The Key Finder needs the FastAPI backend.
+Use Node 22 as specified by `.nvmrc`, install the locked dependencies, and run the Vite multi-page development server:
+
+```bash
+npm ci
+npm run dev
+```
+
+Key Finder analysis additionally needs the FastAPI backend.
 
 On macOS:
 
@@ -193,14 +205,16 @@ http://127.0.0.1:8000/api/health
 
 ## Checks
 
-Run the JavaScript and build checks before committing:
+Run the tests, JavaScript checks, and build verification before committing:
 
 ```bash
+npm test
 npm run check
 npm run build:cloudflare
+npm run verify:cloudflare
 ```
 
-`npm run build:cloudflare` prepares a static `dist/` folder and skips oversized slide PDFs that are too large for Cloudflare Workers.
+`npm run build:cloudflare` compiles all 14 visible Vue multi-page entries plus the build-only foundation smoke entry, copies retained static paths into `dist/`, skips oversized source slide PDFs, and verifies Cloudflare output parity.
 
 ## Key Finder API
 

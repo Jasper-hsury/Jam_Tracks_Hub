@@ -141,6 +141,27 @@ test("keeps migrated page views on Vue locale ownership without legacy DOM trans
   });
 });
 
+test("keeps proven-dead frontend resources out of source and production HTML", () => {
+  [
+    "scripts/home.js",
+    "scripts/tracks.js",
+    "scripts/site.js",
+    "scripts/i18n.js",
+    "styles/style.css",
+    "src/i18n/useLegacyLocale.js"
+  ].forEach(relativePath => {
+    assert.equal(fs.existsSync(path.join(root, relativePath)), false, relativePath);
+  });
+
+  vuePages.forEach(([htmlPath]) => {
+    assert.doesNotMatch(
+      read(htmlPath),
+      /scripts\/(?:home|tracks|site|i18n)\.js|styles\/style\.css/,
+      htmlPath
+    );
+  });
+});
+
 test("keeps the Phase 4D version and dependency boundary unchanged", () => {
   const packageJson = JSON.parse(read("package.json"));
   assert.equal(packageJson.version, "2.0.4");
