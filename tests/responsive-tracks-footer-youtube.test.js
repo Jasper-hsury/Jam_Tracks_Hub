@@ -23,11 +23,11 @@ test("tablet Tracks layout keeps filters and cards in the horizontal hierarchy",
 
 test("mobile footer renders copyright, legal, and social content as three balanced rows", () => {
     const css = read("styles/components.css");
-    const i18n = read("scripts/i18n.js");
+    const footer = read("src/components/site/SiteFooter.vue");
 
-    assert.match(i18n, /rights\.className = "footer-rights"/);
-    assert.match(i18n, /document\.querySelectorAll\("\.footer"\)[\s\S]*?if \(footer\.querySelector\("\.social-links"\)\)[\s\S]*?footer\.appendChild\(socialLinks\)/);
-    assert.match(i18n, /youtubeLink\.textContent = "YouTube"[\s\S]*?instagramLink\.textContent = "Instagram"/);
+    assert.match(footer, /class="footer-rights"/);
+    assert.match(footer, /class="footer-legal-link" href="\/legal\.html"/);
+    assert.match(footer, /youtube\.com\/@weekly_backing_track[\s\S]*instagram\.com\/reyu_jasper/);
     assert.match(css, /@media \(max-width: 720px\)[\s\S]*?\.footer > p\s*\{[^}]*flex-direction:\s*column[^}]*align-items:\s*center/s);
     assert.match(css, /\.footer-rights,\s*\.footer-legal-link,\s*\.footer \.social-links a\s*\{[^}]*font-size:\s*inherit[^}]*line-height:/s);
     assert.match(css, /\.footer-rights,\s*\.footer-legal-link\s*\{[^}]*white-space:\s*nowrap/s);

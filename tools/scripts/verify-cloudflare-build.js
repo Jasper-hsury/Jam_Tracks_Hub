@@ -7,6 +7,14 @@ const maxWorkerAssetBytes = 24 * 1024 * 1024;
 const renderAssetBaseUrl = "https://api.jamtrackshub.com";
 const copiedDirectories = ["assets", "data", "downloads", "locales", "scripts", "slides", "styles"];
 const viteOwnedRootHtml = new Set(["index.html", "404.html", "legal.html", "privacy-policy.html", "service-waking.html", "feedback.html", "tracks.html", "fretboard-trainer.html", "chord-progressions.html", "scale.html", "chord-dictionary.html", "progression-writer.html", "key-finder.html", "song-workspace.html"]);
+const removedLegacyResources = [
+  "scripts/home.js",
+  "scripts/tracks.js",
+  "scripts/site.js",
+  "scripts/i18n.js",
+  "styles/style.css",
+  "src/i18n/useLegacyLocale.js"
+];
 const workerConfig = JSON.parse(fs.readFileSync(path.join(root, "wrangler.jsonc"), "utf8"));
 
 function fail(message) {
@@ -40,6 +48,11 @@ function expectedSlideHtml(source) {
 
 if (!fs.existsSync(dist)) fail("dist/ does not exist");
 
+removedLegacyResources.forEach(function(relativePath) {
+  if (fs.existsSync(path.join(root, relativePath))) fail(`proven-dead source resource was restored: ${relativePath}`);
+  if (fs.existsSync(path.join(dist, relativePath))) fail(`proven-dead resource leaked into dist: ${relativePath}`);
+});
+
 if (workerConfig.assets?.not_found_handling !== "404-page") {
   fail("static assets do not use the native 404-page fallback");
 }
@@ -61,6 +74,10 @@ rootHtml.forEach(function(relativePath) {
   const source = path.join(root, relativePath);
   const target = path.join(dist, relativePath);
   if (!fs.existsSync(target)) fail(`missing root HTML entry ${relativePath}`);
+  const html = fs.readFileSync(target, "utf8");
+  if (/scripts\/(?:home|tracks|site|i18n)\.js|styles\/style\.css/.test(html)) {
+    fail(`root HTML references a proven-dead frontend resource: ${relativePath}`);
+  }
   if (viteOwnedRootHtml.has(relativePath)) return;
   if (!read(source).equals(read(target))) fail(`root HTML is not byte-identical: ${relativePath}`);
 });

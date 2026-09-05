@@ -37,8 +37,9 @@ test("keeps the Vue 404 document safe at nested unknown URLs", () => {
   const html = read("404.html");
   const view = read("src/views/NotFoundView.vue");
   const i18nInit = read("scripts/i18n-init.js");
-  const i18n = read("scripts/i18n.js");
-  const site = read("scripts/site.js");
+  const locale = read("src/i18n/useSiteLocale.js");
+  const header = read("src/components/site/SiteHeader.vue");
+  const footer = read("src/components/site/SiteFooter.vue");
   const localReferences = Array.from(html.matchAll(/(?:href|src)="([^"]+)"/g), match => match[1])
     .filter(reference => !/^(?:https?:|data:|#)/.test(reference));
 
@@ -50,11 +51,11 @@ test("keeps the Vue 404 document safe at nested unknown URLs", () => {
   assert.match(view, /href="\/index\.html"/);
   assert.match(view, /href="\/key-finder\.html"/);
   assert.match(i18nInit, /syncLoadJson\("\/locales\/en\/common\.json"\)/);
-  assert.match(i18n, /fetch\(`\/locales\/\$\{DEFAULT_LANGUAGE\}\/common\.json`/);
-  assert.match(i18n, /fetch\(`\/locales\/\$\{language\}\/common\.json`/);
-  assert.match(i18n, /legalLink\.href = "\/legal\.html"/);
-  assert.match(site, /workspaceLink\.href = "\/song-workspace\.html"/);
-  assert.match(site, /anchor\.href = `\/\$\{link\.href\}`/);
+  assert.match(locale, /locales\/en\/common\.json/);
+  assert.match(locale, /locales\/zh-TW\/common\.json/);
+  assert.match(footer, /class="footer-legal-link" href="\/legal\.html"/);
+  assert.match(header, /href: "\/song-workspace\.html"/);
+  assert.match(header, /:href="item\.href"/);
 });
 
 test("keeps HTML routing implicit and records the patch version", () => {

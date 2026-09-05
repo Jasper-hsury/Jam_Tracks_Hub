@@ -1,6 +1,6 @@
 # Vue Migration
 
-Jam Tracks Hub is moving incrementally from static HTML and imperative browser JavaScript to Vue 3. The migration uses a Vite multi-page-compatible strangler architecture, not a Vue Router single-page application.
+Jam Tracks Hub completed the authorized visible-page migration from imperative page controllers to Vue 3. The site remains a Vite multi-page application, not a Vue Router single-page application.
 
 The multi-page approach preserves the site's established page URLs, page-specific metadata, Cloudflare routing, and independently deployable legacy entries while each page is migrated and verified. A router-based SPA would change those public contracts before feature parity is established.
 
@@ -124,6 +124,18 @@ The visible fretboard remains the established CSS Grid/DOM renderer and continue
 
 The page retains its established DOM/CSS diagram renderer and GSAP/Flip hooks without changing shared chord CSS. Chord playback is isolated in `chordDictionaryAudio.mjs` with the legacy oscillator frequencies, timing, gain envelope, overlap guard, and lifecycle cleanup. The shared `scripts/chord-shapes.js` contract used by Progression Writer and Song Workspace, Chord Progressions dictionary-link generation, Scale Explorer links, Key Finder links, Worker/D1 boundaries, metadata, Umami loader, CSP, and public URLs remain unchanged. The exclusively page-owned `scripts/chord-dictionary.js` runtime is removed only after deterministic fixtures cover all 396 root/chord combinations and the complete representative filter matrix.
 
+## Phases 4E through 6B: Remaining Visible Pages
+
+The remaining visible entries—Progression Writer, Key Finder, and Song Workspace—were migrated with page-specific parity gates. All 14 visible pages now use the shared Vue SiteShell while retaining stable root HTML URLs, metadata, Umami loaders, early theme/locale prepaint, and only the classic-script bridges that still have current consumers.
+
+Song Workspace remains local-first and reuses its canonical core, storage, import, and chord-shape modules. Song content must not enter analytics, URLs, titles, Worker requests, Key Finder requests, Render requests, or remote logs. Key Finder remains a Vue frontend backed by the Cloudflare-protected Render/FastAPI service at `https://api.jamtrackshub.com`.
+
+## Phase 7: Evidence-Driven Legacy Cleanup
+
+Phase 7 removes only resources with proved zero runtime/build consumer dependency. The full audit, retained-resource matrices, uncertain keep-list, phased removal plan, and rollback boundaries are recorded in `docs/VUE_LEGACY_CLEANUP_PHASE_7.md`.
+
+The cleanup retains `theme-init.js`, `i18n-init.js`, `site-animations.js`, `site-config.js`, `chord-shapes.js`, all three Song Workspace application modules, every live stylesheet, all 14 Vue entries, and all 18 static track slides. Current build verification prevents the removed page controllers and compatibility entries from reappearing in source or `dist/`.
+
 ## Next Phase
 
-Phase 4E or any later page migration requires separate authorization and the same page-specific parity gates. It must not start automatically and must preserve the strangler build so legacy and Vue-owned entries can coexist.
+Phase 8 requires separate authorization. It must not begin automatically, and Phase 7 does not authorize Vue Router, public URL changes, backend changes, or a design refresh.
