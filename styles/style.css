@@ -1,5 +1,0 @@
-/* Compatibility entry point. New pages load the modules directly. */
-@import url("styles/base.css");
-@import url("styles/components.css");
-@import url("styles/pages.css");
-@import url("styles/themes.css");
