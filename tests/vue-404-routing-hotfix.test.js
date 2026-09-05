@@ -63,7 +63,7 @@ test("keeps HTML routing implicit and records the patch version", () => {
   const verifier = read("tools/scripts/verify-cloudflare-build.js");
   const viteConfig = read("vite.config.mjs");
 
-  assert.equal(packageJson.version, "2.0.4");
+  assert.equal(packageJson.version, "2.0.5");
   assert.match(verifier, /native 404-page fallback/);
   assert.match(verifier, /Worker-first routing is not limited to API paths/);
   assert.match(verifier, /404 local reference is not root-relative/);

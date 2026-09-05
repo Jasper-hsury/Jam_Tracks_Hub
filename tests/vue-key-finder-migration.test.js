@@ -337,7 +337,7 @@ test("keeps backend, established tools, CSS, and current version byte-identical"
     const hash = crypto.createHash("sha256").update(fs.readFileSync(path.join(root, file))).digest("hex");
     assert.equal(hash, expected, file);
   });
-  assert.equal(JSON.parse(read("package.json")).version, "2.0.4");
+  assert.equal(JSON.parse(read("package.json")).version, "2.0.5");
 });
 
 test("declares the complete 44-case responsive matrix and preserves mobile-safe controls", () => {

@@ -269,7 +269,7 @@ test("extends deterministic Cloudflare ownership without changing backend or ver
   assert.match(verifier, /Chord Dictionary canonical metadata differs/);
   assert.match(verifier, /Chord Dictionary still loads a legacy page runtime/);
   assert.match(verifier, /compiled Vue Chord Dictionary mount marker is missing/);
-  assert.equal(packageJson.version, "2.0.4");
+  assert.equal(packageJson.version, "2.0.5");
   assert.deepEqual(packageJson.dependencies, { vue: "3.5.42" });
   ["vue-router", "pinia", "vue-i18n", "@vueuse/core", "vitest", "@vue/test-utils"].forEach(name => {
     assert.equal(packageJson.dependencies?.[name], undefined);
