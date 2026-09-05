@@ -212,7 +212,7 @@ test("adds no trainer persistence, audio, router, network, or custom analytics",
   assert.doesNotMatch(implementation, /document\.title|location\.(?:search|hash)|history\./);
 });
 
-test("removes only the page-owned legacy trainer runtime at version 2.0.4", () => {
+test("removes only the page-owned legacy trainer runtime at version 2.0.5", () => {
   const packageJson = JSON.parse(read("package.json"));
   const html = read("fretboard-trainer.html");
 
@@ -221,7 +221,7 @@ test("removes only the page-owned legacy trainer runtime at version 2.0.4", () =
   assert.match(read("src/components/site/SiteHeader.vue"), /fretboard-trainer\.html/);
   assert.match(read("src/i18n/useSiteLocale.js"), /jasper:language-change/);
   assert.match(read("scripts/site-animations.js"), /\.trainer-heading/);
-  assert.equal(packageJson.version, "2.0.4");
+  assert.equal(packageJson.version, "2.0.5");
   assert.equal(packageJson.dependencies.vue, "3.5.42");
   assert.equal(packageJson.dependencies["vue-router"], undefined);
 });

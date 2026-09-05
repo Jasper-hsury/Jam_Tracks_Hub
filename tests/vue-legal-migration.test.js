@@ -57,7 +57,7 @@ test("keeps the Legal migration bounded at the current patch version", () => {
   const packageJson = JSON.parse(read("package.json"));
   const verifier = read("tools/scripts/verify-cloudflare-build.js");
 
-  assert.equal(packageJson.version, "2.0.4");
+  assert.equal(packageJson.version, "2.0.5");
   assert.equal(packageJson.dependencies.vue, "3.5.42");
   assert.match(verifier, /const viteOwnedRootHtml = new Set\([^)]*"key-finder\.html"/);
   assert.match(verifier, /Legal canonical metadata differs/);
