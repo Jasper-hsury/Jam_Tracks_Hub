@@ -47,7 +47,7 @@ test("preserves Homepage content, links, media, and accessibility contracts in V
   assert.match(view, /<main class="home-page" id="main-content">/);
   assert.match(view, /<section class="home-hero" id="home">/);
   assert.match(view, /<h1>\{\{ home\.hero\.title \}\}<\/h1>/);
-  assert.match(view, /aria-label="Site overview"/);
+  assert.match(view, /:aria-label="home\.accessibility\.siteOverview"/);
   assert.match(view, /aria-labelledby="homeToolsTitle"/);
   assert.match(view, /aria-labelledby="featuredAudioTitle"/);
   assert.match(view, /aria-labelledby="latestReleasesTitle"/);
@@ -67,7 +67,7 @@ test("preserves Homepage content, links, media, and accessibility contracts in V
     "https://www.youtube.com/@Weekly_Backing_Track"
   ].forEach(href => assert.ok(view.includes(href), href));
   assert.match(view, /src="https:\/\/www\.youtube\.com\/embed\/nNlJNDU-Xgw"/);
-  assert.match(view, /title="W19 Roaming Alone Backing Track in C"/);
+  assert.match(view, /:title="home\.accessibility\.featuredPlayerTitle"/);
   assert.match(view, /loading="lazy"/);
   assert.match(view, /referrerpolicy="strict-origin-when-cross-origin"/);
   assert.match(view, /allowfullscreen/);
@@ -88,6 +88,71 @@ test("keeps Homepage locale rendering in Vue and track labels deterministic", ()
   assert.match(trackTitle, /class="track-title-name"/);
   assert.match(trackTitle, /class="track-title-separator"/);
   assert.match(trackTitle, /class="track-title-key"/);
+});
+
+test("derives localized release details from canonical track identities", () => {
+  const view = read("src/views/HomeView.vue");
+  const catalog = JSON.parse(read("data/tracks.json"));
+  const en = JSON.parse(read("locales/en/common.json"));
+  const zh = JSON.parse(read("locales/zh-TW/common.json"));
+  const latest = ["W19", "W18", "W17"].map(id => catalog.find(track => track.id === id));
+
+  assert.ok(latest.every(Boolean));
+  assert.deepEqual(latest.map(track => track.id), ["W19", "W18", "W17"]);
+  assert.deepEqual(latest.map(track => track.key), ["C major", "C minor", "E major"]);
+  assert.deepEqual(latest.map(track => track.style), ["Guitar", "Rock", "Pop"]);
+  assert.deepEqual(latest.map(track => track.mood), ["Alone", "Missing", "Amazing"]);
+  assert.ok(latest.every(track => track.bpm === ""));
+
+  assert.match(view, /import trackCatalog from "\.\.\/\.\.\/data\/tracks\.json"/);
+  assert.match(view, /const releaseIds = \["W19", "W18", "W17"\]/);
+  assert.match(view, /trackCatalog\.find\(track => track\.id === id\)/);
+  assert.doesNotMatch(view, /const releases = \[\s*\{/);
+  assert.match(view, /localizedTrackDescription\(track\)/);
+  assert.match(view, /localizedTrackKey\(track\.key\)/);
+  assert.match(view, /localizedTrackMetadata\("styles", track\.style\)/);
+  assert.match(view, /localizedTrackMetadata\("moods", track\.mood\)/);
+  assert.match(view, /v-if="track\.bpm"/);
+  assert.doesNotMatch(view, /0 BPM/);
+
+  assert.deepEqual(en.home.releases.modes, { major: "Major", minor: "Minor" });
+  assert.deepEqual(zh.home.releases.modes, { major: "大調", minor: "小調" });
+  assert.deepEqual(zh.home.releases.styles, { Guitar: "吉他", Rock: "搖滾", Pop: "流行" });
+  assert.deepEqual(zh.home.releases.moods, { Alone: "孤寂", Missing: "思念", Amazing: "驚艷" });
+  assert.equal(zh.home.releases.descriptions.W19, "一首以開闊和弦與旋律推進為特色的 C 大調吉他即興伴奏，適合練習帶有漫遊感與省思氛圍的旋律。");
+  assert.equal(zh.home.releases.descriptions.W18, "一首帶有情緒張力的 C 小調搖滾伴奏，適合練習推弦、長音與具有力度變化的旋律。");
+  assert.equal(zh.home.releases.descriptions.W17, "一首明亮的 E 大調流行伴奏，適合練習旋律 Hook、段落推進與副歌式的情緒提升。");
+  assert.match(en.home.releases.descriptions.W19, /^A C major guitar track/);
+  assert.match(en.home.releases.descriptions.W18, /^A C minor rock track/);
+  assert.match(en.home.releases.descriptions.W17, /^A bright E major pop track/);
+});
+
+test("localizes Homepage form, image, and accessibility text without changing behavior", () => {
+  const view = read("src/views/HomeView.vue");
+  const en = JSON.parse(read("locales/en/common.json"));
+  const zh = JSON.parse(read("locales/zh-TW/common.json"));
+
+  assert.equal(en.home.subscribe.emailPlaceholder, "Email address");
+  assert.equal(zh.home.subscribe.emailPlaceholder, "輸入電子郵件");
+  assert.equal(en.home.about.imageCaption, "Jasper, guitarist and music creator");
+  assert.equal(zh.home.about.imageCaption, "Jasper｜吉他手與音樂創作者");
+  assert.equal(zh.home.about.imageAlt, "Jasper 在舞台上彈奏木吉他");
+  assert.deepEqual(Object.keys(en.home.subscribe.status), ["saving", "already", "success", "error"]);
+  assert.deepEqual(Object.keys(zh.home.subscribe.status), ["saving", "already", "success", "error"]);
+
+  assert.match(view, /:placeholder="home\.subscribe\.emailPlaceholder"/);
+  assert.match(view, /:aria-label="home\.subscribe\.emailLabel"/);
+  assert.match(view, /aria-describedby="homeSubscribeStatus"/);
+  assert.match(view, /@invalid="handleInvalidEmail"/);
+  assert.match(view, /subscribeStatusCode\.value = "saving"/);
+  assert.match(view, /subscribeStatusCode\.value = result\.status === "already_subscribed" \? "already" : "success"/);
+  assert.match(view, /subscribeStatusCode\.value = "error"/);
+  assert.match(view, /:alt="home\.about\.imageAlt"/);
+  assert.match(view, /<figcaption>\{\{ home\.about\.imageCaption \}\}<\/figcaption>/);
+  assert.match(view, /:aria-label="home\.accessibility\.watchYouTube"/);
+  assert.match(view, /:aria-label="home\.accessibility\.emailJamTracksHub"/);
+  assert.match(view, /:aria-label="home\.accessibility\.openFeedback"/);
+  assert.doesNotMatch(view, /placeholder="Your Email"|Jasper playing acoustic guitar on stage|>Jasper, guitarist and music creator</);
 });
 
 test("surfaces Song Workspace through the hero and four purpose-led workflow groups", () => {
@@ -192,16 +257,22 @@ test("preserves Subscribe validation and POST payload with controlled fetch only
 test("preserves Subscribe UI states without production mutation", () => {
   const view = read("src/views/HomeView.vue");
   const source = read("tests/vue-homepage-migration.test.js");
+  const en = JSON.parse(read("locales/en/common.json"));
+  const zh = JSON.parse(read("locales/zh-TW/common.json"));
 
   assert.match(view, /id="homeSubscribeForm"/);
   assert.match(view, /data-subscribe-endpoint="\/api\/subscribe"/);
   assert.match(view, /data-subscribe-source="homepage-about"/);
-  assert.match(view, /name="email"[\s\S]*type="email"[\s\S]*autocomplete="email"[\s\S]*required/);
+  assert.match(view, /name="email"[\s\S]*type="email"[\s\S]*autocomplete="email"[\s\S]*pattern="\^\[\^\\s@\]\+@\[\^\\s@\]\+\\\.\[\^\\s@\]\+\$"[\s\S]*required/);
   assert.match(view, /name="website"[\s\S]*tabindex="-1"[\s\S]*aria-hidden="true"/);
-  assert.match(view, /Saving your email\.\.\./);
-  assert.match(view, /You're already on the list\./);
-  assert.match(view, /You're on the list\. Thank you!/);
-  assert.match(view, /Subscription is not available yet\. Please try again later\./);
+  assert.equal(en.home.subscribe.status.saving, "Saving your email...");
+  assert.equal(en.home.subscribe.status.already, "You're already on the list.");
+  assert.equal(en.home.subscribe.status.success, "You're on the list. Thank you!");
+  assert.equal(en.home.subscribe.status.error, "Subscription is not available yet. Please try again later.");
+  assert.equal(zh.home.subscribe.status.saving, "正在儲存你的電子郵件……");
+  assert.equal(zh.home.subscribe.status.already, "你已經在通知名單中。");
+  assert.equal(zh.home.subscribe.status.success, "已加入通知名單，謝謝！");
+  assert.equal(zh.home.subscribe.status.error, "訂閱功能目前無法使用，請稍後再試。");
   assert.match(view, /id="homeSubscribeStatus" aria-live="polite"/);
   assert.match(view, /:disabled="subscribing"/);
   assert.doesNotMatch(source, /https:\/\/jamtrackshub\.com\/api\/subscribe/);

@@ -37,6 +37,7 @@ test("mobile footer renders copyright, legal, and social content as three balanc
 
 test("homepage YouTube embed preserves client identity without widening CSP", () => {
     const home = read("src/views/HomeView.vue");
+    const tracks = JSON.parse(read("data/tracks.json"));
     const headers = read("_headers");
     const workspace = read("song-workspace.html");
     const iframe = home.slice(
@@ -47,7 +48,8 @@ test("homepage YouTube embed preserves client identity without widening CSP", ()
     assert.match(iframe, /src="https:\/\/www\.youtube\.com\/embed\/[A-Za-z0-9_-]{11}"/);
     assert.match(iframe, /referrerpolicy="strict-origin-when-cross-origin"/);
     assert.match(iframe, /allowfullscreen/);
-    assert.match(home, /youtube:\s*"https:\/\/youtu\.be\/nNlJNDU-Xgw"/);
+    assert.match(home, /import trackCatalog from "\.\.\/\.\.\/data\/tracks\.json"/);
+    assert.equal(tracks.find(track => track.id === "W19").youtubeUrl, "https://youtu.be/nNlJNDU-Xgw");
     assert.match(headers, /Referrer-Policy: strict-origin-when-cross-origin/);
     assert.match(headers, /frame-src https:\/\/www\.youtube\.com https:\/\/api\.jamtrackshub\.com;/);
     assert.doesNotMatch(headers, /frame-src[^;]*\*/);
@@ -77,4 +79,26 @@ test("homepage workflow uses four visible responsive groups without horizontal t
     assert.match(css, /\.home-workflow-link:focus-visible,[\s\S]*?\.home-workspace-link:focus-visible\s*\{[^}]*outline:/s);
     assert.equal((home.match(/class="start-card home-step-card home-workflow-group"/g) || []).length, 1);
     assert.match(home, /v-for="group in workflowGroups"/);
+});
+
+test("localized Homepage copy keeps existing wrapping safeguards", () => {
+    const css = read("styles/pages.css");
+    const components = read("styles/components.css");
+    const home = read("src/views/HomeView.vue");
+    const footer = read("src/components/site/SiteFooter.vue");
+    const en = JSON.parse(read("locales/en/common.json"));
+    const zh = JSON.parse(read("locales/zh-TW/common.json"));
+
+    assert.match(components, /\.hero-actions\s*\{[^}]*flex-wrap:\s*wrap/s);
+    assert.match(css, /\.track-meta\s*\{[^}]*display:\s*flex[^}]*flex-wrap:\s*wrap/s);
+    assert.match(css, /\.release-actions\s*\{[^}]*flex-wrap:\s*wrap/s);
+    assert.match(components, /@media \(max-width: 720px\)[\s\S]*?\.footer > p\s*\{[^}]*flex-direction:\s*column/s);
+    assert.match(home, /:placeholder="home\.subscribe\.emailPlaceholder"/);
+    assert.match(home, /home\.releases\.styleLabel/);
+    assert.match(home, /home\.releases\.moodLabel/);
+    assert.match(footer, /footer\.youtubeLabel/);
+    assert.match(footer, /footer\.instagramLabel/);
+    assert.equal(en.home.subscribe.emailPlaceholder, "Email address");
+    assert.equal(zh.home.subscribe.emailPlaceholder, "輸入電子郵件");
+    assert.ok(zh.home.releases.descriptions.W19.length > 40);
 });

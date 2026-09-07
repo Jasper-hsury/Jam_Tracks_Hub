@@ -18,7 +18,14 @@
     "fretboardTrainer": "Fretboard Trainer",
     "about": "About",
     "tools": "Tools",
-    "appearance": "Appearance"
+    "appearance": "Appearance",
+    "primaryLabel": "Primary navigation",
+    "openMenu": "Open navigation menu",
+    "closeMenu": "Close navigation menu"
+  },
+  "theme": {
+    "switchToLight": "Switch to light theme",
+    "switchToDark": "Switch to dark theme"
   },
   "common": {
     "backToTop": "Back to top",
@@ -95,7 +102,56 @@
       }
     },
     "about": {
-      "eyebrow": "About Jam Tracks Hub"
+      "eyebrow": "About Jam Tracks Hub",
+      "imageAlt": "Jasper playing acoustic guitar on stage",
+      "imageCaption": "Jasper, guitarist and music creator"
+    },
+    "accessibility": {
+      "siteOverview": "Site overview",
+      "featuredPlayerTitle": "W19 Roaming Alone Backing Track in C",
+      "watchYouTube": "Watch Jam Tracks Hub on YouTube",
+      "emailJamTracksHub": "Email Jam Tracks Hub",
+      "openFeedback": "Open feedback form"
+    },
+    "releases": {
+      "metadataLabel": "Track details",
+      "keyLabel": "Key",
+      "styleLabel": "Style",
+      "moodLabel": "Mood",
+      "bpmLabel": "BPM",
+      "modes": {
+        "major": "Major",
+        "minor": "Minor"
+      },
+      "styles": {
+        "Guitar": "Guitar",
+        "Rock": "Rock",
+        "Pop": "Pop"
+      },
+      "moods": {
+        "Alone": "Alone",
+        "Missing": "Missing",
+        "Amazing": "Amazing"
+      },
+      "descriptions": {
+        "W19": "A C major guitar track for spacious chords and reflective melodic movement.",
+        "W18": "A C minor rock track for expressive phrasing and melodic tension.",
+        "W17": "A bright E major pop track for melodic hooks and chorus lift."
+      }
+    },
+    "subscribe": {
+      "emailLabel": "Email address",
+      "emailPlaceholder": "Email address",
+      "validation": {
+        "required": "Enter your email address.",
+        "invalid": "Enter a valid email address."
+      },
+      "status": {
+        "saving": "Saving your email...",
+        "already": "You're already on the list.",
+        "success": "You're on the list. Thank you!",
+        "error": "Subscription is not available yet. Please try again later."
+      }
     },
     "extra": {
       "01": "Practice",
@@ -711,7 +767,9 @@
   },
   "footer": {
     "rights": "© 2026 Jam Tracks Hub. All rights reserved.",
-    "legal": "Legal & Usage Policy"
+    "legal": "Legal & Usage Policy",
+    "youtubeLabel": "Visit Jam Tracks Hub YouTube channel",
+    "instagramLabel": "Visit Jasper's Instagram profile"
   },
   "term": {
     "backingTracks": "Backing Tracks",

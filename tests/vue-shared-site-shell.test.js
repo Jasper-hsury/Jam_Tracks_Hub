@@ -76,7 +76,9 @@ test("owns navigation, mobile state, current state, and accessibility in SiteHea
     "/index.html#about"
   ].forEach(href => assert.match(header, new RegExp(href.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))));
 
-  assert.match(header, /aria-label="Primary navigation"/);
+  assert.match(header, /:aria-label="translate\('nav\.primaryLabel', 'Primary navigation'\)"/);
+  assert.match(header, /translate\('nav\.closeMenu', 'Close navigation menu'\)/);
+  assert.match(header, /translate\('nav\.openMenu', 'Open navigation menu'\)/);
   assert.match(header, /:aria-expanded="String\(menuOpen\)"/);
   assert.match(header, /:aria-current="isCurrent\(item\) \? 'page' : null"/);
   assert.match(smartNavbar, /event\.key !== "Escape"/);
@@ -110,6 +112,50 @@ test("preserves language and theme storage and compatibility contracts", () => {
   assert.match(theme, /document\.documentElement\.dataset\.theme/);
   assert.match(theme, /jasper:theme-change/);
   assert.match(themeToggle, /class="theme-toggle-input"/);
+});
+
+test("localizes shared shell controls and social accessibility labels", () => {
+  const header = read("src/components/site/SiteHeader.vue");
+  const footer = read("src/components/site/SiteFooter.vue");
+  const themeToggle = read("src/components/site/ThemeToggle.vue");
+  const backToTop = read("src/components/site/BackToTopButton.vue");
+  const locale = read("src/i18n/useSiteLocale.js");
+  const languageSwitcher = read("src/components/site/LanguageSwitcher.vue");
+  const en = JSON.parse(read("locales/en/common.json"));
+  const zh = JSON.parse(read("locales/zh-TW/common.json"));
+
+  assert.equal(en.nav.primaryLabel, "Primary navigation");
+  assert.equal(zh.nav.primaryLabel, "主要導覽");
+  assert.equal(en.nav.openMenu, "Open navigation menu");
+  assert.equal(zh.nav.openMenu, "開啟導覽選單");
+  assert.equal(en.nav.closeMenu, "Close navigation menu");
+  assert.equal(zh.nav.closeMenu, "關閉導覽選單");
+  assert.equal(en.theme.switchToLight, "Switch to light theme");
+  assert.equal(zh.theme.switchToLight, "切換至淺色主題");
+  assert.equal(en.theme.switchToDark, "Switch to dark theme");
+  assert.equal(zh.theme.switchToDark, "切換至深色主題");
+  assert.equal(en.common.backToTop, "Back to top");
+  assert.equal(zh.common.backToTop, "返回頂端");
+  assert.equal(zh.footer.youtubeLabel, "前往 Jam Tracks Hub 的 YouTube 頻道");
+  assert.equal(zh.footer.instagramLabel, "前往 Jasper 的 Instagram 個人頁面");
+
+  assert.match(header, /translate\('nav\.primaryLabel'/);
+  assert.match(header, /translate\('nav\.openMenu'/);
+  assert.match(header, /translate\('nav\.closeMenu'/);
+  assert.match(footer, /translate\('footer\.youtubeLabel'/);
+  assert.match(footer, /translate\('footer\.instagramLabel'/);
+  assert.match(themeToggle, /useSiteLocale\(\)/);
+  assert.match(themeToggle, /translate\("theme\.switchToDark"/);
+  assert.match(themeToggle, /translate\("theme\.switchToLight"/);
+  assert.match(themeToggle, /translate\("nav\.appearance"/);
+  assert.match(backToTop, /translate\('common\.backToTop'/);
+  assert.match(locale, /language\.value === "zh-TW" \? "zh-TW" : "en"/);
+  assert.match(languageSwitcher, /切換至繁體中文/);
+  assert.match(languageSwitcher, /Switch to English/);
+
+  [header, footer, themeToggle, backToTop].forEach(component => {
+    assert.doesNotMatch(component, /aria-label="(?:Primary navigation|Back to top|Visit Jam Tracks Hub|Switch to)/);
+  });
 });
 
 test("preserves footer content and external-link safety", () => {

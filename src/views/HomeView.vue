@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref } from "vue";
+import trackCatalog from "../../data/tracks.json";
 import englishMessages from "../../locales/en/common.json";
 import traditionalChineseMessages from "../../locales/zh-TW/common.json";
 import TrackTitle from "../components/home/TrackTitle.vue";
@@ -44,38 +45,10 @@ const workflowGroups = [
     workspace: true
   }
 ];
-const releases = [
-  {
-    id: "W19",
-    title: "Roaming Alone Backing Track in C",
-    key: "C major",
-    mood: "Roaming",
-    youtube: "https://youtu.be/nNlJNDU-Xgw",
-    image: "slides/W19/W19.001.jpeg",
-    slides: "slides/w19.html",
-    note: "A C major guitar track for spacious chords and reflective melodic movement."
-  },
-  {
-    id: "W18",
-    title: "Missing You Rock Backing Track in Cm",
-    key: "C minor",
-    mood: "Rock",
-    youtube: "https://youtu.be/kUJmHr1eN2I",
-    image: "slides/W18/W18.001.jpeg",
-    slides: "slides/w18.html",
-    note: "A C minor rock track for expressive phrasing and melodic tension."
-  },
-  {
-    id: "W17",
-    title: "Amazing Crush Backing Track in E",
-    key: "E major",
-    mood: "Crush",
-    youtube: "https://youtu.be/t6rTUWrjdJA",
-    image: "slides/W17/W17.001.jpeg",
-    slides: "slides/w17.html",
-    note: "A bright E major pop track for melodic hooks and chorus lift."
-  }
-];
+const releaseIds = ["W19", "W18", "W17"];
+const releases = releaseIds
+  .map(id => trackCatalog.find(track => track.id === id))
+  .filter(Boolean);
 
 const { language } = useSiteLocale();
 const localeMessages = computed(() => messages[language.value] || messages.en);
@@ -88,7 +61,10 @@ const emailInput = ref(null);
 const email = ref("");
 const website = ref("");
 const subscribing = ref(false);
-const subscribeStatus = ref("");
+const subscribeStatusCode = ref("");
+const subscribeStatus = computed(() => subscribeStatusCode.value
+  ? home.value.subscribe.status[subscribeStatusCode.value]
+  : "");
 
 function coreTrackName(title) {
   return title
@@ -98,10 +74,18 @@ function coreTrackName(title) {
 }
 
 function localizedTrackKey(key) {
-  if (!isTraditionalChinese.value) return key;
-  return key.replace(/\s+(major|minor)$/i, function(_, quality) {
-    return ` ${quality.toLowerCase() === "minor" ? "小調" : "大調"}`;
-  });
+  const match = String(key || "").match(/^(.*?)\s+(major|minor)$/i);
+  if (!match) return key;
+  const mode = home.value.releases.modes[match[2].toLowerCase()] || match[2];
+  return `${match[1]} ${mode}`;
+}
+
+function localizedTrackMetadata(group, value) {
+  return home.value.releases[group]?.[value] || value;
+}
+
+function localizedTrackDescription(track) {
+  return home.value.releases.descriptions[track.id] || "";
 }
 
 function localizedTrackTitle(track) {
@@ -111,6 +95,18 @@ function localizedTrackTitle(track) {
 
 function youtubeAriaLabel(track) {
   return tracks.value.openOnYouTube.replace("{{title}}", localizedTrackTitle(track));
+}
+
+function clearEmailValidation() {
+  emailInput.value?.setCustomValidity("");
+}
+
+function handleInvalidEmail() {
+  if (!emailInput.value) return;
+  const validation = home.value.subscribe.validation;
+  emailInput.value.setCustomValidity(
+    emailInput.value.validity.valueMissing ? validation.required : validation.invalid
+  );
 }
 
 async function handleSubscribe() {
@@ -126,7 +122,7 @@ async function handleSubscribe() {
   }
 
   subscribing.value = true;
-  subscribeStatus.value = "Saving your email...";
+  subscribeStatusCode.value = "saving";
 
   try {
     const result = await submitSubscription({
@@ -139,13 +135,11 @@ async function handleSubscribe() {
         page: window.location.pathname || "/"
       }
     });
-    subscribeStatus.value = result.status === "already_subscribed"
-      ? "You're already on the list."
-      : "You're on the list. Thank you!";
+    subscribeStatusCode.value = result.status === "already_subscribed" ? "already" : "success";
     email.value = "";
   } catch (error) {
     console.error("Subscribe request failed", error);
-    subscribeStatus.value = "Subscription is not available yet. Please try again later.";
+    subscribeStatusCode.value = "error";
   } finally {
     subscribing.value = false;
   }
@@ -169,7 +163,7 @@ async function handleSubscribe() {
           <a href="/song-workspace" class="secondary-button">{{ home.hero.openSongWorkspace }}</a>
         </div>
 
-        <dl class="home-metrics" aria-label="Site overview">
+        <dl class="home-metrics" :aria-label="home.accessibility.siteOverview">
           <div><dt>18</dt><dd>{{ home.hero.stats.tracks }}</dd></div>
           <div><dt>24</dt><dd>{{ home.hero.stats.keys }}</dd></div>
           <div><dt>7</dt><dd>{{ home.hero.stats.tools }}</dd></div>
@@ -234,7 +228,7 @@ async function handleSubscribe() {
         <div class="audio-player-card home-audio-player home-video-player">
           <iframe
             src="https://www.youtube.com/embed/nNlJNDU-Xgw"
-            title="W19 Roaming Alone Backing Track in C"
+            :title="home.accessibility.featuredPlayerTitle"
             loading="lazy"
             referrerpolicy="strict-origin-when-cross-origin"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share;"
@@ -257,24 +251,29 @@ async function handleSubscribe() {
         <div class="home-release-grid">
           <article v-for="track in releases" :key="track.id" class="home-release-card">
             <a
-              :href="track.youtube"
+              :href="track.youtubeUrl"
               class="release-cover-link"
               target="_blank"
               rel="noopener noreferrer"
               :aria-label="youtubeAriaLabel(track)"
             >
-              <img :src="track.image" alt="" loading="lazy" />
+              <img :src="track.coverUrl" alt="" loading="lazy" />
             </a>
             <div class="release-copy">
               <p class="release-number">{{ track.id }}</p>
               <h3 class="is-wrapped" data-track-heading :data-track-week="isTraditionalChinese ? 'localized' : null">
                 <TrackTitle :track="track" :include-week="isTraditionalChinese" />
               </h3>
-              <p class="release-note">{{ track.note }}</p>
-              <p class="track-meta"><span>{{ track.key }}</span><span>{{ track.mood }}</span></p>
+              <p class="release-note">{{ localizedTrackDescription(track) }}</p>
+              <p class="track-meta" :aria-label="home.releases.metadataLabel">
+                <span :aria-label="`${home.releases.keyLabel}: ${localizedTrackKey(track.key)}`">{{ localizedTrackKey(track.key) }}</span>
+                <span>{{ home.releases.styleLabel }}: {{ localizedTrackMetadata("styles", track.style) }}</span>
+                <span>{{ home.releases.moodLabel }}: {{ localizedTrackMetadata("moods", track.mood) }}</span>
+                <span v-if="track.bpm">{{ home.releases.bpmLabel }}: {{ track.bpm }}</span>
+              </p>
               <div class="release-actions">
-                <a :href="track.youtube" class="text-link" target="_blank" rel="noopener noreferrer">YouTube</a>
-                <a :href="track.slides" class="text-link">{{ tracks.downloadSlides }}</a>
+                <a :href="track.youtubeUrl" class="text-link" target="_blank" rel="noopener noreferrer">YouTube</a>
+                <a :href="track.slidesUrl" class="text-link">{{ tracks.downloadSlides }}</a>
               </div>
             </div>
           </article>
@@ -285,8 +284,8 @@ async function handleSubscribe() {
     <section class="home-about" id="about" aria-labelledby="aboutTitle">
       <div class="home-section-inner home-about-layout">
         <figure class="about-portrait">
-          <img :src="'assets/images/cover.jpeg'" alt="Jasper playing acoustic guitar on stage" width="600" height="900" />
-          <figcaption>Jasper, guitarist and music creator</figcaption>
+          <img :src="'assets/images/cover.jpeg'" :alt="home.about.imageAlt" width="600" height="900" />
+          <figcaption>{{ home.about.imageCaption }}</figcaption>
         </figure>
 
         <div class="about-copy">
@@ -309,7 +308,7 @@ async function handleSubscribe() {
                   class="uiverse-youtube-button home-youtube-button"
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="Watch Jam Tracks Hub on YouTube"
+                  :aria-label="home.accessibility.watchYouTube"
                 >
                   <span class="home-youtube-icon-shell" aria-hidden="true">
                     <span class="home-youtube-icon">
@@ -321,7 +320,7 @@ async function handleSubscribe() {
                   </span>
                   <span>{{ home.extra["25"] }}</span>
                 </a>
-                <a href="mailto:Jamtrackshubwork@gmail.com" class="uiverse-contact-button home-contact-button" aria-label="Email Jam Tracks Hub">
+                <a href="mailto:Jamtrackshubwork@gmail.com" class="uiverse-contact-button home-contact-button" :aria-label="home.accessibility.emailJamTracksHub">
                   <span class="home-contact-outline" aria-hidden="true"></span>
                   <span class="home-contact-state home-contact-state--default">
                     <span class="home-contact-icon" aria-hidden="true">
@@ -342,7 +341,7 @@ async function handleSubscribe() {
                     <span class="home-contact-text">{{ home.extra["31"] }}</span>
                   </span>
                 </a>
-                <a href="feedback.html" class="home-contact-button home-feedback-button" aria-label="Open feedback form">
+                <a href="feedback.html" class="home-contact-button home-feedback-button" :aria-label="home.accessibility.openFeedback">
                   <span class="home-contact-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" focusable="false">
                       <path d="M14.22 21.63c-1.18 0-2.85-.83-4.17-4.8l-.72-2.16-2.16-.72c-3.96-1.32-4.79-2.99-4.79-4.17 0-1.17.83-2.85 4.79-4.18l8.49-2.83c2.12-.71 3.89-.5 4.98.58s1.3 2.86.59 4.98l-2.83 8.49c-1.33 3.98-3 4.81-4.18 4.81Z" fill="currentColor" />
@@ -371,8 +370,12 @@ async function handleSubscribe() {
                   name="email"
                   type="email"
                   autocomplete="email"
-                  placeholder="Your Email"
-                  aria-label="Email address"
+                  pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
+                  :placeholder="home.subscribe.emailPlaceholder"
+                  :aria-label="home.subscribe.emailLabel"
+                  aria-describedby="homeSubscribeStatus"
+                  @input="clearEmailValidation"
+                  @invalid="handleInvalidEmail"
                   required
                 />
                 <input

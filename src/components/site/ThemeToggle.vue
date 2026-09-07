@@ -1,9 +1,13 @@
 <script setup>
 import { computed } from "vue";
 import { useTheme } from "../../composables/useTheme.js";
+import { useSiteLocale } from "../../i18n/useSiteLocale.js";
 
 const { isLight, toggleTheme } = useTheme();
-const ariaLabel = computed(() => `Switch to ${isLight.value ? "dark" : "light"} theme`);
+const { translate } = useSiteLocale();
+const ariaLabel = computed(() => isLight.value
+  ? translate("theme.switchToDark", "Switch to dark theme")
+  : translate("theme.switchToLight", "Switch to light theme"));
 </script>
 
 <template>
@@ -15,7 +19,7 @@ const ariaLabel = computed(() => `Switch to ${isLight.value ? "dark" : "light"} 
       :aria-label="ariaLabel"
       @change="toggleTheme"
     >
-    <span class="theme-toggle-label">Appearance</span>
+    <span class="theme-toggle-label">{{ translate("nav.appearance", "Appearance") }}</span>
     <span class="theme-toggle-switch" aria-hidden="true">
       <svg class="theme-toggle-icon" viewBox="0 0 128 128" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
         <path class="theme-toggle-icon-base" d="M77.547 120.684h-5.765l-1.698 3.012a7.477 7.477 0 0 1-6.513 3.804h-.003a7.479 7.479 0 0 1-6.513-3.804l-1.698-3.012h-5.765v-4.06h27.956v4.06z"></path>
