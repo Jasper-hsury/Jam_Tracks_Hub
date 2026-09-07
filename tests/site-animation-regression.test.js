@@ -42,6 +42,17 @@ test("homepage animation retains its reduced-motion fallback", () => {
     assert.match(pagesCss, /@media \(prefers-reduced-motion: reduce\)[\s\S]*?\.home-jam-mark-text\s*\{[^}]*opacity:\s*1[^}]*animation:\s*none/s);
 });
 
+test("homepage workflow does not pin or consume vertical scroll distance", () => {
+    const workflowStart = animationsJs.indexOf("function animateHomeStepRail()");
+    const workflowEnd = animationsJs.indexOf("function resetInteractiveSurface", workflowStart);
+    const workflowAnimation = animationsJs.slice(workflowStart, workflowEnd);
+
+    assert.notEqual(workflowStart, -1);
+    assert.notEqual(workflowEnd, -1);
+    assert.match(workflowAnimation, /createHomeStepIntroTimeline\(section, cards\)/);
+    assert.doesNotMatch(workflowAnimation, /pin:\s*true|travelDistance|scrollWidth|scrollLeft|is-gsap-driven/);
+});
+
 test("Legal uses the established display and body font roles without artistic tagline styling", () => {
     assert.match(legalHtml, /family=Noto\+Sans\+TC:wght@400;500;600;700&family=Noto\+Serif\+TC:wght@700/);
     assert.match(legalView, /class="tracks-page legal-page"/);

@@ -943,10 +943,9 @@
 
     function animateHomeStepRail() {
         const section = document.querySelector(".home-tools");
-        const rail = section?.querySelector(".home-step-rail");
-        const track = rail?.querySelector(".home-step-track");
+        const track = section?.querySelector(".home-step-track");
         const cards = track ? elements(".start-card", track) : [];
-        if (!section || !rail || !track || !cards.length) {
+        if (!section || !cards.length) {
             return;
         }
 
@@ -962,48 +961,6 @@
         gsap.registerPlugin(ScrollTrigger);
 
         createHomeStepIntroTimeline(section, cards);
-
-        function travelDistance() {
-            return Math.max(0, track.scrollWidth - rail.clientWidth);
-        }
-
-        if (!travelDistance()) {
-            return;
-        }
-
-        function resetHomeStepRail() {
-            rail.scrollLeft = 0;
-            gsap.set(track, { x: 0 });
-        }
-
-        resetHomeStepRail();
-        rail.classList.add("is-gsap-driven");
-
-        gsap.to(track, {
-            x: () => -travelDistance(),
-            ease: "none",
-            scrollTrigger: {
-                trigger: section,
-                start: "top 12%",
-                end: () => `+=${travelDistance() + window.innerHeight * 0.62}`,
-                scrub: 0.7,
-                pin: true,
-                anticipatePin: 1,
-                invalidateOnRefresh: true,
-                onLeaveBack: resetHomeStepRail,
-                onRefreshInit: resetHomeStepRail,
-                onRefresh: self => {
-                    if (self.progress <= 0.001) {
-                        resetHomeStepRail();
-                    }
-                },
-                onUpdate: self => {
-                    if (self.progress <= 0.001 && self.direction < 0) {
-                        resetHomeStepRail();
-                    }
-                }
-            }
-        });
     }
 
     function resetInteractiveSurface(target) {
