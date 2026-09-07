@@ -155,6 +155,44 @@ test("localizes Homepage form, image, and accessibility text without changing be
   assert.doesNotMatch(view, /placeholder="Your Email"|Jasper playing acoustic guitar on stage|>Jasper, guitarist and music creator</);
 });
 
+test("keeps the compact About, contact, and Subscribe experience localized and connected", () => {
+  const view = read("src/views/HomeView.vue");
+  const en = JSON.parse(read("locales/en/common.json"));
+  const zh = JSON.parse(read("locales/zh-TW/common.json"));
+  const aboutLinks = view.slice(view.indexOf('<div class="about-links">'), view.indexOf('<form', view.indexOf('<div class="about-links">')));
+
+  assert.equal(en.home.about.eyebrow, "ABOUT JAM TRACKS HUB");
+  assert.equal(zh.home.about.eyebrow, "關於 JAM TRACKS HUB");
+  assert.equal(en.home.extra["18"], "Built by a guitarist, for guitarists.");
+  assert.equal(zh.home.extra["18"], "由吉他手為吉他手打造。");
+  assert.equal(en.home.extra["19"], "Jam Tracks Hub is designed and built by Jasper, bringing original backing tracks, music-theory tools, and a local-first song workspace into one focused practice flow. Start with a track, understand the key, and organize your own songs—no sign-in required.");
+  assert.equal(zh.home.extra["19"], "Jam Tracks Hub 由 Jasper 規劃與開發，將原創即興伴奏、樂理工具與本機歌曲工作區整合成更直接的練習流程。從選曲、理解調性到整理自己的歌曲，不需登入即可開始。");
+  assert.equal(en.home.extra["23"], "Questions, collaborations, or track suggestions? Feel free to get in touch.");
+  assert.equal(zh.home.extra["23"], "有問題、合作提案或曲目建議？歡迎與我聯絡。");
+  assert.equal(en.home.extra["27"], "Get notified when a new weekly backing track is released.");
+  assert.equal(zh.home.extra["27"], "每週新伴奏上線時通知我");
+  assert.equal(en.home.extra["28"], "Subscribe");
+  assert.equal(zh.home.extra["28"], "訂閱");
+  assert.equal(en.home.extra["30"], "Contact");
+  assert.equal(zh.home.extra["30"], "聯絡我");
+  ["20", "21", "22", "24", "26"].forEach(key => {
+    assert.equal(key in en.home.extra, false);
+    assert.equal(key in zh.home.extra, false);
+  });
+
+  assert.match(view, /<p class="home-about-summary">\{\{ home\.extra\["19"\] \}\}<\/p>/);
+  assert.doesNotMatch(view, /home\.extra\["(?:20|21|22|24|26)"\]/);
+  assert.equal((aboutLinks.match(/<a\b/g) || []).length, 3);
+  assert.match(aboutLinks, /href="https:\/\/www\.youtube\.com\/@Weekly_Backing_Track"[\s\S]*target="_blank"[\s\S]*rel="noopener noreferrer"/);
+  assert.match(aboutLinks, /href="mailto:Jamtrackshubwork@gmail\.com"/);
+  assert.match(aboutLinks, /href="feedback\.html"/);
+  assert.match(view, /<label class="home-subscribe-title" for="homeSubscribeEmail">\{\{ home\.extra\["27"\] \}\}<\/label>/);
+  assert.match(view, /@submit\.prevent="handleSubscribe"/);
+  assert.match(view, /data-subscribe-endpoint="\/api\/subscribe"/);
+  assert.match(view, /data-subscribe-source="homepage-about"/);
+  assert.match(view, /<img :src="'assets\/images\/cover\.jpeg'" :alt="home\.about\.imageAlt" width="600" height="900" \/>/);
+});
+
 test("surfaces Song Workspace through the hero and four purpose-led workflow groups", () => {
   const view = read("src/views/HomeView.vue");
   const config = read("vite.config.mjs");

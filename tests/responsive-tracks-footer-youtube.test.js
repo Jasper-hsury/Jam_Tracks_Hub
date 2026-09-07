@@ -102,3 +102,24 @@ test("localized Homepage copy keeps existing wrapping safeguards", () => {
     assert.equal(zh.home.subscribe.emailPlaceholder, "輸入電子郵件");
     assert.ok(zh.home.releases.descriptions.W19.length > 40);
 });
+
+test("compact About stays two-column on desktop and stacks without image distortion on mobile", () => {
+    const css = read("styles/pages.css");
+    const imageStart = css.indexOf(".about-portrait img {");
+    const imageRule = css.slice(imageStart, css.indexOf("}", imageStart) + 1);
+
+    assert.match(css, /\.home-about\s*\{[^}]*padding:\s*48px 0/s);
+    assert.match(css, /\.home-about-layout\s*\{[^}]*grid-template-columns:\s*minmax\(230px, 32%\) minmax\(0, 1fr\)[^}]*gap:\s*clamp\(/s);
+    assert.match(imageRule, /height:\s*auto/);
+    assert.match(imageRule, /aspect-ratio:\s*4 \/ 5/);
+    assert.match(imageRule, /object-fit:\s*cover/);
+    assert.match(imageRule, /object-position:\s*center 25%/);
+    assert.doesNotMatch(imageRule, /height:\s*\d+px/);
+    assert.match(css, /\.about-links\s*\{[^}]*display:\s*flex[^}]*flex-wrap:\s*wrap/s);
+    assert.match(css, /\.about-connect \.home-subscribe-form\s*\{[^}]*grid-template-columns:\s*minmax\(180px, 1fr\) auto/s);
+    assert.match(css, /@media \(max-width: 819px\)\s*\{[\s\S]*?\.home-about-layout\s*\{[^}]*grid-template-columns:\s*1fr/s);
+    assert.match(css, /@media \(max-width: 430px\)[\s\S]*?\.about-connect \.home-subscribe-form\s*\{[^}]*grid-template-columns:\s*1fr/s);
+    assert.match(css, /@media \(max-width: 430px\)[\s\S]*?\.about-portrait\s*\{[^}]*max-width:\s*260px/s);
+    assert.match(css, /\.about-connect \.home-feedback-button\s*\{[^}]*min-width:\s*auto[^}]*box-shadow:\s*none/s);
+    assert.doesNotMatch(css, /\.home-about\s*\{[^}]*overflow:\s*hidden/s);
+});

@@ -291,66 +291,57 @@ async function handleSubscribe() {
         <div class="about-copy">
           <p class="home-eyebrow">{{ home.about.eyebrow }}</p>
           <h2 id="aboutTitle">{{ home.extra["18"] }}</h2>
-          <p>{{ home.extra["19"] }}</p>
-          <p>{{ home.extra["20"] }}</p>
-          <p>{{ home.extra["21"] }}</p>
+          <p class="home-about-summary">{{ home.extra["19"] }}</p>
           <div class="about-connect">
-            <div class="about-connect-copy">
-              <span>{{ home.extra["22"] }}</span>
-              <strong>{{ home.extra["23"] }}</strong>
-              <p>{{ home.extra["24"] }}</p>
-            </div>
-            <div class="about-connect-actions">
-              <a href="mailto:Jamtrackshubwork@gmail.com" class="about-email-link">Jamtrackshubwork@gmail.com</a>
-              <div class="about-links">
-                <a
-                  href="https://www.youtube.com/@Weekly_Backing_Track"
-                  class="uiverse-youtube-button home-youtube-button"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  :aria-label="home.accessibility.watchYouTube"
-                >
-                  <span class="home-youtube-icon-shell" aria-hidden="true">
-                    <span class="home-youtube-icon">
-                      <svg viewBox="0 0 24 24" focusable="false">
-                        <path d="M0 0h24v24H0z" fill="none"></path>
-                        <path d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z" fill="currentColor"></path>
-                      </svg>
-                    </span>
+            <p class="about-contact-prompt">{{ home.extra["23"] }}</p>
+            <div class="about-links">
+              <a
+                href="https://www.youtube.com/@Weekly_Backing_Track"
+                class="uiverse-youtube-button home-youtube-button"
+                target="_blank"
+                rel="noopener noreferrer"
+                :aria-label="home.accessibility.watchYouTube"
+              >
+                <span class="home-youtube-icon-shell" aria-hidden="true">
+                  <span class="home-youtube-icon">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <path d="M0 0h24v24H0z" fill="none"></path>
+                      <path d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z" fill="currentColor"></path>
+                    </svg>
                   </span>
-                  <span>{{ home.extra["25"] }}</span>
-                </a>
-                <a href="mailto:Jamtrackshubwork@gmail.com" class="uiverse-contact-button home-contact-button" :aria-label="home.accessibility.emailJamTracksHub">
-                  <span class="home-contact-outline" aria-hidden="true"></span>
-                  <span class="home-contact-state home-contact-state--default">
-                    <span class="home-contact-icon" aria-hidden="true">
-                      <svg viewBox="0 0 24 24" fill="none" focusable="false">
-                        <path d="M14.22 21.63c-1.18 0-2.85-.83-4.17-4.8l-.72-2.16-2.16-.72c-3.96-1.32-4.79-2.99-4.79-4.17 0-1.17.83-2.85 4.79-4.18l8.49-2.83c2.12-.71 3.89-.5 4.98.58s1.3 2.86.59 4.98l-2.83 8.49c-1.33 3.98-3 4.81-4.18 4.81ZM7.64 7.03c-2.78.93-3.77 2.03-3.77 2.75 0 .72.99 1.82 3.77 2.74l2.52.84c.22.07.4.25.47.47l.84 2.52c.92 2.78 2.03 3.77 2.75 3.77.72 0 1.82-.99 2.75-3.77l2.83-8.49c.51-1.54.42-2.8-.23-3.45-.65-.65-1.91-.73-3.44-.22L7.64 7.03Z" fill="currentColor" />
-                        <path d="M10.11 14.4c-.19 0-.38-.07-.53-.22-.29-.29-.29-.77 0-1.06l3.58-3.59c.29-.29.77-.29 1.06 0 .29.29.29.77 0 1.06l-3.58 3.59c-.14.15-.34.22-.53.22Z" fill="currentColor" />
-                      </svg>
-                    </span>
-                    <span class="home-contact-text">{{ home.extra["30"] }}</span>
-                  </span>
-                  <span class="home-contact-state home-contact-state--sent" aria-hidden="true">
-                    <span class="home-contact-icon">
-                      <svg viewBox="0 0 24 24" fill="none" focusable="false">
-                        <path d="M12 22.75C6.07 22.75 1.25 17.93 1.25 12S6.07 1.25 12 1.25 22.75 6.07 22.75 12 17.93 22.75 12 22.75Zm0-20C6.9 2.75 2.75 6.9 2.75 12S6.9 21.25 12 21.25s9.25-4.15 9.25-9.25S17.1 2.75 12 2.75Z" fill="currentColor" />
-                        <path d="M10.58 15.58c-.2 0-.39-.08-.53-.22l-2.83-2.83a.75.75 0 1 1 1.06-1.06l2.3 2.3 5.14-5.14a.75.75 0 1 1 1.06 1.06l-5.67 5.67c-.14.14-.33.22-.53.22Z" fill="currentColor" />
-                      </svg>
-                    </span>
-                    <span class="home-contact-text">{{ home.extra["31"] }}</span>
-                  </span>
-                </a>
-                <a href="feedback.html" class="home-contact-button home-feedback-button" :aria-label="home.accessibility.openFeedback">
+                </span>
+                <span>{{ home.extra["25"] }}</span>
+              </a>
+              <a href="mailto:Jamtrackshubwork@gmail.com" class="uiverse-contact-button home-contact-button" :aria-label="home.accessibility.emailJamTracksHub">
+                <span class="home-contact-outline" aria-hidden="true"></span>
+                <span class="home-contact-state home-contact-state--default">
                   <span class="home-contact-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" focusable="false">
-                      <path d="M14.22 21.63c-1.18 0-2.85-.83-4.17-4.8l-.72-2.16-2.16-.72c-3.96-1.32-4.79-2.99-4.79-4.17 0-1.17.83-2.85 4.79-4.18l8.49-2.83c2.12-.71 3.89-.5 4.98.58s1.3 2.86.59 4.98l-2.83 8.49c-1.33 3.98-3 4.81-4.18 4.81Z" fill="currentColor" />
+                      <path d="M14.22 21.63c-1.18 0-2.85-.83-4.17-4.8l-.72-2.16-2.16-.72c-3.96-1.32-4.79-2.99-4.79-4.17 0-1.17.83-2.85 4.79-4.18l8.49-2.83c2.12-.71 3.89-.5 4.98.58s1.3 2.86.59 4.98l-2.83 8.49c-1.33 3.98-3 4.81-4.18 4.81ZM7.64 7.03c-2.78.93-3.77 2.03-3.77 2.75 0 .72.99 1.82 3.77 2.74l2.52.84c.22.07.4.25.47.47l.84 2.52c.92 2.78 2.03 3.77 2.75 3.77.72 0 1.82-.99 2.75-3.77l2.83-8.49c.51-1.54.42-2.8-.23-3.45-.65-.65-1.91-.73-3.44-.22L7.64 7.03Z" fill="currentColor" />
                       <path d="M10.11 14.4c-.19 0-.38-.07-.53-.22-.29-.29-.29-.77 0-1.06l3.58-3.59c.29-.29.77-.29 1.06 0 .29.29.29.77 0 1.06l-3.58 3.59c-.14.15-.34.22-.53.22Z" fill="currentColor" />
                     </svg>
                   </span>
-                  <span class="home-feedback-button-text">{{ home.extra["29"] }}</span>
-                </a>
-              </div>
+                  <span class="home-contact-text">{{ home.extra["30"] }}</span>
+                </span>
+                <span class="home-contact-state home-contact-state--sent" aria-hidden="true">
+                  <span class="home-contact-icon">
+                    <svg viewBox="0 0 24 24" fill="none" focusable="false">
+                      <path d="M12 22.75C6.07 22.75 1.25 17.93 1.25 12S6.07 1.25 12 1.25 22.75 6.07 22.75 12 17.93 22.75 12 22.75Zm0-20C6.9 2.75 2.75 6.9 2.75 12S6.9 21.25 12 21.25s9.25-4.15 9.25-9.25S17.1 2.75 12 2.75Z" fill="currentColor" />
+                      <path d="M10.58 15.58c-.2 0-.39-.08-.53-.22l-2.83-2.83a.75.75 0 1 1 1.06-1.06l2.3 2.3 5.14-5.14a.75.75 0 1 1 1.06 1.06l-5.67 5.67c-.14.14-.33.22-.53.22Z" fill="currentColor" />
+                    </svg>
+                  </span>
+                  <span class="home-contact-text">{{ home.extra["31"] }}</span>
+                </span>
+              </a>
+              <a href="feedback.html" class="home-contact-button home-feedback-button" :aria-label="home.accessibility.openFeedback">
+                <span class="home-contact-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" focusable="false">
+                    <path d="M14.22 21.63c-1.18 0-2.85-.83-4.17-4.8l-.72-2.16-2.16-.72c-3.96-1.32-4.79-2.99-4.79-4.17 0-1.17.83-2.85 4.79-4.18l8.49-2.83c2.12-.71 3.89-.5 4.98.58s1.3 2.86.59 4.98l-2.83 8.49c-1.33 3.98-3 4.81-4.18 4.81Z" fill="currentColor" />
+                    <path d="M10.11 14.4c-.19 0-.38-.07-.53-.22-.29-.29-.29-.77 0-1.06l3.58-3.59c.29-.29.77-.29 1.06 0 .29.29.29.77 0 1.06l-3.58 3.59c-.14.15-.34.22-.53.22Z" fill="currentColor" />
+                  </svg>
+                </span>
+                <span class="home-feedback-button-text">{{ home.extra["29"] }}</span>
+              </a>
             </div>
             <form
               ref="subscribeForm"
@@ -360,8 +351,7 @@ async function handleSubscribe() {
               data-subscribe-source="homepage-about"
               @submit.prevent="handleSubscribe"
             >
-              <span class="home-subscribe-title">{{ home.extra["26"] }}</span>
-              <p class="home-subscribe-content">{{ home.extra["27"] }}</p>
+              <label class="home-subscribe-title" for="homeSubscribeEmail">{{ home.extra["27"] }}</label>
               <div class="home-subscribe-form">
                 <input
                   ref="emailInput"
