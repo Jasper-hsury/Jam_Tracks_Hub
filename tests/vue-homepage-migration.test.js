@@ -214,13 +214,17 @@ test("surfaces Song Workspace through the hero and four purpose-led workflow gro
     "key-finder.html",
     "scale.html",
     "chord-dictionary.html",
-    "chord-progressions.html"
+    "chord-progressions.html",
+    "/song-workspace"
   ].forEach(href => assert.ok(view.includes(`href: "${href}"`), href));
   assert.match(view, /v-for="group in workflowGroups"/);
-  assert.match(view, /home-workflow-group--workspace/);
+  assert.match(view, /<strong>\{\{ home\.workflow\[group\.id\] \}\}<\/strong>/);
+  assert.match(view, /<nav class="home-workflow-links" :aria-label="home\.workflow\[group\.id\]">/);
+  assert.match(view, /<a v-for="tool in group\.tools" :key="tool\.href" :href="tool\.href" class="home-workflow-link">/);
+  assert.match(view, /\{\{ tool\.workspace \? home\.workflow\.songWorkspace\.description : home\.extra\[tool\.copy\] \}\}/);
   assert.match(view, /home\.workflow\.songWorkspace\.description/);
-  assert.match(view, /home\.workflow\.songWorkspace\.badges/);
-  assert.match(view, /href="\/song-workspace" class="secondary-button home-workspace-link"/);
+  assert.doesNotMatch(view, /home-workflow-group--workspace|home-workspace-description|home-workspace-badges|home-workspace-link/);
+  assert.doesNotMatch(view, /home\.workflow\.songWorkspace\.(?:badges|badgesLabel|cta)/);
   assert.doesNotMatch(view, /useSongWorkspace|indexedDB|localStorage|getItem\(|setItem\(/);
 
   assert.equal(en.home.hero.exploreTracks, "Browse Backing Tracks");
@@ -241,8 +245,6 @@ test("surfaces Song Workspace through the hero and four purpose-led workflow gro
   ], ["練習", "理解", "創作", "彈奏自己的歌曲"]);
   assert.equal(en.home.workflow.songWorkspace.description, "Build chord-and-lyric sheets, transpose songs, and find a comfortable capo position. Your songs stay in this browser.");
   assert.equal(zh.home.workflow.songWorkspace.description, "建立和弦歌詞譜、移調並尋找適合的 Capo 位置。歌曲只會保存在這個瀏覽器中。");
-  assert.deepEqual(en.home.workflow.songWorkspace.badges, ["Free", "No sign-in", "Stored locally"]);
-  assert.deepEqual(zh.home.workflow.songWorkspace.badges, ["免費", "無需登入", "儲存於本機"]);
 });
 
 test("preserves Subscribe validation and POST payload with controlled fetch only", async () => {

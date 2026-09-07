@@ -76,9 +76,12 @@ test("homepage workflow uses four visible responsive groups without horizontal t
     assert.doesNotMatch(trackRule, /display:\s*flex|width:\s*max-content|home-step-end-buffer/);
     assert.match(css, /\.home-step-rail\s*\{[^}]*overflow:\s*visible/s);
     assert.match(css, /@media \(max-width: 700px\)\s*\{[\s\S]*?\.home-step-track\s*\{[^}]*grid-template-columns:\s*1fr/s);
-    assert.match(css, /\.home-workflow-link:focus-visible,[\s\S]*?\.home-workspace-link:focus-visible\s*\{[^}]*outline:/s);
+    assert.match(css, /\.home-workflow-link:focus-visible[\s\S]*?\{[^}]*outline:/s);
     assert.equal((home.match(/class="start-card home-step-card home-workflow-group"/g) || []).length, 1);
     assert.match(home, /v-for="group in workflowGroups"/);
+    assert.match(home, /\{ href: "\/song-workspace", title: "songWorkspace", workspace: true \}/);
+    assert.match(home, /<nav class="home-workflow-links" :aria-label="home\.workflow\[group\.id\]">/);
+    assert.doesNotMatch(home, /home-workflow-group--workspace|home-workspace-badges|home-workspace-link/);
 });
 
 test("localized Homepage copy keeps existing wrapping safeguards", () => {

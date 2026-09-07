@@ -42,7 +42,9 @@ const workflowGroups = [
   {
     id: "playSongs",
     motion: "pulse",
-    workspace: true
+    tools: [
+      { href: "/song-workspace", title: "songWorkspace", workspace: true }
+    ]
   }
 ];
 const releaseIds = ["W19", "W18", "W17"];
@@ -184,32 +186,17 @@ async function handleSubscribe() {
               v-for="group in workflowGroups"
               :key="group.id"
               class="start-card home-step-card home-workflow-group"
-              :class="{ 'home-workflow-group--workspace': group.workspace }"
               :data-motion="group.motion"
             >
               <span class="step-motif" aria-hidden="true"></span>
               <span class="start-kicker">{{ home.workflow[group.id] }}</span>
-
-              <template v-if="group.workspace">
-                <strong>{{ home.tools.songWorkspace }}</strong>
-                <p class="home-workspace-description">{{ home.workflow.songWorkspace.description }}</p>
-                <ul class="home-workspace-badges" :aria-label="home.workflow.songWorkspace.badgesLabel">
-                  <li v-for="badge in home.workflow.songWorkspace.badges" :key="badge">{{ badge }}</li>
-                </ul>
-                <a href="/song-workspace" class="secondary-button home-workspace-link">
-                  {{ home.workflow.songWorkspace.cta }}
+              <strong>{{ home.workflow[group.id] }}</strong>
+              <nav class="home-workflow-links" :aria-label="home.workflow[group.id]">
+                <a v-for="tool in group.tools" :key="tool.href" :href="tool.href" class="home-workflow-link">
+                  <span>{{ home.tools[tool.title] }}</span>
+                  <small>{{ tool.workspace ? home.workflow.songWorkspace.description : home.extra[tool.copy] }}</small>
                 </a>
-              </template>
-
-              <template v-else>
-                <strong>{{ home.workflow[group.id] }}</strong>
-                <nav class="home-workflow-links" :aria-label="home.workflow[group.id]">
-                  <a v-for="tool in group.tools" :key="tool.href" :href="tool.href" class="home-workflow-link">
-                    <span>{{ home.tools[tool.title] }}</span>
-                    <small>{{ home.extra[tool.copy] }}</small>
-                  </a>
-                </nav>
-              </template>
+              </nav>
             </article>
           </div>
         </div>
