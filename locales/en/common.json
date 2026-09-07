@@ -58,8 +58,8 @@
       "title": "Tracks Hub",
       "tagline": "Capture the Feeling. Compose the Meaning.",
       "description": "Original practice tracks and focused tools for musicians who want to listen, understand harmony, map the fretboard, and create with purpose.",
-      "exploreTracks": "Explore Tracks",
-      "analyzeSong": "Analyze a Song",
+      "exploreTracks": "Browse Backing Tracks",
+      "openSongWorkspace": "Open Song Workspace",
       "stats": {
         "tracks": "Original tracks",
         "keys": "Major and minor keys",
@@ -74,7 +74,25 @@
       "scale": "Scale Explorer",
       "keyFinder": "Key Finder",
       "progressions": "Chord Progressions",
-      "trainer": "Fretboard Trainer"
+      "trainer": "Fretboard Trainer",
+      "songWorkspace": "Song Workspace"
+    },
+    "workflow": {
+      "label": "Choose a music workflow",
+      "practice": "Practice",
+      "understand": "Understand",
+      "create": "Create",
+      "playSongs": "Play your songs",
+      "songWorkspace": {
+        "description": "Build chord-and-lyric sheets, transpose songs, and find a comfortable capo position. Your songs stay in this browser.",
+        "cta": "Open Song Workspace",
+        "badgesLabel": "Song Workspace details",
+        "badges": [
+          "Free",
+          "No sign-in",
+          "Stored locally"
+        ]
+      }
     },
     "about": {
       "eyebrow": "About Jam Tracks Hub"

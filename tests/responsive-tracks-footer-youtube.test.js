@@ -60,3 +60,21 @@ test("featured YouTube player remains a responsive 16:9 iframe", () => {
     assert.match(css, /\.home-video-player iframe\s*\{[^}]*width:\s*100%[^}]*aspect-ratio:\s*16 \/ 9[^}]*border:\s*0/s);
     assert.match(css, /@media \(max-width: 430px\)[\s\S]*?\.home-video-player iframe\s*\{[^}]*min-height:\s*0/s);
 });
+
+test("homepage workflow uses four visible responsive groups without horizontal travel", () => {
+    const css = read("styles/pages.css");
+    const home = read("src/views/HomeView.vue");
+    const trackStart = css.indexOf(".home-step-track {");
+    const trackRule = css.slice(trackStart, css.indexOf("}", trackStart) + 1);
+
+    assert.match(trackRule, /display:\s*grid/);
+    assert.match(trackRule, /grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
+    assert.match(trackRule, /width:\s*100%/);
+    assert.match(trackRule, /min-width:\s*0/);
+    assert.doesNotMatch(trackRule, /display:\s*flex|width:\s*max-content|home-step-end-buffer/);
+    assert.match(css, /\.home-step-rail\s*\{[^}]*overflow:\s*visible/s);
+    assert.match(css, /@media \(max-width: 700px\)\s*\{[\s\S]*?\.home-step-track\s*\{[^}]*grid-template-columns:\s*1fr/s);
+    assert.match(css, /\.home-workflow-link:focus-visible,[\s\S]*?\.home-workspace-link:focus-visible\s*\{[^}]*outline:/s);
+    assert.equal((home.match(/class="start-card home-step-card home-workflow-group"/g) || []).length, 1);
+    assert.match(home, /v-for="group in workflowGroups"/);
+});

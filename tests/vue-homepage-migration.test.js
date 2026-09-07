@@ -61,6 +61,7 @@ test("preserves Homepage content, links, media, and accessibility contracts in V
     "key-finder.html",
     "chord-progressions.html",
     "fretboard-trainer.html",
+    "/song-workspace",
     "feedback.html",
     "mailto:Jamtrackshubwork@gmail.com",
     "https://www.youtube.com/@Weekly_Backing_Track"
@@ -87,6 +88,58 @@ test("keeps Homepage locale rendering in Vue and track labels deterministic", ()
   assert.match(trackTitle, /class="track-title-name"/);
   assert.match(trackTitle, /class="track-title-separator"/);
   assert.match(trackTitle, /class="track-title-key"/);
+});
+
+test("surfaces Song Workspace through the hero and four purpose-led workflow groups", () => {
+  const view = read("src/views/HomeView.vue");
+  const config = read("vite.config.mjs");
+  const en = JSON.parse(read("locales/en/common.json"));
+  const zh = JSON.parse(read("locales/zh-TW/common.json"));
+
+  assert.match(config, /"\/song-workspace", "\/song-workspace\.html"/);
+  assert.match(view, /<a href="tracks\.html" class="primary-button">\{\{ home\.hero\.exploreTracks \}\}<\/a>/);
+  assert.match(view, /<a href="\/song-workspace" class="secondary-button">\{\{ home\.hero\.openSongWorkspace \}\}<\/a>/);
+  assert.ok(view.indexOf('href="tracks.html" class="primary-button"') < view.indexOf('href="/song-workspace" class="secondary-button"'));
+
+  assert.equal((view.match(/id: "(?:practice|understand|create|playSongs)"/g) || []).length, 4);
+  ["practice", "understand", "create", "playSongs"].forEach(group => {
+    assert.ok(view.includes(`id: "${group}"`), group);
+  });
+  [
+    "tracks.html",
+    "fretboard-trainer.html",
+    "key-finder.html",
+    "scale.html",
+    "chord-dictionary.html",
+    "chord-progressions.html"
+  ].forEach(href => assert.ok(view.includes(`href: "${href}"`), href));
+  assert.match(view, /v-for="group in workflowGroups"/);
+  assert.match(view, /home-workflow-group--workspace/);
+  assert.match(view, /home\.workflow\.songWorkspace\.description/);
+  assert.match(view, /home\.workflow\.songWorkspace\.badges/);
+  assert.match(view, /href="\/song-workspace" class="secondary-button home-workspace-link"/);
+  assert.doesNotMatch(view, /useSongWorkspace|indexedDB|localStorage|getItem\(|setItem\(/);
+
+  assert.equal(en.home.hero.exploreTracks, "Browse Backing Tracks");
+  assert.equal(en.home.hero.openSongWorkspace, "Open Song Workspace");
+  assert.equal(zh.home.hero.exploreTracks, "瀏覽即興伴奏");
+  assert.equal(zh.home.hero.openSongWorkspace, "開啟歌曲工作區");
+  assert.deepEqual([
+    en.home.workflow.practice,
+    en.home.workflow.understand,
+    en.home.workflow.create,
+    en.home.workflow.playSongs
+  ], ["Practice", "Understand", "Create", "Play your songs"]);
+  assert.deepEqual([
+    zh.home.workflow.practice,
+    zh.home.workflow.understand,
+    zh.home.workflow.create,
+    zh.home.workflow.playSongs
+  ], ["練習", "理解", "創作", "彈奏自己的歌曲"]);
+  assert.equal(en.home.workflow.songWorkspace.description, "Build chord-and-lyric sheets, transpose songs, and find a comfortable capo position. Your songs stay in this browser.");
+  assert.equal(zh.home.workflow.songWorkspace.description, "建立和弦歌詞譜、移調並尋找適合的 Capo 位置。歌曲只會保存在這個瀏覽器中。");
+  assert.deepEqual(en.home.workflow.songWorkspace.badges, ["Free", "No sign-in", "Stored locally"]);
+  assert.deepEqual(zh.home.workflow.songWorkspace.badges, ["免費", "無需登入", "儲存於本機"]);
 });
 
 test("preserves Subscribe validation and POST payload with controlled fetch only", async () => {

@@ -58,8 +58,8 @@
       "title": "Tracks Hub",
       "tagline": "捕捉感受，譜出心聲。",
       "description": "為想要深入聆聽、理解和聲、掌握指板，並有目的地創作的音樂人，提供原創即興伴奏與專注實用的工具。",
-      "exploreTracks": "探索曲目",
-      "analyzeSong": "分析歌曲",
+      "exploreTracks": "瀏覽即興伴奏",
+      "openSongWorkspace": "開啟歌曲工作區",
       "stats": {
         "tracks": "原創即興伴奏",
         "keys": "大調與小調",
@@ -74,7 +74,25 @@
       "scale": "音階",
       "keyFinder": "調性分析",
       "progressions": "和弦進行",
-      "trainer": "指板練習"
+      "trainer": "指板練習",
+      "songWorkspace": "歌曲工作區"
+    },
+    "workflow": {
+      "label": "選擇音樂使用流程",
+      "practice": "練習",
+      "understand": "理解",
+      "create": "創作",
+      "playSongs": "彈奏自己的歌曲",
+      "songWorkspace": {
+        "description": "建立和弦歌詞譜、移調並尋找適合的 Capo 位置。歌曲只會保存在這個瀏覽器中。",
+        "cta": "開啟歌曲工作區",
+        "badgesLabel": "歌曲工作區特色",
+        "badges": [
+          "免費",
+          "無需登入",
+          "儲存於本機"
+        ]
+      }
     },
     "about": {
       "eyebrow": "關於 Jam Tracks Hub"

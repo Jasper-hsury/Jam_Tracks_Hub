@@ -13,13 +13,36 @@ const messages = {
   en: englishMessages,
   "zh-TW": traditionalChineseMessages
 };
-const toolCards = [
-  { href: "tracks.html", motion: "groove", motif: "tracks", kicker: "01", title: "tracks", copy: "02" },
-  { href: "chord-dictionary.html", motion: "flip", motif: "dictionary", kicker: "03", title: "dictionary", copy: "04" },
-  { href: "scale.html", motion: "map", motif: "scale", kicker: "05", title: "scale", copy: "06" },
-  { href: "key-finder.html", motion: "scan", motif: "keyfinder", kicker: "07", title: "keyFinder", copy: "08" },
-  { href: "chord-progressions.html", motion: "cascade", motif: "progressions", kicker: "09", title: "progressions", copy: "10" },
-  { href: "fretboard-trainer.html", motion: "pulse", motif: "trainer", kicker: "11", title: "trainer", copy: "12" }
+const workflowGroups = [
+  {
+    id: "practice",
+    motion: "groove",
+    tools: [
+      { href: "tracks.html", title: "tracks", copy: "02" },
+      { href: "fretboard-trainer.html", title: "trainer", copy: "12" }
+    ]
+  },
+  {
+    id: "understand",
+    motion: "scan",
+    tools: [
+      { href: "key-finder.html", title: "keyFinder", copy: "08" },
+      { href: "scale.html", title: "scale", copy: "06" },
+      { href: "chord-dictionary.html", title: "dictionary", copy: "04" }
+    ]
+  },
+  {
+    id: "create",
+    motion: "cascade",
+    tools: [
+      { href: "chord-progressions.html", title: "progressions", copy: "10" }
+    ]
+  },
+  {
+    id: "playSongs",
+    motion: "pulse",
+    workspace: true
+  }
 ];
 const releases = [
   {
@@ -143,13 +166,13 @@ async function handleSubscribe() {
 
         <div class="hero-actions">
           <a href="tracks.html" class="primary-button">{{ home.hero.exploreTracks }}</a>
-          <a href="key-finder.html" class="secondary-button">{{ home.hero.analyzeSong }}</a>
+          <a href="/song-workspace" class="secondary-button">{{ home.hero.openSongWorkspace }}</a>
         </div>
 
         <dl class="home-metrics" aria-label="Site overview">
           <div><dt>18</dt><dd>{{ home.hero.stats.tracks }}</dd></div>
           <div><dt>24</dt><dd>{{ home.hero.stats.keys }}</dd></div>
-          <div><dt>6</dt><dd>{{ home.hero.stats.tools }}</dd></div>
+          <div><dt>7</dt><dd>{{ home.hero.stats.tools }}</dd></div>
         </dl>
       </div>
     </section>
@@ -161,68 +184,39 @@ async function handleSubscribe() {
           <h2 id="homeToolsTitle">{{ home.tools.title }}</h2>
         </div>
 
-        <div class="home-step-rail" aria-label="Choose a music tool">
+        <div class="home-step-rail" :aria-label="home.workflow.label">
           <div class="start-grid home-start-grid home-step-track">
-            <a
-              v-for="card in toolCards"
-              :key="card.href"
-              :href="card.href"
-              class="start-card home-step-card"
-              :data-motion="card.motion"
+            <article
+              v-for="group in workflowGroups"
+              :key="group.id"
+              class="start-card home-step-card home-workflow-group"
+              :class="{ 'home-workflow-group--workspace': group.workspace }"
+              :data-motion="group.motion"
             >
-              <span class="step-motif" :class="`step-motif-${card.motif}`" aria-hidden="true">
-                <svg v-if="card.motif === 'tracks'" viewBox="0 0 160 120" role="img" focusable="false">
-                  <path class="home-draw" d="M20 78 C35 56 50 100 66 78 S96 56 112 78 S136 100 148 70" />
-                  <path class="home-draw home-draw-soft" d="M22 93 H138" />
-                  <circle class="home-motion-dot home-motion-dot-gold" cx="20" cy="78" data-motion-path="M20 78 C35 56 50 100 66 78 S96 56 112 78 S136 100 148 70" r="5" />
-                  <rect class="motif-panel" x="18" y="18" width="124" height="74" rx="14" />
-                  <path class="home-draw home-draw-accent" d="M34 36 H84 M34 50 H118 M34 64 H72" />
-                </svg>
-                <svg v-else-if="card.motif === 'dictionary'" viewBox="0 0 160 120" role="img" focusable="false">
-                  <path class="home-draw home-draw-soft" d="M34 20 V100 M62 20 V100 M90 20 V100 M118 20 V100 M20 36 H140 M20 62 H140 M20 88 H140" />
-                  <circle class="motif-note motif-root" cx="34" cy="36" r="10" />
-                  <circle class="motif-note" cx="62" cy="62" r="9" />
-                  <circle class="motif-note" cx="90" cy="88" r="9" />
-                  <circle class="motif-note" cx="118" cy="36" r="9" />
-                  <path class="home-draw home-draw-accent" d="M34 36 C54 50 72 62 90 88 C102 64 110 48 118 36" />
-                </svg>
-                <svg v-else-if="card.motif === 'scale'" viewBox="0 0 160 120" role="img" focusable="false">
-                  <path class="home-draw home-draw-soft" d="M22 34 H138 M22 58 H138 M22 82 H138" />
-                  <path class="home-draw home-draw-accent" d="M28 84 C48 70 63 72 78 58 S108 36 132 38" />
-                  <circle class="home-motion-dot" cx="28" cy="84" data-motion-path="M28 84 C48 70 63 72 78 58 S108 36 132 38" r="6" />
-                  <circle class="motif-note" cx="28" cy="84" r="8" />
-                  <circle class="motif-note" cx="78" cy="58" r="8" />
-                  <circle class="motif-note" cx="132" cy="38" r="8" />
-                </svg>
-                <svg v-else-if="card.motif === 'keyfinder'" viewBox="0 0 160 120" role="img" focusable="false">
-                  <path class="home-draw home-draw-soft" d="M26 36 H136 M24 48 H134 M22 60 H132 M24 72 H134 M26 84 H136" />
-                  <path class="home-draw home-draw-accent" d="M30 76 C54 44 81 90 105 58 C118 41 130 44 142 50" />
-                  <circle class="home-motion-dot home-motion-dot-gold" cx="30" cy="76" data-motion-path="M30 76 C54 44 81 90 105 58 C118 41 130 44 142 50" r="5" />
-                  <path class="motif-note-symbol" d="M50 68 c0 7 -8 12 -15 8 c-6 -4 -4 -12 3 -15 c5 -2 10 -1 12 3 V33 h5 v35z" />
-                  <path class="motif-note-symbol motif-note-symbol-alt" d="M96 78 c0 7 -8 12 -15 8 c-6 -4 -4 -12 3 -15 c5 -2 10 -1 12 3 V39 h5 v39z" />
-                  <path class="motif-note-symbol motif-note-symbol-small" d="M126 55 c0 5 -6 9 -11 6 c-4 -3 -3 -8 2 -10 c4 -2 8 -1 9 2 V30 h4 v25z" />
-                </svg>
-                <svg v-else-if="card.motif === 'progressions'" viewBox="0 0 160 120" role="img" focusable="false">
-                  <circle class="home-draw home-draw-soft" cx="82" cy="60" r="42" />
-                  <path class="home-draw home-draw-accent" d="M82 18 A42 42 0 1 1 81.9 18" />
-                  <circle class="home-motion-dot" cx="82" cy="18" data-motion-path="M82 18 A42 42 0 1 1 81.9 18" r="5" />
-                  <g class="motif-roman"><rect x="29" y="48" width="34" height="28" rx="9" /><text x="46" y="67">I</text></g>
-                  <g class="motif-roman"><rect x="64" y="18" width="40" height="28" rx="9" /><text x="84" y="37">vi</text></g>
-                  <g class="motif-roman"><rect x="98" y="50" width="40" height="28" rx="9" /><text x="118" y="69">IV</text></g>
-                  <g class="motif-roman"><rect x="63" y="80" width="38" height="28" rx="9" /><text x="82" y="99">V</text></g>
-                </svg>
-                <svg v-else viewBox="0 0 160 120" role="img" focusable="false">
-                  <path class="home-draw home-draw-soft" d="M28 20 V100 M52 20 V100 M76 20 V100 M100 20 V100 M124 20 V100 M22 34 H138 M22 58 H138 M22 82 H138" />
-                  <path class="home-draw home-draw-accent" d="M28 82 H124" />
-                  <circle class="motif-note motif-root" cx="52" cy="58" r="9" />
-                  <circle class="motif-note" cx="100" cy="34" r="8" />
-                  <circle class="home-motion-dot home-motion-dot-gold" cx="52" cy="58" data-motion-path="M52 58 C68 30 91 28 100 34 C118 45 118 73 124 82" r="6" />
-                </svg>
-              </span>
-              <span class="start-kicker">{{ home.extra[card.kicker] }}</span>
-              <strong>{{ home.tools[card.title] }}</strong>
-              <span>{{ home.extra[card.copy] }}</span>
-            </a>
+              <span class="step-motif" aria-hidden="true"></span>
+              <span class="start-kicker">{{ home.workflow[group.id] }}</span>
+
+              <template v-if="group.workspace">
+                <strong>{{ home.tools.songWorkspace }}</strong>
+                <p class="home-workspace-description">{{ home.workflow.songWorkspace.description }}</p>
+                <ul class="home-workspace-badges" :aria-label="home.workflow.songWorkspace.badgesLabel">
+                  <li v-for="badge in home.workflow.songWorkspace.badges" :key="badge">{{ badge }}</li>
+                </ul>
+                <a href="/song-workspace" class="secondary-button home-workspace-link">
+                  {{ home.workflow.songWorkspace.cta }}
+                </a>
+              </template>
+
+              <template v-else>
+                <strong>{{ home.workflow[group.id] }}</strong>
+                <nav class="home-workflow-links" :aria-label="home.workflow[group.id]">
+                  <a v-for="tool in group.tools" :key="tool.href" :href="tool.href" class="home-workflow-link">
+                    <span>{{ home.tools[tool.title] }}</span>
+                    <small>{{ home.extra[tool.copy] }}</small>
+                  </a>
+                </nav>
+              </template>
+            </article>
           </div>
         </div>
       </div>

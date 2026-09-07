@@ -3676,39 +3676,17 @@ html:not([data-theme="light"]) .home-hero {
 .home-step-rail {
     width: 100%;
     margin-top: 24px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scrollbar-width: thin;
-    scrollbar-color: color-mix(in srgb, var(--teal) 48%, var(--gold) 24%) transparent;
-    scroll-snap-type: x mandatory;
-}
-
-.home-step-rail::-webkit-scrollbar {
-    height: 8px;
-}
-
-.home-step-rail::-webkit-scrollbar-track {
-    background: color-mix(in srgb, var(--panel-background) 78%, transparent);
-    border-radius: 999px;
-}
-
-.home-step-rail::-webkit-scrollbar-thumb {
-    background: linear-gradient(90deg, var(--teal), var(--gold));
-    border-radius: 999px;
-}
-
-.home-step-rail.is-gsap-driven {
-    overflow: hidden;
+    overflow: visible;
 }
 
 .home-step-track {
-    --home-step-end-buffer: clamp(120px, 16vw, 220px);
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 18px;
-    width: max-content;
-    min-width: 100%;
+    width: 100%;
+    min-width: 0;
     margin-top: 0;
-    padding: 2px var(--home-step-end-buffer) 14px 2px;
+    padding: 2px;
 }
 
 .home-step-track .start-card,
@@ -3717,10 +3695,9 @@ html:not([data-theme="light"]) .home-hero {
 }
 
 .home-step-track .start-card {
-    flex: 0 0 clamp(280px, 28vw, 360px);
-    min-height: 250px;
+    min-width: 0;
+    min-height: 280px;
     padding: clamp(24px, 2.4vw, 32px);
-    scroll-snap-align: start;
 }
 
 /* Adapted from Uiverse.io by joe-watson-sbf: rude-shrimp-21 */
@@ -3738,7 +3715,6 @@ html:not([data-theme="light"]) .home-hero {
         );
     border-color: color-mix(in srgb, var(--teal) 28%, var(--gold) 20%);
     transition:
-        flex-basis 0.5s ease,
         transform 0.25s ease,
         background-color 0.28s ease,
         border-color 0.2s ease,
@@ -3746,8 +3722,7 @@ html:not([data-theme="light"]) .home-hero {
 }
 
 .home-step-card:hover,
-.home-step-card:focus-visible {
-    flex-basis: clamp(340px, 34vw, 440px);
+.home-step-card:focus-within {
     align-content: center;
     justify-content: center;
     justify-items: center;
@@ -3759,6 +3734,126 @@ html:not([data-theme="light"]) .home-hero {
             color-mix(in srgb, var(--teal) 8%, var(--surface-soft))
         );
     border-color: color-mix(in srgb, var(--teal) 46%, var(--gold) 24%);
+}
+
+.home-workflow-group {
+    align-content: start;
+    justify-content: stretch;
+    justify-items: stretch;
+    gap: 12px;
+}
+
+.home-workflow-group:hover,
+.home-workflow-group:focus-within {
+    align-content: start;
+    justify-content: stretch;
+    justify-items: stretch;
+    text-align: left;
+}
+
+.home-workflow-group > strong {
+    font-family: "Noto Serif TC", serif;
+    font-size: clamp(24px, 2.8vw, 34px);
+    line-height: 1.08;
+}
+
+.home-workflow-group:hover > strong,
+.home-workflow-group:focus-within > strong {
+    justify-self: stretch;
+    width: auto;
+    transform: none;
+}
+
+.home-workflow-links {
+    display: grid;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.home-workflow-link {
+    display: grid;
+    gap: 4px;
+    min-width: 0;
+    padding: 13px 14px;
+    color: var(--text);
+    background: color-mix(in srgb, var(--surface-raised) 74%, transparent);
+    border: 1px solid color-mix(in srgb, var(--border-soft) 78%, transparent);
+    border-radius: 12px;
+    text-decoration: none;
+    transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+}
+
+.home-workflow-link:hover,
+.home-workflow-link:focus-visible {
+    color: var(--text);
+    background: color-mix(in srgb, var(--teal) 10%, var(--surface-raised));
+    border-color: color-mix(in srgb, var(--teal) 54%, var(--gold) 18%);
+    transform: translateY(-1px);
+}
+
+.home-workflow-link:focus-visible,
+.home-workspace-link:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--teal) 42%, transparent);
+    outline-offset: 3px;
+}
+
+.home-workflow-link span {
+    font-weight: 850;
+    line-height: 1.3;
+}
+
+.home-workflow-link small {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.home-workflow-group--workspace {
+    background:
+        radial-gradient(circle at top right, color-mix(in srgb, var(--gold) 13%, transparent), transparent 42%),
+        linear-gradient(135deg, color-mix(in srgb, var(--panel-background) 94%, transparent), color-mix(in srgb, var(--teal) 10%, var(--surface-soft)));
+}
+
+.home-workspace-description {
+    max-width: 48ch;
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.65;
+}
+
+.home-workspace-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 2px 0 4px;
+    padding: 0;
+    list-style: none;
+}
+
+.home-workspace-badges li {
+    padding: 5px 9px;
+    color: var(--teal);
+    background: color-mix(in srgb, var(--teal) 9%, transparent);
+    border: 1px solid color-mix(in srgb, var(--teal) 30%, transparent);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.home-workspace-link {
+    justify-self: start;
+    margin-top: auto;
+}
+
+@media (max-width: 700px) {
+    .home-step-track {
+        grid-template-columns: 1fr;
+    }
+
+    .home-step-track .start-card {
+        min-height: 0;
+    }
 }
 
 .home-step-card::after {
@@ -3809,8 +3904,8 @@ html:not([data-theme="light"]) .home-hero {
     transition: transform 0.42s ease, color 0.28s ease;
 }
 
-.home-step-card:hover > strong,
-.home-step-card:focus-visible > strong {
+.home-step-card:not(.home-workflow-group):hover > strong,
+.home-step-card:not(.home-workflow-group):focus-visible > strong {
     color: color-mix(in srgb, var(--gold) 82%, var(--teal));
     justify-self: center;
     width: 100%;
@@ -3835,8 +3930,8 @@ html:not([data-theme="light"]) .home-hero {
         transform 0.32s ease;
 }
 
-.home-step-card:hover > span:last-child,
-.home-step-card:focus-visible > span:last-child {
+.home-step-card:not(.home-workflow-group):hover > span:last-child,
+.home-step-card:not(.home-workflow-group):focus-visible > span:last-child {
     justify-self: center;
     width: min(100%, 32ch);
     max-height: 5.5rem;
@@ -3845,8 +3940,8 @@ html:not([data-theme="light"]) .home-hero {
     transform: translateY(0);
 }
 
-.home-step-card:hover .start-kicker,
-.home-step-card:focus-visible .start-kicker {
+.home-step-card:not(.home-workflow-group):hover .start-kicker,
+.home-step-card:not(.home-workflow-group):focus-visible .start-kicker {
     justify-self: center;
 }
 
@@ -4371,7 +4466,7 @@ html[data-theme="light"] .home-step-track .home-step-card {
 }
 
 html[data-theme="light"] .home-step-track .home-step-card:hover,
-html[data-theme="light"] .home-step-track .home-step-card:focus-visible {
+html[data-theme="light"] .home-step-track .home-step-card:focus-within {
     background:
         linear-gradient(135deg, rgba(255, 253, 249, 0.98), rgba(241, 232, 219, 0.9));
 }
@@ -6143,13 +6238,7 @@ html[data-language="zh-TW"] .home-release-card .release-number {
     }
 
     .home-step-track .start-card {
-        flex-basis: min(78vw, 300px);
         min-height: 230px;
-    }
-
-    .home-step-card:hover,
-    .home-step-card:focus-visible {
-        flex-basis: min(88vw, 340px);
     }
 
     .home-feature-inner {
