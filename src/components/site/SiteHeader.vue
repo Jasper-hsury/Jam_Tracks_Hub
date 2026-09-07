@@ -57,7 +57,7 @@ function isCompactCurrent(item) {
     ref="navbar"
     class="navbar navbar-smart-scroll"
     :class="{ 'menu-open': menuOpen }"
-    aria-label="Primary navigation"
+    :aria-label="translate('nav.primaryLabel', 'Primary navigation')"
     @pointerdown="holdVisible"
     @click="holdVisible"
     @focusin="holdVisible"
@@ -69,7 +69,9 @@ function isCompactCurrent(item) {
       type="button"
       aria-controls="primaryNavigation"
       :aria-expanded="String(menuOpen)"
-      :aria-label="menuOpen ? 'Close navigation menu' : 'Open navigation menu'"
+      :aria-label="menuOpen
+        ? translate('nav.closeMenu', 'Close navigation menu')
+        : translate('nav.openMenu', 'Open navigation menu')"
       @click.stop="toggleMenu"
     >
       <span aria-hidden="true"></span>

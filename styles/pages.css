@@ -3676,39 +3676,17 @@ html:not([data-theme="light"]) .home-hero {
 .home-step-rail {
     width: 100%;
     margin-top: 24px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scrollbar-width: thin;
-    scrollbar-color: color-mix(in srgb, var(--teal) 48%, var(--gold) 24%) transparent;
-    scroll-snap-type: x mandatory;
-}
-
-.home-step-rail::-webkit-scrollbar {
-    height: 8px;
-}
-
-.home-step-rail::-webkit-scrollbar-track {
-    background: color-mix(in srgb, var(--panel-background) 78%, transparent);
-    border-radius: 999px;
-}
-
-.home-step-rail::-webkit-scrollbar-thumb {
-    background: linear-gradient(90deg, var(--teal), var(--gold));
-    border-radius: 999px;
-}
-
-.home-step-rail.is-gsap-driven {
-    overflow: hidden;
+    overflow: visible;
 }
 
 .home-step-track {
-    --home-step-end-buffer: clamp(120px, 16vw, 220px);
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 18px;
-    width: max-content;
-    min-width: 100%;
+    width: 100%;
+    min-width: 0;
     margin-top: 0;
-    padding: 2px var(--home-step-end-buffer) 14px 2px;
+    padding: 2px;
 }
 
 .home-step-track .start-card,
@@ -3717,10 +3695,9 @@ html:not([data-theme="light"]) .home-hero {
 }
 
 .home-step-track .start-card {
-    flex: 0 0 clamp(280px, 28vw, 360px);
-    min-height: 250px;
+    min-width: 0;
+    min-height: 280px;
     padding: clamp(24px, 2.4vw, 32px);
-    scroll-snap-align: start;
 }
 
 /* Adapted from Uiverse.io by joe-watson-sbf: rude-shrimp-21 */
@@ -3738,7 +3715,6 @@ html:not([data-theme="light"]) .home-hero {
         );
     border-color: color-mix(in srgb, var(--teal) 28%, var(--gold) 20%);
     transition:
-        flex-basis 0.5s ease,
         transform 0.25s ease,
         background-color 0.28s ease,
         border-color 0.2s ease,
@@ -3746,8 +3722,7 @@ html:not([data-theme="light"]) .home-hero {
 }
 
 .home-step-card:hover,
-.home-step-card:focus-visible {
-    flex-basis: clamp(340px, 34vw, 440px);
+.home-step-card:focus-within {
     align-content: center;
     justify-content: center;
     justify-items: center;
@@ -3759,6 +3734,126 @@ html:not([data-theme="light"]) .home-hero {
             color-mix(in srgb, var(--teal) 8%, var(--surface-soft))
         );
     border-color: color-mix(in srgb, var(--teal) 46%, var(--gold) 24%);
+}
+
+.home-workflow-group {
+    align-content: start;
+    justify-content: stretch;
+    justify-items: stretch;
+    gap: 12px;
+}
+
+.home-workflow-group:hover,
+.home-workflow-group:focus-within {
+    align-content: start;
+    justify-content: stretch;
+    justify-items: stretch;
+    text-align: left;
+}
+
+.home-workflow-group > strong {
+    font-family: "Noto Serif TC", serif;
+    font-size: clamp(24px, 2.8vw, 34px);
+    line-height: 1.08;
+}
+
+.home-workflow-group:hover > strong,
+.home-workflow-group:focus-within > strong {
+    justify-self: stretch;
+    width: auto;
+    transform: none;
+}
+
+.home-workflow-links {
+    display: grid;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.home-workflow-link {
+    display: grid;
+    gap: 4px;
+    min-width: 0;
+    padding: 13px 14px;
+    color: var(--text);
+    background: color-mix(in srgb, var(--surface-raised) 74%, transparent);
+    border: 1px solid color-mix(in srgb, var(--border-soft) 78%, transparent);
+    border-radius: 12px;
+    text-decoration: none;
+    transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+}
+
+.home-workflow-link:hover,
+.home-workflow-link:focus-visible {
+    color: var(--text);
+    background: color-mix(in srgb, var(--teal) 10%, var(--surface-raised));
+    border-color: color-mix(in srgb, var(--teal) 54%, var(--gold) 18%);
+    transform: translateY(-1px);
+}
+
+.home-workflow-link:focus-visible,
+.home-workspace-link:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--teal) 42%, transparent);
+    outline-offset: 3px;
+}
+
+.home-workflow-link span {
+    font-weight: 850;
+    line-height: 1.3;
+}
+
+.home-workflow-link small {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.home-workflow-group--workspace {
+    background:
+        radial-gradient(circle at top right, color-mix(in srgb, var(--gold) 13%, transparent), transparent 42%),
+        linear-gradient(135deg, color-mix(in srgb, var(--panel-background) 94%, transparent), color-mix(in srgb, var(--teal) 10%, var(--surface-soft)));
+}
+
+.home-workspace-description {
+    max-width: 48ch;
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.65;
+}
+
+.home-workspace-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 2px 0 4px;
+    padding: 0;
+    list-style: none;
+}
+
+.home-workspace-badges li {
+    padding: 5px 9px;
+    color: var(--teal);
+    background: color-mix(in srgb, var(--teal) 9%, transparent);
+    border: 1px solid color-mix(in srgb, var(--teal) 30%, transparent);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.home-workspace-link {
+    justify-self: start;
+    margin-top: auto;
+}
+
+@media (max-width: 700px) {
+    .home-step-track {
+        grid-template-columns: 1fr;
+    }
+
+    .home-step-track .start-card {
+        min-height: 0;
+    }
 }
 
 .home-step-card::after {
@@ -3809,8 +3904,8 @@ html:not([data-theme="light"]) .home-hero {
     transition: transform 0.42s ease, color 0.28s ease;
 }
 
-.home-step-card:hover > strong,
-.home-step-card:focus-visible > strong {
+.home-step-card:not(.home-workflow-group):hover > strong,
+.home-step-card:not(.home-workflow-group):focus-visible > strong {
     color: color-mix(in srgb, var(--gold) 82%, var(--teal));
     justify-self: center;
     width: 100%;
@@ -3835,8 +3930,8 @@ html:not([data-theme="light"]) .home-hero {
         transform 0.32s ease;
 }
 
-.home-step-card:hover > span:last-child,
-.home-step-card:focus-visible > span:last-child {
+.home-step-card:not(.home-workflow-group):hover > span:last-child,
+.home-step-card:not(.home-workflow-group):focus-visible > span:last-child {
     justify-self: center;
     width: min(100%, 32ch);
     max-height: 5.5rem;
@@ -3845,8 +3940,8 @@ html:not([data-theme="light"]) .home-hero {
     transform: translateY(0);
 }
 
-.home-step-card:hover .start-kicker,
-.home-step-card:focus-visible .start-kicker {
+.home-step-card:not(.home-workflow-group):hover .start-kicker,
+.home-step-card:not(.home-workflow-group):focus-visible .start-kicker {
     justify-self: center;
 }
 
@@ -4371,7 +4466,7 @@ html[data-theme="light"] .home-step-track .home-step-card {
 }
 
 html[data-theme="light"] .home-step-track .home-step-card:hover,
-html[data-theme="light"] .home-step-track .home-step-card:focus-visible {
+html[data-theme="light"] .home-step-track .home-step-card:focus-within {
     background:
         linear-gradient(135deg, rgba(255, 253, 249, 0.98), rgba(241, 232, 219, 0.9));
 }
@@ -4555,24 +4650,28 @@ html[data-language="zh-TW"] .home-release-card .release-number {
 }
 
 .home-about {
+    padding: 48px 0;
     background: color-mix(in srgb, var(--panel-background) 46%, transparent);
     border-top: 1px solid var(--border-soft);
 }
 
 .home-about-layout {
     display: grid;
-    grid-template-columns: minmax(240px, 340px) minmax(0, 1fr);
-    align-items: center;
-    gap: 64px;
+    grid-template-columns: minmax(230px, 32%) minmax(0, 1fr);
+    align-items: start;
+    gap: clamp(32px, 4vw, 56px);
 }
 
 .about-portrait {
+    width: 100%;
+    max-width: 340px;
     margin: 0;
 }
 
 .about-portrait img {
     display: block;
     width: 100%;
+    height: auto;
     aspect-ratio: 4 / 5;
     object-fit: cover;
     object-position: center 25%;
@@ -4588,13 +4687,23 @@ html[data-language="zh-TW"] .home-release-card .release-number {
 }
 
 .about-copy {
-    max-width: 820px;
+    min-width: 0;
+    max-width: 760px;
+}
+
+.about-copy .home-eyebrow {
+    text-align: left;
 }
 
 .about-copy > p:not(.home-eyebrow) {
     color: var(--muted);
     line-height: 1.8;
     white-space: pre-line;
+}
+
+.home-about-summary {
+    max-width: 68ch;
+    margin: 16px 0 0;
 }
 
 /* Adapted from Uiverse.io by satyamchaudharydev: Forms/satyamchaudharydev_cold-lionfish-49.html */
@@ -4626,12 +4735,6 @@ html[data-language="zh-TW"] .home-release-card .release-number {
     font-size: 23px;
     font-weight: 900;
     line-height: 1.15;
-}
-
-.home-subscribe-content {
-    color: var(--muted);
-    font-size: 13px;
-    line-height: 1.45;
 }
 
 .home-subscribe-form {
@@ -4724,9 +4827,9 @@ html[data-language="zh-TW"] .home-release-card .release-number {
     display: grid;
     grid-template-columns: 1fr;
     align-items: start;
-    gap: 18px;
-    margin-top: 42px;
-    padding: 26px 28px;
+    gap: 16px;
+    margin-top: 24px;
+    padding: 20px 22px;
     background:
         linear-gradient(135deg, color-mix(in srgb, var(--teal) 8%, transparent), transparent 46%),
         color-mix(in srgb, var(--surface-raised) 72%, transparent);
@@ -4736,60 +4839,13 @@ html[data-language="zh-TW"] .home-release-card .release-number {
     box-shadow: 0 18px 38px color-mix(in srgb, var(--shadow-color) 58%, transparent);
 }
 
-.about-connect-copy {
-    display: grid;
-    gap: 9px;
-    align-content: start;
-    min-width: 0;
-}
-
-.about-connect-copy span {
-    color: var(--teal);
-    font-size: 12px;
-    font-weight: 850;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-}
-
-.about-connect-copy strong {
-    color: var(--text);
-    font-size: clamp(19px, 1.55vw, 24px);
-    line-height: 1.28;
-}
-
-.about-connect-copy p {
+.about-contact-prompt {
     max-width: 62ch;
     margin: 0;
-    color: var(--muted);
-    font-size: 13px;
-    line-height: 1.6;
-}
-
-.about-connect-actions {
-    display: grid;
-    grid-template-columns: 1fr;
-    align-items: start;
-    justify-content: start;
-    gap: 14px;
-    width: 100%;
-    min-width: 0;
-    padding-top: 20px;
-    border-top: 1px solid color-mix(in srgb, var(--border-soft) 72%, transparent);
-}
-
-.about-email-link {
-    width: fit-content;
-    max-width: 100%;
-    color: var(--gold-light);
-    font-size: clamp(14px, 1.05vw, 17px);
-    font-weight: 850;
-    line-height: 1.2;
-    white-space: nowrap;
-    text-underline-offset: 4px;
-}
-
-.about-email-link:hover {
-    color: var(--teal);
+    color: var(--text);
+    font-size: clamp(15px, 1.15vw, 17px);
+    font-weight: 750;
+    line-height: 1.55;
 }
 
 .about-links {
@@ -4797,14 +4853,14 @@ html[data-language="zh-TW"] .home-release-card .release-number {
     flex-wrap: wrap;
     align-items: center;
     justify-content: flex-start;
-    gap: 12px;
+    gap: 10px;
     margin-top: 0;
 }
 
 .about-connect .home-youtube-button {
-    padding: 0.64em 1em;
+    padding: 0.58em 0.9em;
     border-radius: 22px;
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .about-connect .home-youtube-icon {
@@ -4819,7 +4875,8 @@ html[data-language="zh-TW"] .home-release-card .release-number {
 }
 
 .about-connect .home-contact-button {
-    min-width: 132px;
+    box-sizing: border-box;
+    min-width: 120px;
     height: 38px;
     padding: 7px 13px;
     font-size: 13px;
@@ -4832,7 +4889,7 @@ html[data-language="zh-TW"] .home-release-card .release-number {
 .about-connect .home-subscribe-card {
     width: 100%;
     margin: 0;
-    padding: 20px 0 0;
+    padding: 16px 0 0;
     text-align: left;
     background: transparent;
     border: 0;
@@ -4842,17 +4899,14 @@ html[data-language="zh-TW"] .home-release-card .release-number {
 }
 
 .about-connect .home-subscribe-title {
-    font-size: clamp(18px, 1.35vw, 22px);
-}
-
-.about-connect .home-subscribe-content {
-    max-width: 48ch;
+    font-size: clamp(16px, 1.15vw, 18px);
+    line-height: 1.4;
 }
 
 .about-connect .home-subscribe-form {
     display: grid;
     grid-template-columns: minmax(180px, 1fr) auto;
-    margin-top: 4px;
+    margin-top: 2px;
 }
 
 .about-connect .home-subscribe-button {
@@ -4865,7 +4919,31 @@ html[data-language="zh-TW"] .home-release-card .release-number {
 }
 
 .home-feedback-button {
-    min-width: 132px;
+    min-width: auto;
+}
+
+.about-connect .home-feedback-button {
+    width: auto;
+    min-width: auto;
+    height: auto;
+    padding: 7px 4px;
+    color: var(--teal);
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    text-shadow: none;
+}
+
+.about-connect .home-feedback-button::before,
+.about-connect .home-feedback-button::after {
+    display: none;
+}
+
+.about-connect .home-feedback-button:hover,
+.about-connect .home-feedback-button:focus-visible {
+    color: var(--gold-light);
+    box-shadow: none;
+    transform: translateY(-1px);
 }
 
 .home-feedback-button .home-contact-icon {
@@ -5391,15 +5469,9 @@ html[data-language="zh-TW"] .home-release-card .release-number {
     .about-connect {
         grid-template-columns: 1fr;
         align-items: stretch;
-        gap: 18px;
-        margin-top: 30px;
+        gap: 14px;
+        margin-top: 20px;
         padding: 18px;
-    }
-
-    .about-connect-actions {
-        grid-template-columns: 1fr;
-        width: 100%;
-        justify-content: flex-start;
     }
 
     .about-links {
@@ -5471,6 +5543,12 @@ html[data-language="zh-TW"] .home-release-card .release-number {
         height: 38px;
         padding: 8px 12px;
         font-size: 12px;
+    }
+
+    .about-connect .home-feedback-button {
+        min-width: auto;
+        height: auto;
+        padding: 7px 4px;
     }
 }
 
@@ -6137,19 +6215,12 @@ html[data-language="zh-TW"] .home-release-card .release-number {
     }
 
     .home-release-grid,
-    .home-feature-inner,
-    .home-about-layout {
+    .home-feature-inner {
         grid-template-columns: 1fr;
     }
 
     .home-step-track .start-card {
-        flex-basis: min(78vw, 300px);
         min-height: 230px;
-    }
-
-    .home-step-card:hover,
-    .home-step-card:focus-visible {
-        flex-basis: min(88vw, 340px);
     }
 
     .home-feature-inner {
@@ -6161,7 +6232,17 @@ html[data-language="zh-TW"] .home-release-card .release-number {
     }
 
     .about-portrait {
-        max-width: 320px;
+        max-width: 300px;
+    }
+}
+
+@media (max-width: 819px) {
+    .home-about-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .about-portrait {
+        justify-self: start;
     }
 }
 
@@ -6173,6 +6254,10 @@ html[data-language="zh-TW"] .home-release-card .release-number {
     .home-section-inner,
     .home-feature-inner {
         width: min(100% - 30px, 1120px);
+    }
+
+    .about-portrait {
+        max-width: 260px;
     }
 
     .home-hero {

@@ -18,7 +18,14 @@
     "fretboardTrainer": "Fretboard Trainer",
     "about": "About",
     "tools": "Tools",
-    "appearance": "Appearance"
+    "appearance": "Appearance",
+    "primaryLabel": "Primary navigation",
+    "openMenu": "Open navigation menu",
+    "closeMenu": "Close navigation menu"
+  },
+  "theme": {
+    "switchToLight": "Switch to light theme",
+    "switchToDark": "Switch to dark theme"
   },
   "common": {
     "backToTop": "Back to top",
@@ -58,8 +65,8 @@
       "title": "Tracks Hub",
       "tagline": "Capture the Feeling. Compose the Meaning.",
       "description": "Original practice tracks and focused tools for musicians who want to listen, understand harmony, map the fretboard, and create with purpose.",
-      "exploreTracks": "Explore Tracks",
-      "analyzeSong": "Analyze a Song",
+      "exploreTracks": "Browse Backing Tracks",
+      "openSongWorkspace": "Open Song Workspace",
       "stats": {
         "tracks": "Original tracks",
         "keys": "Major and minor keys",
@@ -74,10 +81,77 @@
       "scale": "Scale Explorer",
       "keyFinder": "Key Finder",
       "progressions": "Chord Progressions",
-      "trainer": "Fretboard Trainer"
+      "trainer": "Fretboard Trainer",
+      "songWorkspace": "Song Workspace"
+    },
+    "workflow": {
+      "label": "Choose a music workflow",
+      "practice": "Practice",
+      "understand": "Understand",
+      "create": "Create",
+      "playSongs": "Play your songs",
+      "songWorkspace": {
+        "description": "Build chord-and-lyric sheets, transpose songs, and find a comfortable capo position. Your songs stay in this browser.",
+        "cta": "Open Song Workspace",
+        "badgesLabel": "Song Workspace details",
+        "badges": [
+          "Free",
+          "No sign-in",
+          "Stored locally"
+        ]
+      }
     },
     "about": {
-      "eyebrow": "About Jam Tracks Hub"
+      "eyebrow": "ABOUT JAM TRACKS HUB",
+      "imageAlt": "Jasper playing acoustic guitar on stage",
+      "imageCaption": "Jasper, guitarist and music creator"
+    },
+    "accessibility": {
+      "siteOverview": "Site overview",
+      "featuredPlayerTitle": "W19 Roaming Alone Backing Track in C",
+      "watchYouTube": "Watch Jam Tracks Hub on YouTube",
+      "emailJamTracksHub": "Email Jam Tracks Hub",
+      "openFeedback": "Open feedback form"
+    },
+    "releases": {
+      "metadataLabel": "Track details",
+      "keyLabel": "Key",
+      "styleLabel": "Style",
+      "moodLabel": "Mood",
+      "bpmLabel": "BPM",
+      "modes": {
+        "major": "Major",
+        "minor": "Minor"
+      },
+      "styles": {
+        "Guitar": "Guitar",
+        "Rock": "Rock",
+        "Pop": "Pop"
+      },
+      "moods": {
+        "Alone": "Alone",
+        "Missing": "Missing",
+        "Amazing": "Amazing"
+      },
+      "descriptions": {
+        "W19": "A C major guitar track for spacious chords and reflective melodic movement.",
+        "W18": "A C minor rock track for expressive phrasing and melodic tension.",
+        "W17": "A bright E major pop track for melodic hooks and chorus lift."
+      }
+    },
+    "subscribe": {
+      "emailLabel": "Email address",
+      "emailPlaceholder": "Email address",
+      "validation": {
+        "required": "Enter your email address.",
+        "invalid": "Enter a valid email address."
+      },
+      "status": {
+        "saving": "Saving your email...",
+        "already": "You're already on the list.",
+        "success": "You're on the list. Thank you!",
+        "error": "Subscription is not available yet. Please try again later."
+      }
     },
     "extra": {
       "01": "Practice",
@@ -97,19 +171,14 @@
       "15": "Recent work",
       "16": "Latest Releases",
       "17": "View all tracks",
-      "18": "Designed by a guitarist for musicians who learn by listening.",
-      "19": "Jam Tracks Hub is designed and built by Jasper, a guitarist and music creator who turns weekly backing tracks into a focused workspace for practice, harmony, and songwriting ideas.",
-      "20": "Every page is shaped around real musician workflows: finding a key, mapping a scale, comparing chord colors, locating notes on the fretboard, and bringing the idea back to the instrument.",
-      "21": "The design goal is calm, practical, and musical: less menu hunting, more immediate sound, clear theory, and visual cues that support your ear without getting in the way.",
-      "22": "Connect",
-      "23": "Questions, collaborations, or track requests?",
-      "24": "Send a note anytime. I usually use these messages to plan new backing tracks, workflow improvements, and guitar-focused tools.",
+      "18": "Built by a guitarist, for guitarists.",
+      "19": "Jam Tracks Hub is designed and built by Jasper, bringing original backing tracks, music-theory tools, and a local-first song workspace into one focused practice flow. Start with a track, understand the key, and organize your own songs—no sign-in required.",
+      "23": "Questions, collaborations, or track suggestions? Feel free to get in touch.",
       "25": "Watch on YouTube",
-      "26": "Subscribe",
-      "27": "Get a note when a new backing track is released.",
-      "28": "Join the List",
+      "27": "Get notified when a new weekly backing track is released.",
+      "28": "Subscribe",
       "29": "Give Feedback",
-      "30": "Send Message",
+      "30": "Contact",
       "31": "Sent"
     }
   },
@@ -693,7 +762,9 @@
   },
   "footer": {
     "rights": "© 2026 Jam Tracks Hub. All rights reserved.",
-    "legal": "Legal & Usage Policy"
+    "legal": "Legal & Usage Policy",
+    "youtubeLabel": "Visit Jam Tracks Hub YouTube channel",
+    "instagramLabel": "Visit Jasper's Instagram profile"
   },
   "term": {
     "backingTracks": "Backing Tracks",

@@ -37,6 +37,7 @@ test("mobile footer renders copyright, legal, and social content as three balanc
 
 test("homepage YouTube embed preserves client identity without widening CSP", () => {
     const home = read("src/views/HomeView.vue");
+    const tracks = JSON.parse(read("data/tracks.json"));
     const headers = read("_headers");
     const workspace = read("song-workspace.html");
     const iframe = home.slice(
@@ -47,7 +48,8 @@ test("homepage YouTube embed preserves client identity without widening CSP", ()
     assert.match(iframe, /src="https:\/\/www\.youtube\.com\/embed\/[A-Za-z0-9_-]{11}"/);
     assert.match(iframe, /referrerpolicy="strict-origin-when-cross-origin"/);
     assert.match(iframe, /allowfullscreen/);
-    assert.match(home, /youtube:\s*"https:\/\/youtu\.be\/nNlJNDU-Xgw"/);
+    assert.match(home, /import trackCatalog from "\.\.\/\.\.\/data\/tracks\.json"/);
+    assert.equal(tracks.find(track => track.id === "W19").youtubeUrl, "https://youtu.be/nNlJNDU-Xgw");
     assert.match(headers, /Referrer-Policy: strict-origin-when-cross-origin/);
     assert.match(headers, /frame-src https:\/\/www\.youtube\.com https:\/\/api\.jamtrackshub\.com;/);
     assert.doesNotMatch(headers, /frame-src[^;]*\*/);
@@ -59,4 +61,68 @@ test("featured YouTube player remains a responsive 16:9 iframe", () => {
     const css = read("styles/pages.css");
     assert.match(css, /\.home-video-player iframe\s*\{[^}]*width:\s*100%[^}]*aspect-ratio:\s*16 \/ 9[^}]*border:\s*0/s);
     assert.match(css, /@media \(max-width: 430px\)[\s\S]*?\.home-video-player iframe\s*\{[^}]*min-height:\s*0/s);
+});
+
+test("homepage workflow uses four visible responsive groups without horizontal travel", () => {
+    const css = read("styles/pages.css");
+    const home = read("src/views/HomeView.vue");
+    const trackStart = css.indexOf(".home-step-track {");
+    const trackRule = css.slice(trackStart, css.indexOf("}", trackStart) + 1);
+
+    assert.match(trackRule, /display:\s*grid/);
+    assert.match(trackRule, /grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
+    assert.match(trackRule, /width:\s*100%/);
+    assert.match(trackRule, /min-width:\s*0/);
+    assert.doesNotMatch(trackRule, /display:\s*flex|width:\s*max-content|home-step-end-buffer/);
+    assert.match(css, /\.home-step-rail\s*\{[^}]*overflow:\s*visible/s);
+    assert.match(css, /@media \(max-width: 700px\)\s*\{[\s\S]*?\.home-step-track\s*\{[^}]*grid-template-columns:\s*1fr/s);
+    assert.match(css, /\.home-workflow-link:focus-visible[\s\S]*?\{[^}]*outline:/s);
+    assert.equal((home.match(/class="start-card home-step-card home-workflow-group"/g) || []).length, 1);
+    assert.match(home, /v-for="group in workflowGroups"/);
+    assert.match(home, /\{ href: "\/song-workspace", title: "songWorkspace", workspace: true \}/);
+    assert.match(home, /<nav class="home-workflow-links" :aria-label="home\.workflow\[group\.id\]">/);
+    assert.doesNotMatch(home, /home-workflow-group--workspace|home-workspace-badges|home-workspace-link/);
+});
+
+test("localized Homepage copy keeps existing wrapping safeguards", () => {
+    const css = read("styles/pages.css");
+    const components = read("styles/components.css");
+    const home = read("src/views/HomeView.vue");
+    const footer = read("src/components/site/SiteFooter.vue");
+    const en = JSON.parse(read("locales/en/common.json"));
+    const zh = JSON.parse(read("locales/zh-TW/common.json"));
+
+    assert.match(components, /\.hero-actions\s*\{[^}]*flex-wrap:\s*wrap/s);
+    assert.match(css, /\.track-meta\s*\{[^}]*display:\s*flex[^}]*flex-wrap:\s*wrap/s);
+    assert.match(css, /\.release-actions\s*\{[^}]*flex-wrap:\s*wrap/s);
+    assert.match(components, /@media \(max-width: 720px\)[\s\S]*?\.footer > p\s*\{[^}]*flex-direction:\s*column/s);
+    assert.match(home, /:placeholder="home\.subscribe\.emailPlaceholder"/);
+    assert.match(home, /home\.releases\.styleLabel/);
+    assert.match(home, /home\.releases\.moodLabel/);
+    assert.match(footer, /footer\.youtubeLabel/);
+    assert.match(footer, /footer\.instagramLabel/);
+    assert.equal(en.home.subscribe.emailPlaceholder, "Email address");
+    assert.equal(zh.home.subscribe.emailPlaceholder, "輸入電子郵件");
+    assert.ok(zh.home.releases.descriptions.W19.length > 40);
+});
+
+test("compact About stays two-column on desktop and stacks without image distortion on mobile", () => {
+    const css = read("styles/pages.css");
+    const imageStart = css.indexOf(".about-portrait img {");
+    const imageRule = css.slice(imageStart, css.indexOf("}", imageStart) + 1);
+
+    assert.match(css, /\.home-about\s*\{[^}]*padding:\s*48px 0/s);
+    assert.match(css, /\.home-about-layout\s*\{[^}]*grid-template-columns:\s*minmax\(230px, 32%\) minmax\(0, 1fr\)[^}]*gap:\s*clamp\(/s);
+    assert.match(imageRule, /height:\s*auto/);
+    assert.match(imageRule, /aspect-ratio:\s*4 \/ 5/);
+    assert.match(imageRule, /object-fit:\s*cover/);
+    assert.match(imageRule, /object-position:\s*center 25%/);
+    assert.doesNotMatch(imageRule, /height:\s*\d+px/);
+    assert.match(css, /\.about-links\s*\{[^}]*display:\s*flex[^}]*flex-wrap:\s*wrap/s);
+    assert.match(css, /\.about-connect \.home-subscribe-form\s*\{[^}]*grid-template-columns:\s*minmax\(180px, 1fr\) auto/s);
+    assert.match(css, /@media \(max-width: 819px\)\s*\{[\s\S]*?\.home-about-layout\s*\{[^}]*grid-template-columns:\s*1fr/s);
+    assert.match(css, /@media \(max-width: 430px\)[\s\S]*?\.about-connect \.home-subscribe-form\s*\{[^}]*grid-template-columns:\s*1fr/s);
+    assert.match(css, /@media \(max-width: 430px\)[\s\S]*?\.about-portrait\s*\{[^}]*max-width:\s*260px/s);
+    assert.match(css, /\.about-connect \.home-feedback-button\s*\{[^}]*min-width:\s*auto[^}]*box-shadow:\s*none/s);
+    assert.doesNotMatch(css, /\.home-about\s*\{[^}]*overflow:\s*hidden/s);
 });

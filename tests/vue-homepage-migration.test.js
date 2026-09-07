@@ -47,7 +47,7 @@ test("preserves Homepage content, links, media, and accessibility contracts in V
   assert.match(view, /<main class="home-page" id="main-content">/);
   assert.match(view, /<section class="home-hero" id="home">/);
   assert.match(view, /<h1>\{\{ home\.hero\.title \}\}<\/h1>/);
-  assert.match(view, /aria-label="Site overview"/);
+  assert.match(view, /:aria-label="home\.accessibility\.siteOverview"/);
   assert.match(view, /aria-labelledby="homeToolsTitle"/);
   assert.match(view, /aria-labelledby="featuredAudioTitle"/);
   assert.match(view, /aria-labelledby="latestReleasesTitle"/);
@@ -61,12 +61,13 @@ test("preserves Homepage content, links, media, and accessibility contracts in V
     "key-finder.html",
     "chord-progressions.html",
     "fretboard-trainer.html",
+    "/song-workspace",
     "feedback.html",
     "mailto:Jamtrackshubwork@gmail.com",
     "https://www.youtube.com/@Weekly_Backing_Track"
   ].forEach(href => assert.ok(view.includes(href), href));
   assert.match(view, /src="https:\/\/www\.youtube\.com\/embed\/nNlJNDU-Xgw"/);
-  assert.match(view, /title="W19 Roaming Alone Backing Track in C"/);
+  assert.match(view, /:title="home\.accessibility\.featuredPlayerTitle"/);
   assert.match(view, /loading="lazy"/);
   assert.match(view, /referrerpolicy="strict-origin-when-cross-origin"/);
   assert.match(view, /allowfullscreen/);
@@ -87,6 +88,163 @@ test("keeps Homepage locale rendering in Vue and track labels deterministic", ()
   assert.match(trackTitle, /class="track-title-name"/);
   assert.match(trackTitle, /class="track-title-separator"/);
   assert.match(trackTitle, /class="track-title-key"/);
+});
+
+test("derives localized release details from canonical track identities", () => {
+  const view = read("src/views/HomeView.vue");
+  const catalog = JSON.parse(read("data/tracks.json"));
+  const en = JSON.parse(read("locales/en/common.json"));
+  const zh = JSON.parse(read("locales/zh-TW/common.json"));
+  const latest = ["W19", "W18", "W17"].map(id => catalog.find(track => track.id === id));
+
+  assert.ok(latest.every(Boolean));
+  assert.deepEqual(latest.map(track => track.id), ["W19", "W18", "W17"]);
+  assert.deepEqual(latest.map(track => track.key), ["C major", "C minor", "E major"]);
+  assert.deepEqual(latest.map(track => track.style), ["Guitar", "Rock", "Pop"]);
+  assert.deepEqual(latest.map(track => track.mood), ["Alone", "Missing", "Amazing"]);
+  assert.ok(latest.every(track => track.bpm === ""));
+
+  assert.match(view, /import trackCatalog from "\.\.\/\.\.\/data\/tracks\.json"/);
+  assert.match(view, /const releaseIds = \["W19", "W18", "W17"\]/);
+  assert.match(view, /trackCatalog\.find\(track => track\.id === id\)/);
+  assert.doesNotMatch(view, /const releases = \[\s*\{/);
+  assert.match(view, /localizedTrackDescription\(track\)/);
+  assert.match(view, /localizedTrackKey\(track\.key\)/);
+  assert.match(view, /localizedTrackMetadata\("styles", track\.style\)/);
+  assert.match(view, /localizedTrackMetadata\("moods", track\.mood\)/);
+  assert.match(view, /v-if="track\.bpm"/);
+  assert.doesNotMatch(view, /0 BPM/);
+
+  assert.deepEqual(en.home.releases.modes, { major: "Major", minor: "Minor" });
+  assert.deepEqual(zh.home.releases.modes, { major: "大調", minor: "小調" });
+  assert.deepEqual(zh.home.releases.styles, { Guitar: "吉他", Rock: "搖滾", Pop: "流行" });
+  assert.deepEqual(zh.home.releases.moods, { Alone: "孤寂", Missing: "思念", Amazing: "驚艷" });
+  assert.equal(zh.home.releases.descriptions.W19, "一首以開闊和弦與旋律推進為特色的 C 大調吉他即興伴奏，適合練習帶有漫遊感與省思氛圍的旋律。");
+  assert.equal(zh.home.releases.descriptions.W18, "一首帶有情緒張力的 C 小調搖滾伴奏，適合練習推弦、長音與具有力度變化的旋律。");
+  assert.equal(zh.home.releases.descriptions.W17, "一首明亮的 E 大調流行伴奏，適合練習旋律 Hook、段落推進與副歌式的情緒提升。");
+  assert.match(en.home.releases.descriptions.W19, /^A C major guitar track/);
+  assert.match(en.home.releases.descriptions.W18, /^A C minor rock track/);
+  assert.match(en.home.releases.descriptions.W17, /^A bright E major pop track/);
+});
+
+test("localizes Homepage form, image, and accessibility text without changing behavior", () => {
+  const view = read("src/views/HomeView.vue");
+  const en = JSON.parse(read("locales/en/common.json"));
+  const zh = JSON.parse(read("locales/zh-TW/common.json"));
+
+  assert.equal(en.home.subscribe.emailPlaceholder, "Email address");
+  assert.equal(zh.home.subscribe.emailPlaceholder, "輸入電子郵件");
+  assert.equal(en.home.about.imageCaption, "Jasper, guitarist and music creator");
+  assert.equal(zh.home.about.imageCaption, "Jasper｜吉他手與音樂創作者");
+  assert.equal(zh.home.about.imageAlt, "Jasper 在舞台上彈奏木吉他");
+  assert.deepEqual(Object.keys(en.home.subscribe.status), ["saving", "already", "success", "error"]);
+  assert.deepEqual(Object.keys(zh.home.subscribe.status), ["saving", "already", "success", "error"]);
+
+  assert.match(view, /:placeholder="home\.subscribe\.emailPlaceholder"/);
+  assert.match(view, /:aria-label="home\.subscribe\.emailLabel"/);
+  assert.match(view, /aria-describedby="homeSubscribeStatus"/);
+  assert.match(view, /@invalid="handleInvalidEmail"/);
+  assert.match(view, /subscribeStatusCode\.value = "saving"/);
+  assert.match(view, /subscribeStatusCode\.value = result\.status === "already_subscribed" \? "already" : "success"/);
+  assert.match(view, /subscribeStatusCode\.value = "error"/);
+  assert.match(view, /:alt="home\.about\.imageAlt"/);
+  assert.match(view, /<figcaption>\{\{ home\.about\.imageCaption \}\}<\/figcaption>/);
+  assert.match(view, /:aria-label="home\.accessibility\.watchYouTube"/);
+  assert.match(view, /:aria-label="home\.accessibility\.emailJamTracksHub"/);
+  assert.match(view, /:aria-label="home\.accessibility\.openFeedback"/);
+  assert.doesNotMatch(view, /placeholder="Your Email"|Jasper playing acoustic guitar on stage|>Jasper, guitarist and music creator</);
+});
+
+test("keeps the compact About, contact, and Subscribe experience localized and connected", () => {
+  const view = read("src/views/HomeView.vue");
+  const en = JSON.parse(read("locales/en/common.json"));
+  const zh = JSON.parse(read("locales/zh-TW/common.json"));
+  const aboutLinks = view.slice(view.indexOf('<div class="about-links">'), view.indexOf('<form', view.indexOf('<div class="about-links">')));
+
+  assert.equal(en.home.about.eyebrow, "ABOUT JAM TRACKS HUB");
+  assert.equal(zh.home.about.eyebrow, "關於 JAM TRACKS HUB");
+  assert.equal(en.home.extra["18"], "Built by a guitarist, for guitarists.");
+  assert.equal(zh.home.extra["18"], "由吉他手為吉他手打造。");
+  assert.equal(en.home.extra["19"], "Jam Tracks Hub is designed and built by Jasper, bringing original backing tracks, music-theory tools, and a local-first song workspace into one focused practice flow. Start with a track, understand the key, and organize your own songs—no sign-in required.");
+  assert.equal(zh.home.extra["19"], "Jam Tracks Hub 由 Jasper 規劃與開發，將原創即興伴奏、樂理工具與本機歌曲工作區整合成更直接的練習流程。從選曲、理解調性到整理自己的歌曲，不需登入即可開始。");
+  assert.equal(en.home.extra["23"], "Questions, collaborations, or track suggestions? Feel free to get in touch.");
+  assert.equal(zh.home.extra["23"], "有問題、合作提案或曲目建議？歡迎與我聯絡。");
+  assert.equal(en.home.extra["27"], "Get notified when a new weekly backing track is released.");
+  assert.equal(zh.home.extra["27"], "每週新伴奏上線時通知我");
+  assert.equal(en.home.extra["28"], "Subscribe");
+  assert.equal(zh.home.extra["28"], "訂閱");
+  assert.equal(en.home.extra["30"], "Contact");
+  assert.equal(zh.home.extra["30"], "聯絡我");
+  ["20", "21", "22", "24", "26"].forEach(key => {
+    assert.equal(key in en.home.extra, false);
+    assert.equal(key in zh.home.extra, false);
+  });
+
+  assert.match(view, /<p class="home-about-summary">\{\{ home\.extra\["19"\] \}\}<\/p>/);
+  assert.doesNotMatch(view, /home\.extra\["(?:20|21|22|24|26)"\]/);
+  assert.equal((aboutLinks.match(/<a\b/g) || []).length, 3);
+  assert.match(aboutLinks, /href="https:\/\/www\.youtube\.com\/@Weekly_Backing_Track"[\s\S]*target="_blank"[\s\S]*rel="noopener noreferrer"/);
+  assert.match(aboutLinks, /href="mailto:Jamtrackshubwork@gmail\.com"/);
+  assert.match(aboutLinks, /href="feedback\.html"/);
+  assert.match(view, /<label class="home-subscribe-title" for="homeSubscribeEmail">\{\{ home\.extra\["27"\] \}\}<\/label>/);
+  assert.match(view, /@submit\.prevent="handleSubscribe"/);
+  assert.match(view, /data-subscribe-endpoint="\/api\/subscribe"/);
+  assert.match(view, /data-subscribe-source="homepage-about"/);
+  assert.match(view, /<img :src="'assets\/images\/cover\.jpeg'" :alt="home\.about\.imageAlt" width="600" height="900" \/>/);
+});
+
+test("surfaces Song Workspace through the hero and four purpose-led workflow groups", () => {
+  const view = read("src/views/HomeView.vue");
+  const config = read("vite.config.mjs");
+  const en = JSON.parse(read("locales/en/common.json"));
+  const zh = JSON.parse(read("locales/zh-TW/common.json"));
+
+  assert.match(config, /"\/song-workspace", "\/song-workspace\.html"/);
+  assert.match(view, /<a href="tracks\.html" class="primary-button">\{\{ home\.hero\.exploreTracks \}\}<\/a>/);
+  assert.match(view, /<a href="\/song-workspace" class="secondary-button">\{\{ home\.hero\.openSongWorkspace \}\}<\/a>/);
+  assert.ok(view.indexOf('href="tracks.html" class="primary-button"') < view.indexOf('href="/song-workspace" class="secondary-button"'));
+
+  assert.equal((view.match(/id: "(?:practice|understand|create|playSongs)"/g) || []).length, 4);
+  ["practice", "understand", "create", "playSongs"].forEach(group => {
+    assert.ok(view.includes(`id: "${group}"`), group);
+  });
+  [
+    "tracks.html",
+    "fretboard-trainer.html",
+    "key-finder.html",
+    "scale.html",
+    "chord-dictionary.html",
+    "chord-progressions.html",
+    "/song-workspace"
+  ].forEach(href => assert.ok(view.includes(`href: "${href}"`), href));
+  assert.match(view, /v-for="group in workflowGroups"/);
+  assert.match(view, /<strong>\{\{ home\.workflow\[group\.id\] \}\}<\/strong>/);
+  assert.match(view, /<nav class="home-workflow-links" :aria-label="home\.workflow\[group\.id\]">/);
+  assert.match(view, /<a v-for="tool in group\.tools" :key="tool\.href" :href="tool\.href" class="home-workflow-link">/);
+  assert.match(view, /\{\{ tool\.workspace \? home\.workflow\.songWorkspace\.description : home\.extra\[tool\.copy\] \}\}/);
+  assert.match(view, /home\.workflow\.songWorkspace\.description/);
+  assert.doesNotMatch(view, /home-workflow-group--workspace|home-workspace-description|home-workspace-badges|home-workspace-link/);
+  assert.doesNotMatch(view, /home\.workflow\.songWorkspace\.(?:badges|badgesLabel|cta)/);
+  assert.doesNotMatch(view, /useSongWorkspace|indexedDB|localStorage|getItem\(|setItem\(/);
+
+  assert.equal(en.home.hero.exploreTracks, "Browse Backing Tracks");
+  assert.equal(en.home.hero.openSongWorkspace, "Open Song Workspace");
+  assert.equal(zh.home.hero.exploreTracks, "瀏覽即興伴奏");
+  assert.equal(zh.home.hero.openSongWorkspace, "開啟歌曲工作區");
+  assert.deepEqual([
+    en.home.workflow.practice,
+    en.home.workflow.understand,
+    en.home.workflow.create,
+    en.home.workflow.playSongs
+  ], ["Practice", "Understand", "Create", "Play your songs"]);
+  assert.deepEqual([
+    zh.home.workflow.practice,
+    zh.home.workflow.understand,
+    zh.home.workflow.create,
+    zh.home.workflow.playSongs
+  ], ["練習", "理解", "創作", "彈奏自己的歌曲"]);
+  assert.equal(en.home.workflow.songWorkspace.description, "Build chord-and-lyric sheets, transpose songs, and find a comfortable capo position. Your songs stay in this browser.");
+  assert.equal(zh.home.workflow.songWorkspace.description, "建立和弦歌詞譜、移調並尋找適合的 Capo 位置。歌曲只會保存在這個瀏覽器中。");
 });
 
 test("preserves Subscribe validation and POST payload with controlled fetch only", async () => {
@@ -139,16 +297,22 @@ test("preserves Subscribe validation and POST payload with controlled fetch only
 test("preserves Subscribe UI states without production mutation", () => {
   const view = read("src/views/HomeView.vue");
   const source = read("tests/vue-homepage-migration.test.js");
+  const en = JSON.parse(read("locales/en/common.json"));
+  const zh = JSON.parse(read("locales/zh-TW/common.json"));
 
   assert.match(view, /id="homeSubscribeForm"/);
   assert.match(view, /data-subscribe-endpoint="\/api\/subscribe"/);
   assert.match(view, /data-subscribe-source="homepage-about"/);
-  assert.match(view, /name="email"[\s\S]*type="email"[\s\S]*autocomplete="email"[\s\S]*required/);
+  assert.match(view, /name="email"[\s\S]*type="email"[\s\S]*autocomplete="email"[\s\S]*pattern="\^\[\^\\s@\]\+@\[\^\\s@\]\+\\\.\[\^\\s@\]\+\$"[\s\S]*required/);
   assert.match(view, /name="website"[\s\S]*tabindex="-1"[\s\S]*aria-hidden="true"/);
-  assert.match(view, /Saving your email\.\.\./);
-  assert.match(view, /You're already on the list\./);
-  assert.match(view, /You're on the list\. Thank you!/);
-  assert.match(view, /Subscription is not available yet\. Please try again later\./);
+  assert.equal(en.home.subscribe.status.saving, "Saving your email...");
+  assert.equal(en.home.subscribe.status.already, "You're already on the list.");
+  assert.equal(en.home.subscribe.status.success, "You're on the list. Thank you!");
+  assert.equal(en.home.subscribe.status.error, "Subscription is not available yet. Please try again later.");
+  assert.equal(zh.home.subscribe.status.saving, "正在儲存你的電子郵件……");
+  assert.equal(zh.home.subscribe.status.already, "你已經在通知名單中。");
+  assert.equal(zh.home.subscribe.status.success, "已加入通知名單，謝謝！");
+  assert.equal(zh.home.subscribe.status.error, "訂閱功能目前無法使用，請稍後再試。");
   assert.match(view, /id="homeSubscribeStatus" aria-live="polite"/);
   assert.match(view, /:disabled="subscribing"/);
   assert.doesNotMatch(source, /https:\/\/jamtrackshub\.com\/api\/subscribe/);

@@ -1,7 +1,9 @@
 <script setup>
 import { onBeforeUnmount, onMounted, ref } from "vue";
+import { useSiteLocale } from "../../i18n/useSiteLocale.js";
 
 const visible = ref(false);
+const { translate } = useSiteLocale();
 let animationFrame = 0;
 
 function updateVisibility() {
@@ -55,7 +57,7 @@ onBeforeUnmount(function() {
   <button
     id="backToTopBtn"
     type="button"
-    aria-label="Back to top"
+    :aria-label="translate('common.backToTop', 'Back to top')"
     :style="{ display: visible ? 'grid' : 'none' }"
     @click="scrollBackToTop"
   >

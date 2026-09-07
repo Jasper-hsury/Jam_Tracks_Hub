@@ -18,7 +18,14 @@
     "fretboardTrainer": "指板練習",
     "about": "關於",
     "tools": "工具",
-    "appearance": "外觀"
+    "appearance": "外觀",
+    "primaryLabel": "主要導覽",
+    "openMenu": "開啟導覽選單",
+    "closeMenu": "關閉導覽選單"
+  },
+  "theme": {
+    "switchToLight": "切換至淺色主題",
+    "switchToDark": "切換至深色主題"
   },
   "common": {
     "backToTop": "返回頂端",
@@ -58,8 +65,8 @@
       "title": "Tracks Hub",
       "tagline": "捕捉感受，譜出心聲。",
       "description": "為想要深入聆聽、理解和聲、掌握指板，並有目的地創作的音樂人，提供原創即興伴奏與專注實用的工具。",
-      "exploreTracks": "探索曲目",
-      "analyzeSong": "分析歌曲",
+      "exploreTracks": "瀏覽即興伴奏",
+      "openSongWorkspace": "開啟歌曲工作區",
       "stats": {
         "tracks": "原創即興伴奏",
         "keys": "大調與小調",
@@ -74,10 +81,77 @@
       "scale": "音階",
       "keyFinder": "調性分析",
       "progressions": "和弦進行",
-      "trainer": "指板練習"
+      "trainer": "指板練習",
+      "songWorkspace": "歌曲工作區"
+    },
+    "workflow": {
+      "label": "選擇音樂使用流程",
+      "practice": "練習",
+      "understand": "理解",
+      "create": "創作",
+      "playSongs": "彈奏自己的歌曲",
+      "songWorkspace": {
+        "description": "建立和弦歌詞譜、移調並尋找適合的 Capo 位置。歌曲只會保存在這個瀏覽器中。",
+        "cta": "開啟歌曲工作區",
+        "badgesLabel": "歌曲工作區特色",
+        "badges": [
+          "免費",
+          "無需登入",
+          "儲存於本機"
+        ]
+      }
     },
     "about": {
-      "eyebrow": "關於 Jam Tracks Hub"
+      "eyebrow": "關於 JAM TRACKS HUB",
+      "imageAlt": "Jasper 在舞台上彈奏木吉他",
+      "imageCaption": "Jasper｜吉他手與音樂創作者"
+    },
+    "accessibility": {
+      "siteOverview": "網站概覽",
+      "featuredPlayerTitle": "W19《Roaming Alone》C 大調吉他即興伴奏",
+      "watchYouTube": "在 YouTube 觀看 Jam Tracks Hub",
+      "emailJamTracksHub": "傳送電子郵件給 Jam Tracks Hub",
+      "openFeedback": "開啟意見回饋表單"
+    },
+    "releases": {
+      "metadataLabel": "曲目資訊",
+      "keyLabel": "調性",
+      "styleLabel": "風格",
+      "moodLabel": "氛圍",
+      "bpmLabel": "BPM",
+      "modes": {
+        "major": "大調",
+        "minor": "小調"
+      },
+      "styles": {
+        "Guitar": "吉他",
+        "Rock": "搖滾",
+        "Pop": "流行"
+      },
+      "moods": {
+        "Alone": "孤寂",
+        "Missing": "思念",
+        "Amazing": "驚艷"
+      },
+      "descriptions": {
+        "W19": "一首以開闊和弦與旋律推進為特色的 C 大調吉他即興伴奏，適合練習帶有漫遊感與省思氛圍的旋律。",
+        "W18": "一首帶有情緒張力的 C 小調搖滾伴奏，適合練習推弦、長音與具有力度變化的旋律。",
+        "W17": "一首明亮的 E 大調流行伴奏，適合練習旋律 Hook、段落推進與副歌式的情緒提升。"
+      }
+    },
+    "subscribe": {
+      "emailLabel": "電子郵件地址",
+      "emailPlaceholder": "輸入電子郵件",
+      "validation": {
+        "required": "請輸入電子郵件地址。",
+        "invalid": "請輸入有效的電子郵件地址。"
+      },
+      "status": {
+        "saving": "正在儲存你的電子郵件……",
+        "already": "你已經在通知名單中。",
+        "success": "已加入通知名單，謝謝！",
+        "error": "訂閱功能目前無法使用，請稍後再試。"
+      }
     },
     "extra": {
       "01": "練習",
@@ -97,19 +171,14 @@
       "15": "近期作品",
       "16": "最新發佈",
       "17": "查看所有曲目",
-      "18": "為習慣從聆聽中學習的音樂人而設計。",
-      "19": "Jam Tracks Hub 由吉他手兼音樂創作者 Jasper 規劃與開發，將每週推出的即興伴奏，整理成一個結合音樂練習、和聲探索與創作靈感的工作空間。",
-      "20": "網站的每個頁面都依照音樂人的實際使用流程設計：\n辨識歌曲調性、視覺化音階、比較和弦色彩、熟悉指板音名，再將理解與靈感帶回樂器上。",
-      "21": "整體設計追求平靜、實用與音樂性：\n減少在選單間摸索的時間，讓聲音更快被聽見、樂理更容易理解，並以不干擾聆聽的視覺提示，輔助每一次練習與創作。",
-      "22": "聯絡",
-      "23": "有任何問題、合作提案，或希望新增的曲目嗎？",
-      "24": "歡迎隨時留言。你的建議將成為規劃新即興伴奏、優化網站使用體驗，以及開發更多吉他練習工具的重要參考。",
+      "18": "由吉他手為吉他手打造。",
+      "19": "Jam Tracks Hub 由 Jasper 規劃與開發，將原創即興伴奏、樂理工具與本機歌曲工作區整合成更直接的練習流程。從選曲、理解調性到整理自己的歌曲，不需登入即可開始。",
+      "23": "有問題、合作提案或曲目建議？歡迎與我聯絡。",
       "25": "在 YouTube 觀看",
-      "26": "訂閱",
-      "27": "當新的即興伴奏發佈時接收通知。",
-      "28": "加入通知名單",
+      "27": "每週新伴奏上線時通知我",
+      "28": "訂閱",
       "29": "提供意見",
-      "30": "傳送訊息",
+      "30": "聯絡我",
       "31": "已傳送"
     }
   },
@@ -693,7 +762,9 @@
   },
   "footer": {
     "rights": "© 2026 Jam Tracks Hub。保留所有權利。",
-    "legal": "法律與使用規範"
+    "legal": "法律與使用規範",
+    "youtubeLabel": "前往 Jam Tracks Hub 的 YouTube 頻道",
+    "instagramLabel": "前往 Jasper 的 Instagram 個人頁面"
   },
   "term": {
     "backingTracks": "即興伴奏",

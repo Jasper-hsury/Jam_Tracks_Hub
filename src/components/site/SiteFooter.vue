@@ -16,13 +16,13 @@ const { translate } = useSiteLocale();
         href="https://youtube.com/@weekly_backing_track?si=-Rp6XDvP0A8fclp3"
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Visit Jam Tracks Hub YouTube channel"
+        :aria-label="translate('footer.youtubeLabel', 'Visit Jam Tracks Hub YouTube channel')"
       >YouTube</a>
       <a
         href="https://www.instagram.com/reyu_jasper?igsh=dmVsazFvb2pwMmsw&utm_source=qr"
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Visit Jam Tracks Hub Instagram profile"
+        :aria-label="translate('footer.instagramLabel', 'Visit Jasper\'s Instagram profile')"
       >Instagram</a>
     </div>
   </footer>
