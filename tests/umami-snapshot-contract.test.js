@@ -4,7 +4,7 @@ const fs = require("node:fs");
 const { spawnSync } = require("node:child_process");
 const { deflateSync } = require("node:zlib");
 const c = require("../tools/scripts/umami-snapshot-contract");
-const { captureScreenshot, generateSnapshot, findDashboardIssue } = require("../tools/scripts/update-umami-readme-screenshot");
+const { ALL_TIME_FAILURE, captureScreenshot, generateSnapshot, findDashboardIssue, isAllTimeRangeUrl, selectAllTimeRange, waitForAllTimeDashboardStability } = require("../tools/scripts/update-umami-readme-screenshot");
 const readme = `prefix\n${c.readmeBlock("2026-09-03T00:00:00Z")}\ntrailing spaces  \n`;
 const canonical = fs.readFileSync(c.IMAGE);
 function chunk(type, bytes) {
@@ -16,6 +16,22 @@ function png({width=600,height=250,filter=0,metadata=false,rawLength}={}) {
   const raw=Buffer.alloc(rawLength ?? (width*3+1)*height,47);
   for(let y=0;y<height;y++) raw[y*(width*3+1)]=filter;
   return Buffer.concat([canonical.subarray(0,8),chunk("IHDR",header),...(metadata?[chunk("tEXt",Buffer.from("private URL"))]:[]),chunk("IDAT",deflateSync(raw)),chunk("IEND",Buffer.alloc(0))]);
+}
+function dynamicLocator(items) {
+  return {count:async()=>items().length,nth:index=>items()[index]};
+}
+function rangePage({hasOption=true,url="https://cloud.umami.is/analytics/eu/share/public/example"}={}) {
+  const state={url,menuOpen:false,clicks:[],escapes:0};
+  const trigger={isVisible:async()=>true,click:async()=>{state.clicks.push("trigger");state.menuOpen=true;}};
+  const option={isVisible:async()=>state.menuOpen,click:async()=>{state.clicks.push("All time");state.menuOpen=false;state.url="https://cloud.umami.is/analytics/eu/share/public/example?date=1693526400000%3A1789516800000%3Aall";}};
+  const page={
+    url:()=>state.url,
+    getByRole:(role)=>role==="combobox"?dynamicLocator(()=>[trigger]):dynamicLocator(()=>hasOption&&state.menuOpen?[option]:[]),
+    locator:selector=>selector==="[data-slot='select-trigger']"?dynamicLocator(()=>[]):dynamicLocator(()=>state.menuOpen?[{isVisible:async()=>true}]:[]),
+    keyboard:{press:async()=>{state.escapes++;state.menuOpen=false;}},
+    waitForTimeout:async()=>{}
+  };
+  return {page,state};
 }
 test("canonical PNG decodes within production dimension limits",()=>{
   const decoded=c.decodePng(canonical);
@@ -30,6 +46,61 @@ test("valid historical and current Umami chart dimensions are accepted",()=>{
 test("production dimension boundaries are inclusive and one-pixel violations fail",()=>{
   for(const [width,height] of [[600,250],[2000,250],[600,1000]]) assert.doesNotThrow(()=>c.decodePng(png({width,height})));
   for(const [width,height] of [[599,250],[2001,250],[600,249],[600,1001]]) assert.throws(()=>c.decodePng(png({width,height})));
+});
+test("All Time confirmation uses the dynamic date query suffix, not closed-control text",()=>{
+  assert.equal(isAllTimeRangeUrl("https://cloud.umami.is/share/public/site?date=1693526400000%3A1789516800000%3Aall"),true);
+  assert.equal(isAllTimeRangeUrl("https://cloud.umami.is/share/public/site?date=1693526400000%3A1789516800000"),false);
+  assert.equal(isAllTimeRangeUrl("not a URL"),false);
+});
+test("All Time is selected semantically and its menu is closed before capture",async()=>{
+  const {page,state}=rangePage();
+  await selectAllTimeRange(page,{controlAttempts:1,optionAttempts:1,pollMs:1});
+  assert.deepEqual(state.clicks,["trigger","All time"]);
+  assert.equal(isAllTimeRangeUrl(page.url()),true);
+  assert.equal(state.menuOpen,false);
+});
+test("All Time dashboard must remain ready and stable for consecutive samples",async()=>{
+  const {page}=rangePage({url:"https://cloud.umami.is/analytics/eu/share/public/example?date=1%3A2%3Aall"});
+  const states=[{ready:true,signature:"chart-a"},{ready:true,signature:"chart-b"},{ready:true,signature:"chart-b"},{ready:true,signature:"chart-b"}];
+  let reads=0;
+  await waitForAllTimeDashboardStability(page,{timeoutMs:10,pollMs:1,stableSamples:3,readState:async()=>states[reads++]});
+  assert.equal(reads,4);
+});
+test("missing All Time semantics fail closed before any screenshot",async()=>{
+  const {page}=rangePage({hasOption:false});
+  let screenshotCalls=0;
+  page.goto=async()=>({ok:()=>true});
+  page.evaluate=async()=>{};
+  page.evaluateHandle=async()=>{screenshotCalls++;throw new Error("must not capture");};
+  const chromium={launch:async()=>({newPage:async()=>page,close:async()=>{}})};
+  await assert.rejects(captureScreenshot("https://cloud.umami.is/share/public/example",chromium),error=>error.state===ALL_TIME_FAILURE);
+  assert.equal(screenshotCalls,0);
+  assert.equal(c.safeFailure(new c.SnapshotError(ALL_TIME_FAILURE)),ALL_TIME_FAILURE);
+});
+test("capture occurs only after confirmed All Time, closed menu, and stable dashboard",async()=>{
+  const {page,state}=rangePage();
+  page.goto=async()=>({ok:()=>true});
+  page.evaluate=async fn=>{
+    const source=fn.toString();
+    if(source.includes("removableSelectors"))return;
+    if(source.includes("const loading"))return {ready:true,signature:"stable-chart"};
+    if(source.includes("visibleText"))return "";
+    throw new Error("unexpected evaluate");
+  };
+  const chart={
+    screenshot:async()=>{
+      assert.equal(isAllTimeRangeUrl(page.url()),true);
+      assert.equal(state.menuOpen,false);
+      state.clicks.push("screenshot");
+      return png();
+    },
+    dispose:async()=>{}
+  };
+  page.evaluateHandle=async()=>({asElement:()=>chart,dispose:async()=>{}});
+  const chromium={launch:async()=>({newPage:async()=>page,close:async()=>{}})};
+  const image=await captureScreenshot("https://cloud.umami.is/share/public/example",chromium);
+  assert.equal(c.decodePng(image).width,600);
+  assert.deepEqual(state.clicks,["trigger","All time","screenshot"]);
 });
 test("valid image produces exactly three bounded files and preserves README bytes outside markers",()=>{
   const result=c.buildSnapshot({readme,previousImage:canonical,image:png(),now:"2026-09-05T16:01:00Z"});

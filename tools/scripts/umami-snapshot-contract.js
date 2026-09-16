@@ -10,7 +10,7 @@ const PREFIX = "assets/analytics/history/";
 // Existing valid image: 1278 x 521, 13,254 bytes. Bounds allow chart growth,
 // but exclude full-page captures, image bombs, and metadata-bearing payloads.
 const LIMITS = Object.freeze({ minWidth: 600, maxWidth: 2000, minHeight: 250, maxHeight: 1000, maxBytes: 2 * 1024 * 1024 });
-const STATES = Object.freeze(["UPDATED", "UNCHANGED", "INVALID_DASHBOARD", "FETCH_FAILURE", "SCREENSHOT_FAILURE", "VALIDATION_FAILURE"]);
+const STATES = Object.freeze(["UPDATED", "UNCHANGED", "INVALID_DASHBOARD", "FETCH_FAILURE", "SCREENSHOT_FAILURE", "UMAMI_ALL_TIME_RANGE_NOT_CONFIRMED", "VALIDATION_FAILURE"]);
 class SnapshotError extends Error {
   constructor(state = "VALIDATION_FAILURE") { super(state); this.state = state; }
 }
