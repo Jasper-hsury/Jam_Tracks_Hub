@@ -478,7 +478,7 @@ Public documentation may describe security only at a high level. Do not publish 
 Do not conflate these systems or fix one while casually changing another:
 
 1. **Page analytics:** root HTML pages load the existing Umami script for bounded pageviews. Song Workspace additionally excludes search/hash and has no content-bearing custom events.
-2. **Daily README screenshot:** captures a capability-protected dashboard view, validates a PNG and exact README marker block, creates/updates a machine PR, and may auto-squash only after all hard gates.
+2. **Daily README screenshot:** captures the All Time view of a capability-protected dashboard, validates a PNG and exact README marker block, creates/updates a machine PR, and may auto-squash only after all hard gates.
 3. **Weekly API report:** attempts to generate a Markdown analytics issue report from Umami API credentials. It is currently an unresolved follow-up and is not part of the working daily architecture.
 
 ### Daily snapshot — Last verified / contract
@@ -488,6 +488,8 @@ The daily workflow is `.github/workflows/umami-readme-screenshot.yml`, scheduled
 ```text
 scheduled run from main
   -> validate and mask protected Share credential
+  -> semantically select All time and confirm URL date state ends in :all
+  -> close the range menu and wait for a stable Visitors/Views chart
   -> capture and validate bounded dashboard PNG
   -> validate README marker-only change and dated history image
   -> use repository-only GitHub App token
@@ -508,6 +510,10 @@ automation/umami-readme-snapshot-production-YYYY-MM-DD
 A closed dry-run cycle must never suppress, contaminate, or donate branch/PR identity to a production cycle. A closed unmerged production cycle with identical content follows the intentional production suppression policy. At most one open production snapshot PR may exist.
 
 The machine PR hard gates include repository/base/head identity, App actor, production/dry-run mode, workflow provenance, exact file allowlist, README marker-only mutation, valid bounded PNGs, verified App-created commits, mergeability, required checks, and no bypass. The automation never direct-pushes `main`, never force-pushes, never calls an administrator merge, and never weakens rules.
+
+Daily screenshots use **All Time** prospectively. The closed Umami range control may display changing concrete start/end dates, so button text is not the confirmation contract. The automation selects the accessible `All time` option, verifies the `date` query value ends in `:all`, requires the menu to be closed, and waits up to 30 seconds for three stable 500 ms Visitors/Views chart samples with no visible loading state. Failure emits only `UMAMI_ALL_TIME_RANGE_NOT_CONFIRMED` and occurs before screenshot publication or remote writes. Existing historical PNGs are not rewritten. The weekly API report remains a separate system.
+
+PNG dimensions are bounded by the production validator at 600–2000 px wide and 250–1000 px high. Historical 1278 × 521 and current 1272 × 522 renders are both valid; tests must exercise these shared bounds rather than require one exact browser render size.
 
 The App is repository-scoped. Its operating contract is metadata read plus Contents and Pull Requests read/write, with no administration/ruleset/bypass capability; the workflow requests only the write permissions needed for repository content and PR operations. Re-verify the live App permissions before changing this automation.
 
