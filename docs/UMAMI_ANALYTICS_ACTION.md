@@ -1,8 +1,8 @@
 # Umami Analytics GitHub Actions
 
 The daily README snapshot and weekly API report are independent. The daily
-snapshot uses an Umami Share dashboard, not the paid API. The weekly report
-credentials were absent at the September 2026 audit; a successful credential-skip
+snapshot uses the Umami Share dashboard's All Time view, not the paid API. The
+weekly report credentials were absent at the September 2026 audit; a successful credential-skip
 is not evidence that weekly reporting works. Weekly implementation is unchanged.
 
 ## Weekly API report (separate, optional)
@@ -138,7 +138,7 @@ The old direct-main push failed with GH013 after main protection was enabled.
 Protection remains intact; the writer now uses this lifecycle:
 
 ```text
-schedule -> validated chart -> machine branch -> App-authored PR
+schedule -> establish and verify All Time -> validated chart -> machine branch -> App-authored PR
          -> static-checks + Workers Builds: jamtrackshub
          -> GitHub native auto-SQUASH -> main -> normal Cloudflare deployment
          -> delete only the confirmed merged machine branch
@@ -249,6 +249,19 @@ API report is a separate follow-up and is not changed by this remediation.
 
 ### Snapshot content and last-known-good safety
 
+The daily screenshot range is **All Time**. The browser opens the Share dashboard,
+uses the semantic date-range control to choose `All time`, and confirms Umami's
+current URL state has a `date` value ending in `:all`. The closed control may show
+concrete date bounds, so its displayed text is not proof of All Time. The range
+menu must be closed, and the dashboard must have no visible loading state and a
+stable Visitors/Views chart for three consecutive 500 ms samples within a bounded
+30-second stabilization window before capture.
+
+If All Time cannot be selected, confirmed, closed, or stabilized, the run fails
+with the content-free `UMAMI_ALL_TIME_RANGE_NOT_CONFIRMED` state before snapshot
+or remote publication writes. This All Time policy is prospective: existing
+dated history PNGs remain immutable evidence of their original capture behavior.
+
 Only these generated outputs are permitted:
 
 - `README.md`: strictly inside `UMAMI_ANALYTICS_START` / `UMAMI_ANALYTICS_END`,
@@ -258,13 +271,15 @@ Only these generated outputs are permitted:
 
 PNG validation checks signature, chunk CRC, bounded decompression, scanline filters,
 8-bit RGB/RGBA decoding, 600–2000 px width, 250–1000 px height and a 2 MiB maximum.
-These bounds derive from the existing 1278 × 521 / 13,254-byte chart plus margin.
+The historical 1278 × 521 chart and current 1272 × 522 render are both valid under
+these production bounds; tests do not freeze one browser-rendered dimension.
 Text/EXIF/arbitrary metadata, trailing data, symlinks, renames and deletions are
 rejected. It captures only the traffic chart, not a full dashboard/session replay.
 No Song Workspace data or new analytics events are introduced.
 
-`UPDATED`, `UNCHANGED`, `INVALID_DASHBOARD`, `FETCH_FAILURE`, `SCREENSHOT_FAILURE`
-and `VALIDATION_FAILURE` are distinct. Failed validation exits nonzero before any
+`UPDATED`, `UNCHANGED`, `INVALID_DASHBOARD`, `FETCH_FAILURE`, `SCREENSHOT_FAILURE`,
+`UMAMI_ALL_TIME_RANGE_NOT_CONFIRMED`, and `VALIDATION_FAILURE` are distinct. Failed
+validation exits nonzero before any
 snapshot write: latest image, history and timestamp remain last-known-good.
 Unchanged decoded pixels create no timestamp-only commit, branch, PR or merge.
 Validated files are published together in a Git tree/commit; the writer never

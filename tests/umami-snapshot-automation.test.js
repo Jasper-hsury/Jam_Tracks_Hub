@@ -107,6 +107,13 @@ test("cleanup rejects main, human branches, unmerged production PR and changed t
 test("no image diff makes no remote mutation or branch",async()=>{
   const api=fixture();assert.deepEqual(await a.runAutomation({env,api,capture:async()=>image,now:"2026-09-06"}),{state:"UNCHANGED"});assert.equal(api.writes.length,0);assert.equal(api.mutations.length,0);
 });
+test("unconfirmed All Time range fails before any remote write or PR mutation",async()=>{
+  const api=fixture();
+  const failure=new c.SnapshotError("UMAMI_ALL_TIME_RANGE_NOT_CONFIRMED");
+  await assert.rejects(a.runAutomation({env,api,capture:async()=>{throw failure;},now:"2026-09-06"}),error=>error===failure);
+  assert.equal(a.safeAutomationFailure(failure),"UMAMI_ALL_TIME_RANGE_NOT_CONFIRMED");
+  assert.equal(api.writes.length,0);assert.equal(api.mutations.length,0);
+});
 test("unchanged dry-run retry only completes existing PR checks and cleanup",async()=>{
   const api=fixture({dryRun:true}),pages=api.pages;
   api.pages=async path=>path.startsWith("pulls?state=open")?[api.record]:pages(path);
