@@ -36,7 +36,7 @@ All 14 visible product pages are Vue 3 multi-page entries built with Vite. Root 
 
 Daily Umami analytics snapshot for Jam Tracks Hub.
 
-Last updated: Sep 15, 2026, 8:38 AM
+Last updated: Sep 17, 2026, 12:02 AM
 
 <p align="center">
   <img src="assets/analytics/umami-dashboard.png" alt="Umami analytics dashboard" width="100%" />
