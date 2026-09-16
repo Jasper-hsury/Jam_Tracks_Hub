@@ -17,7 +17,20 @@ function png({width=600,height=250,filter=0,metadata=false,rawLength}={}) {
   for(let y=0;y<height;y++) raw[y*(width*3+1)]=filter;
   return Buffer.concat([canonical.subarray(0,8),chunk("IHDR",header),...(metadata?[chunk("tEXt",Buffer.from("private URL"))]:[]),chunk("IDAT",deflateSync(raw)),chunk("IEND",Buffer.alloc(0))]);
 }
-test("canonical PNG decodes within measured limits",()=>assert.deepEqual([c.decodePng(canonical).width,c.decodePng(canonical).height],[1278,521]));
+test("canonical PNG decodes within production dimension limits",()=>{
+  const decoded=c.decodePng(canonical);
+  assert.ok(decoded.width>=c.LIMITS.minWidth&&decoded.width<=c.LIMITS.maxWidth);
+  assert.ok(decoded.height>=c.LIMITS.minHeight&&decoded.height<=c.LIMITS.maxHeight);
+});
+test("valid historical and current Umami chart dimensions are accepted",()=>{
+  for(const [width,height] of [[1278,521],[1272,522]]) {
+    assert.deepEqual([c.decodePng(png({width,height})).width,c.decodePng(png({width,height})).height],[width,height]);
+  }
+});
+test("production dimension boundaries are inclusive and one-pixel violations fail",()=>{
+  for(const [width,height] of [[600,250],[2000,250],[600,1000]]) assert.doesNotThrow(()=>c.decodePng(png({width,height})));
+  for(const [width,height] of [[599,250],[2001,250],[600,249],[600,1001]]) assert.throws(()=>c.decodePng(png({width,height})));
+});
 test("valid image produces exactly three bounded files and preserves README bytes outside markers",()=>{
   const result=c.buildSnapshot({readme,previousImage:canonical,image:png(),now:"2026-09-05T16:01:00Z"});
   assert.equal(result.state,"UPDATED");assert.equal(result.day,"2026-09-06");assert.equal(result.files.length,3);
