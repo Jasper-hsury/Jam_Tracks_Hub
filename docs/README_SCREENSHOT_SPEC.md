@@ -55,6 +55,11 @@ Modest scrolling may reveal the principal controls, without changing window size
 
 ## Review and reuse
 
+The user has accepted the existing five screenshots as-is, including their cursor
+and halo: `EXISTING_FIVE_SCREENSHOTS_ACCEPTED = YES`. Their bytes must remain
+unchanged. `CURSOR_CLEANUP = NO LONGER BLOCKING`; supported captures of new pages
+may retain a cursor/halo if recorded honestly, without retouching.
+
 Review every image visually, confirm its dimensions/format and production address,
 and check consistent chrome, light theme, English, privacy and visible-only framing.
 Record per-image capture details, file hashes and limitations in a capture manifest.
