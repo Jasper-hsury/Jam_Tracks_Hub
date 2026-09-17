@@ -21,17 +21,7 @@
   </p>
 </div>
 
-<!-- README screenshot placeholders: SCREENSHOT_CURSOR_CLEANUP = DEFERRED_LOCAL_POLISH.
-FIRST_PUSH_ALLOWED = NO until all five candidates pass cursor-free review or the user explicitly authorizes the current images.
--->
-
-<p align="center">
-  <img src="assets/readme/screenshots-v2-0-6/homepage-safari-light.jpg" alt="English light-theme homepage with backing track and Song Workspace entry points in Safari" width="100%" />
-</p>
-
 Start with an original backing track, explore its key and chord shapes, then organize your own chord-and-lyric chart. English and Traditional Chinese interfaces, light/dark themes, and responsive layouts support practice on desktop and mobile.
-
-The previews in this local README draft are layout placeholders. Cursor cleanup is deferred; the five original Safari candidates remain unchanged.
 
 <!-- UMAMI_ANALYTICS_START -->
 ## Website Analytics
@@ -56,50 +46,135 @@ Last updated: Sep 17, 2026, 12:02 AM
 | Create | [Chord Progressions](https://jamtrackshub.com/chord-progressions.html) · [Progression Writer](https://jamtrackshub.com/progression-writer.html) | Explore common progressions, write your own, save/load and duplicate them locally, and export JSON or chord diagrams. |
 | Play your songs | [Song Workspace](https://jamtrackshub.com/song-workspace.html) | Arrange chord-and-lyric charts, transpose, choose capo positions, and use Read or Performance Mode. |
 
-## Song Workspace
+## Product Showcase
 
-A local-first songbook for turning your own material into a playable chart. Start with **Chords + Lyrics**, **Lyrics Only**, or **Chords Only**, or import ChordPro or a previously exported Jam Tracks Hub JSON song.
+### Homepage
 
-- **Edit the chart:** organize sections and lines, position chords against lyrics, and choose chord shapes.
-- **Find a comfortable key:** transpose to a Target Key, set Capo, and compare Smart Capo suggestions. Shape Key describes what you play; Target Key describes what sounds.
-- **Choose a view:** Original, Easy: Balanced, Easy: Beginner, Roman, or Nashville chord display.
-- **Practice and perform:** Read Mode reduces editing controls; Performance Mode adds adjustable auto-scroll and chart zoom.
-- **Keep portable copies:** export individual songs as JTH JSON or ChordPro, and use Backup All / Restore Backup for the local library. JTH JSON preserves the complete song project; ChordPro is a text interchange format, not an identical backup.
-
-Songs are stored in this browser using IndexedDB; display preferences use local storage. There is no account or cloud sync, and song content is not uploaded to Jam Tracks Hub. Clearing browser data or using another browser/device does not preserve the same library—export backups yourself. Other site features, including analytics and Key Finder, may use network services. Only import or share material you have the rights to use.
-
-See the [Legal & Usage Policy](https://jamtrackshub.com/legal.html) and [Privacy Policy](https://jamtrackshub.com/privacy-policy.html) for the boundaries of local content and network-backed tools.
+[Open Homepage](https://jamtrackshub.com/#home) — A starting point connecting original backing tracks, music-theory tools, and Song Workspace through practical workflows.
 
 <p align="center">
-  <img src="assets/readme/screenshots-v2-0-6/song-workspace-safari-light.jpg" alt="Song Workspace creation choices and local browser storage notice in Safari" width="100%" />
+  <img src="assets/readme/screenshots-v2-0-6/homepage-safari-light.jpg" alt="English light-theme homepage with backing track and Song Workspace entry points in Safari" width="100%" />
 </p>
 
-This candidate shows the creation entry points, not private songs or an editor session.
+### Tracks
 
-## Interface Gallery
-
-### Backing Tracks
-
-Browse the library by key, compare releases, and open the available listening and download resources.
+[Browse Tracks](https://jamtrackshub.com/tracks.html) — Filter backing tracks by key, sort newest or oldest first, and open the available listening links and downloadable practice resources.
 
 <p align="center">
   <img src="assets/readme/screenshots-v2-0-6/tracks-safari-light.jpg" alt="Backing track library with key filters, release sorting, and track cards in Safari" width="100%" />
 </p>
 
+### Chord Dictionary
+
+[Open Chord Dictionary](https://jamtrackshub.com/chord-dictionary.html) — Choose a root and chord type to compare its formula, notes, and guitar shapes, with filters for fret position and string sets. The preview shows C major.
+
+<p align="center">
+  <img src="assets/readme/screenshots-v2-0-6/chord-dictionary-safari-light.jpg" alt="Chord Dictionary showing C major controls, formula, notes, and guitar-shape filters in Safari" width="100%" />
+</p>
+
 ### Key Finder
 
-Upload audio for a key estimate, or try a YouTube URL when the analysis service can access the video. Results are estimates, not a substitute for listening. YouTube access can fail; audio upload or the optional local helper provides an alternative.
+[Open Key Finder](https://jamtrackshub.com/key-finder.html) — Upload audio to estimate its likely key or tonal center, or try a YouTube link when the analysis service can access the video. Results are listening aids, not guarantees; audio upload or the optional local helper offers an alternative when YouTube access fails.
 
 <p align="center">
   <img src="assets/readme/screenshots-v2-0-6/key-finder-safari-light.jpg" alt="Idle Key Finder upload and YouTube analysis controls in Safari" width="100%" />
 </p>
 
+### Song Workspace
+
+[Open Song Workspace](https://jamtrackshub.com/song-workspace.html) — A local-first songbook for your own chord-and-lyric charts, with no account required.
+
+- **Create and arrange:** start with Chords + Lyrics, Lyrics Only, or Chords Only; organize sections, align chords with lyrics, and choose chord shapes.
+- **Adapt the chart:** transpose, set Capo, and compare Smart Capo suggestions; Shape Key is what you play and Target Key is what sounds. Choose Original, Easy: Balanced, Easy: Beginner, Roman, or Nashville display.
+- **Practice and perform:** use Read Mode or Performance Mode with adjustable auto-scroll and chart zoom.
+- **Import and back up:** exchange ChordPro or JTH JSON songs and use Backup All / Restore Backup for the library. JTH JSON preserves the complete song project; ChordPro is not an identical backup.
+
+Songs stay in this browser's IndexedDB, with display preferences in local storage; there is no remote song storage or cloud sync, and Song Workspace song/document content is not uploaded to Jam Tracks Hub. Clearing browser data can remove the library, and another browser/device does not share it—keep exported backups. Other features, including analytics and Key Finder, may use network services. Only import or share material you have rights to use; see [Legal & Usage Policy](https://jamtrackshub.com/legal.html) and [Privacy Policy](https://jamtrackshub.com/privacy-policy.html).
+
+<p align="center">
+  <img src="assets/readme/screenshots-v2-0-6/song-workspace-safari-light.jpg" alt="Song Workspace creation choices and local browser storage notice in Safari" width="100%" />
+</p>
+
+The screenshot shows the creation/start screen, not an active editor or Performance Mode.
+
 ### Progression Writer
 
-Build a progression with or without verse/chorus sections, compare chord shapes, and export diagrams for practice. This is separate from Song Workspace's chord-and-lyric songbook.
+[Open Progression Writer](https://jamtrackshub.com/progression-writer.html) — Build progressions with or without verse/chorus sections, compare chord shapes, save/load or duplicate them locally, and export JSON or chord diagrams. This is separate from Song Workspace's chord-and-lyric songbook.
 
 <p align="center">
   <img src="assets/readme/screenshots-v2-0-6/progression-writer-safari-light.jpg" alt="Progression Writer with song settings and four chord input fields in Safari" width="100%" />
+</p>
+
+## Full Product Gallery
+
+### Music Tools
+
+#### Scale Explorer
+
+[Open Scale Explorer](https://jamtrackshub.com/scale.html) — Explore scale notes and intervals, map them on a guitar fretboard, and download a labeled PNG.
+
+<p align="center">
+  <img src="assets/readme/screenshots-v2-0-6/scale-explorer-safari-light.jpg" alt="Scale Explorer with A minor pentatonic controls, note and interval badges, and neck-display settings in Safari" width="100%" />
+</p>
+
+#### Chord Progressions
+
+[Open Chord Progressions](https://jamtrackshub.com/chord-progressions.html) — Select a key and compare common progressions using triads or seventh chords with guitar shapes.
+
+<p align="center">
+  <img src="assets/readme/screenshots-v2-0-6/chord-progressions-safari-light.jpg" alt="Chord Progressions showing C major, triad controls, and the beginning of Pop staples chord cards in Safari" width="100%" />
+</p>
+
+#### Fretboard Trainer
+
+[Open Fretboard Trainer](https://jamtrackshub.com/fretboard-trainer.html) — Practice note names by answering string-and-fret questions in standard tuning.
+
+<p align="center">
+  <img src="assets/readme/screenshots-v2-0-6/fretboard-trainer-safari-light.jpg" alt="Fretboard Trainer with a string-and-fret question, note choices, score, and tuning reference in Safari" width="100%" />
+</p>
+
+### Feedback / Service
+
+#### Feedback
+
+[Open Feedback](https://jamtrackshub.com/feedback.html) — Share suggestions about practice tools, backing tracks, or the site experience.
+
+<p align="center">
+  <img src="assets/readme/screenshots-v2-0-6/feedback-safari-light.jpg" alt="Empty Feedback form with topic and improvement-suggestion fields in Safari" width="100%" />
+</p>
+
+#### Service Waking
+
+[Open Service Waking](https://jamtrackshub.com/service-waking.html) — Check the analyzer's readiness during startup and return to Key Finder when it is ready.
+
+<p align="center">
+  <img src="assets/readme/screenshots-v2-0-6/service-waking-safari-light.jpg" alt="Service Waking page during the analyzer's normal startup and readiness-check flow in Safari" width="100%" />
+</p>
+
+### Policy / Error Pages
+
+#### Legal
+
+[Open Legal](https://jamtrackshub.com/legal.html) — Usage, copyright, and local-content responsibilities.
+
+<p align="center">
+  <img src="assets/readme/screenshots-v2-0-6/legal-safari-light.jpg" alt="Legal and Usage Policy title and opening sections in Safari" width="100%" />
+</p>
+
+#### Privacy
+
+[Open Privacy](https://jamtrackshub.com/privacy-policy.html) — Data processing and user-content boundaries.
+
+<p align="center">
+  <img src="assets/readme/screenshots-v2-0-6/privacy-safari-light.jpg" alt="Privacy and User Content policy title and opening sections in Safari" width="100%" />
+</p>
+
+#### 404
+
+[View 404 Page](https://jamtrackshub.com/404.html) — A missing-page message with links back to the site.
+
+<p align="center">
+  <img src="assets/readme/screenshots-v2-0-6/404-safari-light.jpg" alt="Jam Tracks Hub 404 page with Return Home and Open Key Finder links in Safari" width="100%" />
 </p>
 
 ## Releases and Development
