@@ -279,6 +279,7 @@ async function handleSubscribe() {
           <p class="home-eyebrow">{{ home.about.eyebrow }}</p>
           <h2 id="aboutTitle">{{ home.extra["18"] }}</h2>
           <p class="home-about-summary">{{ home.extra["19"] }}</p>
+          <p v-for="paragraph in home.about.additionalParagraphs" :key="paragraph" class="home-about-summary">{{ paragraph }}</p>
           <div class="about-connect">
             <p class="about-contact-prompt">{{ home.extra["23"] }}</p>
             <div class="about-links">
