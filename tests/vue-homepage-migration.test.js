@@ -164,14 +164,17 @@ test("keeps the compact About, contact, and Subscribe experience localized and c
   assert.equal(en.home.about.eyebrow, "ABOUT JAM TRACKS HUB");
   assert.equal(zh.home.about.eyebrow, "關於 JAM TRACKS HUB");
   assert.equal(en.home.extra["18"], "Built by a guitarist, inspired by real practice.");
-  assert.equal(zh.home.extra["18"], "由吉他手為吉他手打造。");
+  assert.equal(zh.home.extra["18"], "由吉他手打造，源自真實的練習經驗。");
   assert.equal(en.home.extra["19"], "Jam Tracks Hub is designed and built by Jasper as a focused place for the tools he actually needs while practicing. It puts original backing tracks, practical music-theory tools, and a local-first Song Workspace in one place, so you can move naturally from listening and learning to organizing your own songs.");
   assert.deepEqual(en.home.about.additionalParagraphs, [
     "You can access all resources without creating an account.",
     "The goal is simple: spend less time switching between tools, and more time practicing, creating, and playing."
   ]);
-  assert.equal(zh.home.about.additionalParagraphs, undefined);
-  assert.equal(zh.home.extra["19"], "Jam Tracks Hub 由 Jasper 規劃與開發，將原創即興伴奏、樂理工具與本機歌曲工作區整合成更直接的練習流程。從選曲、理解調性到整理自己的歌曲，不需登入即可開始。");
+  assert.deepEqual(zh.home.about.additionalParagraphs, [
+    "無需建立帳號，即可使用所有資源。",
+    "目標很簡單：少花一點時間在工具之間切換，多花一點時間練習、創作與演奏。"
+  ]);
+  assert.equal(zh.home.extra["19"], "Jam Tracks Hub 由 Jasper 設計與開發，希望把自己在練習時真正需要的工具集中在一個專注的空間裡。這裡整合了原創伴奏、實用的樂理工具，以及以本機優先為核心的 Song Workspace，讓你可以自然地從聆聽、學習一路到整理自己的歌曲。");
   assert.equal(en.home.extra["23"], "Questions, collaborations, or track suggestions? Feel free to get in touch.");
   assert.equal(zh.home.extra["23"], "有問題、合作提案或曲目建議？歡迎與我聯絡。");
   assert.equal(en.home.extra["27"], "Get notified when a new weekly backing track is released.");
@@ -198,7 +201,7 @@ test("keeps the compact About, contact, and Subscribe experience localized and c
   assert.match(view, /<img :src="'assets\/images\/cover\.jpeg'" :alt="home\.about\.imageAlt" width="600" height="900" \/>/);
 });
 
-test("renders three separate English About paragraphs while preserving the single Chinese paragraph", async () => {
+test("renders three separate About paragraphs in both English and Traditional Chinese", async () => {
   const { createSSRApp } = require("vue");
   const { renderToString } = require("vue/server-renderer");
   const view = read("src/views/HomeView.vue");
@@ -212,7 +215,7 @@ test("renders three separate English About paragraphs while preserving the singl
     const html = await renderToString(createSSRApp({ template, data: () => ({ home }) }));
     assert.equal(html.match(/<h2 id="aboutTitle">([^<]+)<\/h2>/)?.[1], home.extra["18"]);
     const paragraphs = [...html.matchAll(/<p class="home-about-summary">([^<]+)<\/p>/g)].map(match => match[1]);
-    assert.equal(paragraphs.length, locale === "en" ? 3 : 1);
+    assert.equal(paragraphs.length, 3);
     assert.deepEqual(paragraphs, [home.extra["19"], ...(home.about.additionalParagraphs || [])]);
   }
 });
