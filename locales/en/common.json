@@ -104,7 +104,11 @@
     "about": {
       "eyebrow": "ABOUT JAM TRACKS HUB",
       "imageAlt": "Jasper playing acoustic guitar on stage",
-      "imageCaption": "Jasper, guitarist and music creator"
+      "imageCaption": "Jasper, guitarist and music creator",
+      "additionalParagraphs": [
+        "You can access all resources without creating an account.",
+        "The goal is simple: spend less time switching between tools, and more time practicing, creating, and playing."
+      ]
     },
     "accessibility": {
       "siteOverview": "Site overview",
@@ -171,8 +175,8 @@
       "15": "Recent work",
       "16": "Latest Releases",
       "17": "View all tracks",
-      "18": "Built by a guitarist, for guitarists.",
-      "19": "Jam Tracks Hub is designed and built by Jasper, bringing original backing tracks, music-theory tools, and a local-first song workspace into one focused practice flow. Start with a track, understand the key, and organize your own songs—no sign-in required.",
+      "18": "Built by a guitarist, inspired by real practice.",
+      "19": "Jam Tracks Hub is designed and built by Jasper as a focused place for the tools he actually needs while practicing. It puts original backing tracks, practical music-theory tools, and a local-first Song Workspace in one place, so you can move naturally from listening and learning to organizing your own songs.",
       "23": "Questions, collaborations, or track suggestions? Feel free to get in touch.",
       "25": "Watch on YouTube",
       "27": "Get notified when a new weekly backing track is released.",

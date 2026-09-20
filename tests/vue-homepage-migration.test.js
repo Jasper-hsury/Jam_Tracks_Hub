@@ -163,9 +163,14 @@ test("keeps the compact About, contact, and Subscribe experience localized and c
 
   assert.equal(en.home.about.eyebrow, "ABOUT JAM TRACKS HUB");
   assert.equal(zh.home.about.eyebrow, "關於 JAM TRACKS HUB");
-  assert.equal(en.home.extra["18"], "Built by a guitarist, for guitarists.");
+  assert.equal(en.home.extra["18"], "Built by a guitarist, inspired by real practice.");
   assert.equal(zh.home.extra["18"], "由吉他手為吉他手打造。");
-  assert.equal(en.home.extra["19"], "Jam Tracks Hub is designed and built by Jasper, bringing original backing tracks, music-theory tools, and a local-first song workspace into one focused practice flow. Start with a track, understand the key, and organize your own songs—no sign-in required.");
+  assert.equal(en.home.extra["19"], "Jam Tracks Hub is designed and built by Jasper as a focused place for the tools he actually needs while practicing. It puts original backing tracks, practical music-theory tools, and a local-first Song Workspace in one place, so you can move naturally from listening and learning to organizing your own songs.");
+  assert.deepEqual(en.home.about.additionalParagraphs, [
+    "You can access all resources without creating an account.",
+    "The goal is simple: spend less time switching between tools, and more time practicing, creating, and playing."
+  ]);
+  assert.equal(zh.home.about.additionalParagraphs, undefined);
   assert.equal(zh.home.extra["19"], "Jam Tracks Hub 由 Jasper 規劃與開發，將原創即興伴奏、樂理工具與本機歌曲工作區整合成更直接的練習流程。從選曲、理解調性到整理自己的歌曲，不需登入即可開始。");
   assert.equal(en.home.extra["23"], "Questions, collaborations, or track suggestions? Feel free to get in touch.");
   assert.equal(zh.home.extra["23"], "有問題、合作提案或曲目建議？歡迎與我聯絡。");
@@ -191,6 +196,25 @@ test("keeps the compact About, contact, and Subscribe experience localized and c
   assert.match(view, /data-subscribe-endpoint="\/api\/subscribe"/);
   assert.match(view, /data-subscribe-source="homepage-about"/);
   assert.match(view, /<img :src="'assets\/images\/cover\.jpeg'" :alt="home\.about\.imageAlt" width="600" height="900" \/>/);
+});
+
+test("renders three separate English About paragraphs while preserving the single Chinese paragraph", async () => {
+  const { createSSRApp } = require("vue");
+  const { renderToString } = require("vue/server-renderer");
+  const view = read("src/views/HomeView.vue");
+  const start = view.indexOf('<h2 id="aboutTitle">');
+  const end = view.indexOf('<div class="about-connect">', start);
+  assert.ok(start >= 0 && end > start);
+  const template = `<div>${view.slice(start, end)}</div>`;
+
+  for (const locale of ["en", "zh-TW"]) {
+    const { home } = JSON.parse(read(`locales/${locale}/common.json`));
+    const html = await renderToString(createSSRApp({ template, data: () => ({ home }) }));
+    assert.equal(html.match(/<h2 id="aboutTitle">([^<]+)<\/h2>/)?.[1], home.extra["18"]);
+    const paragraphs = [...html.matchAll(/<p class="home-about-summary">([^<]+)<\/p>/g)].map(match => match[1]);
+    assert.equal(paragraphs.length, locale === "en" ? 3 : 1);
+    assert.deepEqual(paragraphs, [home.extra["19"], ...(home.about.additionalParagraphs || [])]);
+  }
 });
 
 test("surfaces Song Workspace through the hero and four purpose-led workflow groups", () => {
