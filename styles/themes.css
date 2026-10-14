@@ -34,6 +34,10 @@
     --danger: #f0897f;
     --shadow-color: rgba(0, 0, 0, 0.22);
 
+    /* v3 type: DM Serif Display headings, Public Sans body, Noto TC for Chinese. */
+    --font-serif: "DM Serif Display", "Noto Serif TC", serif;
+    --font-sans: "Public Sans", "Noto Sans TC", sans-serif;
+
     /* Legacy names kept as aliases so existing page styles follow the v3 palette. */
     --bg: var(--paper);
     --surface-raised: var(--surface);
@@ -135,11 +139,29 @@ html[data-theme="light"] {
     --shadow-color: rgba(31, 26, 21, 0.08);
 }
 
+/* DM Serif Display ships one weight: never fake bold or italic glyphs.
+   Chinese headings resolve to the loaded Noto Serif TC 600 instead. */
+html {
+    font-synthesis: none;
+}
+
 body {
     background: var(--body-pattern), var(--body-background);
     background-attachment: fixed;
     color: var(--text);
+    font-family: var(--font-sans);
     transition: background 0.28s ease, color 0.2s ease;
+}
+
+h1,
+h2 {
+    font-family: var(--font-serif);
+    letter-spacing: -0.01em;
+}
+
+:lang(zh) :is(h1, h2, h3) {
+    font-weight: 600;
+    letter-spacing: 0;
 }
 
 .navbar {
@@ -1295,7 +1317,7 @@ html[data-theme="light"] .scale-advice-detail {
 .scale-page-heading .hero-tagline.signature-slogan,
 .trainer-heading .hero-tagline.signature-slogan {
     color: var(--gold);
-    font-family: "Noto Serif TC", serif;
+    font-family: var(--font-serif);
     font-style: italic;
     font-weight: 700;
     letter-spacing: 0;

@@ -375,13 +375,13 @@ h1 {
 
 /* Legal keeps the established site roles without inheriting an artistic hero tagline. */
 .legal-page-title {
-    font-family: "Noto Serif TC", serif;
+    font-family: var(--font-serif);
 }
 
 .legal-page-metadata {
     margin: 0 0 18px;
     color: var(--muted);
-    font-family: "Noto Sans TC", sans-serif;
+    font-family: var(--font-sans);
     font-size: 14px;
     font-weight: 500;
     line-height: 1.6;
@@ -389,7 +389,7 @@ h1 {
 
 .legal-page-intro,
 .legal-policy-panel p {
-    font-family: "Noto Sans TC", sans-serif;
+    font-family: var(--font-sans);
     font-size: 16px;
     line-height: 1.7;
 }
@@ -399,7 +399,7 @@ h1 {
 }
 
 .legal-policy-panel .result-section h2 {
-    font-family: "Noto Sans TC", sans-serif;
+    font-family: var(--font-sans);
     font-size: 24px;
     font-weight: 700;
     line-height: 1.25;
@@ -416,20 +416,20 @@ h1 {
 
 /* Privacy policy mirrors the stable Legal typography and remains a static document panel. */
 .privacy-page-title {
-    font-family: "Noto Serif TC", serif;
+    font-family: var(--font-serif);
 }
 
 .privacy-page-metadata {
     margin: 0 0 18px;
     color: var(--muted);
-    font-family: "Noto Sans TC", sans-serif;
+    font-family: var(--font-sans);
     font-size: 14px;
     font-weight: 500;
     line-height: 1.6;
 }
 
 .privacy-policy-panel p {
-    font-family: "Noto Sans TC", sans-serif;
+    font-family: var(--font-sans);
     font-size: 16px;
     line-height: 1.7;
 }
@@ -440,7 +440,7 @@ h1 {
 
 .privacy-policy-panel .section-title,
 .privacy-policy-panel .result-section h2 {
-    font-family: "Noto Sans TC", sans-serif;
+    font-family: var(--font-sans);
     font-size: 24px;
     font-weight: 700;
     line-height: 1.25;
@@ -3440,7 +3440,7 @@ html[data-theme="light"] .track-scroll-five-blade-rotor use {
 .status-page h1 {
     max-width: 720px;
     color: var(--gold);
-    font-family: "Noto Serif TC", serif;
+    font-family: var(--font-serif);
     font-size: 58px;
     line-height: 1.05;
 }
@@ -3624,7 +3624,7 @@ html:not([data-theme="light"]) .home-hero {
 
 .home-metrics dt {
     color: var(--gold);
-    font-family: "Noto Serif TC", serif;
+    font-family: var(--font-serif);
     font-size: 26px;
     font-weight: bold;
 }
@@ -3649,7 +3649,7 @@ html:not([data-theme="light"]) .home-hero {
 .home-feature-band h2,
 .about-copy h2 {
     margin: 0;
-    font-family: "Noto Serif TC", serif;
+    font-family: var(--font-serif);
     font-size: 34px;
     line-height: 1.2;
 }
@@ -3752,7 +3752,7 @@ html:not([data-theme="light"]) .home-hero {
 }
 
 .home-workflow-group > strong {
-    font-family: "Noto Serif TC", serif;
+    font-family: var(--font-serif);
     font-size: clamp(24px, 2.8vw, 34px);
     line-height: 1.08;
 }

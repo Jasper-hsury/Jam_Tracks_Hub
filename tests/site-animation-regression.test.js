@@ -54,26 +54,26 @@ test("homepage workflow does not pin or consume vertical scroll distance", () =>
 });
 
 test("Legal uses the established display and body font roles without artistic tagline styling", () => {
-    assert.match(legalHtml, /family=Noto\+Sans\+TC:wght@400;500;600;700&family=Noto\+Serif\+TC:wght@700/);
+    assert.match(legalHtml, /family=DM\+Serif\+Display:ital@0;1&family=Noto\+Sans\+TC:wght@400;500;600&family=Noto\+Serif\+TC:wght@400;600&family=Public\+Sans/);
     assert.match(legalView, /class="tracks-page legal-page"/);
     assert.match(legalView, /class="legal-page-metadata"/);
     assert.doesNotMatch(legalView, /class="hero-tagline"/);
-    assert.match(pagesCss, /\.legal-page-title\s*\{[^}]*font-family:\s*"Noto Serif TC", serif/s);
-    assert.match(pagesCss, /\.legal-page-metadata\s*\{[^}]*font-family:\s*"Noto Sans TC", sans-serif[^}]*font-size:\s*14px[^}]*font-weight:\s*500[^}]*line-height:\s*1\.6/s);
-    assert.match(pagesCss, /\.legal-policy-panel \.result-section h2\s*\{[^}]*font-family:\s*"Noto Sans TC", sans-serif[^}]*font-size:\s*24px[^}]*font-weight:\s*700[^}]*line-height:\s*1\.25/s);
+    assert.match(pagesCss, /\.legal-page-title\s*\{[^}]*font-family:\s*var\(--font-serif\)/s);
+    assert.match(pagesCss, /\.legal-page-metadata\s*\{[^}]*font-family:\s*var\(--font-sans\)[^}]*font-size:\s*14px[^}]*font-weight:\s*500[^}]*line-height:\s*1\.6/s);
+    assert.match(pagesCss, /\.legal-policy-panel \.result-section h2\s*\{[^}]*font-family:\s*var\(--font-sans\)[^}]*font-size:\s*24px[^}]*font-weight:\s*700[^}]*line-height:\s*1\.25/s);
     assert.match(pagesCss, /\.legal-page \.legal-policy-panel:hover\s*\{[^}]*background:\s*var\(--panel-background\)[^}]*box-shadow:\s*0 10px 26px var\(--shadow-color\)[^}]*transform:\s*none/s);
 });
 
 test("Privacy uses stable policy typography without panel hover or title transform", () => {
-    assert.match(privacyHtml, /family=Noto\+Sans\+TC:wght@400;500;600;700&family=Noto\+Serif\+TC:wght@700/);
+    assert.match(privacyHtml, /family=DM\+Serif\+Display:ital@0;1&family=Noto\+Sans\+TC:wght@400;500;600&family=Noto\+Serif\+TC:wght@400;600&family=Public\+Sans/);
     assert.match(privacyView, /class="tracks-page privacy-page"/);
     assert.match(privacyView, /class="privacy-page-metadata"/);
     assert.match(privacyView, /class="key-finder-panel privacy-policy-panel"/);
     assert.doesNotMatch(privacyView, /class="hero-tagline"/);
-    assert.match(pagesCss, /\.privacy-page-title\s*\{[^}]*font-family:\s*"Noto Serif TC", serif/s);
-    assert.match(pagesCss, /\.privacy-page-metadata\s*\{[^}]*font-family:\s*"Noto Sans TC", sans-serif[^}]*font-size:\s*14px[^}]*font-weight:\s*500[^}]*line-height:\s*1\.6/s);
+    assert.match(pagesCss, /\.privacy-page-title\s*\{[^}]*font-family:\s*var\(--font-serif\)/s);
+    assert.match(pagesCss, /\.privacy-page-metadata\s*\{[^}]*font-family:\s*var\(--font-sans\)[^}]*font-size:\s*14px[^}]*font-weight:\s*500[^}]*line-height:\s*1\.6/s);
     assert.match(pagesCss, /\.privacy-policy-panel\s*\{[^}]*animation:\s*none/s);
-    assert.match(pagesCss, /\.privacy-policy-panel \.section-title,\s*\.privacy-policy-panel \.result-section h2\s*\{[^}]*font-family:\s*"Noto Sans TC", sans-serif[^}]*font-size:\s*24px[^}]*font-weight:\s*700[^}]*line-height:\s*1\.25/s);
+    assert.match(pagesCss, /\.privacy-policy-panel \.section-title,\s*\.privacy-policy-panel \.result-section h2\s*\{[^}]*font-family:\s*var\(--font-sans\)[^}]*font-size:\s*24px[^}]*font-weight:\s*700[^}]*line-height:\s*1\.25/s);
     assert.match(pagesCss, /\.privacy-page \.privacy-policy-panel:hover\s*\{[^}]*background:\s*var\(--panel-background\)[^}]*box-shadow:\s*0 10px 26px var\(--shadow-color\)[^}]*transform:\s*none/s);
     assert.match(animationsJs, /heroPiecesForEntrance[\s\S]*\.filter\(target => !target\.closest\("\.privacy-page"\)\)/s);
     assert.match(animationsJs, /if \(heroPiecesForEntrance\.length\) \{\s*gsap\.set\(heroPiecesForEntrance/s);

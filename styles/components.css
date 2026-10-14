@@ -13,7 +13,7 @@
 
 /* 新增：品牌專屬標語的藝術字體設計 */
 .signature-slogan {
-    font-family: 'Noto Serif TC', serif; /* 使用襯線體增加文學與藝術感 */
+    font-family: var(--font-serif); /* 使用襯線體增加文學與藝術感 */
     font-style: italic; /* 斜體設計 */
     font-size: 22px; /* 字體稍微放大 */
     color: var(--ink); /* 使用你最亮眼的品牌金色 */
@@ -879,7 +879,7 @@
 
 .key-finder-final {
     color: var(--ink);
-    font-family: 'Noto Serif TC', serif;
+    font-family: var(--font-serif);
     font-size: 30px;
     font-weight: bold;
     margin-bottom: 4px;

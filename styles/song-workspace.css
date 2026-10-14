@@ -335,7 +335,7 @@ html[data-theme="default"] {
 
 .workspace-entry-card strong {
     margin: 28px 0 9px;
-    font-family: Georgia, "Noto Serif TC", serif;
+    font-family: var(--font-serif);
     font-size: clamp(1.45rem, 2vw, 2rem);
 }
 
@@ -414,7 +414,7 @@ html[data-theme="default"] {
 .workspace-import-card h3 {
     margin: 7px 0 8px;
     color: var(--workspace-text);
-    font-family: Georgia, "Noto Serif TC", serif;
+    font-family: var(--font-serif);
     font-size: 1.25rem;
 }
 
@@ -3147,7 +3147,7 @@ svg.workspace-anchor-action-icon {
 
     .workspace-line-dialog.is-edit-line-mode .workspace-dialog-heading h2 {
         margin: 0;
-        font-family: Georgia, "Times New Roman", serif;
+        font-family: var(--font-serif);
         font-size: clamp(2rem, 9vw, 2.6rem);
         font-weight: 700;
         line-height: 1.05;

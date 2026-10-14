@@ -118,7 +118,7 @@
     display: block;
     margin: 6px 0;
     color: var(--text);
-    font-family: "Noto Serif TC", serif;
+    font-family: var(--font-serif);
     font-size: 56px;
     line-height: 1;
 }

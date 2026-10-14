@@ -329,9 +329,9 @@ test("keeps backend, established tools, CSS, and current version byte-identical"
     assert.equal(hash, backendHashes[file], file);
   });
   const frozen = {
-    "styles/components.css": "7b5bd4faab7cddf94f888f80eddea5d7dc1566cee29b04c07f3b59330bc9f4ad",
-    "styles/pages.css": "64fcd2799d28eff7972578b78dc3f00847d7dc8ee54106cfd45cb8eeb5b9e6d7",
-    "styles/themes.css": "ff372437504e39b5ed360f52eefbe448b20f686e5d9bfbaec38c26a690918d45"
+    "styles/components.css": "d26cc992a0dfdb02efde0484f6ae11611a761678783f1a835d04a1e256cd630c",
+    "styles/pages.css": "d9da3e2044cb9da66dc4ecb74023caf73d052356df25ee956f8255ecb3748adf",
+    "styles/themes.css": "1c8e2566074a455da7e68de120363d7a6ae5f1cecf8f91f8f5f33e207d3935c4"
   };
   Object.entries(frozen).forEach(([file, expected]) => {
     const hash = crypto.createHash("sha256").update(fs.readFileSync(path.join(root, file))).digest("hex");
