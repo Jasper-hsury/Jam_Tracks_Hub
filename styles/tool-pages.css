@@ -1267,3 +1267,220 @@ html[data-theme] main.v3-tool-page .progression-writer-saved-item {
 html[data-theme] main.v3-tool-page .progression-writer-saved-item.is-active {
     border-color: var(--ink);
 }
+
+/* Fretboard Trainer -------------------------------------------------------- */
+html[data-theme] main.v3-tool-page .trainer-workspace {
+    gap: 24px;
+}
+
+html[data-theme] main.v3-tool-page .trainer-card,
+html[data-theme] main.v3-tool-page .trainer-card:hover {
+    padding: 28px;
+    color: var(--text-body);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .trainer-kicker {
+    margin: 0 0 6px;
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+html[data-theme]:lang(zh) main.v3-tool-page .trainer-kicker {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+}
+
+html[data-theme] main.v3-tool-page .trainer-card h2 {
+    color: var(--ink);
+    font-size: 30px;
+    line-height: 1.12;
+}
+
+/* Current question: the dark band. */
+html[data-theme] main.v3-tool-page .trainer-question-card,
+html[data-theme] main.v3-tool-page .trainer-question-card:hover {
+    color: var(--on-band);
+    background: var(--band);
+    border-color: var(--band-edge);
+}
+
+html[data-theme] main.v3-tool-page .trainer-question-card .trainer-kicker {
+    color: var(--accent-on-band);
+}
+
+html[data-theme] main.v3-tool-page .trainer-question-card h2 {
+    color: var(--on-band);
+}
+
+html[data-theme] main.v3-tool-page .trainer-question-topline #trainerProgress {
+    color: var(--on-band-muted);
+    font-weight: 600;
+}
+
+html[data-theme] main.v3-tool-page .trainer-question-display {
+    gap: 0;
+    border: 1px solid rgba(242, 237, 227, 0.22);
+}
+
+html[data-theme] main.v3-tool-page .trainer-question-display div {
+    padding: 18px 20px;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+}
+
+html[data-theme] main.v3-tool-page .trainer-question-display div + div {
+    border-left: 1px solid rgba(242, 237, 227, 0.22);
+}
+
+html[data-theme] main.v3-tool-page .trainer-question-display span {
+    color: var(--on-band-muted);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+html[data-theme] main.v3-tool-page .trainer-question-display small {
+    color: var(--on-band-muted);
+}
+
+html[data-theme] main.v3-tool-page .trainer-question-display strong {
+    margin: 6px 0 4px;
+    color: var(--on-band);
+    font-size: clamp(64px, 8vw, 104px);
+    font-weight: 400;
+}
+
+html[data-theme] main.v3-tool-page .trainer-feedback {
+    color: var(--on-band);
+    background: transparent;
+    border: 1px solid rgba(242, 237, 227, 0.22);
+    border-radius: 0;
+}
+
+html[data-theme] main.v3-tool-page .trainer-feedback.is-correct {
+    color: #a8dcc0;
+    background: transparent;
+    border-color: #7fc4a0;
+}
+
+html[data-theme] main.v3-tool-page .trainer-feedback.is-wrong {
+    color: #f5b3ab;
+    background: transparent;
+    border-color: #f0897f;
+}
+
+html[data-theme] main.v3-tool-page .trainer-feedback.is-revealed {
+    color: var(--on-band);
+    border-color: var(--accent-on-band);
+}
+
+/* Answer */
+html[data-theme] main.v3-tool-page .trainer-score {
+    padding: 8px 14px;
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--ink);
+    border-radius: 0;
+}
+
+html[data-theme] main.v3-tool-page .trainer-score strong {
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: 26px;
+    font-weight: 400;
+}
+
+html[data-theme] main.v3-tool-page .note-answer-grid {
+    gap: 6px;
+}
+
+html[data-theme] main.v3-tool-page .note-answer-grid button {
+    min-height: 52px;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+    font-weight: 600;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .note-answer-grid button:hover:not(:disabled) {
+    color: var(--ink);
+    background: var(--paper);
+    border-color: var(--ink);
+    box-shadow: none;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .note-answer-grid button:disabled {
+    filter: none;
+}
+
+html[data-theme] main.v3-tool-page .note-answer-grid button.is-correct {
+    color: var(--paper);
+    background: var(--ink);
+    border-color: var(--ink);
+    opacity: 1;
+}
+
+html[data-theme] main.v3-tool-page .note-answer-grid button.is-wrong {
+    color: var(--danger);
+    background: transparent;
+    border: 2px solid var(--danger);
+    opacity: 1;
+    text-decoration: line-through;
+}
+
+html[data-theme] main.v3-tool-page .trainer-actions {
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+}
+
+html[data-theme] main.v3-tool-page .trainer-actions :is(.primary-button, .secondary-button) {
+    min-height: 46px;
+    padding: 0 20px;
+    border-radius: 0;
+}
+
+html[data-theme] main.v3-tool-page .trainer-actions #resetTrainerButton {
+    border-color: var(--line);
+}
+
+/* Reference */
+html[data-theme] main.v3-tool-page .string-reference-grid {
+    gap: 0;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--line);
+}
+
+html[data-theme] main.v3-tool-page .string-reference-grid span {
+    padding: 14px 16px;
+    color: var(--ink);
+    background: transparent;
+    border: 0;
+    border-left: 1px solid var(--line);
+    border-radius: 0;
+    font-weight: 600;
+}
+
+html[data-theme] main.v3-tool-page .string-reference-grid span:first-child {
+    border-left: 0;
+}
+
+html[data-theme] main.v3-tool-page .string-reference-grid strong {
+    color: var(--accent);
+    font-family: var(--font-serif);
+    font-size: 30px;
+    font-weight: 400;
+}

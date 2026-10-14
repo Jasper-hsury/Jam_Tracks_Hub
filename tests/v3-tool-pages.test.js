@@ -127,3 +127,10 @@ test("Progression Writer swaps its three switches for segmented buttons bound to
   assert.match(view, /id="downloadProgressionButton"\s*class="v3-download-button progression-download-button"/);
   assert.doesNotMatch(view, /uiverse-|type="checkbox"|track-slides-download/);
 });
+
+test("Fretboard Trainer shows the question as a dark band and marks answers without color alone", () => {
+  assert.match(css, /main\.v3-tool-page \.trainer-question-card,\s*html\[data-theme\] main\.v3-tool-page \.trainer-question-card:hover \{[^}]*background: var\(--band\);/);
+  assert.match(css, /\.note-answer-grid button\.is-correct \{[^}]*background: var\(--ink\);/);
+  assert.match(css, /\.note-answer-grid button\.is-wrong \{[^}]*border: 2px solid var\(--danger\);[^}]*text-decoration: line-through;/);
+  assert.match(css, /\.note-answer-grid button \{\s*min-height: 52px;/);
+});
