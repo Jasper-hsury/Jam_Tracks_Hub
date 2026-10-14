@@ -248,14 +248,14 @@ html[data-theme] body[data-vue-page="song-workspace"] .workspace-entry-grid {
 
 html[data-theme] body[data-vue-page="song-workspace"] .workspace-entry-card {
     display: grid;
-    grid-template-columns: 64px minmax(0, 1fr) 46px;
+    grid-template-columns: 44px minmax(0, 1fr) 46px;
     grid-template-areas: "index title go" "index copy go";
     align-items: center;
     gap: 2px 16px;
     width: 100%;
     min-height: 0;
     margin: 0;
-    padding: 22px 8px 22px 0;
+    padding: 22px 20px;
     color: var(--text-body);
     background: transparent;
     border: 0;
@@ -884,25 +884,8 @@ html[data-theme] body[data-vue-page="song-workspace"].song-workspace-read-mode :
     opacity: 1;
 }
 
-/* Performance mode: always a dark stage --------------------------------------------- */
+/* Performance mode: a full-page stage in the current theme -------------------------- */
 html[data-theme] body[data-vue-page="song-workspace"] .workspace-performance {
-    --paper: #17130f;
-    --surface: #211c17;
-    --surface-sunken: #2a241e;
-    --ink: #f2ede3;
-    --text-body: #d8cfc2;
-    --text-muted: #a89e91;
-    --line: #3b342d;
-    --accent: #ecc5b4;
-    --focus: #8fc7b5;
-    --workspace-surface: #17130f;
-    --workspace-surface-strong: #17130f;
-    --workspace-soft: #2a241e;
-    --workspace-line: #3b342d;
-    --workspace-accent: #ecc5b4;
-    --workspace-text: #f2ede3;
-    --workspace-muted: #a89e91;
-    color-scheme: dark;
     color: var(--ink);
     background: var(--paper);
 }
@@ -932,7 +915,7 @@ html[data-theme] body[data-vue-page="song-workspace"] .performance-speed-help su
 }
 
 html[data-theme] body[data-vue-page="song-workspace"] .workspace-performance .workspace-line:hover {
-    background: var(--band);
+    background: color-mix(in srgb, var(--band) 8%, transparent);
 }
 
 html[data-theme] body[data-vue-page="song-workspace"] .workspace-performance :is(.workspace-icon-button, .workspace-button) {
@@ -943,9 +926,9 @@ html[data-theme] body[data-vue-page="song-workspace"] .workspace-performance :is
 
 html[data-theme] body[data-vue-page="song-workspace"] .workspace-performance .workspace-button-primary,
 html[data-theme] body[data-vue-page="song-workspace"] .workspace-performance #scrollToggleButton {
-    color: var(--ink);
-    background: #5c4b3f;
-    border-color: #5c4b3f;
+    color: var(--on-band);
+    background: var(--workspace-selected);
+    border-color: var(--workspace-selected);
 }
 
 html[data-theme] body[data-vue-page="song-workspace"] .performance-toolbar {
@@ -1029,6 +1012,109 @@ html[data-theme] body[data-vue-page="song-workspace"] .workspace-global-add-type
     border-color: var(--ink);
 }
 
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-anchor-preview button.is-selected {
+    color: var(--on-band);
+    background: var(--workspace-selected);
+    border-color: var(--workspace-selected);
+}
+
+/* Line editor on tablets and desktops: a heading, a word strip and a chord tracklist */
+@media (min-width: 721px) {
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-line-dialog .workspace-dialog-heading {
+        align-items: flex-start;
+        margin-bottom: 22px;
+        padding-bottom: 18px;
+        border-bottom: 1px solid var(--line);
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-line-dialog .workspace-line-dialog-subtitle {
+        display: block;
+        margin: 8px 0 0;
+        color: var(--text-muted);
+        font-size: 14px;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-line-dialog .workspace-anchor-preview {
+        gap: 6px;
+        min-height: 0;
+        margin: 14px 0 22px;
+        padding: 12px;
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-control);
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-line-dialog .workspace-anchor-preview button {
+        min-width: 0;
+        min-height: 36px;
+        padding: 0 12px;
+        color: var(--ink);
+        background: var(--surface-sunken);
+        border: 1px solid transparent;
+        border-radius: var(--radius-control);
+        font-size: 14px;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-line-dialog .workspace-anchor-preview button:hover {
+        border-color: var(--ink);
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-line-dialog #addAnchorButton {
+        min-height: 48px;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-line-dialog .workspace-anchor-list-heading {
+        display: flex;
+        flex: 1 0 100%;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 24px;
+        padding-bottom: 8px;
+        color: var(--accent);
+        border-bottom: 1px solid var(--ink);
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-line-dialog #anchorChordCount {
+        color: var(--text-muted);
+        letter-spacing: 0.04em;
+        text-transform: none;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-line-dialog .workspace-anchor-list {
+        gap: 0;
+        margin-top: 0;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-line-dialog .workspace-anchor-item {
+        gap: 8px;
+        padding: 10px 0;
+        background: transparent;
+        border: 0;
+        border-bottom: 1px solid var(--line);
+        border-radius: 0;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-line-dialog .workspace-anchor-item strong {
+        color: var(--ink);
+        font-weight: 600;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-line-dialog .workspace-anchor-item [data-action="edit-anchor"] {
+        color: var(--ink);
+        border-color: var(--line);
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-line-dialog .workspace-anchor-item [data-action="edit-anchor"]:hover:not(:disabled) {
+        color: var(--on-band);
+        background: var(--workspace-selected);
+        border-color: var(--workspace-selected);
+    }
+}
+
 /* Phones -------------------------------------------------------------------------------- */
 @media (max-width: 760px) {
     html[data-theme] body[data-vue-page="song-workspace"] .song-workspace-page {
@@ -1057,7 +1143,7 @@ html[data-theme] body[data-vue-page="song-workspace"] .workspace-global-add-type
     html[data-theme] body[data-vue-page="song-workspace"] .workspace-entry-card {
         grid-template-columns: 40px minmax(0, 1fr) 44px;
         gap: 2px 12px;
-        padding: 16px 0;
+        padding: 16px 12px;
     }
 
     html[data-theme] body[data-vue-page="song-workspace"] .workspace-entry-card::after {

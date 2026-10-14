@@ -74,11 +74,21 @@ test("the editor compacts the heading, numbers sections and selects in cocoa", (
   assert.match(css, /button\.workspace-line:is\(:hover, :focus-visible\)::after \{\s*opacity: 1;/);
 });
 
-test("read mode hides the heading, performance mode is a dark stage and dialogs are flat", () => {
+test("read mode hides the heading, performance mode follows the theme and dialogs are flat", () => {
   assert.match(css, /\.song-workspace-read-mode \.song-workspace-page:has\(#workspaceEditorView:not\(\[hidden\]\)\) \.song-workspace-hero \{\s*display: none;/);
-  assert.match(css, /\.workspace-performance \{\s*--paper: #17130f;[^}]*--workspace-text: #f2ede3;[^}]*color-scheme: dark;/);
+  assert.match(css, /\.workspace-performance \{\s*color: var\(--ink\);\s*background: var\(--paper\);\s*\}/);
+  assert.doesNotMatch(css, /color-scheme: dark/);
   assert.match(css, /\.workspace-dialog:not\(\.workspace-performance\) \{[^}]*border-top: 3px double var\(--ink\);/);
   assert.match(css, /#createSourceInput \{\s*font-family: ui-monospace/);
+});
+
+test("the line editor reads as a word strip and a chord tracklist on wider screens", () => {
+  const wide = css.slice(css.indexOf("@media (min-width: 721px)"), css.indexOf("@media (max-width: 760px)"));
+  assert.ok(wide.length > 0);
+  assert.match(css, /\.workspace-anchor-preview button\.is-selected \{\s*color: var\(--on-band\);\s*background: var\(--workspace-selected\);/);
+  assert.match(wide, /\.workspace-anchor-list-heading \{\s*display: flex;/);
+  assert.match(wide, /\.workspace-anchor-item \{[^}]*background: transparent;[^}]*border-bottom: 1px solid var\(--line\);/);
+  assert.match(css, /\.workspace-entry-card \{[^}]*padding: 22px 20px;/);
 });
 
 test("phones get one column, scrollable chord views and a swipeable shape strip", () => {
