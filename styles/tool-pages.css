@@ -1623,7 +1623,7 @@ html[data-theme] main.v3-tool-page .upload-privacy-note {
 }
 
 html[data-theme] main.v3-tool-page .analyze-file-button {
-    min-height: 0;
+    min-height: 46px;
     border-radius: 0;
     box-shadow: none;
 }
@@ -1740,4 +1740,31 @@ html[data-theme] main.v3-tool-page :is(.confidence-note, .result-explanation) {
 
 html[data-theme] main.v3-tool-page .certainty-badge {
     background: transparent;
+}
+
+/* Phones: tighter panels ----------------------------------------------------- */
+@media (max-width: 760px) {
+    html[data-theme] main.v3-tool-page :is(.dictionary-browser, .dictionary-detail, .scale-control-panel, .scale-summary, .key-options, .key-result, .progression-writer-panel, .progression-writer-meta, .progression-writer-entry, .progression-writer-saved, .trainer-card, .key-finder-panel) {
+        padding: 20px;
+    }
+
+    html[data-theme] main.v3-tool-page :is(.v3-selected-band, .progression-selected-heading) {
+        margin: -20px -20px 20px;
+        padding: 20px;
+    }
+
+    html[data-theme] main.v3-tool-page .scale-display-toolbar {
+        padding: 16px 20px;
+    }
+
+    html[data-theme] main.v3-tool-page .key-button-grid {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 760px) {
+    html[data-theme] main.v3-tool-page .trainer-score {
+        align-self: flex-start;
+        width: fit-content;
+    }
 }

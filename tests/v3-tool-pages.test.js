@@ -143,3 +143,9 @@ test("Key Finder keeps its flow and restyles upload, status and result surfaces"
   assert.match(css, /main\.v3-tool-page \.key-finder-result\.key-finder-empty \{[^}]*font-style: italic;/);
   assert.match(css, /main\.v3-tool-page \.key-finder-panel,\s*html\[data-theme\] main\.v3-tool-page \.key-finder-panel:hover \{[^}]*border-radius: 0;/);
 });
+
+test("phones get tighter panels and a full-height Analyze File button", () => {
+  assert.match(css, /\.analyze-file-button \{\s*min-height: 46px;/);
+  assert.match(css, /@media \(max-width: 760px\) \{[\s\S]*?\.key-finder-panel\) \{\s*padding: 20px;/);
+  assert.match(css, /@media \(max-width: 760px\) \{[\s\S]*?\.key-button-grid \{\s*grid-template-columns: repeat\(6, minmax\(0, 1fr\)\);/);
+});
