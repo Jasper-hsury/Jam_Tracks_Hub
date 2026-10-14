@@ -154,3 +154,13 @@ test("Chord Dictionary diagrams inset the neck so edge-string dots stay inside t
   assert.match(css, /\.chord-shape-card \.diagram-neck \{\s*width: calc\(100% \* 5 \/ 6\);/);
   assert.match(css, /\.chord-shape-card \.diagram-base-fret \{\s*right: calc\(100% \+ 13px\);/);
 });
+
+test("the band is a softer cocoa brown in both themes and every page fetches the new themes.css", () => {
+  const themes = read("styles/themes.css");
+  assert.match(themes, /--band: #3a2f27;\s*--band-edge: #4a3d33;\s*--on-band: #f2ede3;\s*--on-band-muted: #cbbcab;\s*--accent-on-band: #ecc5b4;/);
+  assert.match(themes, /--band: #4a3d33;\s*--band-edge: #4a3d33;\s*--on-band: #f2ede3;\s*--on-band-muted: #d3c6b6;\s*--accent-on-band: #ecc5b4;/);
+  const pages = fs.readdirSync(root).filter(file => file.endsWith(".html") && read(file).includes("themes.css"));
+  assert.ok(pages.length >= 14);
+  pages.forEach(page => assert.match(read(page), /themes\.css\?v=20261014-v3-cocoa-band"/, page));
+  assert.doesNotMatch(read("vite.config.mjs") + read("tools/scripts/verify-cloudflare-build.js"), /themes\.css\?v=20261014-v3-liner-notes/);
+});
