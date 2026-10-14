@@ -6321,3 +6321,933 @@ html[data-language="zh-TW"] .home-release-card .release-number {
         border-right: 0;
     }
 }
+
+/* ====================
+   v3 Homepage: Liner Notes
+   Record sleeve hero, tracklist band, releases, liner notes and contact.
+   Scoped to .v3-home so the earlier homepage rules above stay inert.
+   ==================== */
+html[data-theme] .v3-home .home-section-inner,
+html[data-theme] .v3-home .home-feature-inner {
+    box-sizing: border-box;
+    width: min(1180px, calc(100% - 64px));
+    max-width: none;
+    margin: 0 auto;
+}
+
+html[data-theme] .v3-home .home-eyebrow {
+    margin: 0;
+    color: var(--text-muted);
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+html[data-theme]:lang(zh) .v3-home .home-eyebrow {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: none;
+}
+
+/* Hero */
+html[data-theme] .v3-home .home-hero {
+    min-height: 0;
+    padding: 72px 0 96px;
+    background: none;
+    text-align: left;
+}
+
+html[data-theme] .v3-home .home-hero::before,
+html[data-theme] .v3-home .home-hero::after {
+    content: none;
+    display: none;
+}
+
+html[data-theme] .v3-home .home-hero .home-eyebrow {
+    color: var(--accent);
+    text-align: center;
+}
+
+html[data-theme] .v3-home .home-hero h1 {
+    width: 100%;
+    max-width: none;
+    margin: 16px 0 0;
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: clamp(80px, 13vw, 200px);
+    font-weight: 400;
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+    text-align: center;
+}
+
+html[data-theme] .v3-home .home-hero .signature-slogan {
+    margin: 20px 0 0;
+    color: var(--accent);
+    font-family: var(--font-serif);
+    font-size: clamp(22px, 2.4vw, 28px);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-align: center;
+}
+
+html[data-theme]:lang(zh) .v3-home .home-hero .signature-slogan {
+    font-style: normal;
+    letter-spacing: 0.04em;
+}
+
+html[data-theme] .v3-home .v3-hero-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+    align-items: center;
+    gap: 56px;
+    margin-top: 64px;
+}
+
+html[data-theme] .v3-home .v3-sleeve-stage {
+    position: relative;
+    width: 100%;
+    max-width: 560px;
+    aspect-ratio: 560 / 460;
+}
+
+html[data-theme] .v3-home .v3-record {
+    position: absolute;
+    z-index: 1;
+    top: 8.7%;
+    left: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 67.9%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background: #1f1a15;
+}
+
+html[data-theme="default"] .v3-home .v3-record {
+    box-shadow: 0 0 0 1px var(--line);
+}
+
+html[data-theme] .v3-home .v3-record::before,
+html[data-theme] .v3-home .v3-record::after {
+    position: absolute;
+    border: 1px solid #3b342d;
+    border-radius: 50%;
+    content: "";
+}
+
+html[data-theme] .v3-home .v3-record::before {
+    inset: 9%;
+}
+
+html[data-theme] .v3-home .v3-record::after {
+    inset: 20%;
+}
+
+html[data-theme] .v3-home .v3-record-label {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    color: #1f1a15;
+    background: #f2ede3;
+    font-family: var(--font-serif);
+    font-size: clamp(11px, 1.2vw, 15px);
+    line-height: 1.2;
+    text-align: center;
+}
+
+html[data-theme] .v3-home .v3-sleeve {
+    position: absolute;
+    z-index: 2;
+    top: 6.5%;
+    left: 0;
+    width: 71.4%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: var(--sleeve);
+    box-shadow: 10px 10px 0 rgba(var(--ink-rgb), 0.12);
+}
+
+html[data-theme="default"] .v3-home .v3-sleeve {
+    box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.45);
+}
+
+html[data-theme] .v3-home .v3-sleeve-brand,
+html[data-theme] .v3-home .v3-sleeve-tagline {
+    position: absolute;
+    right: 7%;
+    left: 7%;
+    overflow: hidden;
+    color: #f2ede3;
+    font-family: var(--font-serif);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+html[data-theme] .v3-home .v3-sleeve-brand {
+    top: 5%;
+    font-size: clamp(12px, 1.6vw, 18px);
+}
+
+html[data-theme] .v3-home .v3-sleeve-tagline {
+    bottom: 4.5%;
+    font-size: clamp(11px, 1.3vw, 15px);
+    font-style: italic;
+}
+
+html[data-theme]:lang(zh) .v3-home .v3-sleeve-tagline {
+    font-style: normal;
+}
+
+html[data-theme] .v3-home .v3-sleeve-art {
+    position: absolute;
+    bottom: 14%;
+    left: 8%;
+    width: 84%;
+    height: 84%;
+    object-fit: contain;
+    object-position: bottom;
+}
+
+html[data-theme] .v3-home .v3-sleeve-stage-line {
+    position: absolute;
+    right: 0;
+    bottom: 14%;
+    left: 0;
+    height: 2px;
+    background: #f2ede3;
+}
+
+html[data-theme] .v3-home .v3-hero-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+html[data-theme] .v3-home .home-lead {
+    max-width: none;
+    margin: 0;
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: clamp(21px, 2vw, 26px);
+    font-weight: 400;
+    line-height: 1.45;
+}
+
+html[data-theme]:lang(zh) .v3-home .home-lead {
+    font-size: clamp(18px, 1.7vw, 21px);
+    line-height: 1.75;
+}
+
+html[data-theme] .v3-home .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 0;
+}
+
+html[data-theme] .v3-home .hero-actions .primary-button,
+html[data-theme] .v3-home .hero-actions .secondary-button {
+    display: inline-flex;
+    align-items: center;
+    min-height: 48px;
+    box-sizing: border-box;
+    padding: 0 24px;
+    border: 1px solid var(--ink);
+    border-radius: 0;
+    box-shadow: none;
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    transform: none;
+}
+
+html[data-theme] .v3-home .hero-actions .primary-button {
+    color: var(--paper);
+    background: var(--ink);
+}
+
+html[data-theme] .v3-home .hero-actions .secondary-button {
+    color: var(--ink);
+    background: transparent;
+}
+
+html[data-theme] .v3-home .hero-actions .primary-button:hover,
+html[data-theme] .v3-home .hero-actions .primary-button:focus-visible {
+    color: var(--on-accent);
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+html[data-theme] .v3-home .hero-actions .secondary-button:hover,
+html[data-theme] .v3-home .hero-actions .secondary-button:focus-visible {
+    color: var(--paper);
+    background: var(--ink);
+}
+
+html[data-theme] .v3-home .home-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 12px 0 0;
+    padding: 0;
+    border: 0;
+    border-top: 1px solid var(--ink);
+    background: none;
+    box-shadow: none;
+}
+
+html[data-theme] .v3-home .home-metrics > div {
+    padding: 16px 0 0 16px;
+    border: 0;
+    border-left: 1px solid var(--line);
+    background: none;
+    box-shadow: none;
+}
+
+html[data-theme] .v3-home .home-metrics > div:first-child {
+    padding-left: 0;
+    border-left: 0;
+}
+
+html[data-theme] .v3-home .home-metrics dt {
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: 44px;
+    font-weight: 400;
+    line-height: 1;
+}
+
+html[data-theme] .v3-home .home-metrics dd {
+    margin: 6px 0 0;
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+/* Tracklist band */
+html[data-theme] .v3-home .v3-band {
+    margin: 0;
+    padding: 88px 0;
+    color: var(--on-band);
+    background: var(--band);
+    border-top: 1px solid var(--band-edge);
+    border-bottom: 1px solid var(--band-edge);
+}
+
+html[data-theme] .v3-home .home-tools.v3-band {
+    border-bottom: 0;
+}
+
+html[data-theme] .v3-home .v3-band--feature {
+    padding-top: 0;
+    border-top: 0;
+}
+
+html[data-theme] .v3-home .v3-band .home-eyebrow {
+    color: var(--on-band-muted);
+}
+
+html[data-theme] .v3-home .v3-band-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 40px;
+}
+
+html[data-theme] .v3-home .v3-band h2 {
+    margin: 0;
+    color: var(--on-band);
+    font-family: var(--font-serif);
+    font-size: clamp(40px, 6vw, 72px);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+}
+
+html[data-theme]:lang(zh) .v3-home .v3-band h2 {
+    font-size: clamp(34px, 5vw, 58px);
+    font-weight: 600;
+    letter-spacing: 0;
+}
+
+html[data-theme] .v3-home .v3-tracklist {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: auto auto;
+    grid-auto-flow: column;
+    column-gap: 56px;
+}
+
+html[data-theme] .v3-home .v3-tracklist-group {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    transform: none;
+}
+
+html[data-theme] .v3-home .v3-side-title {
+    margin: 0 0 4px;
+    color: var(--accent-on-band);
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-style: italic;
+}
+
+html[data-theme]:lang(zh) .v3-home .v3-side-title {
+    font-size: 20px;
+    font-style: normal;
+}
+
+html[data-theme] .v3-home .v3-tracklist-group > strong {
+    display: block;
+    margin: 20px 0 6px;
+    color: var(--on-band-muted);
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+html[data-theme]:lang(zh) .v3-home .v3-tracklist-group > strong {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+}
+
+html[data-theme] .v3-home .home-workflow-links {
+    display: flex;
+    flex-direction: column;
+}
+
+html[data-theme] .v3-home .home-workflow-link {
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr);
+    gap: 12px;
+    padding: 18px 0;
+    border: 0;
+    border-top: 1px solid #3b342d;
+    border-radius: 0;
+    color: var(--on-band);
+    background: none;
+    box-shadow: none;
+    text-decoration: none;
+    transform: none;
+}
+
+html[data-theme] .v3-home .v3-tracklist-group:nth-child(2n) .home-workflow-link:last-child {
+    border-bottom: 1px solid #3b342d;
+}
+
+html[data-theme] .v3-home .v3-track-no {
+    padding-top: 5px;
+    color: var(--on-band-muted);
+    font-size: 14px;
+}
+
+html[data-theme] .v3-home .v3-track-name {
+    display: block;
+    color: var(--on-band);
+    font-family: var(--font-serif);
+    font-size: 22px;
+    line-height: 1.3;
+}
+
+html[data-theme]:lang(zh) .v3-home .v3-track-name {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+html[data-theme] .v3-home .home-workflow-link small {
+    display: block;
+    margin-top: 4px;
+    color: var(--on-band-muted);
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+html[data-theme] .v3-home .home-workflow-link:hover .v3-track-no,
+html[data-theme] .v3-home .home-workflow-link:hover .v3-track-name,
+html[data-theme] .v3-home .home-workflow-link:focus-visible .v3-track-no,
+html[data-theme] .v3-home .home-workflow-link:focus-visible .v3-track-name {
+    color: var(--accent-on-band);
+}
+
+html[data-theme] .v3-home .home-workflow-link:focus-visible {
+    outline: 2px solid var(--accent-on-band);
+    outline-offset: 4px;
+}
+
+/* Featured audio */
+html[data-theme] .v3-home .home-feature-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    align-items: center;
+    gap: 40px;
+    padding: 28px;
+    border: 1px solid #3b342d;
+    background: none;
+}
+
+html[data-theme]:lang(zh) .v3-home .v3-band--feature h2 {
+    font-size: clamp(22px, 2.6vw, 30px);
+    line-height: 1.35;
+}
+
+html[data-theme] .v3-home .v3-feature-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+html[data-theme] .v3-home .v3-band--feature h2 {
+    font-size: clamp(26px, 3vw, 34px);
+    line-height: 1.2;
+    letter-spacing: 0;
+}
+
+html[data-theme] .v3-home .v3-feature-copy > p:not(.home-eyebrow) {
+    margin: 0;
+    color: var(--on-band-muted);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+html[data-theme] .v3-home .home-video-player {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+}
+
+html[data-theme] .v3-home .home-video-player iframe {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+    border-radius: 0;
+}
+
+/* Latest releases */
+html[data-theme] .v3-home .home-releases {
+    padding: 88px 0;
+    background: none;
+}
+
+html[data-theme] .v3-home .home-releases .home-section-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 32px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--ink);
+}
+
+html[data-theme] .v3-home .home-releases h2 {
+    margin: 6px 0 0;
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: clamp(36px, 5vw, 60px);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+}
+
+html[data-theme]:lang(zh) .v3-home .home-releases h2 {
+    font-weight: 600;
+    letter-spacing: 0;
+}
+
+html[data-theme] .v3-home .text-link {
+    color: var(--accent);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+html[data-theme] .v3-home .text-link:hover,
+html[data-theme] .v3-home .text-link:focus-visible {
+    color: var(--accent-hover);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+html[data-theme] .v3-home .home-release-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+    gap: 32px;
+}
+
+html[data-theme] .v3-home .home-release-card {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    transform: none;
+}
+
+html[data-theme] .v3-home .release-cover-link,
+html[data-theme] .v3-home .release-cover-link img {
+    display: block;
+    width: 100%;
+    border-radius: 0;
+}
+
+html[data-theme] .v3-home .release-cover-link img {
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+}
+
+html[data-theme] .v3-home .release-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0;
+}
+
+html[data-theme] .v3-home .release-number {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+}
+
+html[data-theme] .v3-home .release-copy h3 {
+    margin: 0;
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.25;
+}
+
+html[data-theme]:lang(zh) .v3-home .release-copy h3 {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+html[data-theme] .v3-home .release-note {
+    margin: 0;
+    color: var(--text-body);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+html[data-theme] .v3-home .track-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    margin: 0;
+}
+
+html[data-theme] .v3-home .track-meta span {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    color: var(--text-muted);
+    background: none;
+    font-size: 13px;
+}
+
+html[data-theme] .v3-home .track-meta span:first-child {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+html[data-theme] .v3-home .release-actions {
+    display: flex;
+    gap: 18px;
+    margin-top: 4px;
+}
+
+/* Liner notes and contact */
+html[data-theme] .v3-home .home-about {
+    padding: 24px 0 96px;
+    background: none;
+}
+
+html[data-theme] .v3-home .home-about-layout {
+    display: block;
+    padding-top: 40px;
+    border-top: 3px double var(--ink);
+}
+
+html[data-theme] .v3-home .about-copy {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    column-gap: 56px;
+    row-gap: 16px;
+    max-width: none;
+}
+
+html[data-theme] .v3-home .about-copy > :not(.about-connect) {
+    grid-column: 1;
+}
+
+html[data-theme] .v3-home .about-copy h2 {
+    margin: 0;
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: clamp(30px, 3.4vw, 38px);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.2;
+}
+
+html[data-theme]:lang(zh) .v3-home .about-copy h2 {
+    font-size: clamp(26px, 3vw, 34px);
+    font-style: normal;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+html[data-theme] .v3-home .home-about-summary {
+    margin: 0;
+    color: var(--text-body);
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+html[data-theme]:lang(zh) .v3-home .home-about-summary {
+    font-size: 16px;
+    line-height: 1.85;
+}
+
+html[data-theme] .v3-home .about-connect {
+    display: flex;
+    grid-row: 1 / span 6;
+    grid-column: 2;
+    flex-direction: column;
+    gap: 18px;
+    margin: 0;
+    padding: 28px;
+    border: 1px solid var(--line);
+    border-radius: 0;
+    background: var(--surface);
+    box-shadow: none;
+}
+
+html[data-theme] .v3-home .about-contact-prompt {
+    margin: 0;
+    color: var(--text-body);
+    font-size: 16px;
+    line-height: 1.65;
+}
+
+html[data-theme] .v3-home .about-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+html[data-theme] .v3-home .v3-connect-button,
+html[data-theme] .v3-home .v3-connect-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    box-sizing: border-box;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+html[data-theme] .v3-home .v3-connect-button {
+    padding: 0 18px;
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    background: transparent;
+}
+
+html[data-theme] .v3-home .v3-connect-button--primary {
+    color: var(--paper);
+    background: var(--ink);
+}
+
+html[data-theme] .v3-home .v3-connect-button:hover,
+html[data-theme] .v3-home .v3-connect-button:focus-visible {
+    color: var(--paper);
+    background: var(--ink);
+}
+
+html[data-theme] .v3-home .v3-connect-button--primary:hover,
+html[data-theme] .v3-home .v3-connect-button--primary:focus-visible {
+    color: var(--on-accent);
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+html[data-theme] .v3-home .v3-connect-link {
+    color: var(--accent);
+}
+
+html[data-theme] .v3-home .v3-connect-link:hover,
+html[data-theme] .v3-home .v3-connect-link:focus-visible {
+    color: var(--accent-hover);
+}
+
+html[data-theme] .v3-home .v3-connect-icon {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linejoin: round;
+}
+
+html[data-theme] .v3-home .home-subscribe-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 0;
+    padding: 18px 0 0;
+    border: 0;
+    border-top: 1px solid var(--line);
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+}
+
+html[data-theme] .v3-home .home-subscribe-title {
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: 21px;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+html[data-theme]:lang(zh) .v3-home .home-subscribe-title {
+    font-size: 19px;
+    font-weight: 600;
+}
+
+html[data-theme] .v3-home .about-connect .home-subscribe-form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0;
+}
+
+html[data-theme] .v3-home .home-subscribe-form input[type="email"] {
+    min-width: 0;
+    min-height: 48px;
+    box-sizing: border-box;
+    padding: 0 14px;
+    border: 1px solid var(--ink);
+    border-right: 0;
+    border-radius: 0;
+    color: var(--ink);
+    background: var(--paper);
+    box-shadow: none;
+    font: inherit;
+    font-size: 15px;
+}
+
+html[data-theme] .v3-home .home-subscribe-button {
+    min-height: 48px;
+    padding: 0 20px;
+    border: 1px solid var(--ink);
+    border-radius: 0;
+    color: var(--paper);
+    background: var(--ink);
+    box-shadow: none;
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 600;
+    transform: none;
+}
+
+html[data-theme] .v3-home .home-subscribe-button:hover:not(:disabled),
+html[data-theme] .v3-home .home-subscribe-button:focus-visible {
+    color: var(--on-accent);
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+html[data-theme] .v3-home .home-subscribe-status {
+    min-height: 1.4em;
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+@media (max-width: 860px) {
+    html[data-theme] .v3-home .v3-tracklist {
+        grid-template-columns: 1fr;
+        grid-template-rows: none;
+        grid-auto-flow: row;
+    }
+
+    html[data-theme] .v3-home .v3-tracklist-group.is-side-b:first-of-type,
+    html[data-theme] .v3-home .v3-tracklist-group:nth-child(3) {
+        margin-top: 40px;
+    }
+
+    html[data-theme] .v3-home .home-feature-inner,
+    html[data-theme] .v3-home .about-copy {
+        grid-template-columns: 1fr;
+    }
+
+    html[data-theme] .v3-home .about-connect {
+        grid-row: auto;
+        grid-column: 1;
+        margin-top: 16px;
+    }
+}
+
+@media (max-width: 640px) {
+    html[data-theme] .v3-home .home-section-inner,
+    html[data-theme] .v3-home .home-feature-inner {
+        width: calc(100% - 40px);
+    }
+
+    html[data-theme] .v3-home .home-hero {
+        padding: 40px 0 56px;
+    }
+
+    html[data-theme] .v3-home .v3-hero-grid {
+        gap: 36px;
+        margin-top: 36px;
+    }
+
+    html[data-theme] .v3-home .v3-band,
+    html[data-theme] .v3-home .home-releases {
+        padding: 56px 0;
+    }
+
+    html[data-theme] .v3-home .v3-band--feature {
+        padding-top: 0;
+    }
+
+    html[data-theme] .v3-home .home-feature-inner {
+        padding: 20px;
+    }
+
+    html[data-theme] .v3-home .home-metrics dt {
+        font-size: 34px;
+    }
+
+    html[data-theme] .v3-home .about-connect {
+        padding: 20px;
+    }
+}

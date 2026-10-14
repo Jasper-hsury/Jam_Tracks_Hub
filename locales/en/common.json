@@ -101,6 +101,14 @@
         ]
       }
     },
+    "tracklist": {
+      "label": "Tracklist",
+      "recordSide": "Side A",
+      "sides": {
+        "a": "Side A — Practice & Understand",
+        "b": "Side B — Create & Play"
+      }
+    },
     "about": {
       "eyebrow": "ABOUT JAM TRACKS HUB",
       "imageAlt": "Jasper playing acoustic guitar on stage",

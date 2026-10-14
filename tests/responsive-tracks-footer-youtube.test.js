@@ -66,20 +66,20 @@ test("featured YouTube player remains a responsive 16:9 iframe", () => {
 test("homepage workflow uses four visible responsive groups without horizontal travel", () => {
     const css = read("styles/pages.css");
     const home = read("src/views/HomeView.vue");
-    const trackStart = css.indexOf(".home-step-track {");
+    const trackStart = css.indexOf("html[data-theme] .v3-home .v3-tracklist {");
     const trackRule = css.slice(trackStart, css.indexOf("}", trackStart) + 1);
 
+    assert.ok(trackStart > 0);
     assert.match(trackRule, /display:\s*grid/);
     assert.match(trackRule, /grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
-    assert.match(trackRule, /width:\s*100%/);
-    assert.match(trackRule, /min-width:\s*0/);
-    assert.doesNotMatch(trackRule, /display:\s*flex|width:\s*max-content|home-step-end-buffer/);
-    assert.match(css, /\.home-step-rail\s*\{[^}]*overflow:\s*visible/s);
-    assert.match(css, /@media \(max-width: 700px\)\s*\{[\s\S]*?\.home-step-track\s*\{[^}]*grid-template-columns:\s*1fr/s);
-    assert.match(css, /\.home-workflow-link:focus-visible[\s\S]*?\{[^}]*outline:/s);
-    assert.equal((home.match(/class="start-card home-step-card home-workflow-group"/g) || []).length, 1);
+    assert.match(trackRule, /grid-auto-flow:\s*column/);
+    assert.doesNotMatch(trackRule, /display:\s*flex|width:\s*max-content|overflow-x/);
+    assert.match(css, /@media \(max-width: 860px\)\s*\{[\s\S]*?\.v3-tracklist\s*\{[^}]*grid-template-columns:\s*1fr/s);
+    assert.match(css, /\.v3-home \.home-workflow-link:focus-visible\s*\{[^}]*outline:/s);
+    assert.equal((home.match(/class="home-workflow-group v3-tracklist-group"/g) || []).length, 1);
+    assert.doesNotMatch(home, /home-step-card|home-step-track|home-step-rail/);
     assert.match(home, /v-for="group in workflowGroups"/);
-    assert.match(home, /\{ href: "\/song-workspace", title: "songWorkspace", workspace: true \}/);
+    assert.match(home, /\{ href: "\/song-workspace", title: "songWorkspace", workspace: true, no: "B2" \}/);
     assert.match(home, /<nav class="home-workflow-links" :aria-label="home\.workflow\[group\.id\]">/);
     assert.doesNotMatch(home, /home-workflow-group--workspace|home-workspace-badges|home-workspace-link/);
 });
