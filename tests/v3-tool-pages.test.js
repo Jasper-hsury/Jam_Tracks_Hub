@@ -149,3 +149,8 @@ test("phones get tighter panels and a full-height Analyze File button", () => {
   assert.match(css, /@media \(max-width: 760px\) \{[\s\S]*?\.key-finder-panel\) \{\s*padding: 20px;/);
   assert.match(css, /@media \(max-width: 760px\) \{[\s\S]*?\.key-button-grid \{\s*grid-template-columns: repeat\(6, minmax\(0, 1fr\)\);/);
 });
+
+test("Chord Dictionary diagrams inset the neck so edge-string dots stay inside the card", () => {
+  assert.match(css, /\.chord-shape-card \.diagram-neck \{\s*width: calc\(100% \* 5 \/ 6\);/);
+  assert.match(css, /\.chord-shape-card \.diagram-base-fret \{\s*right: calc\(100% \+ 13px\);/);
+});

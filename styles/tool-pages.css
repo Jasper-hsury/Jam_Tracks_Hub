@@ -1768,3 +1768,18 @@ html[data-theme] main.v3-tool-page .certainty-badge {
         width: fit-content;
     }
 }
+
+/* Chord Dictionary diagrams: inset the neck so the edge strings line up with
+   the X/O and string-name columns and their finger dots stay inside the card. */
+html[data-theme] main.v3-tool-page .chord-shape-card {
+    padding-inline: 12px;
+}
+
+html[data-theme] main.v3-tool-page .chord-shape-card .diagram-neck {
+    width: calc(100% * 5 / 6);
+}
+
+html[data-theme] main.v3-tool-page .chord-shape-card .diagram-base-fret {
+    right: calc(100% + 13px);
+    font-size: 11px;
+}
