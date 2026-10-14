@@ -841,4 +841,192 @@ html[data-theme] body[data-vue-page="song-workspace"] .workspace-shape-card h3 {
     font-weight: 400;
 }
 
+/* Read mode: just the chart and its toolbar --------------------------------------- */
+html[data-theme] body[data-vue-page="song-workspace"].song-workspace-read-mode .song-workspace-page:has(#workspaceEditorView:not([hidden])) .song-workspace-hero {
+    display: none;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-read-toolbar {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-control);
+    box-shadow: none;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] #exitReadModeButton {
+    color: var(--ink);
+    background: transparent;
+    border-color: var(--ink);
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] #exitReadModeButton::before {
+    content: "←\00a0";
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] #exitReadModeButton:hover {
+    color: var(--paper);
+    background: var(--ink);
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-read-summary {
+    flex: 0 1 auto;
+    margin-right: auto;
+    padding: 8px 12px;
+    color: var(--on-band);
+    background: var(--band);
+    border-radius: var(--radius-control);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"].song-workspace-read-mode :is(#songChartTitle, #songChartTitle .workspace-title-trigger) {
+    color: var(--ink);
+    opacity: 1;
+}
+
+/* Performance mode: always a dark stage --------------------------------------------- */
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-performance {
+    --paper: #17130f;
+    --surface: #211c17;
+    --surface-sunken: #2a241e;
+    --ink: #f2ede3;
+    --text-body: #d8cfc2;
+    --text-muted: #a89e91;
+    --line: #3b342d;
+    --accent: #ecc5b4;
+    --focus: #8fc7b5;
+    --workspace-surface: #17130f;
+    --workspace-surface-strong: #17130f;
+    --workspace-soft: #2a241e;
+    --workspace-line: #3b342d;
+    --workspace-accent: #ecc5b4;
+    --workspace-text: #f2ede3;
+    --workspace-muted: #a89e91;
+    color-scheme: dark;
+    color: var(--ink);
+    background: var(--paper);
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .performance-header {
+    background: var(--paper);
+    border-bottom: 3px double var(--line);
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .performance-header .result-kicker {
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] #performanceTitle {
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: clamp(30px, 4vw, 40px);
+    font-weight: 400;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .performance-speed-help summary {
+    color: var(--accent);
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-performance .workspace-line:hover {
+    background: var(--band);
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-performance :is(.workspace-icon-button, .workspace-button) {
+    color: var(--ink);
+    background: transparent;
+    border-color: var(--ink);
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-performance .workspace-button-primary,
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-performance #scrollToggleButton {
+    color: var(--ink);
+    background: #5c4b3f;
+    border-color: #5c4b3f;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .performance-toolbar {
+    background: var(--surface);
+    border-color: var(--line);
+    border-radius: 10px;
+    box-shadow: none;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .performance-toolbar label {
+    background: transparent;
+    border-color: var(--line);
+    border-radius: var(--radius-control);
+}
+
+/* Dialogs ------------------------------------------------------------------------------ */
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-dialog:not(.workspace-performance) {
+    color: var(--text-body);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-top: 3px double var(--ink);
+    border-radius: 0;
+    box-shadow: 0 24px 60px rgba(15, 13, 11, 0.28);
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-dialog-heading .result-kicker {
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-dialog-heading h2 {
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: 36px;
+    font-weight: 400;
+    line-height: 1.05;
+}
+
+html[data-theme]:lang(zh) body[data-vue-page="song-workspace"] .workspace-dialog-heading h2 {
+    font-weight: 600;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-icon-button {
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--ink);
+    border-radius: var(--radius-control);
+    box-shadow: none;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] #createSourceInput {
+    font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-dialog-disclosure {
+    color: var(--text-muted);
+    background: var(--surface-sunken);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-control);
+    box-shadow: none;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-dialog-actions {
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] :is(.workspace-global-add-type, .workspace-line-card, .workspace-anchor-item) {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-control);
+    box-shadow: none;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-global-add-type:hover {
+    border-color: var(--ink);
+}
+
 }

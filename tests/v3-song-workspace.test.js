@@ -73,3 +73,10 @@ test("the editor compacts the heading, numbers sections and selects in cocoa", (
   assert.match(css, /\.workspace-segmented button:is\(\.is-selected, \[aria-pressed="true"\]\):hover \{\s*color: var\(--on-band\);\s*background: var\(--workspace-selected\);/);
   assert.match(css, /button\.workspace-line:is\(:hover, :focus-visible\)::after \{\s*opacity: 1;/);
 });
+
+test("read mode hides the heading, performance mode is a dark stage and dialogs are flat", () => {
+  assert.match(css, /\.song-workspace-read-mode \.song-workspace-page:has\(#workspaceEditorView:not\(\[hidden\]\)\) \.song-workspace-hero \{\s*display: none;/);
+  assert.match(css, /\.workspace-performance \{\s*--paper: #17130f;[^}]*--workspace-text: #f2ede3;[^}]*color-scheme: dark;/);
+  assert.match(css, /\.workspace-dialog:not\(\.workspace-performance\) \{[^}]*border-top: 3px double var\(--ink\);/);
+  assert.match(css, /#createSourceInput \{\s*font-family: ui-monospace/);
+});
