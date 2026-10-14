@@ -127,8 +127,8 @@
     min-height: 58px;
     padding: 14px 16px;
     color: var(--copy-text);
-    background: rgba(127, 183, 173, 0.08);
-    border: 1px solid rgba(127, 183, 173, 0.28);
+    background: rgba(var(--accent-rgb), 0.08);
+    border: 1px solid rgba(var(--accent-rgb), 0.28);
     border-radius: 8px;
     font-weight: 600;
     line-height: 1.55;
@@ -136,14 +136,14 @@
 
 .trainer-feedback.is-correct {
     color: var(--teal);
-    background: rgba(127, 183, 173, 0.14);
-    border-color: rgba(127, 183, 173, 0.44);
+    background: rgba(var(--accent-rgb), 0.14);
+    border-color: rgba(var(--accent-rgb), 0.44);
 }
 
 .trainer-feedback.is-wrong {
     color: #e2c1c4;
-    background: rgba(167, 111, 115, 0.1);
-    border-color: rgba(167, 111, 115, 0.42);
+    background: rgba(var(--accent-rgb), 0.1);
+    border-color: rgba(var(--accent-rgb), 0.42);
 }
 
 html[data-theme="light"] .trainer-feedback.is-wrong {

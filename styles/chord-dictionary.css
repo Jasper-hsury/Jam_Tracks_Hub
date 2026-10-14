@@ -855,7 +855,7 @@ html[data-theme="light"] .dictionary-browser,
 html[data-theme="light"] .dictionary-detail,
 html[data-theme="light"] .chord-shape-card,
 html[data-theme="light"] .dictionary-facts div {
-    border-color: rgba(88, 72, 58, 0.24);
+    border-color: rgba(var(--ink-rgb), 0.24);
 }
 
 html[data-theme="light"] :is(.chord-dictionary-page, .song-workspace-page, .workspace-shape-dialog) {
@@ -886,7 +886,7 @@ html[data-theme="light"] .chord-shape-card {
 }
 
 html[data-theme="light"] .diagram-string-status.is-root strong {
-    box-shadow: 0 2px 5px rgba(45, 123, 118, 0.16);
+    box-shadow: 0 2px 5px rgba(var(--accent-rgb), 0.16);
 }
 
 @media (max-width: 1120px) {

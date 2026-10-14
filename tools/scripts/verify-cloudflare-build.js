@@ -103,10 +103,10 @@ if (/src\/entries\/home\.js/.test(migratedHome)) fail("Homepage source entry lea
 [
   "scripts/theme-init.js?v=20261014-v3-paper-default",
   "scripts/i18n-init.js?v=20260804-no-language-flash",
-  "styles/base.css?v=20260829-smart-navbar-v2",
-  "styles/components.css?v=20260827-legal-footer",
-  "styles/pages.css?v=20260804-feedback-consistency",
-  "styles/themes.css?v=20260804-feedback-consistency",
+  "styles/base.css?v=20261014-v3-liner-notes",
+  "styles/components.css?v=20261014-v3-liner-notes",
+  "styles/pages.css?v=20261014-v3-liner-notes",
+  "styles/themes.css?v=20261014-v3-liner-notes",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
   "assets/vendor/gsap/SplitText.min.js",
@@ -136,10 +136,10 @@ Array.from(migrated404.matchAll(/(?:href|src)="([^"]+)"/g), match => match[1])
   });
 [
   "scripts/i18n-init.js?v=20260902-404-route-root",
-  "styles/base.css?v=20260829-smart-navbar-v2",
-  "styles/components.css?v=20260827-legal-footer",
-  "styles/pages.css?v=20260804-feedback-consistency",
-  "styles/themes.css?v=20260804-feedback-consistency",
+  "styles/base.css?v=20261014-v3-liner-notes",
+  "styles/components.css?v=20261014-v3-liner-notes",
+  "styles/pages.css?v=20261014-v3-liner-notes",
+  "styles/themes.css?v=20261014-v3-liner-notes",
   "scripts/site-animations.js?v=20260718-trainer-dropdown-hover"
 ].forEach(function(asset) {
   if (!migrated404.includes(asset)) fail(`404 legacy asset path differs: ${asset}`);
@@ -159,10 +159,10 @@ if (!/<script type="module" crossorigin src="\/assets\/vue\/legal-[^"]+\.js"><\/
 }
 if (/src\/entries\/legal\.js/.test(migratedLegal)) fail("Legal source entry leaked into production HTML");
 [
-  "styles/base.css?v=20260829-smart-navbar-v2",
-  "styles/components.css?v=20260827-legal-footer",
-  "styles/pages.css?v=20260830-legal-static-panel",
-  "styles/themes.css?v=20260804-feedback-consistency"
+  "styles/base.css?v=20261014-v3-liner-notes",
+  "styles/components.css?v=20261014-v3-liner-notes",
+  "styles/pages.css?v=20261014-v3-liner-notes",
+  "styles/themes.css?v=20261014-v3-liner-notes"
 ].forEach(function(asset) {
   if (!migratedLegal.includes(asset)) fail(`Legal legacy asset path differs: ${asset}`);
 });
@@ -181,10 +181,10 @@ if (!/<script type="module" crossorigin src="\/assets\/vue\/privacy-[^"]+\.js"><
 }
 if (/src\/entries\/privacy\.js/.test(migratedPrivacy)) fail("Privacy source entry leaked into production HTML");
 [
-  "styles/base.css?v=20260829-smart-navbar-v2",
-  "styles/components.css?v=20260827-legal-footer",
-  "styles/pages.css?v=20260830-policy-static-panels",
-  "styles/themes.css?v=20260804-feedback-consistency",
+  "styles/base.css?v=20261014-v3-liner-notes",
+  "styles/components.css?v=20261014-v3-liner-notes",
+  "styles/pages.css?v=20261014-v3-liner-notes",
+  "styles/themes.css?v=20261014-v3-liner-notes",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
   "scripts/site-animations.js?v=20260830-privacy-static-policy"
@@ -215,10 +215,10 @@ if (/src\/entries\/service-waking\.js/.test(migratedServiceWaking)) {
 [
   "scripts/theme-init.js?v=20261014-v3-paper-default",
   "scripts/i18n-init.js?v=20260804-no-language-flash",
-  "styles/base.css?v=20260829-smart-navbar-v2",
-  "styles/components.css?v=20260827-legal-footer",
-  "styles/pages.css?v=20260804-feedback-consistency",
-  "styles/themes.css?v=20260804-feedback-consistency",
+  "styles/base.css?v=20261014-v3-liner-notes",
+  "styles/components.css?v=20261014-v3-liner-notes",
+  "styles/pages.css?v=20261014-v3-liner-notes",
+  "styles/themes.css?v=20261014-v3-liner-notes",
   "scripts/site-config.js?v=20260729-youtube-key-api",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
@@ -249,10 +249,10 @@ if (/src\/entries\/feedback\.js/.test(migratedFeedback)) {
 [
   "scripts/theme-init.js?v=20261014-v3-paper-default",
   "scripts/i18n-init.js?v=20260804-no-language-flash",
-  "styles/base.css?v=20260829-smart-navbar-v2",
-  "styles/components.css?v=20260827-legal-footer",
-  "styles/pages.css?v=20260804-feedback-consistency",
-  "styles/themes.css?v=20260804-feedback-consistency",
+  "styles/base.css?v=20261014-v3-liner-notes",
+  "styles/components.css?v=20261014-v3-liner-notes",
+  "styles/pages.css?v=20261014-v3-liner-notes",
+  "styles/themes.css?v=20261014-v3-liner-notes",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
   "scripts/site-animations.js?v=20260718-trainer-dropdown-hover"
@@ -285,10 +285,10 @@ if (/src\/entries\/tracks\.js/.test(migratedTracks)) {
 [
   "scripts/theme-init.js?v=20261014-v3-paper-default",
   "scripts/i18n-init.js?v=20260804-no-language-flash",
-  "styles/base.css?v=20260829-smart-navbar-v2",
-  "styles/components.css?v=20260827-legal-footer",
-  "styles/pages.css?v=20260804-feedback-consistency",
-  "styles/themes.css?v=20260804-feedback-consistency",
+  "styles/base.css?v=20261014-v3-liner-notes",
+  "styles/components.css?v=20261014-v3-liner-notes",
+  "styles/pages.css?v=20261014-v3-liner-notes",
+  "styles/themes.css?v=20261014-v3-liner-notes",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/Flip.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
@@ -325,11 +325,11 @@ if (/src\/entries\/fretboard-trainer\.js/.test(migratedFretboardTrainer)) {
 [
   "scripts/theme-init.js?v=20261014-v3-paper-default",
   "scripts/i18n-init.js?v=20260804-no-language-flash",
-  "styles/base.css?v=20260829-smart-navbar-v2",
-  "styles/components.css?v=20260827-legal-footer",
-  "styles/pages.css?v=20260804-feedback-consistency",
-  "styles/themes.css?v=20260804-feedback-consistency",
-  "styles/fretboard-trainer.css?v=20260718-fretboard-trainer-polish",
+  "styles/base.css?v=20261014-v3-liner-notes",
+  "styles/components.css?v=20261014-v3-liner-notes",
+  "styles/pages.css?v=20261014-v3-liner-notes",
+  "styles/themes.css?v=20261014-v3-liner-notes",
+  "styles/fretboard-trainer.css?v=20261014-v3-liner-notes",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
   "scripts/site-animations.js?v=20260718-trainer-dropdown-hover"
@@ -365,10 +365,10 @@ if (/src\/entries\/chord-progressions\.js/.test(migratedChordProgressions)) {
 [
   "scripts/theme-init.js?v=20261014-v3-paper-default",
   "scripts/i18n-init.js?v=20260804-no-language-flash",
-  "styles/base.css?v=20260829-smart-navbar-v2",
-  "styles/components.css?v=20260827-legal-footer",
-  "styles/pages.css?v=20260804-feedback-consistency",
-  "styles/themes.css?v=20260804-feedback-consistency",
+  "styles/base.css?v=20261014-v3-liner-notes",
+  "styles/components.css?v=20261014-v3-liner-notes",
+  "styles/pages.css?v=20261014-v3-liner-notes",
+  "styles/themes.css?v=20261014-v3-liner-notes",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
   "scripts/site-animations.js?v=20260718-trainer-dropdown-hover"
@@ -404,11 +404,11 @@ if (/src\/entries\/scale-explorer\.js/.test(migratedScaleExplorer)) {
 [
   "scripts/theme-init.js?v=20261014-v3-paper-default",
   "scripts/i18n-init.js?v=20260804-no-language-flash",
-  "styles/base.css?v=20260829-smart-navbar-v2",
-  "styles/components.css?v=20260827-legal-footer",
-  "styles/pages.css?v=20260804-feedback-consistency",
-  "styles/themes.css?v=20260804-feedback-consistency",
-  "styles/scale.css?v=20260718-scale-original",
+  "styles/base.css?v=20261014-v3-liner-notes",
+  "styles/components.css?v=20261014-v3-liner-notes",
+  "styles/pages.css?v=20261014-v3-liner-notes",
+  "styles/themes.css?v=20261014-v3-liner-notes",
+  "styles/scale.css?v=20261014-v3-liner-notes",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
   "scripts/site-animations.js?v=20260718-trainer-dropdown-hover"
@@ -444,11 +444,11 @@ if (/src\/entries\/chord-dictionary\.js/.test(migratedChordDictionary)) {
 [
   "scripts/theme-init.js?v=20261014-v3-paper-default",
   "scripts/i18n-init.js?v=20260804-no-language-flash",
-  "styles/base.css?v=20260829-smart-navbar-v2",
-  "styles/components.css?v=20260827-legal-footer",
-  "styles/pages.css?v=20260804-feedback-consistency",
-  "styles/themes.css?v=20260804-feedback-consistency",
-  "styles/chord-dictionary.css?v=20260728-mobile-polish",
+  "styles/base.css?v=20261014-v3-liner-notes",
+  "styles/components.css?v=20261014-v3-liner-notes",
+  "styles/pages.css?v=20261014-v3-liner-notes",
+  "styles/themes.css?v=20261014-v3-liner-notes",
+  "styles/chord-dictionary.css?v=20261014-v3-liner-notes",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/Flip.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
@@ -485,11 +485,11 @@ if (/src\/entries\/progression-writer\.js/.test(migratedProgressionWriter)) {
 [
   "scripts/theme-init.js?v=20261014-v3-paper-default",
   "scripts/i18n-init.js?v=20260804-no-language-flash",
-  "styles/base.css?v=20260829-smart-navbar-v2",
-  "styles/components.css?v=20260827-legal-footer",
-  "styles/chord-dictionary.css?v=20260728-mobile-polish",
-  "styles/pages.css?v=20260804-feedback-consistency",
-  "styles/themes.css?v=20260804-feedback-consistency",
+  "styles/base.css?v=20261014-v3-liner-notes",
+  "styles/components.css?v=20261014-v3-liner-notes",
+  "styles/chord-dictionary.css?v=20261014-v3-liner-notes",
+  "styles/pages.css?v=20261014-v3-liner-notes",
+  "styles/themes.css?v=20261014-v3-liner-notes",
   "scripts/chord-shapes.js?v=20260826-workspace-hardening",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
@@ -526,10 +526,10 @@ if (/src\/entries\/key-finder\.js/.test(migratedKeyFinder)) {
 [
   "scripts/theme-init.js?v=20261014-v3-paper-default",
   "scripts/i18n-init.js?v=20260804-no-language-flash",
-  "styles/base.css?v=20260829-smart-navbar-v2",
-  "styles/components.css?v=20260827-legal-footer",
-  "styles/pages.css?v=20260804-feedback-consistency",
-  "styles/themes.css?v=20260804-feedback-consistency",
+  "styles/base.css?v=20261014-v3-liner-notes",
+  "styles/components.css?v=20261014-v3-liner-notes",
+  "styles/pages.css?v=20261014-v3-liner-notes",
+  "styles/themes.css?v=20261014-v3-liner-notes",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
   "scripts/site-animations.js?v=20260718-trainer-dropdown-hover"
@@ -568,12 +568,12 @@ if (/src\/entries\/song-workspace\.js/.test(migratedSongWorkspace)) {
 [
   "scripts/theme-init.js?v=20261014-v3-paper-default",
   "scripts/i18n-init.js?v=20260826-song-workspace",
-  "styles/base.css?v=20260829-smart-navbar-v2",
-  "styles/components.css?v=20260827-legal-footer",
-  "styles/pages.css?v=20260826-song-workspace",
-  "styles/themes.css?v=20260826-song-workspace",
-  "styles/chord-dictionary.css?v=20260826-workspace-hardening",
-  "styles/song-workspace.css?v=20260829-library-text-v3",
+  "styles/base.css?v=20261014-v3-liner-notes",
+  "styles/components.css?v=20261014-v3-liner-notes",
+  "styles/pages.css?v=20261014-v3-liner-notes",
+  "styles/themes.css?v=20261014-v3-liner-notes",
+  "styles/chord-dictionary.css?v=20261014-v3-liner-notes",
+  "styles/song-workspace.css?v=20261014-v3-liner-notes",
   "scripts/chord-shapes.js?v=20260827-picker-json-fix",
   "scripts/song-workspace-core.js?v=20260827-picker-json-fix",
   "scripts/song-workspace-storage.js?v=20260828-settings-ux",
