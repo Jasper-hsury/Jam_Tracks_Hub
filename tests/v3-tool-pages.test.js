@@ -113,3 +113,17 @@ test("Chord Progressions picks major or minor with two buttons and keeps the mod
   assert.match(css, /\.progression-selected-heading \{[^}]*background: var\(--band\);/);
   assert.match(css, /\.progression-mini-neck \{\s*--neck-line: rgba\(var\(--ink-rgb\), 0\.34\);/);
 });
+
+test("Progression Writer swaps its three switches for segmented buttons bound to the same state", () => {
+  const view = read("src/views/ProgressionWriterView.vue");
+  assert.match(view, /id="progressionStructureToggle" role="group" :aria-label="messages\.switchStructure"/);
+  assert.match(view, /:aria-pressed="String\(writer\.mode\.value === 'single'\)" @click="setStructure\('single'\)"/);
+  assert.match(view, /:aria-pressed="String\(writer\.mode\.value === 'sections'\)" @click="setStructure\('sections'\)"/);
+  assert.match(view, /function setStructure\(nextMode\) \{\s*if \(writer\.mode\.value === nextMode\) return;\s*writer\.setMode\(nextMode\);/);
+  assert.match(view, /id="progressionKeyQualityToggle" role="group" :aria-label="messages\.switchKeyMode"/);
+  assert.match(view, /@click="writer\.keyQuality\.value = 'minor'"/);
+  assert.match(view, /id="separateProgressionDownload" role="group" :aria-label="messages\.downloadLayout"/);
+  assert.match(view, /@click="writer\.separateDownload\.value = true"/);
+  assert.match(view, /id="downloadProgressionButton"\s*class="v3-download-button progression-download-button"/);
+  assert.doesNotMatch(view, /uiverse-|type="checkbox"|track-slides-download/);
+});

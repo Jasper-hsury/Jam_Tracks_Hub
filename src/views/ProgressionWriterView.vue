@@ -136,6 +136,11 @@ function triggerDownloadButton() {
   }, 1800);
 }
 
+function setStructure(nextMode) {
+  if (writer.mode.value === nextMode) return;
+  writer.setMode(nextMode);
+}
+
 async function downloadImage() {
   triggerDownloadButton();
   const data = collectDownloadProgression(writer.currentState(), writer.shapeEngine);
@@ -179,18 +184,9 @@ onUnmounted(() => {
         <span class="result-kicker">{{ messages.format }}</span>
         <h2 id="progressionWriterModeTitle" class="section-title">{{ messages.modeTitle }}</h2>
       </div>
-      <div class="progression-writer-mode-control">
-        <input
-          id="progressionStructureToggle"
-          class="uiverse-toggle-input progression-writer-switch-input"
-          type="checkbox"
-          :checked="writer.mode.value === 'sections'"
-          :aria-label="messages.switchStructure"
-          @change="writer.setMode($event.target.checked ? 'sections' : 'single')"
-        >
-        <span class="progression-writer-mode-label progression-writer-mode-without">{{ messages.withoutVerseChorus }}</span>
-        <label class="uiverse-toggle progression-writer-switch" for="progressionStructureToggle"></label>
-        <span class="progression-writer-mode-label progression-writer-mode-with">{{ messages.withVerseChorus }}</span>
+      <div class="v3-mode-buttons progression-writer-mode-control" id="progressionStructureToggle" role="group" :aria-label="messages.switchStructure">
+        <button type="button" :aria-pressed="String(writer.mode.value === 'single')" @click="setStructure('single')">{{ messages.withoutVerseChorus }}</button>
+        <button type="button" :aria-pressed="String(writer.mode.value === 'sections')" @click="setStructure('sections')">{{ messages.withVerseChorus }}</button>
       </div>
     </section>
 
@@ -207,18 +203,9 @@ onUnmounted(() => {
             </select>
             <label class="progression-writer-meta-label" for="progressionKeyRoot">{{ messages.key }}</label>
           </div>
-          <div class="progression-key-mode-control">
-            <input
-              id="progressionKeyQualityToggle"
-              class="uiverse-toggle-input progression-writer-switch-input progression-key-mode-input"
-              type="checkbox"
-              :checked="writer.keyQuality.value === 'minor'"
-              :aria-label="messages.switchKeyMode"
-              @change="writer.keyQuality.value = $event.target.checked ? 'minor' : 'major'"
-            >
-            <span class="progression-key-mode-label progression-key-mode-major">{{ messages.major }}</span>
-            <label class="uiverse-toggle progression-writer-switch progression-key-mode-switch" for="progressionKeyQualityToggle"></label>
-            <span class="progression-key-mode-label progression-key-mode-minor">{{ messages.minor }}</span>
+          <div class="v3-mode-buttons progression-key-mode-control" id="progressionKeyQualityToggle" role="group" :aria-label="messages.switchKeyMode">
+            <button type="button" :aria-pressed="String(writer.keyQuality.value === 'major')" @click="writer.keyQuality.value = 'major'">{{ messages.major }}</button>
+            <button type="button" :aria-pressed="String(writer.keyQuality.value === 'minor')" @click="writer.keyQuality.value = 'minor'">{{ messages.minor }}</button>
           </div>
         </div>
         <div class="progression-writer-meta-field progression-writer-meta-field-bpm">
@@ -274,28 +261,23 @@ onUnmounted(() => {
 
       <div class="progression-writer-actions">
         <button class="primary-button progression-writer-save-button" type="submit">{{ messages.saveProgression }}</button>
-        <div class="progression-download-layout-control">
-          <input id="separateProgressionDownload" v-model="writer.separateDownload.value" class="uiverse-toggle-input progression-download-layout-input" type="checkbox" :aria-label="messages.downloadLayout">
-          <span class="progression-download-layout-label progression-download-layout-full">{{ messages.fullShapeCards }}</span>
-          <label class="uiverse-toggle progression-download-layout-switch" for="separateProgressionDownload"></label>
-          <span class="progression-download-layout-label progression-download-layout-separated">{{ messages.separateShapes }}</span>
+        <div class="v3-mode-buttons progression-download-layout-control" id="separateProgressionDownload" role="group" :aria-label="messages.downloadLayout">
+          <button type="button" :aria-pressed="String(!writer.separateDownload.value)" @click="writer.separateDownload.value = false">{{ messages.fullShapeCards }}</button>
+          <button type="button" :aria-pressed="String(writer.separateDownload.value)" @click="writer.separateDownload.value = true">{{ messages.separateShapes }}</button>
         </div>
         <button
           id="downloadProgressionButton"
-          class="uiverse-download-button progression-download-button track-slides-download-link"
+          class="v3-download-button progression-download-button"
           :class="{ 'is-activating': isDownloading }"
           type="button"
           :aria-label="messages.downloadImage"
           :aria-busy="isDownloading ? 'true' : null"
           @click="downloadImage"
         >
-          <span class="uiverse-download-button-circle track-slides-download-circle" aria-hidden="true">
-            <svg class="uiverse-download-button-icon track-slides-download-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M12 5v11m0 0-4-4m4 4 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path>
-              <path d="M6 19h12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path>
-            </svg>
-            <span class="uiverse-download-button-square track-slides-download-square"></span>
-          </span>
+          <svg class="v3-download-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 5v11m0 0-4-4m4 4 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M6 19h12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path>
+          </svg>
         </button>
         <p id="progressionWriterStatus" class="progression-writer-status" role="status" aria-live="polite">{{ writer.status.value }}</p>
       </div>

@@ -671,10 +671,16 @@ html[data-theme] main.v3-tool-page .fretboard-scroll {
 /* Shared: two-button segmented mode control ------------------------------- */
 html[data-theme] main.v3-tool-page .v3-mode-buttons {
     display: inline-grid;
-    grid-auto-columns: minmax(0, 1fr);
+    grid-template-columns: none;
+    grid-auto-columns: auto;
     grid-auto-flow: column;
     flex: none;
+    gap: 0;
+    min-height: 0;
+    padding: 0;
+    background: none;
     border: 1px solid var(--ink);
+    border-radius: 0;
 }
 
 html[data-theme] main.v3-tool-page .v3-mode-buttons button {
@@ -1064,4 +1070,200 @@ html[data-theme] main.v3-tool-page :is(.progression-style, .progression-shape-ca
 
 html[data-theme] main.v3-tool-page :is(.progression-shape-card-head strong, .progression-shape-frets) {
     color: var(--ink);
+}
+
+/* Shared: primary and secondary buttons on tool pages --------------------- */
+html[data-theme] main.v3-tool-page :is(.primary-button, .secondary-button) {
+    min-height: 46px;
+    padding: 0 20px;
+    border-radius: 0;
+    box-shadow: none;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .primary-button {
+    color: var(--paper);
+    background: var(--ink);
+    border: 1px solid var(--ink);
+}
+
+html[data-theme] main.v3-tool-page .secondary-button {
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--ink);
+}
+
+html[data-theme] main.v3-tool-page :is(.primary-button, .secondary-button)::before,
+html[data-theme] main.v3-tool-page :is(.primary-button, .secondary-button)::after {
+    display: none;
+}
+
+html[data-theme] main.v3-tool-page .primary-button:hover:not(:disabled) {
+    color: var(--on-accent);
+    background: var(--accent);
+    border-color: var(--accent);
+    box-shadow: none;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .secondary-button:hover:not(:disabled) {
+    color: var(--paper);
+    background: var(--ink);
+    border-color: var(--ink);
+    box-shadow: none;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page :is(.primary-button, .secondary-button):disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+/* Progression Writer -------------------------------------------------------- */
+html[data-theme] main.v3-tool-page :is(.progression-writer-panel, .progression-writer-meta, .progression-writer-entry, .progression-writer-saved) {
+    padding: 28px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .progression-writer-panel .section-title,
+html[data-theme] main.v3-tool-page .progression-writer-entry .section-title,
+html[data-theme] main.v3-tool-page .progression-writer-saved .section-title {
+    margin: 0;
+    color: var(--ink);
+    font-size: 30px;
+    line-height: 1.12;
+    text-align: left;
+}
+
+/* Song information keeps its floating labels on an underline field. */
+html[data-theme] main.v3-tool-page .progression-writer-meta-input {
+    color: var(--ink);
+    background-color: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--ink);
+    border-image: none;
+    border-radius: 0;
+    box-shadow: none;
+    font-weight: 600;
+}
+
+html[data-theme] main.v3-tool-page .progression-writer-meta-input:focus {
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--accent);
+    border-image: none;
+}
+
+html[data-theme] main.v3-tool-page .progression-writer-meta-label {
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+html[data-theme] main.v3-tool-page .progression-writer-meta-input:focus ~ .progression-writer-meta-label {
+    color: var(--accent);
+}
+
+html[data-theme] main.v3-tool-page .progression-writer-saved-controls {
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .progression-writer-chord-field input {
+    min-height: 52px;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+    font-family: var(--font-serif);
+    font-size: 24px;
+}
+
+html[data-theme] main.v3-tool-page .progression-writer-chord-field input:is(:hover, :focus) {
+    border-color: var(--ink);
+}
+
+html[data-theme] main.v3-tool-page .progression-writer-chord-field label > span {
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+html[data-theme] main.v3-tool-page .progression-writer-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px 18px;
+    padding: 16px 0;
+    background: none;
+    border: 0;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .v3-download-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    padding: 0;
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--ink);
+    border-radius: 0;
+    cursor: pointer;
+}
+
+html[data-theme] main.v3-tool-page .v3-download-button:hover,
+html[data-theme] main.v3-tool-page .v3-download-button.is-activating {
+    color: var(--paper);
+    background: var(--ink);
+}
+
+html[data-theme] main.v3-tool-page .v3-download-icon {
+    width: 20px;
+    height: 20px;
+}
+
+html[data-theme] main.v3-tool-page .progression-writer-saved-picker select {
+    min-height: 46px;
+    color: var(--ink);
+    background-color: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 0;
+}
+
+html[data-theme] main.v3-tool-page .progression-writer-saved-count {
+    color: var(--accent);
+    background: none;
+    border: 0;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+html[data-theme] main.v3-tool-page .progression-writer-saved-item {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .progression-writer-saved-item.is-active {
+    border-color: var(--ink);
 }
