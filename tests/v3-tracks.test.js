@@ -54,3 +54,9 @@ test("the record slides out only for hover-capable pointers without reduced moti
   assert.match(block, /@media \(max-width: 760px\) \{[\s\S]*?\.track-card \{\s*grid-template-columns: 1fr;/);
   assert.match(block, /\.v3-download-button \{[^}]*width: 44px;[^}]*height: 44px;/);
 });
+
+test("pages.css carries a fresh cache key so v3.1 markup never meets the cached v3.0 stylesheet", () => {
+  const pages = ["tracks.html", "index.html", "song-workspace.html"];
+  pages.forEach(page => assert.match(read(page), /styles\/pages\.css\?v=20261014-v3-tracks/, page));
+  assert.doesNotMatch(read("tracks.html"), /styles\/pages\.css\?v=20261014-v3-liner-notes/);
+});
