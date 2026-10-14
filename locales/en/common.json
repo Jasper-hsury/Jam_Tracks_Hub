@@ -198,6 +198,7 @@
     "tracks": {
       "title": "All Backing Tracks",
       "tagline": "Capture the Feeling. Compose the Meaning.",
+      "libraryCount": "{{count}} original tracks",
       "filtersLabel": "Filters",
       "keyLabel": "Key",
       "allKeys": "All keys",

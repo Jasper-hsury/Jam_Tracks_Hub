@@ -45,6 +45,7 @@ const filterSummary = computed(() => {
   if (!selected.length) return messages.value.allKeys;
   return selected.length === 1 ? selected[0].label : `${selected[0].label} +${selected.length - 1}`;
 });
+const libraryEyebrow = computed(() => messages.value.libraryCount.replace("{{count}}", String(tracks.value.length)));
 const resultCount = computed(() => {
   const key = visibleTracks.value.length === 1 ? "resultCount_one" : "resultCount_other";
   return messages.value[key].replace("{{count}}", String(visibleTracks.value.length));
@@ -179,8 +180,10 @@ function setGroup(groupId, checked) {
 }
 
 function setSortMode(oldestFirst) {
+  const nextMode = oldestFirst ? "oldest" : "newest";
+  if (nextMode === sortMode.value) return;
   updateVisibleTracks(() => {
-    sortMode.value = oldestFirst ? "oldest" : "newest";
+    sortMode.value = nextMode;
   });
 }
 
@@ -222,6 +225,7 @@ onBeforeUnmount(() => {
   <main class="tracks-page tracks-library-page" id="main-content">
     <div class="page-heading-row">
       <div>
+        <p v-if="tracks.length" class="v3-tracks-eyebrow">{{ libraryEyebrow }}</p>
         <h1>{{ messages.title }}</h1>
         <p class="hero-tagline signature-slogan">{{ messages.tagline }}</p>
       </div>
@@ -287,19 +291,22 @@ onBeforeUnmount(() => {
             <option value="oldest">{{ messages.oldestFirst }}</option>
           </select>
         </label>
-        <div class="track-sort-switch-control" id="trackSortPills" :aria-label="messages.sortLabel">
-          <span class="track-sort-caption">{{ messages.sortBy }}</span>
-          <span class="track-sort-mode track-sort-mode-latest" :class="{ 'is-active': sortMode === 'newest' }">{{ messages.latestFirst }}</span>
-          <input
-            class="uiverse-toggle-input track-sort-switch-input"
-            id="trackSortToggle"
-            type="checkbox"
-            :checked="sortMode === 'oldest'"
-            :aria-label="messages.switchSort"
-            @change="setSortMode($event.target.checked)"
-          >
-          <label class="uiverse-toggle track-sort-switch" for="trackSortToggle"></label>
-          <span class="track-sort-mode track-sort-mode-oldest" :class="{ 'is-active': sortMode === 'oldest' }">{{ messages.oldestFirst }}</span>
+        <div class="v3-sort-control" id="trackSortPills">
+          <span class="track-sort-caption" id="trackSortCaption">{{ messages.sortBy }}</span>
+          <div class="v3-sort-buttons" role="group" aria-labelledby="trackSortCaption">
+            <button
+              class="v3-sort-button"
+              type="button"
+              :aria-pressed="String(sortMode === 'newest')"
+              @click="setSortMode(false)"
+            >{{ messages.latestFirst }}</button>
+            <button
+              class="v3-sort-button"
+              type="button"
+              :aria-pressed="String(sortMode === 'oldest')"
+              @click="setSortMode(true)"
+            >{{ messages.oldestFirst }}</button>
+          </div>
         </div>
       </div>
     </section>
@@ -328,34 +335,5 @@ onBeforeUnmount(() => {
         />
       </template>
     </div>
-
-    <Teleport to="body">
-      <div class="track-scroll-windmill track-scroll-five-blade" aria-hidden="true">
-        <svg class="track-scroll-windmill-svg track-scroll-five-blade-svg" viewBox="0 0 160 160" role="img">
-          <defs>
-            <linearGradient id="trackFiveBlade" x1="28" y1="20" x2="132" y2="142" gradientUnits="userSpaceOnUse">
-              <stop offset="0" stop-color="#86c3ba" />
-              <stop offset="0.46" stop-color="#d6b18c" />
-              <stop offset="1" stop-color="#b56a75" />
-            </linearGradient>
-            <radialGradient id="trackFiveBladeHub" cx="38%" cy="32%" r="68%">
-              <stop offset="0" stop-color="#fff7ec" />
-              <stop offset="0.58" stop-color="#d8b690" />
-              <stop offset="1" stop-color="#7f4f34" />
-            </radialGradient>
-            <path id="trackFiveBladeShape" d="M80 69 C56 41 56 18 80 5 C104 18 104 41 80 69 Z" />
-          </defs>
-          <g class="track-scroll-five-blade-rotor">
-            <use href="#trackFiveBladeShape" />
-            <use href="#trackFiveBladeShape" transform="rotate(72 80 80)" />
-            <use href="#trackFiveBladeShape" transform="rotate(144 80 80)" />
-            <use href="#trackFiveBladeShape" transform="rotate(216 80 80)" />
-            <use href="#trackFiveBladeShape" transform="rotate(288 80 80)" />
-            <circle class="track-scroll-five-blade-hub" cx="80" cy="80" r="15" />
-            <circle class="track-scroll-five-blade-core" cx="80" cy="80" r="6" />
-          </g>
-        </svg>
-      </div>
-    </Teleport>
   </main>
 </template>
