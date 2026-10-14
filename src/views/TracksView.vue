@@ -328,34 +328,5 @@ onBeforeUnmount(() => {
         />
       </template>
     </div>
-
-    <Teleport to="body">
-      <div class="track-scroll-windmill track-scroll-five-blade" aria-hidden="true">
-        <svg class="track-scroll-windmill-svg track-scroll-five-blade-svg" viewBox="0 0 160 160" role="img">
-          <defs>
-            <linearGradient id="trackFiveBlade" x1="28" y1="20" x2="132" y2="142" gradientUnits="userSpaceOnUse">
-              <stop offset="0" stop-color="#86c3ba" />
-              <stop offset="0.46" stop-color="#d6b18c" />
-              <stop offset="1" stop-color="#b56a75" />
-            </linearGradient>
-            <radialGradient id="trackFiveBladeHub" cx="38%" cy="32%" r="68%">
-              <stop offset="0" stop-color="#fff7ec" />
-              <stop offset="0.58" stop-color="#d8b690" />
-              <stop offset="1" stop-color="#7f4f34" />
-            </radialGradient>
-            <path id="trackFiveBladeShape" d="M80 69 C56 41 56 18 80 5 C104 18 104 41 80 69 Z" />
-          </defs>
-          <g class="track-scroll-five-blade-rotor">
-            <use href="#trackFiveBladeShape" />
-            <use href="#trackFiveBladeShape" transform="rotate(72 80 80)" />
-            <use href="#trackFiveBladeShape" transform="rotate(144 80 80)" />
-            <use href="#trackFiveBladeShape" transform="rotate(216 80 80)" />
-            <use href="#trackFiveBladeShape" transform="rotate(288 80 80)" />
-            <circle class="track-scroll-five-blade-hub" cx="80" cy="80" r="15" />
-            <circle class="track-scroll-five-blade-core" cx="80" cy="80" r="6" />
-          </g>
-        </svg>
-      </div>
-    </Teleport>
   </main>
 </template>
