@@ -85,7 +85,7 @@ test("tool page rules are scoped so Feedback and other pages keep their look", (
     return [...parts, current];
   };
   selectors.forEach(group => splitTopLevel(group).forEach(selector => {
-    assert.match(selector.trim(), /^html\[data-theme\](?::lang\(zh\))? main\.v3-tool-page\b/, selector);
+    assert.match(selector.trim(), /^html\[data-theme(?:="default")?\](?::lang\(zh\))? main\.v3-tool-page\b/, selector);
   }));
 });
 
@@ -181,4 +181,14 @@ test("buttons, fields and dropdowns share one rounded corner across the site", (
     .forEach(selector => assert.ok(block.includes(`html[data-theme] ${selector}`), selector));
   assert.match(block, /\.home-subscribe-button \{\s*border-radius: 0 var\(--radius-control\) var\(--radius-control\) 0;/);
   assert.match(block, /main\.tracks-library-page \.v3-sort-buttons \{\s*overflow: hidden;\s*border-radius: var\(--radius-control\);/);
+});
+
+test("tool page selections use cocoa instead of ink, with a lighter cocoa in the ink theme", () => {
+  const block = css.slice(css.indexOf("Selected states use the cocoa band color"));
+  assert.ok(block.length > 0);
+  assert.match(block, /main\.v3-tool-page \{\s*--tool-selected-bg: var\(--band\);\s*--tool-selected-text: var\(--on-band\);/);
+  assert.match(block, /html\[data-theme="default"\] main\.v3-tool-page \{\s*--tool-selected-bg: #5c4b3f;/);
+  [".key-button:is([aria-pressed=\"true\"], .is-selected)", ".note-answer-grid button.is-correct", ".v3-mode-buttons button[aria-pressed=\"true\"]", ".progression-extension-option.is-selected", ".segmented-control button:is(.is-selected, .active)"]
+    .forEach(selector => assert.ok(block.includes(selector), selector));
+  assert.doesNotMatch(read("styles/pages.css") + read("styles/themes.css"), /--tool-selected-bg/);
 });

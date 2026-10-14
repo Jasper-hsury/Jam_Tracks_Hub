@@ -1860,3 +1860,45 @@ html[data-theme] main.v3-tool-page :is(.segmented-control, .v3-mode-buttons, .pr
 html[data-theme] main.v3-tool-page :is(.v3-tool-no, .dictionary-category-heading > span) {
     border-radius: 4px;
 }
+
+/* Selected states use the cocoa band color --------------------------------- */
+/* Tool pages only: the homepage and Tracks keep their ink selections. */
+html[data-theme] main.v3-tool-page {
+    --tool-selected-bg: var(--band);
+    --tool-selected-text: var(--on-band);
+    --tool-selected-border: var(--band);
+}
+
+/* In the ink theme the band sits close to the dark panels, so selections use
+   a lighter cocoa (7.1:1 with the text, 2:1 against the panel). */
+html[data-theme="default"] main.v3-tool-page {
+    --tool-selected-bg: #5c4b3f;
+    --tool-selected-border: #5c4b3f;
+}
+
+html[data-theme] main.v3-tool-page :is(.dictionary-root-grid button, .dictionary-quality-button, .dictionary-position-filter button, .scale-root-grid button, .scale-range-buttons button).is-selected,
+html[data-theme] main.v3-tool-page :is(.dictionary-root-grid button, .dictionary-quality-button, .dictionary-position-filter button, .scale-root-grid button, .scale-range-buttons button).is-selected:hover,
+html[data-theme] main.v3-tool-page .key-button:is([aria-pressed="true"], .is-selected),
+html[data-theme] main.v3-tool-page .note-answer-grid button.is-correct {
+    color: var(--tool-selected-text);
+    background: var(--tool-selected-bg);
+    border-color: var(--tool-selected-border);
+}
+
+html[data-theme] main.v3-tool-page .segmented-control button:is(.is-selected, .active),
+html[data-theme] main.v3-tool-page .segmented-control button:is(.is-selected, .active):hover,
+html[data-theme] main.v3-tool-page .v3-mode-buttons button[aria-pressed="true"],
+html[data-theme] main.v3-tool-page .progression-extension-option.is-selected,
+html[data-theme] main.v3-tool-page .progression-extension-option.is-selected:hover {
+    color: var(--tool-selected-text);
+    background: var(--tool-selected-bg);
+}
+
+html[data-theme] main.v3-tool-page .dictionary-quality-button.is-selected span {
+    color: var(--on-band-muted);
+    opacity: 1;
+}
+
+html[data-theme="default"] main.v3-tool-page .dictionary-quality-button.is-selected span {
+    color: var(--on-band);
+}
