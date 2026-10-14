@@ -412,3 +412,258 @@ html[data-theme] main.v3-tool-page .dictionary-pagination button {
 html[data-theme] main.v3-tool-page .dictionary-pagination button:disabled {
     opacity: 0.45;
 }
+
+/* Segmented controls (Scale Explorer, Key Finder) ------------------------- */
+html[data-theme] main.v3-tool-page .segmented-control {
+    gap: 0;
+    padding: 0;
+    background: transparent;
+    border: 1px solid var(--ink);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .segmented-control button {
+    min-height: 44px;
+    padding: 0 16px;
+    color: var(--ink);
+    background: transparent;
+    border: 0;
+    border-left: 1px solid var(--ink);
+    border-radius: 0;
+    box-shadow: none;
+    font-size: 14px;
+    font-weight: 600;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .segmented-control button:first-child {
+    border-left: 0;
+}
+
+html[data-theme] main.v3-tool-page .segmented-control button:hover:not(:disabled) {
+    color: var(--ink);
+    background: var(--surface-sunken);
+}
+
+html[data-theme] main.v3-tool-page .segmented-control button:is(.is-selected, .active),
+html[data-theme] main.v3-tool-page .segmented-control button:is(.is-selected, .active):hover {
+    color: var(--paper);
+    background: var(--ink);
+    box-shadow: none;
+}
+
+/* Scale Explorer ------------------------------------------------------------ */
+html[data-theme] main.v3-tool-page :is(.scale-control-panel, .scale-display-toolbar, .fretboard-card) {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .scale-control-panel {
+    padding: 28px;
+}
+
+html[data-theme] main.v3-tool-page .scale-section-kicker {
+    color: var(--accent) !important;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+}
+
+html[data-theme]:lang(zh) main.v3-tool-page .scale-section-kicker {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+}
+
+html[data-theme] main.v3-tool-page .scale-control-heading h2 {
+    color: var(--ink);
+    font-size: 30px;
+    line-height: 1.12;
+}
+
+html[data-theme] main.v3-tool-page .scale-control-heading > p {
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+}
+
+html[data-theme] main.v3-tool-page :is(.scale-select-field > span, .scale-root-field legend, .scale-display-toolbar legend) {
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+html[data-theme] main.v3-tool-page .scale-select-field select {
+    min-height: 46px;
+    color: var(--ink);
+    background-color: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .scale-select-field select:is(:hover, :focus) {
+    background-color: var(--paper);
+    border-color: var(--ink);
+}
+
+html[data-theme] main.v3-tool-page :is(.scale-root-grid button, .scale-range-buttons button) {
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+    font-weight: 600;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .scale-root-grid button {
+    min-height: 46px;
+    font-size: 15px;
+}
+
+html[data-theme] main.v3-tool-page .scale-range-buttons button {
+    min-height: 40px;
+    padding: 0 12px;
+    font-size: 13px;
+}
+
+html[data-theme] main.v3-tool-page :is(.scale-root-grid button, .scale-range-buttons button):hover:not(:disabled) {
+    color: var(--ink);
+    background: var(--paper);
+    border-color: var(--ink);
+    box-shadow: none;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page :is(.scale-root-grid button, .scale-range-buttons button).is-selected,
+html[data-theme] main.v3-tool-page :is(.scale-root-grid button, .scale-range-buttons button).is-selected:hover {
+    color: var(--paper);
+    background: var(--ink);
+    border-color: var(--ink);
+}
+
+/* Current scale: the dark band. */
+html[data-theme] main.v3-tool-page .scale-summary {
+    gap: 20px 24px;
+    padding: 28px;
+    color: var(--on-band);
+    background: var(--band);
+    border: 1px solid var(--band-edge);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .scale-summary .scale-section-kicker {
+    color: var(--accent-on-band) !important;
+}
+
+html[data-theme] main.v3-tool-page .scale-summary h2 {
+    color: var(--on-band);
+    font-size: clamp(36px, 4.4vw, 56px);
+    line-height: 1.04;
+}
+
+html[data-theme] main.v3-tool-page .scale-summary p:not(.scale-section-kicker) {
+    color: var(--on-band-muted);
+}
+
+html[data-theme] main.v3-tool-page :is(.scale-play-button, .scale-download-button) {
+    min-height: 46px;
+    padding: 0 20px;
+    border-radius: 0;
+    box-shadow: none;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .scale-play-button {
+    color: var(--band);
+    background: var(--on-band);
+    border: 1px solid var(--on-band);
+}
+
+html[data-theme] main.v3-tool-page .scale-download-button {
+    color: var(--on-band);
+    background: transparent;
+    border: 1px solid var(--on-band);
+}
+
+html[data-theme] main.v3-tool-page :is(.scale-play-button, .scale-download-button):hover:not(:disabled) {
+    color: var(--band);
+    background: var(--accent-on-band);
+    border-color: var(--accent-on-band);
+    box-shadow: none;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .scale-interval-chip {
+    display: inline-flex;
+    gap: 8px;
+    min-height: 34px;
+    padding: 0 12px;
+    color: var(--on-band);
+    background: transparent;
+    border: 1px solid rgba(242, 237, 227, 0.28);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .scale-interval-chip::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    flex: none;
+    background: var(--interval-color);
+    border-radius: 50%;
+}
+
+html[data-theme] main.v3-tool-page .scale-interval-chip small {
+    padding-left: 0;
+    color: var(--on-band-muted);
+    border-left: 0;
+}
+
+html[data-theme] main.v3-tool-page .scale-interval-chip.is-root {
+    border-color: var(--on-band);
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .scale-tool-links {
+    gap: 10px 22px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(242, 237, 227, 0.18);
+}
+
+html[data-theme] main.v3-tool-page .scale-tool-links a,
+html[data-theme] main.v3-tool-page .scale-tool-links a:hover {
+    min-height: 0;
+    padding: 2px 0;
+    color: var(--on-band);
+    background: none;
+    border: 0;
+    border-bottom: 1px solid var(--accent-on-band);
+    border-radius: 0;
+    box-shadow: none;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .scale-tool-links a::after {
+    content: "\00a0→";
+}
+
+/* Neck */
+html[data-theme] main.v3-tool-page .scale-display-toolbar {
+    padding: 20px 28px;
+}
+
+html[data-theme] main.v3-tool-page .fretboard-help {
+    color: var(--text-muted);
+    border-bottom-color: var(--line);
+}
+
+html[data-theme] main.v3-tool-page .fretboard-scroll {
+    background: var(--paper);
+}

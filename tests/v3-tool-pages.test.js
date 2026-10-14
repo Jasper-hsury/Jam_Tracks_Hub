@@ -95,3 +95,10 @@ test("Chord Dictionary groups the selected chord into a dark band without changi
   assert.match(css, /main\.v3-tool-page \.v3-selected-band \{[^}]*background: var\(--band\);/);
   assert.match(css, /\.dictionary-position-filter button\)\.is-selected/);
 });
+
+test("Scale Explorer keeps interval colors while the current scale becomes a dark band", () => {
+  assert.match(css, /main\.v3-tool-page \.scale-summary \{[^}]*background: var\(--band\);/);
+  assert.match(css, /\.scale-interval-chip::before \{[^}]*background: var\(--interval-color\);/);
+  assert.match(css, /main\.v3-tool-page \.segmented-control button:is\(\.is-selected, \.active\)/);
+  assert.doesNotMatch(css, /\.fret-note[^{]*\{[^}]*background/);
+});
