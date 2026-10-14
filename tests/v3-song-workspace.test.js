@@ -64,3 +64,12 @@ test("the home view reads as liner notes: one promise line, numbered create rows
   assert.match(css, /\.workspace-song-card \{[^}]*grid-template-areas: "identity actions" "meta actions" "menu menu";/);
   assert.match(css, /\.workspace-button \{[^}]*border-radius: var\(--radius-control\);/);
 });
+
+test("the editor compacts the heading, numbers sections and selects in cocoa", () => {
+  assert.match(css, /\.song-workspace-page:has\(#workspaceEditorView:not\(\[hidden\]\)\) \.song-workspace-hero \{/);
+  assert.match(css, /\.workspace-chart \{\s*counter-reset: workspace-section;/);
+  assert.match(css, /\.workspace-section-heading-row h3::before \{\s*content: counter\(workspace-section, decimal-leading-zero\);/);
+  assert.match(css, /html\[data-theme="default"\] body\[data-vue-page="song-workspace"\] \{\s*--workspace-selected: #5c4b3f;/);
+  assert.match(css, /\.workspace-segmented button:is\(\.is-selected, \[aria-pressed="true"\]\):hover \{\s*color: var\(--on-band\);\s*background: var\(--workspace-selected\);/);
+  assert.match(css, /button\.workspace-line:is\(:hover, :focus-visible\)::after \{\s*opacity: 1;/);
+});

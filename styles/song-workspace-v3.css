@@ -7,6 +7,15 @@
 
 @media screen {
 
+/* Selections use cocoa; the ink theme lifts it so it stands out on dark panels. */
+html[data-theme] body[data-vue-page="song-workspace"] {
+    --workspace-selected: var(--band);
+}
+
+html[data-theme="default"] body[data-vue-page="song-workspace"] {
+    --workspace-selected: #5c4b3f;
+}
+
 /* Page heading ------------------------------------------------------------- */
 html[data-theme] body[data-vue-page="song-workspace"] .song-workspace-page {
     max-width: 1200px;
@@ -314,8 +323,8 @@ html[data-theme] body[data-vue-page="song-workspace"] .workspace-entry-card:hove
 
 html[data-theme] body[data-vue-page="song-workspace"] .workspace-entry-card:hover::after {
     color: var(--on-band);
-    background: var(--band);
-    border-color: var(--band);
+    background: var(--workspace-selected);
+    border-color: var(--workspace-selected);
 }
 
 html[data-theme] body[data-vue-page="song-workspace"] :is(.workspace-main-disclosure, .workspace-local-note) {
@@ -492,6 +501,344 @@ html[data-theme] body[data-vue-page="song-workspace"] .workspace-song-actions .w
 html[data-theme] body[data-vue-page="song-workspace"] .workspace-song-download-menu {
     grid-area: menu;
     justify-self: end;
+}
+
+/* Editor: a compact heading while a song is open ---------------------------- */
+html[data-theme] body[data-vue-page="song-workspace"] .song-workspace-page:has(#workspaceEditorView:not([hidden])) .song-workspace-hero {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 8px 16px;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 3px double var(--ink);
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .song-workspace-page:has(#workspaceEditorView:not([hidden])) .song-workspace-hero > .result-kicker {
+    flex-basis: 100%;
+    margin-bottom: 0;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .song-workspace-page:has(#workspaceEditorView:not([hidden])) .song-workspace-hero h1 {
+    font-size: 40px;
+    line-height: 1;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .song-workspace-page:has(#workspaceEditorView:not([hidden])) :is(.song-workspace-hero .hero-tagline, .song-workspace-lead, .song-workspace-promises > span:not(.workspace-save-state)) {
+    display: none;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .song-workspace-page:has(#workspaceEditorView:not([hidden])) .song-workspace-promises {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+/* Song settings ------------------------------------------------------------------ */
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-settings-disclosure {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-settings-disclosure > summary {
+    color: var(--ink);
+    background: none;
+    border-radius: 0;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-settings-panel {
+    background: none;
+    border: 0;
+    border-top: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] :is(.workspace-setting-label, .workspace-reading-control-label, .workspace-field > span) {
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] :is(.workspace-field select, .workspace-field input, .workspace-field textarea) {
+    color: var(--ink);
+    background-color: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-control);
+    box-shadow: none;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] :is(.workspace-field select, .workspace-field input):is(:hover, :focus) {
+    border-color: var(--ink);
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-readonly-field strong {
+    color: var(--ink);
+    background: var(--surface-sunken);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-control);
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-setting-help-trigger {
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--line);
+    box-shadow: none;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] :is(.workspace-reading-stepper, .workspace-read-stepper) {
+    overflow: hidden;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-control);
+    box-shadow: none;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] :is(.workspace-reading-step-button, .workspace-read-stepper button) {
+    color: var(--ink);
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] :is(.workspace-reading-step-button, .workspace-read-stepper button):hover {
+    background: var(--surface-sunken);
+}
+
+/* Chord view: a segmented control with a cocoa selection ----------------------- */
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-segmented {
+    gap: 0;
+    padding: 0;
+    overflow: hidden;
+    background: transparent;
+    border: 1px solid var(--ink);
+    border-radius: var(--radius-control);
+    box-shadow: none;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-segmented button {
+    min-height: 44px;
+    padding: 0 16px;
+    color: var(--ink);
+    background: transparent;
+    border: 0;
+    border-left: 1px solid var(--ink);
+    border-radius: 0;
+    box-shadow: none;
+    font-size: 14px;
+    font-weight: 600;
+    transform: none;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-segmented button:first-child {
+    border-left: 0;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-segmented button:hover {
+    background: var(--surface-sunken);
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-segmented button:is(.is-selected, [aria-pressed="true"]),
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-segmented button:is(.is-selected, [aria-pressed="true"]):hover {
+    color: var(--on-band);
+    background: var(--workspace-selected);
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] #chordHintsButton[aria-pressed="true"] {
+    color: var(--on-band);
+    background: var(--workspace-selected);
+    border-color: var(--workspace-selected);
+}
+
+/* Chart ------------------------------------------------------------------------------ */
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-chart-panel {
+    padding: 32px 36px 36px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-score-header {
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--line);
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-score-kicker-row .result-kicker {
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] #songChartTitle {
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: clamp(34px, 4vw, 48px);
+    font-weight: 400;
+    line-height: 1.04;
+}
+
+html[data-theme]:lang(zh) body[data-vue-page="song-workspace"] #songChartTitle {
+    font-weight: 600;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-title-trigger {
+    color: inherit;
+    font: inherit;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-title-trigger small,
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-inline-edit-button {
+    color: var(--accent);
+    font-family: var(--font-sans);
+    font-weight: 600;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] #songMetadataSummary {
+    color: var(--text-muted);
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] #chartKeySummary {
+    padding: 8px 12px;
+    color: var(--on-band);
+    background: var(--band);
+    border: 0;
+    border-radius: var(--radius-control);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* Sections are numbered like tracks and ruled to the edge. */
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-chart {
+    counter-reset: workspace-section;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-section {
+    counter-increment: workspace-section;
+    border-top: 0;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-section-heading-row h3 {
+    display: flex;
+    flex: 1;
+    align-items: baseline;
+    gap: 12px;
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: 26px;
+    font-weight: 400;
+}
+
+html[data-theme]:lang(zh) body[data-vue-page="song-workspace"] .workspace-section-heading-row h3 {
+    font-weight: 600;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-section-heading-row h3::before {
+    content: counter(workspace-section, decimal-leading-zero);
+    color: var(--accent);
+    font-size: 18px;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-section-heading-row h3::after {
+    content: "";
+    flex: 1;
+    align-self: center;
+    border-top: 1px solid var(--line);
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-section-title-trigger {
+    color: inherit;
+    font: inherit;
+}
+
+/* Lines show an edit pencil on hover and keyboard focus. */
+html[data-theme] body[data-vue-page="song-workspace"] button.workspace-line {
+    position: relative;
+    padding-right: 48px;
+    border-radius: var(--radius-control);
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] button.workspace-line:is(:hover, :focus-visible) {
+    background: var(--surface-sunken);
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] button.workspace-line::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    width: 20px;
+    height: 20px;
+    background: var(--ink);
+    opacity: 0;
+    transform: translateY(-50%);
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linejoin='round'%3E%3Cpath d='M4 20h4L19 9l-4-4L4 16v4Z'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linejoin='round'%3E%3Cpath d='M4 20h4L19 9l-4-4L4 16v4Z'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] button.workspace-line:is(:hover, :focus-visible)::after {
+    opacity: 1;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] :is(.workspace-chord-annotation, .workspace-chord-chip, .workspace-instrumental-chord) {
+    color: var(--accent);
+    font-weight: 700;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-lyric-flow {
+    color: var(--ink);
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-add-trigger {
+    color: var(--text-muted);
+    background: transparent;
+    border-radius: var(--radius-control);
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-add-trigger:is(:hover, :focus-visible) {
+    color: var(--accent);
+}
+
+/* Chord shapes ------------------------------------------------------------------------ */
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-shapes-panel {
+    padding: 22px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] #chordShapesTitle {
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: 26px;
+    font-weight: 400;
+}
+
+html[data-theme]:lang(zh) body[data-vue-page="song-workspace"] #chordShapesTitle {
+    font-weight: 600;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-shape-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-control);
+    box-shadow: none;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-shape-card h3 {
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-weight: 400;
 }
 
 }
