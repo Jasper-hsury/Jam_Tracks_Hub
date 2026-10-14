@@ -1757,3 +1757,200 @@ html[data-theme="light"] :is(
         display: none;
     }
 }
+
+/* ====================
+   v3 shared shell: Liner Notes header and footer
+   Flat paper/ink chrome, square controls, double rule under the header.
+   Layout and drawer behaviour stay with the rules above.
+   ==================== */
+html[data-theme] .navbar {
+    background-color: rgba(var(--paper-rgb), 0.96);
+    border-bottom: 3px double var(--ink);
+    box-shadow: none;
+}
+
+html[data-theme] .navbar .logo {
+    font-family: var(--font-serif);
+    font-size: 27px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    transform: none;
+}
+
+html[data-theme] .navbar .logo:hover,
+html[data-theme] .navbar .logo:focus-visible {
+    color: var(--accent);
+}
+
+html[data-theme] .navbar .nav-links a {
+    color: var(--ink);
+    font-weight: 500;
+}
+
+html[data-theme] .navbar .nav-links a:hover,
+html[data-theme] .navbar .nav-links a:focus-visible {
+    color: var(--accent);
+}
+
+html[data-theme] .navbar .nav-links a.active::after {
+    background: var(--accent);
+}
+
+html[data-theme] .navbar .nav-compact-tools summary,
+html[data-theme] .navbar .nav-compact-tools summary:hover,
+html[data-theme] .navbar .nav-compact-tools.is-active summary,
+html[data-theme] .navbar .nav-compact-tools[open] summary {
+    color: var(--ink);
+    font-weight: 500;
+    background: transparent;
+    border: 1px solid var(--ink);
+    border-radius: 0;
+    box-shadow: none;
+    transform: none;
+}
+
+html[data-theme] .navbar .nav-compact-tools[open] summary,
+html[data-theme] .navbar .nav-compact-tools summary:hover {
+    color: var(--paper);
+    background: var(--ink);
+}
+
+html[data-theme] .navbar .nav-compact-tools-menu {
+    background: var(--surface);
+    border: 1px solid var(--ink);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] .navbar .nav-compact-tools-menu a.active {
+    color: var(--accent);
+    background: var(--accent-soft);
+}
+
+html[data-theme] .navbar .theme-toggle,
+html[data-theme] .navbar .theme-toggle.is-light-theme,
+html[data-theme] .navbar .language-switch-button {
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--ink);
+    border-radius: 0;
+    box-shadow: none;
+    animation: none;
+    transform: none;
+}
+
+html[data-theme] .navbar .theme-toggle:hover,
+html[data-theme] .navbar .theme-toggle.is-light-theme:hover,
+html[data-theme] .navbar .language-switch-button:hover {
+    color: var(--paper);
+    background: var(--ink);
+    box-shadow: none;
+    transform: none;
+}
+
+html[data-theme] .navbar .theme-toggle:focus-within,
+html[data-theme] .navbar .language-switch-button:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+}
+
+html[data-theme] .navbar .theme-toggle-switch,
+html[data-theme] .navbar .theme-toggle-input:checked ~ .theme-toggle-switch {
+    animation: none;
+    transform: none;
+}
+
+html[data-theme] .navbar .language-switch-label,
+html[data-theme] .navbar .language-switch-button:hover .language-switch-label {
+    color: inherit;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    text-shadow: none;
+}
+
+html[data-theme] .navbar .nav-menu-button {
+    background: transparent;
+    border: 1px solid var(--ink);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] .navbar .nav-menu-button:hover,
+html[data-theme] .navbar.menu-open .nav-menu-button {
+    background: var(--surface-sunken);
+}
+
+.v3-theme-icon {
+    display: block;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+@media (min-width: 1181px) {
+    html[data-theme] .navbar .nav-theme-toggle,
+    html[data-theme] .navbar .nav-language-toggle {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        min-height: 44px;
+        padding: 0;
+    }
+}
+
+@media (max-width: 1180px) {
+    html[data-theme] .navbar .nav-links {
+        background: var(--paper);
+        border-left: 1px solid var(--ink);
+        box-shadow: none;
+    }
+
+    html[data-theme] .navbar .nav-language-toggle {
+        --theme-switch-size: 46px;
+        width: 46px;
+        height: 46px;
+        min-width: 46px;
+        min-height: 46px;
+    }
+}
+
+html[data-theme] .footer {
+    margin-top: 96px;
+    padding: 28px 40px;
+    color: var(--text-muted);
+    background: var(--paper);
+    border-top: 1px solid var(--ink);
+    font-size: 13px;
+    text-align: left;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 24px;
+}
+
+html[data-theme] .footer p {
+    margin: 0;
+}
+
+html[data-theme] .footer a,
+html[data-theme] .footer .social-links a {
+    color: var(--ink);
+    text-decoration: none;
+}
+
+html[data-theme] .footer a:hover,
+html[data-theme] .footer a:focus-visible,
+html[data-theme] .footer .social-links a:hover {
+    color: var(--accent);
+}
+
+html[data-theme] .footer .social-links {
+    display: flex;
+    gap: 20px;
+    margin: 0;
+}
