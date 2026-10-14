@@ -23,10 +23,7 @@ const asideText = computed(() => props.aside ? shell.value[props.aside] || props
 
 <template>
   <header class="v3-tool-heading" :class="headingClass">
-    <p class="home-eyebrow v3-tool-eyebrow">
-      <span class="v3-tool-no" aria-hidden="true">{{ side }}{{ track }}</span>
-      <span>{{ eyebrow }}</span>
-    </p>
+    <p class="home-eyebrow v3-tool-eyebrow">{{ eyebrow }}</p>
     <slot></slot>
     <div class="v3-tool-meta">
       <span>{{ sideTrack }}</span>

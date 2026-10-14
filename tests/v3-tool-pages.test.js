@@ -33,7 +33,7 @@ test("other pages keep their stylesheets unchanged", () => {
     .forEach(html => assert.doesNotMatch(read(html), /tool-pages\.css/, html));
 });
 
-test("each tool page renders the shared heading with its tracklist number", () => {
+test("each tool page renders the shared heading with its side and track", () => {
   toolPages.forEach(({ view, side, track, aside }) => {
     const source = read(`src/views/${view}.vue`);
     assert.match(source, /import ToolPageHeading from "\.\.\/components\/site\/ToolPageHeading\.vue";/, view);
@@ -45,9 +45,10 @@ test("each tool page renders the shared heading with its tracklist number", () =
   });
 });
 
-test("the shared heading keeps the number decorative and the meta row localized", () => {
+test("the shared heading drops the number badge and keeps the meta row localized", () => {
   const heading = read("src/components/site/ToolPageHeading.vue");
-  assert.match(heading, /<span class="v3-tool-no" aria-hidden="true">\{\{ side \}\}\{\{ track \}\}<\/span>/);
+  assert.match(heading, /<p class="home-eyebrow v3-tool-eyebrow">\{\{ eyebrow \}\}<\/p>/);
+  assert.doesNotMatch(heading + css, /v3-tool-no/);
   assert.match(heading, /<div class="v3-tool-meta">/);
   assert.doesNotMatch(heading, /<h1\b|v-html/);
   const en = JSON.parse(read("locales/en/common.json")).pages;

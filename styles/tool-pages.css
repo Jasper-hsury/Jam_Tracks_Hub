@@ -34,17 +34,6 @@ html[data-theme] main.v3-tool-page .v3-tool-eyebrow {
     text-transform: uppercase;
 }
 
-html[data-theme] main.v3-tool-page .v3-tool-no {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 36px;
-    height: 26px;
-    padding: 0 8px;
-    border: 1px solid var(--accent);
-    letter-spacing: 0.06em;
-}
-
 html[data-theme] main.v3-tool-page .v3-tool-heading h1 {
     margin: 0;
     color: var(--ink);
@@ -1857,7 +1846,7 @@ html[data-theme] main.v3-tool-page :is(.segmented-control, .v3-mode-buttons, .pr
     border-radius: var(--tool-control-radius);
 }
 
-html[data-theme] main.v3-tool-page :is(.v3-tool-no, .dictionary-category-heading > span) {
+html[data-theme] main.v3-tool-page .dictionary-category-heading > span {
     border-radius: 4px;
 }
 
