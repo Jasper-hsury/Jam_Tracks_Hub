@@ -1,5 +1,6 @@
 <script setup>
 import { computed, onUnmounted, ref } from "vue";
+import ToolPageHeading from "../components/site/ToolPageHeading.vue";
 import ScaleFretboard from "../components/scale/ScaleFretboard.vue";
 import { useScaleExplorer } from "../composables/useScaleExplorer.js";
 import { useSiteLocale } from "../i18n/useSiteLocale.js";
@@ -75,12 +76,15 @@ onUnmounted(() => audioPlayer.dispose(value => {
 </script>
 
 <template>
-  <main class="tracks-page scale-page" id="main-content">
-    <header class="scale-page-heading">
-      <p class="home-eyebrow">{{ messages.eyebrow }}</p>
+  <main class="tracks-page scale-page v3-tool-page" id="main-content">
+    <ToolPageHeading
+      heading-class="scale-page-heading"
+      aside="standardTuning"
+      :eyebrow="messages.eyebrow"
+    >
       <h1>{{ messages.title }}</h1>
       <p class="hero-tagline signature-slogan">{{ messages.tagline }}</p>
-    </header>
+    </ToolPageHeading>
 
     <section class="scale-workspace" aria-labelledby="scaleControlsHeading">
       <div class="scale-control-panel">

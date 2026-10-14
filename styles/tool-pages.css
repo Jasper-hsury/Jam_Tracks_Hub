@@ -1,0 +1,1927 @@
+/* ====================
+   v3 Tool pages: Liner Notes
+   Loaded last on the six theory and practice tool pages. Every rule is scoped
+   to main.v3-tool-page so Feedback and other pages that share legacy class
+   names keep their current look.
+   ==================== */
+
+/* Page shell and heading ------------------------------------------------- */
+html[data-theme] main.v3-tool-page {
+    max-width: 1200px;
+    margin-top: 56px;
+    color: var(--text-body);
+}
+
+html[data-theme] main.v3-tool-page .v3-tool-heading {
+    display: block;
+    max-width: none;
+    margin: 0 0 36px;
+    padding: 0;
+    text-align: left;
+}
+
+html[data-theme] main.v3-tool-page .v3-tool-eyebrow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    margin: 0 0 18px;
+    color: var(--accent);
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+html[data-theme] main.v3-tool-page .v3-tool-heading h1 {
+    margin: 0;
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: clamp(46px, 6vw, 76px);
+    font-weight: 400;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    text-align: left;
+}
+
+html[data-theme] main.v3-tool-page .v3-tool-heading .hero-tagline {
+    margin: 10px 0 0;
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: clamp(19px, 2vw, 24px);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-align: left;
+    text-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .v3-tool-heading .trainer-lead {
+    max-width: 680px;
+    margin: 18px 0 0;
+    color: var(--text-body);
+    font-size: 17px;
+    line-height: 1.65;
+}
+
+html[data-theme] main.v3-tool-page .v3-tool-meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 6px 16px;
+    margin-top: 28px;
+    padding-top: 10px;
+    border-top: 3px double var(--ink);
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+html[data-theme] main.v3-tool-page .v3-tool-meta:empty {
+    padding-top: 0;
+}
+
+html[data-theme]:lang(zh) main.v3-tool-page .v3-tool-eyebrow,
+html[data-theme]:lang(zh) main.v3-tool-page .v3-tool-meta {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: none;
+}
+
+html[data-theme]:lang(zh) main.v3-tool-page .v3-tool-heading h1 {
+    font-weight: 600;
+    line-height: 1.12;
+    letter-spacing: 0;
+}
+
+html[data-theme]:lang(zh) main.v3-tool-page .v3-tool-heading .hero-tagline {
+    font-style: normal;
+    font-weight: 600;
+}
+
+@media (max-width: 760px) {
+    html[data-theme] main.v3-tool-page {
+        margin-top: 32px;
+        padding: 0 16px;
+    }
+
+    html[data-theme] main.v3-tool-page .v3-tool-heading {
+        margin-bottom: 24px;
+    }
+}
+
+/* Shared panels and controls --------------------------------------------- */
+html[data-theme] main.v3-tool-page :is(h2, h3, h4) {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+}
+
+html[data-theme]:lang(zh) main.v3-tool-page :is(h2, h3, h4) {
+    font-weight: 600;
+    letter-spacing: 0;
+}
+
+html[data-theme] main.v3-tool-page :is(button, a, input, select, summary):focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+}
+
+/* Chord Dictionary --------------------------------------------------------- */
+html[data-theme] main.v3-tool-page :is(.dictionary-browser, .dictionary-detail) {
+    padding: 28px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .dictionary-kicker {
+    margin: 0 0 6px;
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+html[data-theme]:lang(zh) main.v3-tool-page .dictionary-kicker {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+}
+
+html[data-theme] main.v3-tool-page .dictionary-browser-heading h2 {
+    color: var(--ink);
+    font-size: 30px;
+    line-height: 1.12;
+}
+
+html[data-theme] main.v3-tool-page .dictionary-search span,
+html[data-theme] main.v3-tool-page .dictionary-root-field legend {
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+html[data-theme] main.v3-tool-page .dictionary-search input {
+    min-height: 46px;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .dictionary-search input:hover,
+html[data-theme] main.v3-tool-page .dictionary-search input:focus {
+    background: var(--paper);
+    border-color: var(--ink);
+}
+
+html[data-theme] main.v3-tool-page :is(.dictionary-root-grid button, .dictionary-quality-button, .dictionary-position-filter button, .dictionary-pagination button) {
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .dictionary-root-grid button {
+    min-height: 46px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+html[data-theme] main.v3-tool-page :is(.dictionary-root-grid button, .dictionary-quality-button, .dictionary-position-filter button, .dictionary-pagination button):hover:not(:disabled) {
+    color: var(--ink);
+    background: var(--paper);
+    border-color: var(--ink);
+}
+
+html[data-theme] main.v3-tool-page :is(.dictionary-root-grid button, .dictionary-quality-button, .dictionary-position-filter button).is-selected,
+html[data-theme] main.v3-tool-page :is(.dictionary-root-grid button, .dictionary-quality-button, .dictionary-position-filter button).is-selected:hover {
+    color: var(--paper);
+    background: var(--ink);
+    border-color: var(--ink);
+}
+
+html[data-theme] main.v3-tool-page .dictionary-quality-button.is-selected span {
+    color: inherit;
+    opacity: 0.78;
+}
+
+html[data-theme] main.v3-tool-page .dictionary-category {
+    border-color: var(--line);
+}
+
+html[data-theme] main.v3-tool-page .dictionary-category-heading h3 {
+    color: var(--ink);
+    font-size: 22px;
+    line-height: 1.15;
+}
+
+html[data-theme] main.v3-tool-page .dictionary-category-heading p {
+    color: var(--text-muted);
+}
+
+html[data-theme] main.v3-tool-page .dictionary-category-heading > span {
+    min-width: 30px;
+    height: 26px;
+    color: var(--accent);
+    background: transparent;
+    border: 1px solid var(--accent);
+    border-radius: 0;
+    font-size: 12px;
+}
+
+/* Selected chord: a dark band at the top of the detail panel. */
+html[data-theme] main.v3-tool-page .v3-selected-band {
+    display: grid;
+    gap: 20px;
+    margin: -28px -28px 28px;
+    padding: 28px;
+    color: var(--on-band);
+    background: var(--band);
+    border-bottom: 1px solid var(--band-edge);
+}
+
+html[data-theme] main.v3-tool-page .v3-selected-band .dictionary-detail-heading {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+html[data-theme] main.v3-tool-page .v3-selected-band .dictionary-kicker {
+    color: var(--accent-on-band);
+}
+
+html[data-theme] main.v3-tool-page .v3-selected-band h2 {
+    color: var(--on-band);
+    font-size: clamp(44px, 5vw, 64px);
+    line-height: 1;
+}
+
+html[data-theme] main.v3-tool-page .v3-selected-band #selectedChordDescription {
+    margin-top: 10px;
+    color: var(--on-band-muted);
+}
+
+html[data-theme] main.v3-tool-page .v3-selected-band .dictionary-play-button {
+    min-height: 46px;
+    padding: 0 20px;
+    color: var(--band);
+    background: var(--on-band);
+    border: 1px solid var(--on-band);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .v3-selected-band .dictionary-play-button:hover:not(:disabled) {
+    color: var(--on-band);
+    background: transparent;
+    border-color: var(--on-band);
+}
+
+html[data-theme] main.v3-tool-page .v3-selected-band .dictionary-facts {
+    gap: 0;
+    margin: 0;
+    border-top: 1px solid rgba(242, 237, 227, 0.18);
+    border-bottom: 1px solid rgba(242, 237, 227, 0.18);
+}
+
+html[data-theme] main.v3-tool-page .v3-selected-band .dictionary-facts div {
+    padding: 14px 16px;
+    background: transparent;
+    border: 0;
+    border-left: 1px solid rgba(242, 237, 227, 0.18);
+    border-radius: 0;
+}
+
+html[data-theme] main.v3-tool-page .v3-selected-band .dictionary-facts div:first-child {
+    padding-left: 0;
+    border-left: 0;
+}
+
+html[data-theme] main.v3-tool-page .v3-selected-band .dictionary-facts dt {
+    color: var(--on-band-muted);
+}
+
+html[data-theme] main.v3-tool-page .v3-selected-band .dictionary-facts dd {
+    color: var(--on-band);
+    font-size: 17px;
+    font-weight: 600;
+}
+
+html[data-theme] main.v3-tool-page .v3-selected-band .dictionary-related-actions {
+    gap: 10px 22px;
+    margin: 0;
+}
+
+html[data-theme] main.v3-tool-page .v3-selected-band .dictionary-related-actions a,
+html[data-theme] main.v3-tool-page .v3-selected-band .dictionary-related-actions a:hover,
+html[data-theme] main.v3-tool-page .v3-selected-band .dictionary-related-actions a:focus-visible {
+    min-height: 0;
+    padding: 2px 0;
+    color: var(--on-band);
+    background: none;
+    border: 0;
+    border-bottom: 1px solid var(--accent-on-band);
+    border-radius: 0;
+    box-shadow: none;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .v3-selected-band .dictionary-related-actions a::after {
+    content: "\00a0→";
+}
+
+/* Shapes */
+html[data-theme] main.v3-tool-page .dictionary-shape-heading h3 {
+    color: var(--ink);
+    font-size: 26px;
+    line-height: 1.15;
+}
+
+html[data-theme] main.v3-tool-page .dictionary-shape-heading p {
+    color: var(--text-muted);
+}
+
+html[data-theme] main.v3-tool-page .dictionary-shape-heading > span {
+    padding: 0;
+    color: var(--ink);
+    background: none;
+    border: 0;
+    border-radius: 0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+html[data-theme] main.v3-tool-page .dictionary-position-filter {
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: 0;
+}
+
+html[data-theme] main.v3-tool-page .dictionary-position-filter > span {
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+html[data-theme] main.v3-tool-page .dictionary-position-filter button {
+    min-height: 40px;
+    padding: 0 12px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+html[data-theme] main.v3-tool-page .chord-shape-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .chord-shape-card-heading span {
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+html[data-theme] main.v3-tool-page .dictionary-pagination button {
+    min-height: 44px;
+    padding: 0 18px;
+    font-weight: 600;
+}
+
+html[data-theme] main.v3-tool-page .dictionary-pagination button:disabled {
+    opacity: 0.45;
+}
+
+/* Segmented controls (Scale Explorer, Key Finder) ------------------------- */
+html[data-theme] main.v3-tool-page .segmented-control {
+    gap: 0;
+    padding: 0;
+    background: transparent;
+    border: 1px solid var(--ink);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .segmented-control button {
+    min-height: 44px;
+    padding: 0 16px;
+    color: var(--ink);
+    background: transparent;
+    border: 0;
+    border-left: 1px solid var(--ink);
+    border-radius: 0;
+    box-shadow: none;
+    font-size: 14px;
+    font-weight: 600;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .segmented-control button:first-child {
+    border-left: 0;
+}
+
+html[data-theme] main.v3-tool-page .segmented-control button:hover:not(:disabled) {
+    color: var(--ink);
+    background: var(--surface-sunken);
+}
+
+html[data-theme] main.v3-tool-page .segmented-control button:is(.is-selected, .active),
+html[data-theme] main.v3-tool-page .segmented-control button:is(.is-selected, .active):hover {
+    color: var(--paper);
+    background: var(--ink);
+    box-shadow: none;
+}
+
+/* Scale Explorer ------------------------------------------------------------ */
+html[data-theme] main.v3-tool-page :is(.scale-control-panel, .scale-display-toolbar, .fretboard-card) {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .scale-control-panel {
+    padding: 28px;
+}
+
+html[data-theme] main.v3-tool-page .scale-section-kicker {
+    color: var(--accent) !important;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+}
+
+html[data-theme]:lang(zh) main.v3-tool-page .scale-section-kicker {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+}
+
+html[data-theme] main.v3-tool-page .scale-control-heading h2 {
+    color: var(--ink);
+    font-size: 30px;
+    line-height: 1.12;
+}
+
+html[data-theme] main.v3-tool-page .scale-control-heading > p {
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+}
+
+html[data-theme] main.v3-tool-page :is(.scale-select-field > span, .scale-root-field legend, .scale-display-toolbar legend) {
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+html[data-theme] main.v3-tool-page .scale-select-field select {
+    min-height: 46px;
+    color: var(--ink);
+    background-color: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .scale-select-field select:is(:hover, :focus) {
+    background-color: var(--paper);
+    border-color: var(--ink);
+}
+
+html[data-theme] main.v3-tool-page :is(.scale-root-grid button, .scale-range-buttons button) {
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+    font-weight: 600;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .scale-root-grid button {
+    min-height: 46px;
+    font-size: 15px;
+}
+
+html[data-theme] main.v3-tool-page .scale-range-buttons button {
+    min-height: 40px;
+    padding: 0 12px;
+    font-size: 13px;
+}
+
+html[data-theme] main.v3-tool-page :is(.scale-root-grid button, .scale-range-buttons button):hover:not(:disabled) {
+    color: var(--ink);
+    background: var(--paper);
+    border-color: var(--ink);
+    box-shadow: none;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page :is(.scale-root-grid button, .scale-range-buttons button).is-selected,
+html[data-theme] main.v3-tool-page :is(.scale-root-grid button, .scale-range-buttons button).is-selected:hover {
+    color: var(--paper);
+    background: var(--ink);
+    border-color: var(--ink);
+}
+
+/* Current scale: the dark band. */
+html[data-theme] main.v3-tool-page .scale-summary {
+    gap: 20px 24px;
+    padding: 28px;
+    color: var(--on-band);
+    background: var(--band);
+    border: 1px solid var(--band-edge);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .scale-summary .scale-section-kicker {
+    color: var(--accent-on-band) !important;
+}
+
+html[data-theme] main.v3-tool-page .scale-summary h2 {
+    color: var(--on-band);
+    font-size: clamp(36px, 4.4vw, 56px);
+    line-height: 1.04;
+}
+
+html[data-theme] main.v3-tool-page .scale-summary p:not(.scale-section-kicker) {
+    color: var(--on-band-muted);
+}
+
+html[data-theme] main.v3-tool-page :is(.scale-play-button, .scale-download-button) {
+    min-height: 46px;
+    padding: 0 20px;
+    border-radius: 0;
+    box-shadow: none;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .scale-play-button {
+    color: var(--band);
+    background: var(--on-band);
+    border: 1px solid var(--on-band);
+}
+
+html[data-theme] main.v3-tool-page .scale-download-button {
+    color: var(--on-band);
+    background: transparent;
+    border: 1px solid var(--on-band);
+}
+
+html[data-theme] main.v3-tool-page :is(.scale-play-button, .scale-download-button):hover:not(:disabled) {
+    color: var(--band);
+    background: var(--accent-on-band);
+    border-color: var(--accent-on-band);
+    box-shadow: none;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .scale-interval-chip {
+    display: inline-flex;
+    gap: 8px;
+    min-height: 34px;
+    padding: 0 12px;
+    color: var(--on-band);
+    background: transparent;
+    border: 1px solid rgba(242, 237, 227, 0.28);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .scale-interval-chip::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    flex: none;
+    background: var(--interval-color);
+    border-radius: 50%;
+}
+
+html[data-theme] main.v3-tool-page .scale-interval-chip small {
+    padding-left: 0;
+    color: var(--on-band-muted);
+    border-left: 0;
+}
+
+html[data-theme] main.v3-tool-page .scale-interval-chip.is-root {
+    border-color: var(--on-band);
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .scale-tool-links {
+    gap: 10px 22px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(242, 237, 227, 0.18);
+}
+
+html[data-theme] main.v3-tool-page .scale-tool-links a,
+html[data-theme] main.v3-tool-page .scale-tool-links a:hover {
+    min-height: 0;
+    padding: 2px 0;
+    color: var(--on-band);
+    background: none;
+    border: 0;
+    border-bottom: 1px solid var(--accent-on-band);
+    border-radius: 0;
+    box-shadow: none;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .scale-tool-links a::after {
+    content: "\00a0→";
+}
+
+/* Neck */
+html[data-theme] main.v3-tool-page .scale-display-toolbar {
+    padding: 20px 28px;
+}
+
+html[data-theme] main.v3-tool-page .fretboard-help {
+    color: var(--text-muted);
+    border-bottom-color: var(--line);
+}
+
+html[data-theme] main.v3-tool-page .fretboard-scroll {
+    background: var(--paper);
+}
+
+/* Shared: two-button segmented mode control ------------------------------- */
+html[data-theme] main.v3-tool-page .v3-mode-buttons {
+    display: inline-grid;
+    grid-template-columns: none;
+    grid-auto-columns: auto;
+    grid-auto-flow: column;
+    flex: none;
+    gap: 0;
+    min-height: 0;
+    padding: 0;
+    background: none;
+    border: 1px solid var(--ink);
+    border-radius: 0;
+}
+
+html[data-theme] main.v3-tool-page .v3-mode-buttons button {
+    min-width: 88px;
+    min-height: 44px;
+    padding: 0 18px;
+    color: var(--ink);
+    background: transparent;
+    border: 0;
+    border-left: 1px solid var(--ink);
+    border-radius: 0;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+html[data-theme] main.v3-tool-page .v3-mode-buttons button:first-child {
+    border-left: 0;
+}
+
+html[data-theme] main.v3-tool-page .v3-mode-buttons button:hover {
+    background: var(--surface-sunken);
+}
+
+html[data-theme] main.v3-tool-page .v3-mode-buttons button[aria-pressed="true"] {
+    color: var(--paper);
+    background: var(--ink);
+    cursor: default;
+}
+
+/* Chord Progressions -------------------------------------------------------- */
+html[data-theme] main.v3-tool-page .key-selector {
+    display: grid;
+    gap: 24px;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .key-selector > .tool-section-heading {
+    margin: 0;
+    text-align: left;
+}
+
+html[data-theme] main.v3-tool-page .key-selector > .tool-section-heading h2 {
+    margin: 0 0 8px;
+    color: var(--ink);
+    font-size: 30px;
+    text-align: left;
+}
+
+html[data-theme] main.v3-tool-page .key-selector > .tool-section-heading p {
+    max-width: 680px;
+    margin: 0;
+    color: var(--text-body);
+    text-align: left;
+}
+
+html[data-theme] main.v3-tool-page .select-key-button {
+    justify-self: start;
+    width: auto;
+    min-height: 46px;
+    margin: 0;
+    padding: 0 20px;
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--ink);
+    border-radius: 0;
+    box-shadow: none;
+    font-size: 14px;
+    font-weight: 600;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .select-key-button::before {
+    display: none;
+}
+
+html[data-theme] main.v3-tool-page .select-key-button:hover {
+    color: var(--paper);
+    background: var(--ink);
+    box-shadow: none;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .progression-write-link::after {
+    content: "\00a0→";
+}
+
+html[data-theme] main.v3-tool-page .key-options {
+    padding: 28px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .key-mode-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 0 0 22px;
+}
+
+html[data-theme] main.v3-tool-page .result-kicker {
+    display: block;
+    margin: 0 0 6px;
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+html[data-theme]:lang(zh) main.v3-tool-page .result-kicker {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+}
+
+html[data-theme] main.v3-tool-page .key-mode-heading h2 {
+    margin: 0;
+    color: var(--ink);
+    font-size: 30px;
+    text-align: left;
+}
+
+html[data-theme] main.v3-tool-page .key-button-grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 6px;
+}
+
+html[data-theme] main.v3-tool-page .key-button {
+    width: auto;
+    min-height: 48px;
+    margin: 0;
+    padding: 0;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+    font-size: 15px;
+    font-weight: 600;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .key-button::before {
+    display: none;
+}
+
+html[data-theme] main.v3-tool-page .key-button:hover {
+    color: var(--ink);
+    background: var(--paper);
+    border-color: var(--ink);
+    box-shadow: none;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .key-button:is([aria-pressed="true"], .is-selected) {
+    color: var(--paper);
+    background: var(--ink);
+    border-color: var(--ink);
+}
+
+html[data-theme] main.v3-tool-page .key-result {
+    margin: 0;
+    padding: 28px;
+    color: var(--text-body);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .key-result > h3 {
+    margin: 0 0 6px;
+    color: var(--ink);
+    font-size: 26px;
+}
+
+html[data-theme] main.v3-tool-page .key-result > p {
+    margin: 0;
+    color: var(--text-muted);
+}
+
+/* Selected key: the dark band. */
+html[data-theme] main.v3-tool-page .progression-selected-heading {
+    margin: -28px -28px 28px;
+    padding: 28px;
+    color: var(--on-band);
+    background: var(--band);
+    border: 0;
+    border-bottom: 1px solid var(--band-edge);
+    border-radius: 0;
+}
+
+html[data-theme] main.v3-tool-page .progression-selected-heading .result-kicker {
+    color: var(--accent-on-band);
+}
+
+html[data-theme] main.v3-tool-page .progression-selected-heading h3 {
+    margin: 0;
+    color: var(--on-band);
+    font-size: clamp(40px, 5vw, 60px);
+    line-height: 1;
+}
+
+html[data-theme] main.v3-tool-page .progression-toolbar-simple {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px 24px;
+    margin: 0 0 20px;
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .progression-toolbar-heading h4 {
+    margin: 0 0 6px;
+    color: var(--ink);
+    font-size: 30px;
+    line-height: 1.12;
+}
+
+html[data-theme] main.v3-tool-page .progression-toolbar-heading p {
+    max-width: 620px;
+    margin: 0;
+    color: var(--text-muted);
+}
+
+html[data-theme] main.v3-tool-page .progression-chord-mode-control > span {
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+html[data-theme] main.v3-tool-page .progression-extension-toggle {
+    gap: 0;
+    padding: 0;
+    background: transparent;
+    border: 1px solid var(--ink);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .progression-extension-option {
+    min-height: 44px;
+    padding: 0 18px;
+    color: var(--ink);
+    background: transparent;
+    border: 0;
+    border-left: 1px solid var(--ink);
+    border-radius: 0;
+    box-shadow: none;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .progression-extension-option:first-child {
+    border-left: 0;
+}
+
+html[data-theme] main.v3-tool-page .progression-extension-option:hover {
+    background: var(--surface-sunken);
+}
+
+html[data-theme] main.v3-tool-page .progression-extension-option.is-selected,
+html[data-theme] main.v3-tool-page .progression-extension-option.is-selected:hover {
+    color: var(--paper);
+    background: var(--ink);
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .progression-category-list {
+    display: grid;
+    gap: 0;
+    border-top: 1px solid var(--ink);
+}
+
+html[data-theme] main.v3-tool-page .progression-voicing-category,
+html[data-theme] main.v3-tool-page .progression-voicing-category[open] {
+    margin: 0;
+    background: none;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .progression-voicing-heading {
+    padding: 18px 40px 18px 0;
+    background: none;
+    border-bottom: 0;
+}
+
+html[data-theme] main.v3-tool-page .progression-voicing-heading::after {
+    right: 4px;
+    color: var(--ink);
+    font-weight: 400;
+}
+
+html[data-theme] main.v3-tool-page .progression-voicing-category[open] .progression-voicing-heading::after {
+    content: "\2212";
+}
+
+html[data-theme] main.v3-tool-page .progression-voicing-heading:hover {
+    background: none;
+}
+
+html[data-theme] main.v3-tool-page .progression-category-title {
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: 22px;
+}
+
+html[data-theme]:lang(zh) main.v3-tool-page .progression-category-title {
+    font-weight: 600;
+}
+
+html[data-theme] main.v3-tool-page .progression-category-meta strong {
+    color: var(--accent);
+    background: none;
+    border: 0;
+    font-size: 13px;
+}
+
+html[data-theme] main.v3-tool-page .progression-voicing-grid {
+    padding: 0 0 24px;
+}
+
+html[data-theme] main.v3-tool-page .progression-voicing-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .progression-numeral-token {
+    color: var(--accent);
+}
+
+html[data-theme] main.v3-tool-page .progression-chord-token {
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .progression-style {
+    color: var(--text-muted);
+}
+
+html[data-theme] main.v3-tool-page .progression-shape-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .progression-shape-card:hover {
+    border-color: var(--ink);
+    box-shadow: none;
+    transform: none;
+}
+
+/* Mini chord shapes read in both themes (the legacy dark rules used the
+   surface color, which is dark in the v3 ink theme). */
+html[data-theme] main.v3-tool-page .progression-mini-neck {
+    --neck-line: rgba(var(--ink-rgb), 0.34);
+}
+
+html[data-theme] main.v3-tool-page :is(.progression-style, .progression-shape-card-head span, .progression-open-row, .progression-base-fret, .progression-string-row, .progression-group-label) {
+    color: var(--text-muted);
+}
+
+html[data-theme] main.v3-tool-page :is(.progression-shape-card-head strong, .progression-shape-frets) {
+    color: var(--ink);
+}
+
+/* Shared: primary and secondary buttons on tool pages --------------------- */
+html[data-theme] main.v3-tool-page :is(.primary-button, .secondary-button) {
+    min-height: 46px;
+    padding: 0 20px;
+    border-radius: 0;
+    box-shadow: none;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .primary-button {
+    color: var(--paper);
+    background: var(--ink);
+    border: 1px solid var(--ink);
+}
+
+html[data-theme] main.v3-tool-page .secondary-button {
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--ink);
+}
+
+html[data-theme] main.v3-tool-page :is(.primary-button, .secondary-button)::before,
+html[data-theme] main.v3-tool-page :is(.primary-button, .secondary-button)::after {
+    display: none;
+}
+
+html[data-theme] main.v3-tool-page .primary-button:hover:not(:disabled) {
+    color: var(--on-accent);
+    background: var(--accent);
+    border-color: var(--accent);
+    box-shadow: none;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .secondary-button:hover:not(:disabled) {
+    color: var(--paper);
+    background: var(--ink);
+    border-color: var(--ink);
+    box-shadow: none;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page :is(.primary-button, .secondary-button):disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+/* Progression Writer -------------------------------------------------------- */
+html[data-theme] main.v3-tool-page :is(.progression-writer-panel, .progression-writer-meta, .progression-writer-entry, .progression-writer-saved) {
+    padding: 28px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .progression-writer-panel .section-title,
+html[data-theme] main.v3-tool-page .progression-writer-entry .section-title,
+html[data-theme] main.v3-tool-page .progression-writer-saved .section-title {
+    margin: 0;
+    color: var(--ink);
+    font-size: 30px;
+    line-height: 1.12;
+    text-align: left;
+}
+
+/* Song information keeps its floating labels on an underline field. */
+html[data-theme] main.v3-tool-page .progression-writer-meta-input {
+    color: var(--ink);
+    background-color: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--ink);
+    border-image: none;
+    border-radius: 0;
+    box-shadow: none;
+    font-weight: 600;
+}
+
+html[data-theme] main.v3-tool-page .progression-writer-meta-input:focus {
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--accent);
+    border-image: none;
+}
+
+html[data-theme] main.v3-tool-page .progression-writer-meta-label {
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+html[data-theme] main.v3-tool-page .progression-writer-meta-input:focus ~ .progression-writer-meta-label {
+    color: var(--accent);
+}
+
+html[data-theme] main.v3-tool-page .progression-writer-saved-controls {
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .progression-writer-chord-field input {
+    min-height: 52px;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+    font-family: var(--font-serif);
+    font-size: 24px;
+}
+
+html[data-theme] main.v3-tool-page .progression-writer-chord-field input:is(:hover, :focus) {
+    border-color: var(--ink);
+}
+
+html[data-theme] main.v3-tool-page .progression-writer-chord-field label > span {
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+html[data-theme] main.v3-tool-page .progression-writer-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px 18px;
+    padding: 16px 0;
+    background: none;
+    border: 0;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .v3-download-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    padding: 0;
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--ink);
+    border-radius: 0;
+    cursor: pointer;
+}
+
+html[data-theme] main.v3-tool-page .v3-download-button:hover,
+html[data-theme] main.v3-tool-page .v3-download-button.is-activating {
+    color: var(--paper);
+    background: var(--ink);
+}
+
+html[data-theme] main.v3-tool-page .v3-download-icon {
+    width: 20px;
+    height: 20px;
+}
+
+html[data-theme] main.v3-tool-page .progression-writer-saved-picker select {
+    min-height: 46px;
+    color: var(--ink);
+    background-color: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 0;
+}
+
+html[data-theme] main.v3-tool-page .progression-writer-saved-count {
+    color: var(--accent);
+    background: none;
+    border: 0;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+html[data-theme] main.v3-tool-page .progression-writer-saved-item {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .progression-writer-saved-item.is-active {
+    border-color: var(--ink);
+}
+
+/* Fretboard Trainer -------------------------------------------------------- */
+html[data-theme] main.v3-tool-page .trainer-workspace {
+    gap: 24px;
+}
+
+html[data-theme] main.v3-tool-page .trainer-card,
+html[data-theme] main.v3-tool-page .trainer-card:hover {
+    padding: 28px;
+    color: var(--text-body);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .trainer-kicker {
+    margin: 0 0 6px;
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+html[data-theme]:lang(zh) main.v3-tool-page .trainer-kicker {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+}
+
+html[data-theme] main.v3-tool-page .trainer-card h2 {
+    color: var(--ink);
+    font-size: 30px;
+    line-height: 1.12;
+}
+
+/* Current question: the dark band. */
+html[data-theme] main.v3-tool-page .trainer-question-card,
+html[data-theme] main.v3-tool-page .trainer-question-card:hover {
+    color: var(--on-band);
+    background: var(--band);
+    border-color: var(--band-edge);
+}
+
+html[data-theme] main.v3-tool-page .trainer-question-card .trainer-kicker {
+    color: var(--accent-on-band);
+}
+
+html[data-theme] main.v3-tool-page .trainer-question-card h2 {
+    color: var(--on-band);
+}
+
+html[data-theme] main.v3-tool-page .trainer-question-topline #trainerProgress {
+    color: var(--on-band-muted);
+    font-weight: 600;
+}
+
+html[data-theme] main.v3-tool-page .trainer-question-display {
+    gap: 0;
+    border: 1px solid rgba(242, 237, 227, 0.22);
+}
+
+html[data-theme] main.v3-tool-page .trainer-question-display div {
+    padding: 18px 20px;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+}
+
+html[data-theme] main.v3-tool-page .trainer-question-display div + div {
+    border-left: 1px solid rgba(242, 237, 227, 0.22);
+}
+
+html[data-theme] main.v3-tool-page .trainer-question-display span {
+    color: var(--on-band-muted);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+html[data-theme] main.v3-tool-page .trainer-question-display small {
+    color: var(--on-band-muted);
+}
+
+html[data-theme] main.v3-tool-page .trainer-question-display strong {
+    margin: 6px 0 4px;
+    color: var(--on-band);
+    font-size: clamp(64px, 8vw, 104px);
+    font-weight: 400;
+}
+
+html[data-theme] main.v3-tool-page .trainer-feedback {
+    color: var(--on-band);
+    background: transparent;
+    border: 1px solid rgba(242, 237, 227, 0.22);
+    border-radius: 0;
+}
+
+html[data-theme] main.v3-tool-page .trainer-feedback.is-correct {
+    color: #a8dcc0;
+    background: transparent;
+    border-color: #7fc4a0;
+}
+
+html[data-theme] main.v3-tool-page .trainer-feedback.is-wrong {
+    color: #f5b3ab;
+    background: transparent;
+    border-color: #f0897f;
+}
+
+html[data-theme] main.v3-tool-page .trainer-feedback.is-revealed {
+    color: var(--on-band);
+    border-color: var(--accent-on-band);
+}
+
+/* Answer */
+html[data-theme] main.v3-tool-page .trainer-score {
+    padding: 8px 14px;
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--ink);
+    border-radius: 0;
+}
+
+html[data-theme] main.v3-tool-page .trainer-score strong {
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: 26px;
+    font-weight: 400;
+}
+
+html[data-theme] main.v3-tool-page .note-answer-grid {
+    gap: 6px;
+}
+
+html[data-theme] main.v3-tool-page .note-answer-grid button {
+    min-height: 52px;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+    font-weight: 600;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .note-answer-grid button:hover:not(:disabled) {
+    color: var(--ink);
+    background: var(--paper);
+    border-color: var(--ink);
+    box-shadow: none;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .note-answer-grid button:disabled {
+    filter: none;
+}
+
+html[data-theme] main.v3-tool-page .note-answer-grid button.is-correct {
+    color: var(--paper);
+    background: var(--ink);
+    border-color: var(--ink);
+    opacity: 1;
+}
+
+html[data-theme] main.v3-tool-page .note-answer-grid button.is-wrong {
+    color: var(--danger);
+    background: transparent;
+    border: 2px solid var(--danger);
+    opacity: 1;
+    text-decoration: line-through;
+}
+
+html[data-theme] main.v3-tool-page .trainer-actions {
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+}
+
+html[data-theme] main.v3-tool-page .trainer-actions :is(.primary-button, .secondary-button) {
+    min-height: 46px;
+    padding: 0 20px;
+    border-radius: 0;
+}
+
+html[data-theme] main.v3-tool-page .trainer-actions #resetTrainerButton {
+    border-color: var(--line);
+}
+
+/* Reference */
+html[data-theme] main.v3-tool-page .string-reference-grid {
+    gap: 0;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--line);
+}
+
+html[data-theme] main.v3-tool-page .string-reference-grid span {
+    padding: 14px 16px;
+    color: var(--ink);
+    background: transparent;
+    border: 0;
+    border-left: 1px solid var(--line);
+    border-radius: 0;
+    font-weight: 600;
+}
+
+html[data-theme] main.v3-tool-page .string-reference-grid span:first-child {
+    border-left: 0;
+}
+
+html[data-theme] main.v3-tool-page .string-reference-grid strong {
+    color: var(--accent);
+    font-family: var(--font-serif);
+    font-size: 30px;
+    font-weight: 400;
+}
+
+/* Song Key Finder ------------------------------------------------------------ */
+html[data-theme] main.v3-tool-page .key-finder-panel,
+html[data-theme] main.v3-tool-page .key-finder-panel:hover {
+    margin-top: 0;
+    padding: 32px;
+    color: var(--text-body);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .key-finder-panel .tool-section-heading {
+    text-align: left;
+}
+
+html[data-theme] main.v3-tool-page .key-finder-panel .tool-section-heading h2 {
+    margin: 0 0 10px;
+    color: var(--ink);
+    font-size: 34px;
+    text-align: left;
+}
+
+html[data-theme] main.v3-tool-page .key-finder-panel .tool-section-heading p {
+    max-width: 760px;
+    margin: 0;
+    color: var(--text-body);
+    text-align: left;
+}
+
+html[data-theme] main.v3-tool-page .key-finder-status-row {
+    gap: 10px;
+}
+
+html[data-theme] main.v3-tool-page .api-status {
+    min-height: 34px;
+    padding: 0 12px;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+html[data-theme] main.v3-tool-page .status-dot {
+    background: var(--accent);
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .api-status.is-online .status-dot {
+    background: var(--success);
+}
+
+html[data-theme] main.v3-tool-page .api-status.is-offline .status-dot {
+    background: var(--danger);
+}
+
+html[data-theme] main.v3-tool-page .helper-start-button {
+    color: var(--ink);
+    border-bottom: 1px solid var(--accent);
+    border-radius: 0;
+}
+
+html[data-theme] main.v3-tool-page .service-wake-panel {
+    padding: 16px 18px;
+    color: var(--ink);
+    background: var(--surface-sunken);
+    border: 1px solid var(--line);
+    border-radius: 0;
+}
+
+html[data-theme] main.v3-tool-page .service-wake-panel p {
+    color: var(--text-body);
+}
+
+html[data-theme] main.v3-tool-page .service-wake-link {
+    color: var(--ink);
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent);
+}
+
+html[data-theme] main.v3-tool-page .key-finder-divider {
+    margin-top: 24px;
+    color: var(--text-muted);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+}
+
+html[data-theme] main.v3-tool-page .key-finder-divider-primary {
+    color: var(--accent);
+}
+
+html[data-theme] main.v3-tool-page .key-finder-divider::before,
+html[data-theme] main.v3-tool-page .key-finder-divider::after {
+    background: var(--line);
+}
+
+html[data-theme] main.v3-tool-page .upload-file-label {
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px dashed var(--ink);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .upload-file-label:hover,
+html[data-theme] main.v3-tool-page .key-finder-upload input[type="file"]:focus + .upload-file-label {
+    border-style: solid;
+    border-color: var(--ink);
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .key-finder-upload input[type="file"]:focus-visible + .upload-file-label {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+}
+
+html[data-theme] main.v3-tool-page .upload-file-label span {
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+}
+
+html[data-theme] main.v3-tool-page .upload-file-label strong {
+    color: var(--ink);
+    font-weight: 600;
+}
+
+html[data-theme] main.v3-tool-page .upload-file-label small,
+html[data-theme] main.v3-tool-page .upload-privacy-note {
+    color: var(--text-muted);
+}
+
+html[data-theme] main.v3-tool-page .analyze-file-button {
+    min-height: 46px;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .key-finder-form input {
+    min-height: 52px;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .key-finder-form input:is(:hover, :focus) {
+    border-color: var(--ink);
+}
+
+html[data-theme] main.v3-tool-page .helper-install-details {
+    margin-top: 24px;
+    padding: 0;
+    background: none;
+    border: 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .helper-install-details[open] {
+    padding-bottom: 20px;
+}
+
+html[data-theme] main.v3-tool-page .helper-install-details summary {
+    min-height: 52px;
+    color: var(--ink);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+}
+
+html[data-theme] main.v3-tool-page .helper-install-details summary::after {
+    color: var(--ink);
+    font-weight: 400;
+}
+
+html[data-theme] main.v3-tool-page .key-finder-result {
+    margin-top: 24px;
+    padding: 20px 0 0;
+    color: var(--text-body);
+    background: none;
+    border: 0;
+    border-top: 1px solid var(--ink);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .key-finder-result.key-finder-empty {
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-style: italic;
+}
+
+html[data-theme]:lang(zh) main.v3-tool-page .key-finder-result.key-finder-empty {
+    font-style: normal;
+}
+
+html[data-theme] main.v3-tool-page .key-finder-final {
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: clamp(44px, 5vw, 64px);
+    font-weight: 400;
+    line-height: 1;
+}
+
+html[data-theme] main.v3-tool-page :is(.certainty-badge, .result-explanation-card, .result-evidence-grid div, .key-finder-candidates li, .analysis-progress-bar, .confidence-bar) {
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page :is(.result-explanation-card, .result-evidence-grid div, .key-finder-candidates li) {
+    color: var(--text-body);
+    background: var(--paper);
+    border: 1px solid var(--line);
+}
+
+html[data-theme] main.v3-tool-page .key-finder-candidates li span {
+    color: var(--ink);
+}
+
+html[data-theme] main.v3-tool-page :is(.confidence-bar, .analysis-progress-bar) {
+    background: var(--surface-sunken);
+}
+
+html[data-theme] main.v3-tool-page :is(.confidence-bar, .analysis-progress-bar) span {
+    background: var(--accent);
+    border-radius: 0;
+}
+
+html[data-theme] main.v3-tool-page .analysis-history {
+    margin-top: 24px;
+    background: none;
+    border: 0;
+    border-top: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page :is(.confidence-note, .result-explanation) {
+    background: var(--surface-sunken);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .certainty-badge {
+    background: transparent;
+}
+
+/* Phones: tighter panels ----------------------------------------------------- */
+@media (max-width: 760px) {
+    html[data-theme] main.v3-tool-page :is(.dictionary-browser, .dictionary-detail, .scale-control-panel, .scale-summary, .key-options, .key-result, .progression-writer-panel, .progression-writer-meta, .progression-writer-entry, .progression-writer-saved, .trainer-card, .key-finder-panel) {
+        padding: 20px;
+    }
+
+    html[data-theme] main.v3-tool-page :is(.v3-selected-band, .progression-selected-heading) {
+        margin: -20px -20px 20px;
+        padding: 20px;
+    }
+
+    html[data-theme] main.v3-tool-page .scale-display-toolbar {
+        padding: 16px 20px;
+    }
+
+    html[data-theme] main.v3-tool-page .key-button-grid {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 760px) {
+    html[data-theme] main.v3-tool-page .trainer-score {
+        align-self: flex-start;
+        width: fit-content;
+    }
+}
+
+/* Chord Dictionary diagrams: inset the neck so the edge strings line up with
+   the X/O and string-name columns and their finger dots stay inside the card. */
+html[data-theme] main.v3-tool-page .chord-shape-card {
+    padding-inline: 12px;
+}
+
+html[data-theme] main.v3-tool-page .chord-shape-card .diagram-neck {
+    width: calc(100% * 5 / 6);
+}
+
+html[data-theme] main.v3-tool-page .chord-shape-card .diagram-base-fret {
+    right: calc(100% + 13px);
+    font-size: 11px;
+}
+
+/* Fields that fit their text ------------------------------------------------- */
+/* The chord search sits under the heading at full width instead of being
+   squeezed beside it. */
+html[data-theme] main.v3-tool-page .dictionary-browser-heading {
+    display: grid;
+    gap: 18px;
+}
+
+html[data-theme] main.v3-tool-page .dictionary-search {
+    flex: none;
+    width: 100%;
+}
+
+/* Safari ignores min-height on native selects, so draw them ourselves. */
+html[data-theme] main.v3-tool-page :is(.scale-select-field select, .progression-writer-saved-picker select) {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    min-height: 46px;
+    padding: 0 40px 0 14px;
+    background-image:
+        linear-gradient(45deg, transparent 50%, var(--ink) 50%),
+        linear-gradient(135deg, var(--ink) 50%, transparent 50%);
+    background-position:
+        calc(100% - 20px) 50%,
+        calc(100% - 15px) 50%;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+/* Softer corners on controls --------------------------------------------------- */
+html[data-theme] main.v3-tool-page {
+    --tool-control-radius: var(--radius-control, 6px);
+}
+
+html[data-theme] main.v3-tool-page :is(
+    .dictionary-root-grid button,
+    .dictionary-quality-button,
+    .dictionary-position-filter button,
+    .dictionary-pagination button,
+    .v3-selected-band .dictionary-play-button,
+    .dictionary-search input,
+    .scale-root-grid button,
+    .scale-range-buttons button,
+    .scale-play-button,
+    .scale-download-button,
+    .scale-select-field select,
+    .select-key-button,
+    .key-button,
+    .primary-button,
+    .secondary-button,
+    .v3-download-button,
+    .note-answer-grid button,
+    .trainer-score,
+    .api-status,
+    .upload-file-label,
+    .analyze-file-button,
+    .key-finder-form input,
+    .progression-writer-chord-field input,
+    .progression-writer-saved-picker select,
+    .scale-interval-chip
+) {
+    border-radius: var(--tool-control-radius);
+}
+
+html[data-theme] main.v3-tool-page :is(.segmented-control, .v3-mode-buttons, .progression-extension-toggle) {
+    overflow: hidden;
+    border-radius: var(--tool-control-radius);
+}
+
+html[data-theme] main.v3-tool-page .dictionary-category-heading > span {
+    border-radius: 4px;
+}
+
+/* Selected states use the cocoa band color --------------------------------- */
+/* Tool pages only: the homepage and Tracks keep their ink selections. */
+html[data-theme] main.v3-tool-page {
+    --tool-selected-bg: var(--band);
+    --tool-selected-text: var(--on-band);
+    --tool-selected-border: var(--band);
+}
+
+/* In the ink theme the band sits close to the dark panels, so selections use
+   a lighter cocoa (7.1:1 with the text, 2:1 against the panel). */
+html[data-theme="default"] main.v3-tool-page {
+    --tool-selected-bg: #5c4b3f;
+    --tool-selected-border: #5c4b3f;
+}
+
+html[data-theme] main.v3-tool-page :is(.dictionary-root-grid button, .dictionary-quality-button, .dictionary-position-filter button, .scale-root-grid button, .scale-range-buttons button).is-selected,
+html[data-theme] main.v3-tool-page :is(.dictionary-root-grid button, .dictionary-quality-button, .dictionary-position-filter button, .scale-root-grid button, .scale-range-buttons button).is-selected:hover,
+html[data-theme] main.v3-tool-page .key-button:is([aria-pressed="true"], .is-selected),
+html[data-theme] main.v3-tool-page .note-answer-grid button.is-correct {
+    color: var(--tool-selected-text);
+    background: var(--tool-selected-bg);
+    border-color: var(--tool-selected-border);
+}
+
+html[data-theme] main.v3-tool-page .segmented-control button:is(.is-selected, .active),
+html[data-theme] main.v3-tool-page .segmented-control button:is(.is-selected, .active):hover,
+html[data-theme] main.v3-tool-page .v3-mode-buttons button[aria-pressed="true"],
+html[data-theme] main.v3-tool-page .progression-extension-option.is-selected,
+html[data-theme] main.v3-tool-page .progression-extension-option.is-selected:hover {
+    color: var(--tool-selected-text);
+    background: var(--tool-selected-bg);
+}
+
+html[data-theme] main.v3-tool-page .dictionary-quality-button.is-selected span {
+    color: var(--on-band-muted);
+    opacity: 1;
+}
+
+html[data-theme="default"] main.v3-tool-page .dictionary-quality-button.is-selected span {
+    color: var(--on-band);
+}
+
+/* Chord Progressions: record-shop hover --------------------------------------- */
+/* Tonic keys warm to a light cocoa; shape cards lift like a record pulled from
+   a stack, leaving a cocoa sleeve edge behind them. */
+html[data-theme] main.v3-tool-page.chord-progressions-page .key-button:hover:not([aria-pressed="true"]) {
+    color: var(--ink);
+    background: color-mix(in srgb, var(--tool-selected-bg) 16%, var(--paper));
+    border-color: var(--tool-selected-bg);
+}
+
+html[data-theme] main.v3-tool-page.chord-progressions-page .progression-shape-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+html[data-theme] main.v3-tool-page.chord-progressions-page .progression-shape-card:is(:hover, :focus-visible) {
+    border-color: var(--ink);
+    box-shadow: 4px 4px 0 var(--tool-selected-bg);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    html[data-theme] main.v3-tool-page.chord-progressions-page .progression-shape-card:hover {
+        transform: translate(-2px, -3px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html[data-theme] main.v3-tool-page.chord-progressions-page .progression-shape-card {
+        transition: none;
+    }
+}

@@ -106,11 +106,11 @@ if (/src\/entries\/home\.js/.test(migratedHome)) fail("Homepage source entry lea
   "styles/base.css?v=20261014-v3-liner-notes",
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261014-v3-tracks",
-  "styles/themes.css?v=20261014-v3-liner-notes",
+  "styles/themes.css?v=20261014-v3-rounded",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
   "assets/vendor/gsap/SplitText.min.js",
-  "scripts/site-animations.js?v=20260903-vue-home-lifecycle"
+  "scripts/site-animations.js?v=20261014-tracks-entrance-once"
 ].forEach(function(asset) {
   if (!migratedHome.includes(asset)) fail(`Homepage legacy asset path differs: ${asset}`);
 });
@@ -139,8 +139,8 @@ Array.from(migrated404.matchAll(/(?:href|src)="([^"]+)"/g), match => match[1])
   "styles/base.css?v=20261014-v3-liner-notes",
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261014-v3-tracks",
-  "styles/themes.css?v=20261014-v3-liner-notes",
-  "scripts/site-animations.js?v=20260718-trainer-dropdown-hover"
+  "styles/themes.css?v=20261014-v3-rounded",
+  "scripts/site-animations.js?v=20261014-tracks-entrance-once"
 ].forEach(function(asset) {
   if (!migrated404.includes(asset)) fail(`404 legacy asset path differs: ${asset}`);
 });
@@ -162,7 +162,7 @@ if (/src\/entries\/legal\.js/.test(migratedLegal)) fail("Legal source entry leak
   "styles/base.css?v=20261014-v3-liner-notes",
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261014-v3-tracks",
-  "styles/themes.css?v=20261014-v3-liner-notes"
+  "styles/themes.css?v=20261014-v3-rounded"
 ].forEach(function(asset) {
   if (!migratedLegal.includes(asset)) fail(`Legal legacy asset path differs: ${asset}`);
 });
@@ -184,10 +184,10 @@ if (/src\/entries\/privacy\.js/.test(migratedPrivacy)) fail("Privacy source entr
   "styles/base.css?v=20261014-v3-liner-notes",
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261014-v3-tracks",
-  "styles/themes.css?v=20261014-v3-liner-notes",
+  "styles/themes.css?v=20261014-v3-rounded",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20260830-privacy-static-policy"
+  "scripts/site-animations.js?v=20261014-tracks-entrance-once"
 ].forEach(function(asset) {
   if (!migratedPrivacy.includes(asset)) fail(`Privacy legacy asset path differs: ${asset}`);
 });
@@ -218,11 +218,11 @@ if (/src\/entries\/service-waking\.js/.test(migratedServiceWaking)) {
   "styles/base.css?v=20261014-v3-liner-notes",
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261014-v3-tracks",
-  "styles/themes.css?v=20261014-v3-liner-notes",
+  "styles/themes.css?v=20261014-v3-rounded",
   "scripts/site-config.js?v=20260729-youtube-key-api",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20260718-trainer-dropdown-hover"
+  "scripts/site-animations.js?v=20261014-tracks-entrance-once"
 ].forEach(function(asset) {
   if (!migratedServiceWaking.includes(asset)) fail(`Service Waking legacy asset path differs: ${asset}`);
 });
@@ -252,10 +252,10 @@ if (/src\/entries\/feedback\.js/.test(migratedFeedback)) {
   "styles/base.css?v=20261014-v3-liner-notes",
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261014-v3-tracks",
-  "styles/themes.css?v=20261014-v3-liner-notes",
+  "styles/themes.css?v=20261014-v3-rounded",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20260718-trainer-dropdown-hover"
+  "scripts/site-animations.js?v=20261014-tracks-entrance-once"
 ].forEach(function(asset) {
   if (!migratedFeedback.includes(asset)) fail(`Feedback legacy asset path differs: ${asset}`);
 });
@@ -288,11 +288,11 @@ if (/src\/entries\/tracks\.js/.test(migratedTracks)) {
   "styles/base.css?v=20261014-v3-liner-notes",
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261014-v3-tracks",
-  "styles/themes.css?v=20261014-v3-liner-notes",
+  "styles/themes.css?v=20261014-v3-rounded",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/Flip.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20260720-track-windmill-heartless"
+  "scripts/site-animations.js?v=20261014-tracks-entrance-once"
 ].forEach(function(asset) {
   if (!migratedTracks.includes(asset)) fail(`Tracks legacy asset path differs: ${asset}`);
 });
@@ -328,11 +328,12 @@ if (/src\/entries\/fretboard-trainer\.js/.test(migratedFretboardTrainer)) {
   "styles/base.css?v=20261014-v3-liner-notes",
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261014-v3-tracks",
-  "styles/themes.css?v=20261014-v3-liner-notes",
+  "styles/themes.css?v=20261014-v3-rounded",
+  "styles/tool-pages.css?v=20261014-v3-tools",
   "styles/fretboard-trainer.css?v=20261014-v3-liner-notes",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20260718-trainer-dropdown-hover"
+  "scripts/site-animations.js?v=20261014-tracks-entrance-once"
 ].forEach(function(asset) {
   if (!migratedFretboardTrainer.includes(asset)) fail(`Fretboard Trainer legacy asset path differs: ${asset}`);
 });
@@ -368,10 +369,11 @@ if (/src\/entries\/chord-progressions\.js/.test(migratedChordProgressions)) {
   "styles/base.css?v=20261014-v3-liner-notes",
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261014-v3-tracks",
-  "styles/themes.css?v=20261014-v3-liner-notes",
+  "styles/themes.css?v=20261014-v3-rounded",
+  "styles/tool-pages.css?v=20261014-v3-tools",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20260718-trainer-dropdown-hover"
+  "scripts/site-animations.js?v=20261014-tracks-entrance-once"
 ].forEach(function(asset) {
   if (!migratedChordProgressions.includes(asset)) fail(`Chord Progressions legacy asset path differs: ${asset}`);
 });
@@ -407,11 +409,12 @@ if (/src\/entries\/scale-explorer\.js/.test(migratedScaleExplorer)) {
   "styles/base.css?v=20261014-v3-liner-notes",
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261014-v3-tracks",
-  "styles/themes.css?v=20261014-v3-liner-notes",
+  "styles/themes.css?v=20261014-v3-rounded",
+  "styles/tool-pages.css?v=20261014-v3-tools",
   "styles/scale.css?v=20261014-v3-liner-notes",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20260718-trainer-dropdown-hover"
+  "scripts/site-animations.js?v=20261014-tracks-entrance-once"
 ].forEach(function(asset) {
   if (!migratedScaleExplorer.includes(asset)) fail(`Scale Explorer legacy asset path differs: ${asset}`);
 });
@@ -447,12 +450,13 @@ if (/src\/entries\/chord-dictionary\.js/.test(migratedChordDictionary)) {
   "styles/base.css?v=20261014-v3-liner-notes",
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261014-v3-tracks",
-  "styles/themes.css?v=20261014-v3-liner-notes",
+  "styles/themes.css?v=20261014-v3-rounded",
+  "styles/tool-pages.css?v=20261014-v3-tools",
   "styles/chord-dictionary.css?v=20261014-v3-liner-notes",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/Flip.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20260722-shape-entry-polish"
+  "scripts/site-animations.js?v=20261014-tracks-entrance-once"
 ].forEach(function(asset) {
   if (!migratedChordDictionary.includes(asset)) fail(`Chord Dictionary legacy asset path differs: ${asset}`);
 });
@@ -489,11 +493,12 @@ if (/src\/entries\/progression-writer\.js/.test(migratedProgressionWriter)) {
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/chord-dictionary.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261014-v3-tracks",
-  "styles/themes.css?v=20261014-v3-liner-notes",
+  "styles/themes.css?v=20261014-v3-rounded",
+  "styles/tool-pages.css?v=20261014-v3-tools",
   "scripts/chord-shapes.js?v=20260826-workspace-hardening",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20260718-trainer-dropdown-hover"
+  "scripts/site-animations.js?v=20261014-tracks-entrance-once"
 ].forEach(function(asset) {
   if (!migratedProgressionWriter.includes(asset)) fail(`Progression Writer legacy asset path differs: ${asset}`);
 });
@@ -529,10 +534,11 @@ if (/src\/entries\/key-finder\.js/.test(migratedKeyFinder)) {
   "styles/base.css?v=20261014-v3-liner-notes",
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261014-v3-tracks",
-  "styles/themes.css?v=20261014-v3-liner-notes",
+  "styles/themes.css?v=20261014-v3-rounded",
+  "styles/tool-pages.css?v=20261014-v3-tools",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20260718-trainer-dropdown-hover"
+  "scripts/site-animations.js?v=20261014-tracks-entrance-once"
 ].forEach(function(asset) {
   if (!migratedKeyFinder.includes(asset)) fail(`Key Finder legacy asset path differs: ${asset}`);
 });
@@ -571,7 +577,7 @@ if (/src\/entries\/song-workspace\.js/.test(migratedSongWorkspace)) {
   "styles/base.css?v=20261014-v3-liner-notes",
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261014-v3-tracks",
-  "styles/themes.css?v=20261014-v3-liner-notes",
+  "styles/themes.css?v=20261014-v3-rounded",
   "styles/chord-dictionary.css?v=20261014-v3-liner-notes",
   "styles/song-workspace.css?v=20261014-v3-liner-notes",
   "scripts/chord-shapes.js?v=20260827-picker-json-fix",
@@ -579,7 +585,7 @@ if (/src\/entries\/song-workspace\.js/.test(migratedSongWorkspace)) {
   "scripts/song-workspace-storage.js?v=20260828-settings-ux",
   "scripts/song-workspace-import.js?v=20260827-picker-json-fix",
   "assets/vendor/gsap/gsap.min.js",
-  "scripts/site-animations.js?v=20260830-workspace-entrance"
+  "scripts/site-animations.js?v=20261014-tracks-entrance-once"
 ].forEach(function(asset) {
   if (!migratedSongWorkspace.includes(asset)) fail(`Song Workspace legacy-compatible asset path differs: ${asset}`);
 });

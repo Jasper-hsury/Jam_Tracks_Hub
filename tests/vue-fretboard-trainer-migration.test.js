@@ -45,7 +45,7 @@ test("preserves Fretboard Trainer SEO, analytics, CSS, and animation assets", ()
   assert.match(html, /styles\/fretboard-trainer\.css\?v=20261014-v3-liner-notes/);
   assert.match(html, /assets\/vendor\/gsap\/gsap\.min\.js/);
   assert.match(html, /assets\/vendor\/gsap\/ScrollTrigger\.min\.js/);
-  assert.match(html, /scripts\/site-animations\.js\?v=20260718-trainer-dropdown-hover/);
+  assert.match(html, /scripts\/site-animations\.js\?v=20261014-tracks-entrance-once/);
   assert.doesNotMatch(html, /data-umami-event|unsafe-eval|unsafe-inline|vue(?:\.global)?\.js/);
 });
 
@@ -212,7 +212,7 @@ test("adds no trainer persistence, audio, router, network, or custom analytics",
   assert.doesNotMatch(implementation, /document\.title|location\.(?:search|hash)|history\./);
 });
 
-test("removes only the page-owned legacy trainer runtime at version 3.1.0", () => {
+test("removes only the page-owned legacy trainer runtime at version 3.2.0", () => {
   const packageJson = JSON.parse(read("package.json"));
   const html = read("fretboard-trainer.html");
 
@@ -221,7 +221,7 @@ test("removes only the page-owned legacy trainer runtime at version 3.1.0", () =
   assert.match(read("src/components/site/SiteHeader.vue"), /fretboard-trainer\.html/);
   assert.match(read("src/i18n/useSiteLocale.js"), /jasper:language-change/);
   assert.match(read("scripts/site-animations.js"), /\.trainer-heading/);
-  assert.equal(packageJson.version, "3.1.0");
+  assert.equal(packageJson.version, "3.2.0");
   assert.equal(packageJson.dependencies.vue, "3.5.42");
   assert.equal(packageJson.dependencies["vue-router"], undefined);
 });

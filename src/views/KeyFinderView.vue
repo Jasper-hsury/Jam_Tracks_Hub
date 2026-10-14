@@ -3,6 +3,7 @@ import { computed, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
 import KeyFinderError from "../components/key-finder/KeyFinderError.vue";
 import KeyFinderProgress from "../components/key-finder/KeyFinderProgress.vue";
 import KeyFinderResult from "../components/key-finder/KeyFinderResult.vue";
+import ToolPageHeading from "../components/site/ToolPageHeading.vue";
 import { useKeyFinder } from "../composables/useKeyFinder.js";
 import { useSiteLocale } from "../i18n/useSiteLocale.js";
 import englishMessages from "../../locales/en/common.json";
@@ -60,9 +61,15 @@ onUnmounted(finder.dispose);
 </script>
 
 <template>
-  <main id="main-content" class="tracks-page key-finder-page">
-    <h1>{{ messages.title }}</h1>
-    <p class="hero-tagline signature-slogan">{{ messages.tagline }}</p>
+  <main id="main-content" class="tracks-page key-finder-page v3-tool-page">
+    <ToolPageHeading
+      heading-class="page-heading-row"
+      aside="uploadFirst"
+      :eyebrow="messages.eyebrow"
+    >
+      <h1>{{ messages.title }}</h1>
+      <p class="hero-tagline signature-slogan">{{ messages.tagline }}</p>
+    </ToolPageHeading>
 
     <section class="key-finder-panel" aria-labelledby="keyFinderTitle">
       <div class="tool-section-heading compact-heading">

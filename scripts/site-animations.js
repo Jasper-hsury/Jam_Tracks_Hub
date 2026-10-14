@@ -391,6 +391,8 @@
             ".trainer-card"
         ].join(", "))
             .filter(target => !target.closest(".navbar"))
+            // The Tracks entrance timeline already brings in its toolbar.
+            .filter(target => !target.matches(".tracks-library-page .track-controls"))
             .filter(target => !target.closest(".trainer-page"))
             .filter(target => !target.closest(".song-workspace-page"))
             .filter(target => !target.closest(".privacy-page"));

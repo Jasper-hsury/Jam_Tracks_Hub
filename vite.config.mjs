@@ -17,28 +17,25 @@ const legacyHtmlAssets = [
   "styles/pages.css?v=20261014-v3-tracks",
   "styles/pages.css?v=20261014-v3-tracks",
   "styles/pages.css?v=20261014-v3-tracks",
-  "styles/themes.css?v=20261014-v3-liner-notes",
-  "styles/themes.css?v=20261014-v3-liner-notes",
+  "styles/themes.css?v=20261014-v3-rounded",
+  "styles/themes.css?v=20261014-v3-rounded",
   "styles/fretboard-trainer.css?v=20261014-v3-liner-notes",
   "styles/scale.css?v=20261014-v3-liner-notes",
   "styles/chord-dictionary.css?v=20261014-v3-liner-notes",
   "styles/chord-dictionary.css?v=20261014-v3-liner-notes",
   "styles/song-workspace.css?v=20261014-v3-liner-notes",
+  "styles/tool-pages.css?v=20261014-v3-tools",
   "scripts/site-config.js?v=20260729-youtube-key-api",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/Flip.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
   "assets/vendor/gsap/SplitText.min.js",
-  "scripts/site-animations.js?v=20260718-trainer-dropdown-hover",
-  "scripts/site-animations.js?v=20260903-vue-home-lifecycle",
-  "scripts/site-animations.js?v=20260830-privacy-static-policy",
-  "scripts/site-animations.js?v=20260720-track-windmill-heartless",
+  "scripts/site-animations.js?v=20261014-tracks-entrance-once",
   "scripts/chord-shapes.js?v=20260826-workspace-hardening",
   "scripts/chord-shapes.js?v=20260827-picker-json-fix",
   "scripts/song-workspace-core.js?v=20260827-picker-json-fix",
   "scripts/song-workspace-storage.js?v=20260828-settings-ux",
-  "scripts/song-workspace-import.js?v=20260827-picker-json-fix",
-  "scripts/site-animations.js?v=20260830-workspace-entrance"
+  "scripts/song-workspace-import.js?v=20260827-picker-json-fix"
 ];
 const legacyAssetSentinel = "https://vite-preserved-legacy.invalid/";
 

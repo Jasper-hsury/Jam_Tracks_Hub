@@ -60,3 +60,13 @@ test("pages.css carries a fresh cache key so v3.1 markup never meets the cached 
   pages.forEach(page => assert.match(read(page), /styles\/pages\.css\?v=20261014-v3-tracks/, page));
   assert.doesNotMatch(read("tracks.html"), /styles\/pages\.css\?v=20261014-v3-liner-notes/);
 });
+
+test("the Tracks toolbar animates in once, from the entrance timeline only", () => {
+  const animations = read("scripts/site-animations.js");
+  assert.match(animations, /timeline\.from\("\.tracks-library-page \.track-controls"/);
+  assert.match(animations, /\.filter\(target => !target\.matches\("\.tracks-library-page \.track-controls"\)\)/);
+  const key = "scripts/site-animations.js?v=20261014-tracks-entrance-once";
+  fs.readdirSync(root).filter(file => file.endsWith(".html") && read(file).includes("site-animations.js"))
+    .forEach(file => assert.ok(read(file).includes(key), file));
+  assert.equal(read("vite.config.mjs").split("scripts/site-animations.js?v=").length - 1, 1);
+});

@@ -1,6 +1,7 @@
 <script setup>
 import { computed, nextTick, ref, watch } from "vue";
 import ProgressionLibrary from "../components/chords/ProgressionLibrary.vue";
+import ToolPageHeading from "../components/site/ToolPageHeading.vue";
 import { useChordProgressions } from "../composables/useChordProgressions.js";
 import { useSiteLocale } from "../i18n/useSiteLocale.js";
 import { PROGRESSION_COPY_TRANSLATION_KEYS } from "../music/chordProgressions.mjs";
@@ -36,8 +37,9 @@ function translateCopy(value) {
   return segment && copyMessages.value[segment] ? copyMessages.value[segment] : value;
 }
 
-function changeMode(event) {
-  state.setMode(event.target.checked ? "minor" : "major");
+function setMode(mode) {
+  if (state.mode.value === mode) return;
+  state.setMode(mode);
   modePrompt.value = true;
 }
 
@@ -59,9 +61,14 @@ watch(language, () => {
 </script>
 
 <template>
-  <main class="tracks-page" id="main-content">
-    <h1>{{ messages.title }}</h1>
-    <p class="hero-tagline signature-slogan">{{ messages.tagline }}</p>
+  <main class="tracks-page chord-progressions-page v3-tool-page" id="main-content">
+    <ToolPageHeading
+      heading-class="page-heading-row"
+      :eyebrow="messages.eyebrow"
+    >
+      <h1>{{ messages.title }}</h1>
+      <p class="hero-tagline signature-slogan">{{ messages.tagline }}</p>
+    </ToolPageHeading>
 
     <section class="key-selector" aria-labelledby="progressionExplorerTitle">
       <div class="tool-section-heading">
@@ -85,27 +92,20 @@ watch(language, () => {
             <span class="result-kicker">{{ messages.keyMode }}</span>
             <h2 class="section-title">{{ messages.chooseTonic }}</h2>
           </div>
-          <label class="key-mode-switch" for="keyModeToggle">
-            <span class="key-mode-label key-mode-label-major">{{ messages.major }}</span>
-            <span class="key-mode-toggle-shell">
-              <input
-                class="key-mode-toggle-input"
-                id="keyModeToggle"
-                type="checkbox"
-                :checked="state.mode.value === 'minor'"
-                :aria-label="messages.switchMode"
-                @change="changeMode"
-              >
-              <span class="key-mode-toggle-handle-wrapper">
-                <span class="key-mode-toggle-handle">
-                  <span class="key-mode-toggle-knob"></span>
-                  <span class="key-mode-toggle-bar-wrapper"><span class="key-mode-toggle-bar"></span></span>
-                </span>
-              </span>
-              <span class="key-mode-toggle-base"><span class="key-mode-toggle-base-inside"></span></span>
-            </span>
-            <span class="key-mode-label key-mode-label-minor">{{ messages.minor }}</span>
-          </label>
+          <div class="v3-mode-buttons" id="keyModeToggle" role="group" :aria-label="messages.switchMode">
+            <button
+              type="button"
+              data-key-mode="major"
+              :aria-pressed="String(state.mode.value === 'major')"
+              @click="setMode('major')"
+            >{{ messages.major }}</button>
+            <button
+              type="button"
+              data-key-mode="minor"
+              :aria-pressed="String(state.mode.value === 'minor')"
+              @click="setMode('minor')"
+            >{{ messages.minor }}</button>
+          </div>
         </div>
         <div class="key-button-grid">
           <button

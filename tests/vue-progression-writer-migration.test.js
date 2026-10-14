@@ -355,14 +355,14 @@ test("keeps every shared music/backend consumer byte-identical", () => {
     "scripts/chord-shapes.js": "00189b548b9d6fe48daab6c3ea68fd2a2a2baf9e39d16d638df1b0e8d19c1c04",
     "styles/chord-dictionary.css": "0fe2af95a2598cd252e850bbb7035e02a8ca89af671a81234fe7f614f0852653",
     "styles/pages.css": "b5f2c19ad6f060ff37e91226f173a7cc56352994566a162eeb310ea20c90b574",
-    "styles/themes.css": "fd5bad789dd058dc8ae99bb8341c577724b7240103f8560874150c3fd347d1ec",
+    "styles/themes.css": "81fba6e5d22f9fdc36a9fba45f5008bef541d936c12ceb37487b6b983575f22a",
     "scripts/song-workspace-core.js": "d792e65873c140deda2ac576370bcd940d14e1f35d9fb5da88bbd11431b28ecb",
     "scripts/song-workspace-storage.js": "b11c00dcb5cafb3ca414ccc9fec59bd6931dc39fe3658ecec33003f4d7d210ae",
     "scripts/song-workspace-import.js": "7c04c4890176ac235d93f29ed9ca2440466978b7973fbb4e07e5c3ee9d311b56",
-    "src/views/ChordDictionaryView.vue": "142790fdb81cc1a1b13c027d7e7b681dd77f35ef22ee0d3696c3cffe775414e1",
-    "src/views/ChordProgressionsView.vue": "80f12c439cd04d88000b26527787e02c9ecf606884b3bcc3a1c4a9ef191b70a0",
-    "src/views/ScaleExplorerView.vue": "e8dc3cf9beff6e408a8b0453d342a28bf53db975c610d1b4a6f8bf470826b1cf",
-    "src/views/FretboardTrainerView.vue": "4ac89644ed35a42e63a96d62476454efeaec24fb7081e1ba0c48dd0e95cb3ff6",
+    "src/views/ChordDictionaryView.vue": "1128ecb262168f2dc66aec41ca477bb557f91db1feacf8ff17ecdff7c5e48927",
+    "src/views/ChordProgressionsView.vue": "9481ec6b04ca15b8e76ef620cb188d1d2e004e48a6d920e918643bc18fe822b8",
+    "src/views/ScaleExplorerView.vue": "de286ab639a7c34a641522d3d108daacd00e55a3f1481dfa89b6d23386a2abde",
+    "src/views/FretboardTrainerView.vue": "7f6b1f5d330ca1d33606e4f35f6d8ae5805d12dd9f767f22b2dc230e32fc8dbc",
     "worker.js": "38bb981a849874c0c4421c00c73aef2bf0e2fbfa857f3a85dc63f145af7f970c",
     "wrangler.jsonc": "fcd1a460b0bee67ad6f0b33076234c682c22580d48ee3f4ffbe339d2a88145db"
   };
@@ -378,7 +378,7 @@ test("updates deterministic Cloudflare ownership without changing version or bac
   assert.match(verifier, /Progression Writer canonical metadata differs/);
   assert.match(verifier, /Progression Writer still loads a legacy page runtime/);
   assert.match(verifier, /compiled Vue Progression Writer mount marker is missing/);
-  assert.equal(packageJson.version, "3.1.0");
+  assert.equal(packageJson.version, "3.2.0");
   assert.deepEqual(packageJson.dependencies, { vue: "3.5.42" });
   ["vue-router", "pinia", "vue-i18n", "@vueuse/core", "vitest", "@vue/test-utils"].forEach(name => {
     assert.equal(packageJson.dependencies?.[name], undefined);

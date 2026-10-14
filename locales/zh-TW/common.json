@@ -217,6 +217,10 @@
       "openOnYouTube": "在 YouTube 開啟 {{title}}",
       "downloadSlidesFor": "下載 {{title}} 的投影片"
     },
+    "toolShell": {
+      "standardTuning": "標準調弦 · E A D G B E",
+      "uploadFirst": "優先上傳音訊 · YouTube 為選用"
+    },
     "chordDictionary": {
       "title": "和弦圖鑑",
       "tagline": "認識和弦，看懂組成音，找到指型。",
@@ -292,6 +296,7 @@
     "keyFinder": {
       "title": "調性分析",
       "tagline": "深入聆聽，找出調性。",
+      "eyebrow": "上傳音訊 • 調性估計 • 速度",
       "analyzeTitle": "分析歌曲",
       "intro": "上傳音訊檔案可獲得最可靠的調性估計。當雲端服務或本機輔助程式能夠存取影片時，也可使用 YouTube 連結作為次要分析方式。",
       "checkingApi": "正在檢查 API……",
@@ -372,6 +377,7 @@
     "chordProgressions": {
       "title": "和弦進行",
       "tagline": "捕捉感受，譜出心聲。",
+      "eyebrow": "調性 • 三和弦與七和弦 • 常見進行",
       "explorerTitle": "和弦進行探索器",
       "intro": "選擇調性，在三和弦與七和弦之間切換，並比較適合吉他的根音位置和弦配置。",
       "writeOwn": "自訂你的和弦進行",
@@ -410,6 +416,7 @@
     "progressionWriter": {
       "title": "自訂你的和弦進行",
       "tagline": "捕捉感受，譜出心聲。",
+      "eyebrow": "歌曲資訊 • 自訂和弦 • 匯出圖片",
       "modeTitle": "和弦進行",
       "format": "進行格式",
       "switchStructure": "在含 Verse／Chorus 與不含 Verse／Chorus 的和弦進行格式之間切換",
