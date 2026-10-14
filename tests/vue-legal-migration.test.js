@@ -26,7 +26,7 @@ test("preserves Legal metadata, analytics, theme, locale, and shared shell", () 
   assert.match(html, /<link rel="canonical" href="https:\/\/jamtrackshub\.com\/legal\.html">/);
   assert.match(html, /<meta property="og:url" content="https:\/\/jamtrackshub\.com\/legal\.html">/);
   assert.match(html, /<body data-i18n-title="titles\.legal">/);
-  assert.match(html, /scripts\/theme-init\.js\?v=20260725-friendly-insect-switch/);
+  assert.match(html, /scripts\/theme-init\.js\?v=20261014-v3-paper-default/);
   assert.match(html, /scripts\/i18n-init\.js\?v=20260827-legal-footer/);
   assert.match(html, /<script defer src="https:\/\/cloud\.umami\.is\/script\.js" data-website-id="[^"]+"><\/script>/);
   assert.doesNotMatch(html, /<nav class="navbar"/);

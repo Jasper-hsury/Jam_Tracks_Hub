@@ -101,7 +101,7 @@ if (!/<script type="module" crossorigin src="\/assets\/vue\/home-[^"]+\.js"><\/s
 }
 if (/src\/entries\/home\.js/.test(migratedHome)) fail("Homepage source entry leaked into production HTML");
 [
-  "scripts/theme-init.js?v=20260725-friendly-insect-switch",
+  "scripts/theme-init.js?v=20261014-v3-paper-default",
   "scripts/i18n-init.js?v=20260804-no-language-flash",
   "styles/base.css?v=20260829-smart-navbar-v2",
   "styles/components.css?v=20260827-legal-footer",
@@ -213,7 +213,7 @@ if (/src\/entries\/service-waking\.js/.test(migratedServiceWaking)) {
   fail("Service Waking source entry leaked into production HTML");
 }
 [
-  "scripts/theme-init.js?v=20260725-friendly-insect-switch",
+  "scripts/theme-init.js?v=20261014-v3-paper-default",
   "scripts/i18n-init.js?v=20260804-no-language-flash",
   "styles/base.css?v=20260829-smart-navbar-v2",
   "styles/components.css?v=20260827-legal-footer",
@@ -247,7 +247,7 @@ if (/src\/entries\/feedback\.js/.test(migratedFeedback)) {
   fail("Feedback source entry leaked into production HTML");
 }
 [
-  "scripts/theme-init.js?v=20260725-friendly-insect-switch",
+  "scripts/theme-init.js?v=20261014-v3-paper-default",
   "scripts/i18n-init.js?v=20260804-no-language-flash",
   "styles/base.css?v=20260829-smart-navbar-v2",
   "styles/components.css?v=20260827-legal-footer",
@@ -283,7 +283,7 @@ if (/src\/entries\/tracks\.js/.test(migratedTracks)) {
   fail("Tracks source entry leaked into production HTML");
 }
 [
-  "scripts/theme-init.js?v=20260725-friendly-insect-switch",
+  "scripts/theme-init.js?v=20261014-v3-paper-default",
   "scripts/i18n-init.js?v=20260804-no-language-flash",
   "styles/base.css?v=20260829-smart-navbar-v2",
   "styles/components.css?v=20260827-legal-footer",
@@ -323,7 +323,7 @@ if (/src\/entries\/fretboard-trainer\.js/.test(migratedFretboardTrainer)) {
   fail("Fretboard Trainer source entry leaked into production HTML");
 }
 [
-  "scripts/theme-init.js?v=20260725-friendly-insect-switch",
+  "scripts/theme-init.js?v=20261014-v3-paper-default",
   "scripts/i18n-init.js?v=20260804-no-language-flash",
   "styles/base.css?v=20260829-smart-navbar-v2",
   "styles/components.css?v=20260827-legal-footer",
@@ -363,7 +363,7 @@ if (/src\/entries\/chord-progressions\.js/.test(migratedChordProgressions)) {
   fail("Chord Progressions source entry leaked into production HTML");
 }
 [
-  "scripts/theme-init.js?v=20260725-friendly-insect-switch",
+  "scripts/theme-init.js?v=20261014-v3-paper-default",
   "scripts/i18n-init.js?v=20260804-no-language-flash",
   "styles/base.css?v=20260829-smart-navbar-v2",
   "styles/components.css?v=20260827-legal-footer",
@@ -402,7 +402,7 @@ if (/src\/entries\/scale-explorer\.js/.test(migratedScaleExplorer)) {
   fail("Scale Explorer source entry leaked into production HTML");
 }
 [
-  "scripts/theme-init.js?v=20260725-friendly-insect-switch",
+  "scripts/theme-init.js?v=20261014-v3-paper-default",
   "scripts/i18n-init.js?v=20260804-no-language-flash",
   "styles/base.css?v=20260829-smart-navbar-v2",
   "styles/components.css?v=20260827-legal-footer",
@@ -442,7 +442,7 @@ if (/src\/entries\/chord-dictionary\.js/.test(migratedChordDictionary)) {
   fail("Chord Dictionary source entry leaked into production HTML");
 }
 [
-  "scripts/theme-init.js?v=20260725-friendly-insect-switch",
+  "scripts/theme-init.js?v=20261014-v3-paper-default",
   "scripts/i18n-init.js?v=20260804-no-language-flash",
   "styles/base.css?v=20260829-smart-navbar-v2",
   "styles/components.css?v=20260827-legal-footer",
@@ -483,7 +483,7 @@ if (/src\/entries\/progression-writer\.js/.test(migratedProgressionWriter)) {
   fail("Progression Writer source entry leaked into production HTML");
 }
 [
-  "scripts/theme-init.js?v=20260725-friendly-insect-switch",
+  "scripts/theme-init.js?v=20261014-v3-paper-default",
   "scripts/i18n-init.js?v=20260804-no-language-flash",
   "styles/base.css?v=20260829-smart-navbar-v2",
   "styles/components.css?v=20260827-legal-footer",
@@ -524,7 +524,7 @@ if (/src\/entries\/key-finder\.js/.test(migratedKeyFinder)) {
   fail("Key Finder source entry leaked into production HTML");
 }
 [
-  "scripts/theme-init.js?v=20260725-friendly-insect-switch",
+  "scripts/theme-init.js?v=20261014-v3-paper-default",
   "scripts/i18n-init.js?v=20260804-no-language-flash",
   "styles/base.css?v=20260829-smart-navbar-v2",
   "styles/components.css?v=20260827-legal-footer",
@@ -566,7 +566,7 @@ if (/src\/entries\/song-workspace\.js/.test(migratedSongWorkspace)) {
   fail("Song Workspace source entry leaked into production HTML");
 }
 [
-  "scripts/theme-init.js?v=20260725-friendly-insect-switch",
+  "scripts/theme-init.js?v=20261014-v3-paper-default",
   "scripts/i18n-init.js?v=20260826-song-workspace",
   "styles/base.css?v=20260829-smart-navbar-v2",
   "styles/components.css?v=20260827-legal-footer",

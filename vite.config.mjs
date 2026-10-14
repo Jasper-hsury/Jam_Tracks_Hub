@@ -7,7 +7,7 @@ const root = fileURLToPath(new URL(".", import.meta.url));
 const viteOwnedHtml = new Set(["/", "/index.html", "/404.html", "/legal.html", "/privacy-policy.html", "/service-waking.html", "/feedback.html", "/tracks", "/tracks.html", "/fretboard-trainer", "/fretboard-trainer.html", "/chord-progressions", "/chord-progressions.html", "/scale", "/scale.html", "/chord-dictionary", "/chord-dictionary.html", "/progression-writer", "/progression-writer.html", "/key-finder", "/key-finder.html", "/song-workspace", "/song-workspace.html"]);
 const legacyHtmlAssets = [
   "assets/images/icon.png",
-  "scripts/theme-init.js?v=20260725-friendly-insect-switch",
+  "scripts/theme-init.js?v=20261014-v3-paper-default",
   "scripts/i18n-init.js?v=20260804-no-language-flash",
   "scripts/i18n-init.js?v=20260902-404-route-root",
   "scripts/i18n-init.js?v=20260826-song-workspace",
