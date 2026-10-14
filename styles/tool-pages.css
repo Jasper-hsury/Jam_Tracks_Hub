@@ -667,3 +667,401 @@ html[data-theme] main.v3-tool-page .fretboard-help {
 html[data-theme] main.v3-tool-page .fretboard-scroll {
     background: var(--paper);
 }
+
+/* Shared: two-button segmented mode control ------------------------------- */
+html[data-theme] main.v3-tool-page .v3-mode-buttons {
+    display: inline-grid;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
+    flex: none;
+    border: 1px solid var(--ink);
+}
+
+html[data-theme] main.v3-tool-page .v3-mode-buttons button {
+    min-width: 88px;
+    min-height: 44px;
+    padding: 0 18px;
+    color: var(--ink);
+    background: transparent;
+    border: 0;
+    border-left: 1px solid var(--ink);
+    border-radius: 0;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+html[data-theme] main.v3-tool-page .v3-mode-buttons button:first-child {
+    border-left: 0;
+}
+
+html[data-theme] main.v3-tool-page .v3-mode-buttons button:hover {
+    background: var(--surface-sunken);
+}
+
+html[data-theme] main.v3-tool-page .v3-mode-buttons button[aria-pressed="true"] {
+    color: var(--paper);
+    background: var(--ink);
+    cursor: default;
+}
+
+/* Chord Progressions -------------------------------------------------------- */
+html[data-theme] main.v3-tool-page .key-selector {
+    display: grid;
+    gap: 24px;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .key-selector > .tool-section-heading {
+    margin: 0;
+    text-align: left;
+}
+
+html[data-theme] main.v3-tool-page .key-selector > .tool-section-heading h2 {
+    margin: 0 0 8px;
+    color: var(--ink);
+    font-size: 30px;
+    text-align: left;
+}
+
+html[data-theme] main.v3-tool-page .key-selector > .tool-section-heading p {
+    max-width: 680px;
+    margin: 0;
+    color: var(--text-body);
+    text-align: left;
+}
+
+html[data-theme] main.v3-tool-page .select-key-button {
+    justify-self: start;
+    width: auto;
+    min-height: 46px;
+    margin: 0;
+    padding: 0 20px;
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--ink);
+    border-radius: 0;
+    box-shadow: none;
+    font-size: 14px;
+    font-weight: 600;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .select-key-button::before {
+    display: none;
+}
+
+html[data-theme] main.v3-tool-page .select-key-button:hover {
+    color: var(--paper);
+    background: var(--ink);
+    box-shadow: none;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .progression-write-link::after {
+    content: "\00a0→";
+}
+
+html[data-theme] main.v3-tool-page .key-options {
+    padding: 28px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .key-mode-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 0 0 22px;
+}
+
+html[data-theme] main.v3-tool-page .result-kicker {
+    display: block;
+    margin: 0 0 6px;
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+html[data-theme]:lang(zh) main.v3-tool-page .result-kicker {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+}
+
+html[data-theme] main.v3-tool-page .key-mode-heading h2 {
+    margin: 0;
+    color: var(--ink);
+    font-size: 30px;
+    text-align: left;
+}
+
+html[data-theme] main.v3-tool-page .key-button-grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 6px;
+}
+
+html[data-theme] main.v3-tool-page .key-button {
+    width: auto;
+    min-height: 48px;
+    margin: 0;
+    padding: 0;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+    font-size: 15px;
+    font-weight: 600;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .key-button::before {
+    display: none;
+}
+
+html[data-theme] main.v3-tool-page .key-button:hover {
+    color: var(--ink);
+    background: var(--paper);
+    border-color: var(--ink);
+    box-shadow: none;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .key-button:is([aria-pressed="true"], .is-selected) {
+    color: var(--paper);
+    background: var(--ink);
+    border-color: var(--ink);
+}
+
+html[data-theme] main.v3-tool-page .key-result {
+    margin: 0;
+    padding: 28px;
+    color: var(--text-body);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .key-result > h3 {
+    margin: 0 0 6px;
+    color: var(--ink);
+    font-size: 26px;
+}
+
+html[data-theme] main.v3-tool-page .key-result > p {
+    margin: 0;
+    color: var(--text-muted);
+}
+
+/* Selected key: the dark band. */
+html[data-theme] main.v3-tool-page .progression-selected-heading {
+    margin: -28px -28px 28px;
+    padding: 28px;
+    color: var(--on-band);
+    background: var(--band);
+    border: 0;
+    border-bottom: 1px solid var(--band-edge);
+    border-radius: 0;
+}
+
+html[data-theme] main.v3-tool-page .progression-selected-heading .result-kicker {
+    color: var(--accent-on-band);
+}
+
+html[data-theme] main.v3-tool-page .progression-selected-heading h3 {
+    margin: 0;
+    color: var(--on-band);
+    font-size: clamp(40px, 5vw, 60px);
+    line-height: 1;
+}
+
+html[data-theme] main.v3-tool-page .progression-toolbar-simple {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px 24px;
+    margin: 0 0 20px;
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .progression-toolbar-heading h4 {
+    margin: 0 0 6px;
+    color: var(--ink);
+    font-size: 30px;
+    line-height: 1.12;
+}
+
+html[data-theme] main.v3-tool-page .progression-toolbar-heading p {
+    max-width: 620px;
+    margin: 0;
+    color: var(--text-muted);
+}
+
+html[data-theme] main.v3-tool-page .progression-chord-mode-control > span {
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+html[data-theme] main.v3-tool-page .progression-extension-toggle {
+    gap: 0;
+    padding: 0;
+    background: transparent;
+    border: 1px solid var(--ink);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .progression-extension-option {
+    min-height: 44px;
+    padding: 0 18px;
+    color: var(--ink);
+    background: transparent;
+    border: 0;
+    border-left: 1px solid var(--ink);
+    border-radius: 0;
+    box-shadow: none;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .progression-extension-option:first-child {
+    border-left: 0;
+}
+
+html[data-theme] main.v3-tool-page .progression-extension-option:hover {
+    background: var(--surface-sunken);
+}
+
+html[data-theme] main.v3-tool-page .progression-extension-option.is-selected,
+html[data-theme] main.v3-tool-page .progression-extension-option.is-selected:hover {
+    color: var(--paper);
+    background: var(--ink);
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .progression-category-list {
+    display: grid;
+    gap: 0;
+    border-top: 1px solid var(--ink);
+}
+
+html[data-theme] main.v3-tool-page .progression-voicing-category,
+html[data-theme] main.v3-tool-page .progression-voicing-category[open] {
+    margin: 0;
+    background: none;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .progression-voicing-heading {
+    padding: 18px 40px 18px 0;
+    background: none;
+    border-bottom: 0;
+}
+
+html[data-theme] main.v3-tool-page .progression-voicing-heading::after {
+    right: 4px;
+    color: var(--ink);
+    font-weight: 400;
+}
+
+html[data-theme] main.v3-tool-page .progression-voicing-category[open] .progression-voicing-heading::after {
+    content: "\2212";
+}
+
+html[data-theme] main.v3-tool-page .progression-voicing-heading:hover {
+    background: none;
+}
+
+html[data-theme] main.v3-tool-page .progression-category-title {
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: 22px;
+}
+
+html[data-theme]:lang(zh) main.v3-tool-page .progression-category-title {
+    font-weight: 600;
+}
+
+html[data-theme] main.v3-tool-page .progression-category-meta strong {
+    color: var(--accent);
+    background: none;
+    border: 0;
+    font-size: 13px;
+}
+
+html[data-theme] main.v3-tool-page .progression-voicing-grid {
+    padding: 0 0 24px;
+}
+
+html[data-theme] main.v3-tool-page .progression-voicing-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .progression-numeral-token {
+    color: var(--accent);
+}
+
+html[data-theme] main.v3-tool-page .progression-chord-token {
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .progression-style {
+    color: var(--text-muted);
+}
+
+html[data-theme] main.v3-tool-page .progression-shape-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .progression-shape-card:hover {
+    border-color: var(--ink);
+    box-shadow: none;
+    transform: none;
+}
+
+/* Mini chord shapes read in both themes (the legacy dark rules used the
+   surface color, which is dark in the v3 ink theme). */
+html[data-theme] main.v3-tool-page .progression-mini-neck {
+    --neck-line: rgba(var(--ink-rgb), 0.34);
+}
+
+html[data-theme] main.v3-tool-page :is(.progression-style, .progression-shape-card-head span, .progression-open-row, .progression-base-fret, .progression-string-row, .progression-group-label) {
+    color: var(--text-muted);
+}
+
+html[data-theme] main.v3-tool-page :is(.progression-shape-card-head strong, .progression-shape-frets) {
+    color: var(--ink);
+}

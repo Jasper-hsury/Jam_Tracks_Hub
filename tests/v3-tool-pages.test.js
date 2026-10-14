@@ -102,3 +102,14 @@ test("Scale Explorer keeps interval colors while the current scale becomes a dar
   assert.match(css, /main\.v3-tool-page \.segmented-control button:is\(\.is-selected, \.active\)/);
   assert.doesNotMatch(css, /\.fret-note[^{]*\{[^}]*background/);
 });
+
+test("Chord Progressions picks major or minor with two buttons and keeps the mode prompt", () => {
+  const view = read("src/views/ChordProgressionsView.vue");
+  assert.match(view, /<div class="v3-mode-buttons" id="keyModeToggle" role="group" :aria-label="messages\.switchMode">/);
+  assert.match(view, /:aria-pressed="String\(state\.mode\.value === 'major'\)"\s*@click="setMode\('major'\)"/);
+  assert.match(view, /:aria-pressed="String\(state\.mode\.value === 'minor'\)"\s*@click="setMode\('minor'\)"/);
+  assert.match(view, /function setMode\(mode\) \{\s*if \(state\.mode\.value === mode\) return;\s*state\.setMode\(mode\);\s*modePrompt\.value = true;/);
+  assert.doesNotMatch(view, /key-mode-toggle|type="checkbox"/);
+  assert.match(css, /\.progression-selected-heading \{[^}]*background: var\(--band\);/);
+  assert.match(css, /\.progression-mini-neck \{\s*--neck-line: rgba\(var\(--ink-rgb\), 0\.34\);/);
+});
