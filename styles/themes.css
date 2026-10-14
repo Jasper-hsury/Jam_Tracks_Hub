@@ -1954,3 +1954,50 @@ html[data-theme] .footer .social-links {
     gap: 20px;
     margin: 0;
 }
+
+/* ====================
+   v3 rounded controls
+   One small radius for buttons, fields, chips and dropdowns across the site.
+   Panels, record sleeves, cards and media stay square.
+   ==================== */
+:root {
+    --radius-control: 6px;
+}
+
+html[data-theme] .navbar .nav-compact-tools summary,
+html[data-theme] .navbar .nav-compact-tools summary:hover,
+html[data-theme] .navbar .nav-compact-tools.is-active summary,
+html[data-theme] .navbar .nav-compact-tools[open] summary,
+html[data-theme] .navbar .nav-compact-tools-menu,
+html[data-theme] .navbar .theme-toggle,
+html[data-theme] .navbar .theme-toggle.is-light-theme,
+html[data-theme] .navbar .language-switch-button,
+html[data-theme] .navbar .nav-menu-button,
+html[data-theme] .v3-home .hero-actions .primary-button,
+html[data-theme] .v3-home .hero-actions .secondary-button,
+html[data-theme] .v3-home .v3-connect-button,
+html[data-theme] main.tracks-library-page .track-key-filter-toggle,
+html[data-theme] main.tracks-library-page .track-key-options,
+html[data-theme] main.tracks-library-page .track-key-checkbox-visual,
+html[data-theme] main.tracks-library-page .v3-download-button {
+    border-radius: var(--radius-control);
+}
+
+/* The email field and Subscribe button read as one joined control. */
+html[data-theme] .v3-home .home-subscribe-form input[type="email"] {
+    border-radius: var(--radius-control) 0 0 var(--radius-control);
+}
+
+html[data-theme] .v3-home .home-subscribe-button {
+    border-radius: 0 var(--radius-control) var(--radius-control) 0;
+}
+
+html[data-theme] main.tracks-library-page .v3-sort-buttons {
+    overflow: hidden;
+    border-radius: var(--radius-control);
+}
+
+html[data-theme] .v3-home .track-meta span,
+html[data-theme] main.tracks-library-page .track-meta span {
+    border-radius: 4px;
+}

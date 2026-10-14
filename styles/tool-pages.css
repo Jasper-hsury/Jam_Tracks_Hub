@@ -1819,7 +1819,7 @@ html[data-theme] main.v3-tool-page :is(.scale-select-field select, .progression-
 
 /* Softer corners on controls --------------------------------------------------- */
 html[data-theme] main.v3-tool-page {
-    --tool-control-radius: 6px;
+    --tool-control-radius: var(--radius-control, 6px);
 }
 
 html[data-theme] main.v3-tool-page :is(

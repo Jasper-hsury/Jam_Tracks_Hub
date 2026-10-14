@@ -161,13 +161,24 @@ test("the band is a softer cocoa brown in both themes and every page fetches the
   assert.match(themes, /--band: #4a3d33;\s*--band-edge: #4a3d33;\s*--on-band: #f2ede3;\s*--on-band-muted: #d3c6b6;\s*--accent-on-band: #ecc5b4;/);
   const pages = fs.readdirSync(root).filter(file => file.endsWith(".html") && read(file).includes("themes.css"));
   assert.ok(pages.length >= 14);
-  pages.forEach(page => assert.match(read(page), /themes\.css\?v=20261014-v3-cocoa-band"/, page));
-  assert.doesNotMatch(read("vite.config.mjs") + read("tools/scripts/verify-cloudflare-build.js"), /themes\.css\?v=20261014-v3-liner-notes/);
+  pages.forEach(page => assert.match(read(page), /themes\.css\?v=20261014-v3-rounded"/, page));
+  assert.doesNotMatch(read("vite.config.mjs") + read("tools/scripts/verify-cloudflare-build.js"), /themes\.css\?v=20261014-v3-(?:liner-notes|cocoa-band)/);
 });
 
 test("tool page fields fit their text in Safari and controls get softer corners", () => {
   assert.match(css, /main\.v3-tool-page \.dictionary-browser-heading \{\s*display: grid;/);
   assert.match(css, /:is\(\.scale-select-field select, \.progression-writer-saved-picker select\) \{\s*-webkit-appearance: none;\s*appearance: none;[^}]*min-height: 46px;/);
-  assert.match(css, /--tool-control-radius: 6px;/);
+  assert.match(css, /--tool-control-radius: var\(--radius-control, 6px\);/);
   assert.match(css, /:is\(\.segmented-control, \.v3-mode-buttons, \.progression-extension-toggle\) \{\s*overflow: hidden;\s*border-radius: var\(--tool-control-radius\);/);
+});
+
+test("buttons, fields and dropdowns share one rounded corner across the site", () => {
+  const themes = read("styles/themes.css");
+  const block = themes.slice(themes.indexOf("v3 rounded controls"));
+  assert.ok(block.length > 0);
+  assert.match(block, /:root \{\s*--radius-control: 6px;/);
+  [".navbar .language-switch-button", ".navbar .nav-compact-tools summary", ".v3-home .hero-actions .primary-button", "main.tracks-library-page .track-key-filter-toggle", "main.tracks-library-page .v3-download-button"]
+    .forEach(selector => assert.ok(block.includes(`html[data-theme] ${selector}`), selector));
+  assert.match(block, /\.home-subscribe-button \{\s*border-radius: 0 var\(--radius-control\) var\(--radius-control\) 0;/);
+  assert.match(block, /main\.tracks-library-page \.v3-sort-buttons \{\s*overflow: hidden;\s*border-radius: var\(--radius-control\);/);
 });
