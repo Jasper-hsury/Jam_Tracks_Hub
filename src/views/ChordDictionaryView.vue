@@ -229,27 +229,29 @@ onUnmounted(() => audioPlayer.dispose(value => { isPlaying.value = value; }));
       </div>
 
       <aside ref="dictionaryDetail" class="dictionary-detail" aria-labelledby="selectedChordName">
-        <div class="dictionary-detail-heading">
-          <div>
-            <p class="dictionary-kicker">{{ messages.selectedChord }}</p>
-            <h2 id="selectedChordName">{{ selectedName }}</h2>
-            <p id="selectedChordDescription">{{ selectedDescription }}</p>
+        <div class="v3-selected-band">
+          <div class="dictionary-detail-heading">
+            <div>
+              <p class="dictionary-kicker">{{ messages.selectedChord }}</p>
+              <h2 id="selectedChordName">{{ selectedName }}</h2>
+              <p id="selectedChordDescription">{{ selectedDescription }}</p>
+            </div>
+            <button class="dictionary-play-button" id="playChordButton" type="button" :disabled="isPlaying" @click="playChord">
+              <span aria-hidden="true">&#9654;</span><span>{{ isPlaying ? messages.playing : messages.playChord }}</span>
+            </button>
           </div>
-          <button class="dictionary-play-button" id="playChordButton" type="button" :disabled="isPlaying" @click="playChord">
-            <span aria-hidden="true">&#9654;</span><span>{{ isPlaying ? messages.playing : messages.playChord }}</span>
-          </button>
-        </div>
 
-        <dl class="dictionary-facts">
-          <div><dt>{{ messages.symbol }}</dt><dd id="selectedChordSymbol">{{ selectedSymbol }}</dd></div>
-          <div><dt>{{ messages.formula }}</dt><dd id="selectedChordFormula">{{ state.chord.value.formula.join(" · ") }}</dd></div>
-          <div><dt>{{ messages.notes }}</dt><dd id="selectedChordNotes">{{ selectedNotes }}</dd></div>
-        </dl>
+          <dl class="dictionary-facts">
+            <div><dt>{{ messages.symbol }}</dt><dd id="selectedChordSymbol">{{ selectedSymbol }}</dd></div>
+            <div><dt>{{ messages.formula }}</dt><dd id="selectedChordFormula">{{ state.chord.value.formula.join(" · ") }}</dd></div>
+            <div><dt>{{ messages.notes }}</dt><dd id="selectedChordNotes">{{ selectedNotes }}</dd></div>
+          </dl>
 
-        <div class="dictionary-related-actions" id="dictionaryRelatedActions" :aria-label="messages.relatedTools">
-          <a :href="toolUrls.scale">{{ messages.viewScale }}</a>
-          <a :href="toolUrls.progressions">{{ messages.buildProgressions }}</a>
-          <a :href="toolUrls.fretboard">{{ messages.practiceNotes }}</a>
+          <div class="dictionary-related-actions" id="dictionaryRelatedActions" :aria-label="messages.relatedTools">
+            <a :href="toolUrls.scale">{{ messages.viewScale }}</a>
+            <a :href="toolUrls.progressions">{{ messages.buildProgressions }}</a>
+            <a :href="toolUrls.fretboard">{{ messages.practiceNotes }}</a>
+          </div>
         </div>
 
         <div class="dictionary-shape-heading">

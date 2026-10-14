@@ -68,7 +68,30 @@ test("tool page rules are scoped so Feedback and other pages keep their look", (
     .map(selector => selector.trim())
     .filter(selector => selector && !selector.startsWith("@"));
   assert.ok(selectors.length > 0);
-  selectors.forEach(group => group.split(",").forEach(selector => {
+  const splitTopLevel = group => {
+    const parts = [];
+    let depth = 0;
+    let current = "";
+    for (const character of group) {
+      if (character === "(") depth += 1;
+      if (character === ")") depth -= 1;
+      if (character === "," && depth === 0) {
+        parts.push(current);
+        current = "";
+      } else {
+        current += character;
+      }
+    }
+    return [...parts, current];
+  };
+  selectors.forEach(group => splitTopLevel(group).forEach(selector => {
     assert.match(selector.trim(), /^html\[data-theme\](?::lang\(zh\))? main\.v3-tool-page\b/, selector);
   }));
+});
+
+test("Chord Dictionary groups the selected chord into a dark band without changing its controls", () => {
+  const view = read("src/views/ChordDictionaryView.vue");
+  assert.match(view, /<div class="v3-selected-band">\s*<div class="dictionary-detail-heading">[\s\S]*?id="playChordButton"[\s\S]*?<dl class="dictionary-facts">[\s\S]*?id="dictionaryRelatedActions"[\s\S]*?<\/div>\s*<\/div>\s*<div class="dictionary-shape-heading">/);
+  assert.match(css, /main\.v3-tool-page \.v3-selected-band \{[^}]*background: var\(--band\);/);
+  assert.match(css, /\.dictionary-position-filter button\)\.is-selected/);
 });

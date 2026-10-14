@@ -359,7 +359,7 @@ test("keeps every shared music/backend consumer byte-identical", () => {
     "scripts/song-workspace-core.js": "d792e65873c140deda2ac576370bcd940d14e1f35d9fb5da88bbd11431b28ecb",
     "scripts/song-workspace-storage.js": "b11c00dcb5cafb3ca414ccc9fec59bd6931dc39fe3658ecec33003f4d7d210ae",
     "scripts/song-workspace-import.js": "7c04c4890176ac235d93f29ed9ca2440466978b7973fbb4e07e5c3ee9d311b56",
-    "src/views/ChordDictionaryView.vue": "4c4bd9255da28ff42ae75d0303d2b69bf7f466ec8594d0dad6c2cd00001c4dc6",
+    "src/views/ChordDictionaryView.vue": "a873fec9fc516ded8d50e4e1015e6b2950d12e640bb6af1a6468deb5a22b018b",
     "src/views/ChordProgressionsView.vue": "6ea21976beaa30bd001b4d761f3e81a836b04b514b81e69f89393e8301c8a103",
     "src/views/ScaleExplorerView.vue": "8aaef0ecf7b67bd80aa7be7c3dba1c64068c7af5d710d347f673cd19f17b39dc",
     "src/views/FretboardTrainerView.vue": "1501473db23590a8d10dee1ca150152462d0456a133f4ac71ca5c5f895b3b9cd",
