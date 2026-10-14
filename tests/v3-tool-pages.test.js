@@ -195,3 +195,12 @@ test("tool page selections use cocoa instead of ink, with a lighter cocoa in the
     .forEach(selector => assert.ok(block.includes(selector), selector));
   assert.doesNotMatch(read("styles/pages.css") + read("styles/themes.css"), /--tool-selected-bg/);
 });
+
+test("Chord Progressions cards lift like a record from a sleeve, and stay still with reduced motion", () => {
+  const block = css.slice(css.indexOf("Chord Progressions: record-shop hover"));
+  assert.ok(block.length > 0);
+  assert.match(block, /\.progression-shape-card:is\(:hover, :focus-visible\) \{[^}]*box-shadow: 4px 4px 0 var\(--tool-selected-bg\);/);
+  assert.match(block, /@media \(hover: hover\) and \(prefers-reduced-motion: no-preference\) \{[^}]*\.progression-shape-card:hover \{\s*transform: translate\(-2px, -3px\);/);
+  assert.match(block, /@media \(prefers-reduced-motion: reduce\) \{[^}]*\.progression-shape-card \{\s*transition: none;/);
+  assert.match(block, /\.key-button:hover:not\(\[aria-pressed="true"\]\) \{\s*color: var\(--ink\);/);
+});

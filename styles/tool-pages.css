@@ -1895,3 +1895,33 @@ html[data-theme] main.v3-tool-page .dictionary-quality-button.is-selected span {
 html[data-theme="default"] main.v3-tool-page .dictionary-quality-button.is-selected span {
     color: var(--on-band);
 }
+
+/* Chord Progressions: record-shop hover --------------------------------------- */
+/* Tonic keys warm to a light cocoa; shape cards lift like a record pulled from
+   a stack, leaving a cocoa sleeve edge behind them. */
+html[data-theme] main.v3-tool-page.chord-progressions-page .key-button:hover:not([aria-pressed="true"]) {
+    color: var(--ink);
+    background: color-mix(in srgb, var(--tool-selected-bg) 16%, var(--paper));
+    border-color: var(--tool-selected-bg);
+}
+
+html[data-theme] main.v3-tool-page.chord-progressions-page .progression-shape-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+html[data-theme] main.v3-tool-page.chord-progressions-page .progression-shape-card:is(:hover, :focus-visible) {
+    border-color: var(--ink);
+    box-shadow: 4px 4px 0 var(--tool-selected-bg);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    html[data-theme] main.v3-tool-page.chord-progressions-page .progression-shape-card:hover {
+        transform: translate(-2px, -3px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html[data-theme] main.v3-tool-page.chord-progressions-page .progression-shape-card {
+        transition: none;
+    }
+}
