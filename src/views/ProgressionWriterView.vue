@@ -2,6 +2,7 @@
 import { computed, nextTick, onUnmounted, reactive, ref } from "vue";
 import ProgressionChordSection from "../components/progression-writer/ProgressionChordSection.vue";
 import ProgressionShapePicker from "../components/progression-writer/ProgressionShapePicker.vue";
+import ToolPageHeading from "../components/site/ToolPageHeading.vue";
 import { useProgressionWriter } from "../composables/useProgressionWriter.js";
 import { useSiteLocale } from "../i18n/useSiteLocale.js";
 import {
@@ -161,13 +162,17 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <main id="main-content" class="tracks-page progression-writer-page">
-    <div class="page-heading-row progression-writer-heading">
-      <div>
-        <h1>{{ messages.title }}</h1>
-        <p class="hero-tagline signature-slogan">{{ messages.tagline }}</p>
-      </div>
-    </div>
+  <main id="main-content" class="tracks-page progression-writer-page v3-tool-page">
+    <ToolPageHeading
+      heading-class="page-heading-row progression-writer-heading"
+      side="B"
+      :track="1"
+      aside="standardTuning"
+      :eyebrow="messages.eyebrow"
+    >
+      <h1>{{ messages.title }}</h1>
+      <p class="hero-tagline signature-slogan">{{ messages.tagline }}</p>
+    </ToolPageHeading>
 
     <section class="progression-writer-panel" aria-labelledby="progressionWriterModeTitle">
       <div class="tool-section-heading progression-writer-copy">

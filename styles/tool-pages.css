@@ -1,0 +1,121 @@
+/* ====================
+   v3 Tool pages: Liner Notes
+   Loaded last on the six theory and practice tool pages. Every rule is scoped
+   to main.v3-tool-page so Feedback and other pages that share legacy class
+   names keep their current look.
+   ==================== */
+
+/* Page shell and heading ------------------------------------------------- */
+html[data-theme] main.v3-tool-page {
+    max-width: 1200px;
+    margin-top: 56px;
+    color: var(--text-body);
+}
+
+html[data-theme] main.v3-tool-page .v3-tool-heading {
+    display: block;
+    max-width: none;
+    margin: 0 0 36px;
+    padding: 0;
+    text-align: left;
+}
+
+html[data-theme] main.v3-tool-page .v3-tool-eyebrow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    margin: 0 0 18px;
+    color: var(--accent);
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+html[data-theme] main.v3-tool-page .v3-tool-no {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 26px;
+    padding: 0 8px;
+    border: 1px solid var(--accent);
+    letter-spacing: 0.06em;
+}
+
+html[data-theme] main.v3-tool-page .v3-tool-heading h1 {
+    margin: 0;
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: clamp(46px, 6vw, 76px);
+    font-weight: 400;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    text-align: left;
+}
+
+html[data-theme] main.v3-tool-page .v3-tool-heading .hero-tagline {
+    margin: 10px 0 0;
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: clamp(19px, 2vw, 24px);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-align: left;
+    text-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .v3-tool-heading .trainer-lead {
+    max-width: 680px;
+    margin: 18px 0 0;
+    color: var(--text-body);
+    font-size: 17px;
+    line-height: 1.65;
+}
+
+html[data-theme] main.v3-tool-page .v3-tool-meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 6px 16px;
+    margin-top: 28px;
+    padding-top: 10px;
+    border-top: 3px double var(--ink);
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+html[data-theme]:lang(zh) main.v3-tool-page .v3-tool-eyebrow,
+html[data-theme]:lang(zh) main.v3-tool-page .v3-tool-meta {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: none;
+}
+
+html[data-theme]:lang(zh) main.v3-tool-page .v3-tool-heading h1 {
+    font-weight: 600;
+    line-height: 1.12;
+    letter-spacing: 0;
+}
+
+html[data-theme]:lang(zh) main.v3-tool-page .v3-tool-heading .hero-tagline {
+    font-style: normal;
+    font-weight: 600;
+}
+
+@media (max-width: 760px) {
+    html[data-theme] main.v3-tool-page {
+        margin-top: 32px;
+        padding: 0 16px;
+    }
+
+    html[data-theme] main.v3-tool-page .v3-tool-heading {
+        margin-bottom: 24px;
+    }
+}

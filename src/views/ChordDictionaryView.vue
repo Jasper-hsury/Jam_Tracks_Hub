@@ -1,6 +1,7 @@
 <script setup>
 import { computed, nextTick, onMounted, onUnmounted, ref } from "vue";
 import ChordDictionaryDiagram from "../components/chords/ChordDictionaryDiagram.vue";
+import ToolPageHeading from "../components/site/ToolPageHeading.vue";
 import { useChordDictionary } from "../composables/useChordDictionary.js";
 import { useSiteLocale } from "../i18n/useSiteLocale.js";
 import {
@@ -161,12 +162,17 @@ onUnmounted(() => audioPlayer.dispose(value => { isPlaying.value = value; }));
 </script>
 
 <template>
-  <main class="tracks-page chord-dictionary-page" id="main-content">
-    <header class="dictionary-heading">
-      <p class="home-eyebrow">{{ messages.eyebrow }}</p>
+  <main class="tracks-page chord-dictionary-page v3-tool-page" id="main-content">
+    <ToolPageHeading
+      heading-class="dictionary-heading"
+      side="A"
+      :track="5"
+      aside="standardTuning"
+      :eyebrow="messages.eyebrow"
+    >
       <h1>{{ messages.title }}</h1>
       <p class="hero-tagline signature-slogan">{{ messages.tagline }}</p>
-    </header>
+    </ToolPageHeading>
 
     <section class="dictionary-workspace" aria-labelledby="dictionaryBrowseTitle">
       <div class="dictionary-browser">

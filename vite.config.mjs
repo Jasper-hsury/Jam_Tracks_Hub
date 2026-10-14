@@ -24,6 +24,7 @@ const legacyHtmlAssets = [
   "styles/chord-dictionary.css?v=20261014-v3-liner-notes",
   "styles/chord-dictionary.css?v=20261014-v3-liner-notes",
   "styles/song-workspace.css?v=20261014-v3-liner-notes",
+  "styles/tool-pages.css?v=20261014-v3-tools",
   "scripts/site-config.js?v=20260729-youtube-key-api",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/Flip.min.js",

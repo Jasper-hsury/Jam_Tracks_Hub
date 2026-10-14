@@ -359,10 +359,10 @@ test("keeps every shared music/backend consumer byte-identical", () => {
     "scripts/song-workspace-core.js": "d792e65873c140deda2ac576370bcd940d14e1f35d9fb5da88bbd11431b28ecb",
     "scripts/song-workspace-storage.js": "b11c00dcb5cafb3ca414ccc9fec59bd6931dc39fe3658ecec33003f4d7d210ae",
     "scripts/song-workspace-import.js": "7c04c4890176ac235d93f29ed9ca2440466978b7973fbb4e07e5c3ee9d311b56",
-    "src/views/ChordDictionaryView.vue": "142790fdb81cc1a1b13c027d7e7b681dd77f35ef22ee0d3696c3cffe775414e1",
-    "src/views/ChordProgressionsView.vue": "80f12c439cd04d88000b26527787e02c9ecf606884b3bcc3a1c4a9ef191b70a0",
-    "src/views/ScaleExplorerView.vue": "e8dc3cf9beff6e408a8b0453d342a28bf53db975c610d1b4a6f8bf470826b1cf",
-    "src/views/FretboardTrainerView.vue": "4ac89644ed35a42e63a96d62476454efeaec24fb7081e1ba0c48dd0e95cb3ff6",
+    "src/views/ChordDictionaryView.vue": "4c4bd9255da28ff42ae75d0303d2b69bf7f466ec8594d0dad6c2cd00001c4dc6",
+    "src/views/ChordProgressionsView.vue": "6ea21976beaa30bd001b4d761f3e81a836b04b514b81e69f89393e8301c8a103",
+    "src/views/ScaleExplorerView.vue": "8aaef0ecf7b67bd80aa7be7c3dba1c64068c7af5d710d347f673cd19f17b39dc",
+    "src/views/FretboardTrainerView.vue": "1501473db23590a8d10dee1ca150152462d0456a133f4ac71ca5c5f895b3b9cd",
     "worker.js": "38bb981a849874c0c4421c00c73aef2bf0e2fbfa857f3a85dc63f145af7f970c",
     "wrangler.jsonc": "fcd1a460b0bee67ad6f0b33076234c682c22580d48ee3f4ffbe339d2a88145db"
   };

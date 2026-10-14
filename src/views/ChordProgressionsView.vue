@@ -1,6 +1,7 @@
 <script setup>
 import { computed, nextTick, ref, watch } from "vue";
 import ProgressionLibrary from "../components/chords/ProgressionLibrary.vue";
+import ToolPageHeading from "../components/site/ToolPageHeading.vue";
 import { useChordProgressions } from "../composables/useChordProgressions.js";
 import { useSiteLocale } from "../i18n/useSiteLocale.js";
 import { PROGRESSION_COPY_TRANSLATION_KEYS } from "../music/chordProgressions.mjs";
@@ -59,9 +60,16 @@ watch(language, () => {
 </script>
 
 <template>
-  <main class="tracks-page" id="main-content">
-    <h1>{{ messages.title }}</h1>
-    <p class="hero-tagline signature-slogan">{{ messages.tagline }}</p>
+  <main class="tracks-page chord-progressions-page v3-tool-page" id="main-content">
+    <ToolPageHeading
+      heading-class="page-heading-row"
+      side="B"
+      :track="1"
+      :eyebrow="messages.eyebrow"
+    >
+      <h1>{{ messages.title }}</h1>
+      <p class="hero-tagline signature-slogan">{{ messages.tagline }}</p>
+    </ToolPageHeading>
 
     <section class="key-selector" aria-labelledby="progressionExplorerTitle">
       <div class="tool-section-heading">

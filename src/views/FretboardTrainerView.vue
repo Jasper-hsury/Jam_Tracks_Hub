@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref, watch } from "vue";
 import { useFretboardTrainer } from "../composables/useFretboardTrainer.js";
+import ToolPageHeading from "../components/site/ToolPageHeading.vue";
 import { useSiteLocale } from "../i18n/useSiteLocale.js";
 import { exactNoteName, NOTES } from "../music/fretboardTrainer.mjs";
 import { pages as englishPages } from "../../locales/en/common.json";
@@ -83,13 +84,18 @@ watch(language, () => {
 </script>
 
 <template>
-  <main class="tracks-page trainer-page" id="main-content">
-    <header class="trainer-heading">
-      <p class="home-eyebrow">{{ messages.eyebrow }}</p>
+  <main class="tracks-page trainer-page v3-tool-page" id="main-content">
+    <ToolPageHeading
+      heading-class="trainer-heading"
+      side="A"
+      :track="2"
+      aside="standardTuning"
+      :eyebrow="messages.eyebrow"
+    >
       <h1>{{ messages.title }}</h1>
       <p class="hero-tagline signature-slogan">{{ messages.tagline }}</p>
       <p class="trainer-lead">{{ messages.lead }}</p>
-    </header>
+    </ToolPageHeading>
 
     <section class="trainer-workspace" aria-labelledby="trainerQuestionTitle">
       <div class="trainer-card trainer-question-card">

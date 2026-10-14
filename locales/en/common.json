@@ -217,6 +217,11 @@
       "openOnYouTube": "Open {{title}} on YouTube",
       "downloadSlidesFor": "Download slides for {{title}}"
     },
+    "toolShell": {
+      "sideTrack": "Side {{side}} · Track {{track}}",
+      "standardTuning": "Standard tuning · E A D G B E",
+      "uploadFirst": "Upload first · YouTube optional"
+    },
     "chordDictionary": {
       "title": "Chord Dictionary",
       "tagline": "Name the harmony. See the notes. Find a shape.",
@@ -292,6 +297,7 @@
     "keyFinder": {
       "title": "Song Key Finder",
       "tagline": "Listen deeper. Find the tonal center.",
+      "eyebrow": "Audio upload • key estimate • tempo",
       "analyzeTitle": "Analyze a Song",
       "intro": "Upload an audio file for the most reliable key estimate. YouTube link analysis is available as a secondary option when cloud access or the local helper can reach the video.",
       "checkingApi": "Checking API...",
@@ -372,6 +378,7 @@
     "chordProgressions": {
       "title": "Chord Progressions",
       "tagline": "Capture the Feeling. Compose the Meaning.",
+      "eyebrow": "Keys • triads & sevenths • common progressions",
       "explorerTitle": "Chord Progression Explorer",
       "intro": "Choose a key, switch between triads and seventh chords, then compare guitar-friendly root-position voicings.",
       "writeOwn": "Write Your Own Progression",
@@ -410,6 +417,7 @@
     "progressionWriter": {
       "title": "Write Your Own Progression",
       "tagline": "Capture the Feeling. Compose the Meaning.",
+      "eyebrow": "Song info • custom chords • image export",
       "modeTitle": "Chord Progression",
       "format": "Progression format",
       "switchStructure": "Switch between chord progression with or without verse and chorus",
