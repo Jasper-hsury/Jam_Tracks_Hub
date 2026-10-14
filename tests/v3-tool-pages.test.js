@@ -9,12 +9,12 @@ const css = read("styles/tool-pages.css");
 const TOOL_STYLESHEET = "styles/tool-pages.css?v=20261014-v3-tools";
 
 const toolPages = [
-  { html: "chord-dictionary.html", view: "ChordDictionaryView", side: "A", track: 5, aside: "standardTuning" },
-  { html: "scale.html", view: "ScaleExplorerView", side: "A", track: 4, aside: "standardTuning" },
-  { html: "chord-progressions.html", view: "ChordProgressionsView", side: "B", track: 1, aside: null },
-  { html: "progression-writer.html", view: "ProgressionWriterView", side: "B", track: 1, aside: "standardTuning" },
-  { html: "fretboard-trainer.html", view: "FretboardTrainerView", side: "A", track: 2, aside: "standardTuning" },
-  { html: "key-finder.html", view: "KeyFinderView", side: "A", track: 3, aside: "uploadFirst" }
+  { html: "chord-dictionary.html", view: "ChordDictionaryView", aside: "standardTuning" },
+  { html: "scale.html", view: "ScaleExplorerView", aside: "standardTuning" },
+  { html: "chord-progressions.html", view: "ChordProgressionsView", aside: null },
+  { html: "progression-writer.html", view: "ProgressionWriterView", aside: "standardTuning" },
+  { html: "fretboard-trainer.html", view: "FretboardTrainerView", aside: "standardTuning" },
+  { html: "key-finder.html", view: "KeyFinderView", aside: "uploadFirst" }
 ];
 
 test("every tool page loads the v3 tool stylesheet last", () => {
@@ -33,19 +33,20 @@ test("other pages keep their stylesheets unchanged", () => {
     .forEach(html => assert.doesNotMatch(read(html), /tool-pages\.css/, html));
 });
 
-test("each tool page renders the shared heading with its side and track", () => {
-  toolPages.forEach(({ view, side, track, aside }) => {
+test("each tool page renders the shared heading with its eyebrow and optional note", () => {
+  toolPages.forEach(({ view, aside }) => {
     const source = read(`src/views/${view}.vue`);
     assert.match(source, /import ToolPageHeading from "\.\.\/components\/site\/ToolPageHeading\.vue";/, view);
     assert.match(source, /<main\b[^>]*class="[^"]*\bv3-tool-page\b/, view);
-    assert.match(source, new RegExp(`<ToolPageHeading[\\s\\S]*?side="${side}"[\\s\\S]*?:track="${track}"`), view);
+    assert.match(source, /<ToolPageHeading[\s\S]*?:eyebrow="messages\.eyebrow"/, view);
+    assert.doesNotMatch(source, /\sside="|:track="/, view);
     if (aside) assert.match(source, new RegExp(`aside="${aside}"`), view);
     else assert.doesNotMatch(source, /aside="/, view);
     assert.equal((source.match(/<h1\b/g) || []).length, 1, view);
   });
 });
 
-test("the shared heading drops the number badge and keeps the meta row localized", () => {
+test("the shared heading has no number badge or side/track line and keeps the note localized", () => {
   const heading = read("src/components/site/ToolPageHeading.vue");
   assert.match(heading, /<p class="home-eyebrow v3-tool-eyebrow">\{\{ eyebrow \}\}<\/p>/);
   assert.doesNotMatch(heading + css, /v3-tool-no/);
@@ -54,8 +55,9 @@ test("the shared heading drops the number badge and keeps the meta row localized
   const en = JSON.parse(read("locales/en/common.json")).pages;
   const zh = JSON.parse(read("locales/zh-TW/common.json")).pages;
   assert.deepEqual(Object.keys(en.toolShell), Object.keys(zh.toolShell));
-  assert.equal(en.toolShell.sideTrack, "Side {{side}} · Track {{track}}");
-  assert.equal(zh.toolShell.sideTrack, "{{side}} 面 · 第 {{track}} 首");
+  assert.equal(en.toolShell.sideTrack, undefined);
+  assert.doesNotMatch(heading, /sideTrack|props\.side|props\.track/);
+  assert.match(css, /\.v3-tool-meta:empty \{\s*padding-top: 0;/);
   ["chordProgressions", "keyFinder", "progressionWriter"].forEach(page => {
     assert.ok(en[page].eyebrow, page);
     assert.ok(zh[page].eyebrow, page);

@@ -170,8 +170,6 @@ onUnmounted(() => {
   <main id="main-content" class="tracks-page progression-writer-page v3-tool-page">
     <ToolPageHeading
       heading-class="page-heading-row progression-writer-heading"
-      side="B"
-      :track="1"
       aside="standardTuning"
       :eyebrow="messages.eyebrow"
     >

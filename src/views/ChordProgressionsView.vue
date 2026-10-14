@@ -64,8 +64,6 @@ watch(language, () => {
   <main class="tracks-page chord-progressions-page v3-tool-page" id="main-content">
     <ToolPageHeading
       heading-class="page-heading-row"
-      side="B"
-      :track="1"
       :eyebrow="messages.eyebrow"
     >
       <h1>{{ messages.title }}</h1>

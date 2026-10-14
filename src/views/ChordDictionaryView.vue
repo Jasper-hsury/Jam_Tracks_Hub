@@ -165,8 +165,6 @@ onUnmounted(() => audioPlayer.dispose(value => { isPlaying.value = value; }));
   <main class="tracks-page chord-dictionary-page v3-tool-page" id="main-content">
     <ToolPageHeading
       heading-class="dictionary-heading"
-      side="A"
-      :track="5"
       aside="standardTuning"
       :eyebrow="messages.eyebrow"
     >

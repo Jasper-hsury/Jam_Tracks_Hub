@@ -218,7 +218,6 @@
       "downloadSlidesFor": "Download slides for {{title}}"
     },
     "toolShell": {
-      "sideTrack": "Side {{side}} · Track {{track}}",
       "standardTuning": "Standard tuning · E A D G B E",
       "uploadFirst": "Upload first · YouTube optional"
     },

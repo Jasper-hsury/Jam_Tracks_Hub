@@ -218,7 +218,6 @@
       "downloadSlidesFor": "下載 {{title}} 的投影片"
     },
     "toolShell": {
-      "sideTrack": "{{side}} 面 · 第 {{track}} 首",
       "standardTuning": "標準調弦 · E A D G B E",
       "uploadFirst": "優先上傳音訊 · YouTube 為選用"
     },

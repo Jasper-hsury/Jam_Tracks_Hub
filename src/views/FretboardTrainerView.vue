@@ -87,8 +87,6 @@ watch(language, () => {
   <main class="tracks-page trainer-page v3-tool-page" id="main-content">
     <ToolPageHeading
       heading-class="trainer-heading"
-      side="A"
-      :track="2"
       aside="standardTuning"
       :eyebrow="messages.eyebrow"
     >

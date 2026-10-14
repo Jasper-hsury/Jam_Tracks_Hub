@@ -79,8 +79,6 @@ onUnmounted(() => audioPlayer.dispose(value => {
   <main class="tracks-page scale-page v3-tool-page" id="main-content">
     <ToolPageHeading
       heading-class="scale-page-heading"
-      side="A"
-      :track="4"
       aside="standardTuning"
       :eyebrow="messages.eyebrow"
     >

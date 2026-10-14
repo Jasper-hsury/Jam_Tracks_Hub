@@ -64,8 +64,6 @@ onUnmounted(finder.dispose);
   <main id="main-content" class="tracks-page key-finder-page v3-tool-page">
     <ToolPageHeading
       heading-class="page-heading-row"
-      side="A"
-      :track="3"
       aside="uploadFirst"
       :eyebrow="messages.eyebrow"
     >
