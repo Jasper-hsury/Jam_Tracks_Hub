@@ -45,6 +45,7 @@ const filterSummary = computed(() => {
   if (!selected.length) return messages.value.allKeys;
   return selected.length === 1 ? selected[0].label : `${selected[0].label} +${selected.length - 1}`;
 });
+const libraryEyebrow = computed(() => messages.value.libraryCount.replace("{{count}}", String(tracks.value.length)));
 const resultCount = computed(() => {
   const key = visibleTracks.value.length === 1 ? "resultCount_one" : "resultCount_other";
   return messages.value[key].replace("{{count}}", String(visibleTracks.value.length));
@@ -179,8 +180,10 @@ function setGroup(groupId, checked) {
 }
 
 function setSortMode(oldestFirst) {
+  const nextMode = oldestFirst ? "oldest" : "newest";
+  if (nextMode === sortMode.value) return;
   updateVisibleTracks(() => {
-    sortMode.value = oldestFirst ? "oldest" : "newest";
+    sortMode.value = nextMode;
   });
 }
 
@@ -222,6 +225,7 @@ onBeforeUnmount(() => {
   <main class="tracks-page tracks-library-page" id="main-content">
     <div class="page-heading-row">
       <div>
+        <p v-if="tracks.length" class="v3-tracks-eyebrow">{{ libraryEyebrow }}</p>
         <h1>{{ messages.title }}</h1>
         <p class="hero-tagline signature-slogan">{{ messages.tagline }}</p>
       </div>
@@ -287,19 +291,22 @@ onBeforeUnmount(() => {
             <option value="oldest">{{ messages.oldestFirst }}</option>
           </select>
         </label>
-        <div class="track-sort-switch-control" id="trackSortPills" :aria-label="messages.sortLabel">
-          <span class="track-sort-caption">{{ messages.sortBy }}</span>
-          <span class="track-sort-mode track-sort-mode-latest" :class="{ 'is-active': sortMode === 'newest' }">{{ messages.latestFirst }}</span>
-          <input
-            class="uiverse-toggle-input track-sort-switch-input"
-            id="trackSortToggle"
-            type="checkbox"
-            :checked="sortMode === 'oldest'"
-            :aria-label="messages.switchSort"
-            @change="setSortMode($event.target.checked)"
-          >
-          <label class="uiverse-toggle track-sort-switch" for="trackSortToggle"></label>
-          <span class="track-sort-mode track-sort-mode-oldest" :class="{ 'is-active': sortMode === 'oldest' }">{{ messages.oldestFirst }}</span>
+        <div class="v3-sort-control" id="trackSortPills">
+          <span class="track-sort-caption" id="trackSortCaption">{{ messages.sortBy }}</span>
+          <div class="v3-sort-buttons" role="group" aria-labelledby="trackSortCaption">
+            <button
+              class="v3-sort-button"
+              type="button"
+              :aria-pressed="String(sortMode === 'newest')"
+              @click="setSortMode(false)"
+            >{{ messages.latestFirst }}</button>
+            <button
+              class="v3-sort-button"
+              type="button"
+              :aria-pressed="String(sortMode === 'oldest')"
+              @click="setSortMode(true)"
+            >{{ messages.oldestFirst }}</button>
+          </div>
         </div>
       </div>
     </section>

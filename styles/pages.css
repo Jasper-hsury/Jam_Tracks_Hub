@@ -7251,3 +7251,234 @@ html[data-theme] .v3-home .home-subscribe-status {
         padding: 20px;
     }
 }
+
+/* ====================
+   v3 Tracks: Liner Notes catalog
+   Header, toolbar and record-sleeve rows. Scoped to .tracks-library-page so
+   the earlier Tracks rules above stay inert.
+   ==================== */
+html[data-theme] main.tracks-library-page {
+    max-width: 1180px;
+    margin-top: 64px;
+}
+
+html[data-theme] main.tracks-library-page .page-heading-row {
+    display: block;
+    max-width: none;
+    margin-bottom: 0;
+    padding-bottom: 28px;
+    border-bottom: 3px double var(--ink);
+}
+
+html[data-theme] main.tracks-library-page .page-heading-row > div {
+    max-width: none;
+}
+
+html[data-theme] main.tracks-library-page .v3-tracks-eyebrow {
+    margin: 0 0 12px;
+    color: var(--accent);
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+html[data-theme]:lang(zh) main.tracks-library-page .v3-tracks-eyebrow {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: none;
+}
+
+html[data-theme] main.tracks-library-page h1 {
+    margin: 0 0 12px;
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: clamp(48px, 7vw, 96px);
+    font-weight: 400;
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+}
+
+html[data-theme]:lang(zh) main.tracks-library-page h1 {
+    font-weight: 600;
+    letter-spacing: 0;
+}
+
+html[data-theme] main.tracks-library-page .hero-tagline {
+    margin: 0;
+    color: var(--accent);
+    font-family: var(--font-serif);
+    font-size: clamp(20px, 2.2vw, 26px);
+    font-style: italic;
+}
+
+html[data-theme]:lang(zh) main.tracks-library-page .hero-tagline {
+    font-style: normal;
+    letter-spacing: 0.04em;
+}
+
+html[data-theme] main.tracks-library-page .track-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px 24px;
+    margin: 0;
+    padding: 18px 0;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+}
+
+html[data-theme] main.tracks-library-page .track-toolbar-group,
+html[data-theme] main.tracks-library-page .v3-sort-control {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+html[data-theme] main.tracks-library-page .track-toolbar-label,
+html[data-theme] main.tracks-library-page .track-sort-caption {
+    color: var(--text-muted);
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+html[data-theme]:lang(zh) main.tracks-library-page .track-toolbar-label,
+html[data-theme]:lang(zh) main.tracks-library-page .track-sort-caption {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: none;
+}
+
+html[data-theme] main.tracks-library-page .track-key-filter-toggle {
+    min-height: 44px;
+    gap: 10px;
+    padding: 0 14px;
+    border: 1px solid var(--ink);
+    border-radius: 0;
+    color: var(--ink);
+    background: transparent;
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 500;
+}
+
+html[data-theme] main.tracks-library-page .track-key-filter-toggle span {
+    color: var(--text-muted);
+}
+
+html[data-theme] main.tracks-library-page .track-key-filter-toggle [data-filter-current] {
+    color: var(--ink);
+    font-weight: 600;
+}
+
+html[data-theme] main.tracks-library-page .track-key-filter-toggle:hover,
+html[data-theme] main.tracks-library-page .track-key-multiselect.is-open .track-key-filter-toggle {
+    background: var(--surface-sunken);
+}
+
+html[data-theme] main.tracks-library-page .track-key-filter-toggle:focus-visible,
+html[data-theme] main.tracks-library-page .v3-sort-button:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+}
+
+html[data-theme] main.tracks-library-page .track-key-options {
+    left: 0;
+    width: min(400px, calc(100vw - 40px));
+    gap: 6px;
+    padding: 10px;
+    border: 1px solid var(--ink);
+    border-radius: 0;
+    background: var(--surface);
+    box-shadow: none;
+}
+
+html[data-theme] main.tracks-library-page .track-key-checkbox-visual {
+    height: 40px;
+    border: 1px solid var(--line);
+    border-radius: 0;
+    color: var(--ink);
+    background: transparent;
+    box-shadow: none;
+}
+
+html[data-theme] main.tracks-library-page .track-key-checkbox-inner {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+html[data-theme] main.tracks-library-page .track-key-checkbox-visual:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+    background: var(--surface-sunken);
+}
+
+html[data-theme] main.tracks-library-page .track-key-checkbox:checked + .track-key-checkbox-wrapper .track-key-checkbox-visual,
+html[data-theme] main.tracks-library-page .track-key-checkbox:checked + .track-key-checkbox-wrapper .track-key-checkbox-visual:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-soft);
+    box-shadow: none;
+}
+
+html[data-theme] main.tracks-library-page .track-key-checkbox:focus-visible + .track-key-checkbox-wrapper .track-key-checkbox-visual {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+}
+
+html[data-theme] main.tracks-library-page .v3-sort-buttons {
+    display: flex;
+    border: 1px solid var(--ink);
+}
+
+html[data-theme] main.tracks-library-page .v3-sort-button {
+    min-height: 42px;
+    padding: 0 16px;
+    border: 0;
+    color: var(--ink);
+    background: transparent;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+html[data-theme] main.tracks-library-page .v3-sort-button + .v3-sort-button {
+    border-left: 1px solid var(--ink);
+}
+
+html[data-theme] main.tracks-library-page .v3-sort-button[aria-pressed="true"] {
+    color: var(--paper);
+    background: var(--ink);
+}
+
+html[data-theme] main.tracks-library-page .v3-sort-button[aria-pressed="false"]:hover {
+    background: var(--surface-sunken);
+}
+
+html[data-theme] main.tracks-library-page .track-result-count {
+    margin: 16px 0 8px;
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+@media (max-width: 640px) {
+    html[data-theme] main.tracks-library-page {
+        margin-top: 36px;
+    }
+
+    html[data-theme] main.tracks-library-page .track-controls {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

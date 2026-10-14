@@ -198,6 +198,7 @@
     "tracks": {
       "title": "所有即興伴奏",
       "tagline": "捕捉感受，譜出心聲。",
+      "libraryCount": "{{count}} 首原創即興伴奏",
       "filtersLabel": "篩選",
       "keyLabel": "調性",
       "allKeys": "所有調性",
