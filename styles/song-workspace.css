@@ -1,12 +1,13 @@
 :root {
-    --workspace-surface: rgba(255, 255, 255, 0.78);
-    --workspace-surface-strong: #fff;
-    --workspace-soft: rgba(245, 238, 228, 0.78);
-    --workspace-line: rgba(116, 91, 65, 0.24);
-    --workspace-accent: #2f8b84;
-    --workspace-text: #302821;
-    --workspace-muted: #71685f;
-    --workspace-shadow: 0 16px 34px rgba(75, 57, 39, 0.1);
+    /* v3: Song Workspace follows the shared paper/ink tokens in both themes. */
+    --workspace-surface: var(--surface);
+    --workspace-surface-strong: var(--surface);
+    --workspace-soft: var(--surface-sunken);
+    --workspace-line: var(--line);
+    --workspace-accent: var(--accent);
+    --workspace-text: var(--ink);
+    --workspace-muted: var(--text-muted);
+    --workspace-shadow: 0 0 0 transparent;
     --workspace-control-radius: 999px;
     --workspace-control-height: 44px;
     --song-settings-control-height: 42px;
@@ -39,14 +40,14 @@ body::-webkit-scrollbar,
 }
 
 html[data-theme="default"] {
-    --workspace-surface: rgba(26, 25, 24, 0.91);
-    --workspace-surface-strong: #1c1b1a;
-    --workspace-soft: rgba(47, 43, 39, 0.9);
-    --workspace-line: rgba(218, 195, 160, 0.24);
-    --workspace-accent: #75c4bb;
-    --workspace-text: #f5ead8;
-    --workspace-muted: #c6bdb2;
-    --workspace-shadow: 0 16px 34px rgba(0, 0, 0, 0.24);
+    --workspace-surface: var(--surface);
+    --workspace-surface-strong: var(--surface);
+    --workspace-soft: var(--surface-sunken);
+    --workspace-line: var(--line);
+    --workspace-accent: var(--accent);
+    --workspace-text: var(--ink);
+    --workspace-muted: var(--text-muted);
+    --workspace-shadow: 0 0 0 transparent;
 }
 
 .song-workspace-page {
@@ -223,7 +224,7 @@ html[data-theme="default"] {
 .workspace-button-primary:active,
 .workspace-button-secondary:active,
 .workspace-button-danger:active {
-    box-shadow: 0 2px 0 rgba(80, 57, 38, 0.3), 0 8px 16px var(--shadow-color);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3), 0 8px 16px var(--shadow-color);
     transform: translateY(2px) scale(0.985);
 }
 
@@ -324,7 +325,7 @@ html[data-theme="default"] {
 .workspace-entry-card:hover {
     border-color: var(--workspace-accent);
     transform: translateY(-3px);
-    box-shadow: 0 20px 42px rgba(75, 57, 39, 0.14);
+    box-shadow: 0 20px 42px rgba(0, 0, 0, 0.14);
 }
 
 .workspace-entry-card:active {
@@ -334,7 +335,7 @@ html[data-theme="default"] {
 
 .workspace-entry-card strong {
     margin: 28px 0 9px;
-    font-family: Georgia, "Noto Serif TC", serif;
+    font-family: var(--font-serif);
     font-size: clamp(1.45rem, 2vw, 2rem);
 }
 
@@ -413,7 +414,7 @@ html[data-theme="default"] {
 .workspace-import-card h3 {
     margin: 7px 0 8px;
     color: var(--workspace-text);
-    font-family: Georgia, "Noto Serif TC", serif;
+    font-family: var(--font-serif);
     font-size: 1.25rem;
 }
 
@@ -3146,7 +3147,7 @@ svg.workspace-anchor-action-icon {
 
     .workspace-line-dialog.is-edit-line-mode .workspace-dialog-heading h2 {
         margin: 0;
-        font-family: Georgia, "Times New Roman", serif;
+        font-family: var(--font-serif);
         font-size: clamp(2rem, 9vw, 2.6rem);
         font-weight: 700;
         line-height: 1.05;
@@ -3508,11 +3509,11 @@ svg.workspace-anchor-action-icon {
         border: 0;
         box-shadow: none;
         background: #fff;
-        color: #111;
+        color: var(--paper);
     }
 
     .workspace-line {
-        color: #111;
+        color: var(--paper);
     }
 
     .workspace-lines.is-instrumental-grid {

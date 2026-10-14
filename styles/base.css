@@ -9,16 +9,16 @@ html {
 }
 
 :root {
-    --bg: #111111;
+    --bg: var(--paper);
     --surface: #1b1b1b;
     --surface-raised: #242424;
     --surface-soft: #2c2b29;
     --line: #343434;
     --text: #e6e2dc;
     --muted: #aaa39a;
-    --gold: #c4a484;
-    --gold-light: #e5d3b3;
-    --teal: #7fb7ad;
+    --gold: var(--ink);
+    --gold-light: var(--ink);
+    --teal: var(--accent);
     --wine: #a76f73;
     --radius: 8px;
 }
@@ -31,28 +31,28 @@ html {
 }
 
 ::-webkit-scrollbar-track {
-    background: #121212; /* 軌道顏色跟背景一樣 */
+    background: var(--paper); /* 軌道顏色跟背景一樣 */
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #333; /* 捲軸本體的顏色 */
+    background: var(--line); /* 捲軸本體的顏色 */
     border-radius: 10px; /* 圓角設計 */
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #c4a484; /* 滑鼠移過去時亮起你的品牌金色 */
+    background: var(--ink); /* 滑鼠移過去時改用墨色 */
 }
 
 body {
-    background: linear-gradient(135deg, #101010 0%, #15120f 52%, #101817 100%);
+    background: var(--paper);
     color: var(--text);
-    font-family: 'Noto Sans TC', sans-serif;
+    font-family: var(--font-sans);
     margin: 0;
     padding: 0;
 }
 
 h1 {
-    font-family: 'Noto Serif TC', serif;
+    font-family: var(--font-serif);
     font-size: clamp(38px, 5vw, 56px);
     color: var(--gold);
     margin-bottom: 10px;
@@ -78,13 +78,13 @@ h1 {
     justify-content: space-between;
     align-items: center;
     /* 改為 80% 透明度的深色背景 */
-    background-color: rgba(20, 20, 20, 0.84); 
+    background-color: rgba(var(--paper-rgb), 0.84);
     /* 新增：毛玻璃模糊特效 */
     backdrop-filter: blur(12px); 
     -webkit-backdrop-filter: blur(12px); /* 支援 Safari */
     padding: 10px 50px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-    border-bottom: 1px solid rgba(196, 164, 132, 0.16);
+    border-bottom: 1px solid rgba(var(--ink-rgb), 0.16);
 }
 
 .navbar.navbar-smart-scroll {
@@ -116,15 +116,15 @@ h1 {
 }
 
 .logo {
-    font-family: 'Noto Serif TC', serif;
+    font-family: var(--font-serif);
     font-size: 24px;
-    color: #c4a484;
+    color: var(--ink);
     font-weight: bold;
     text-decoration: none;
 }
 
 .logo:hover {
-    color: #e5d3b3;
+    color: var(--ink);
 }
 
 
@@ -145,8 +145,8 @@ h1 {
     place-items: center;
     padding: 9px;
     color: var(--text);
-    background: rgba(27, 27, 27, 0.82);
-    border: 1px solid rgba(196, 164, 132, 0.24);
+    background: rgba(var(--surface-rgb), 0.82);
+    border: 1px solid rgba(var(--ink-rgb), 0.24);
     border-radius: 7px;
     cursor: pointer;
 }
@@ -182,7 +182,7 @@ h1 {
     left: 12px;
     z-index: 1000;
     padding: 9px 13px;
-    color: #111;
+    color: var(--paper);
     background: var(--gold-light);
     border-radius: 6px;
     font-weight: bold;
@@ -288,12 +288,12 @@ h1 {
 }
 
 .nav-links a:hover {
-    color: #c4a484;
+    color: var(--ink);
 }
 
 /* 新增：當前所在頁面的專屬高亮顏色 */
 .nav-links a.active {
-    color: #c4a484;
+    color: var(--ink);
 }
 
 .nav-links a:focus-visible,
@@ -313,7 +313,7 @@ h1 {
 .track-link:focus-visible,
 .footer .social-links a:focus-visible,
 #backToTopBtn:focus-visible {
-    outline: 3px solid #e5d3b3;
+    outline: 3px solid var(--ink);
     outline-offset: 4px;
 }
 
@@ -322,12 +322,12 @@ h1 {
    ==================== */
 :root {
     --motion-lift-shadow: 0 18px 46px rgba(0, 0, 0, 0.34);
-    --motion-wash: rgba(229, 211, 179, 0.16);
+    --motion-wash: rgba(var(--ink-rgb), 0.16);
 }
 
 html[data-theme="light"] {
-    --motion-lift-shadow: 0 20px 48px rgba(99, 75, 55, 0.16);
-    --motion-wash: rgba(154, 107, 68, 0.13);
+    --motion-lift-shadow: 0 20px 48px rgba(var(--ink-rgb), 0.16);
+    --motion-wash: rgba(var(--ink-rgb), 0.13);
 }
 
 .navbar,
@@ -509,7 +509,7 @@ html.motion-reduced *::after {
    區塊標題與文字
    ==================== */
 .section-title {
-    color: #c4a484;
+    color: var(--ink);
     font-size: 24px;
 }
 
@@ -523,7 +523,7 @@ html.motion-reduced *::after {
 }
 
 .section-title-link:hover {
-    color: #e5d3b3;
+    color: var(--ink);
 }
 
 .section-divider {

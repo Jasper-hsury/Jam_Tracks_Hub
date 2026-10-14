@@ -36,7 +36,7 @@ test("preserves Privacy metadata, analytics, theme, locale, shell, and animation
   assert.match(html, /<link rel="canonical" href="https:\/\/jamtrackshub\.com\/privacy-policy\.html">/);
   assert.match(html, /<meta property="og:url" content="https:\/\/jamtrackshub\.com\/privacy-policy\.html">/);
   assert.match(html, /<body data-i18n-title="titles\.privacy">/);
-  assert.match(html, /scripts\/theme-init\.js\?v=20260725-friendly-insect-switch/);
+  assert.match(html, /scripts\/theme-init\.js\?v=20261014-v3-paper-default/);
   assert.match(html, /scripts\/i18n-init\.js\?v=20260804-no-language-flash/);
   assert.match(html, /<script defer src="https:\/\/cloud\.umami\.is\/script\.js" data-website-id="[^"]+"><\/script>/);
   assert.doesNotMatch(html, /<nav class="navbar"/);
@@ -71,7 +71,7 @@ test("keeps Privacy static and its migration bounded at the current patch versio
   const pagesCss = read("styles/pages.css");
   const verifier = read("tools/scripts/verify-cloudflare-build.js");
 
-  assert.equal(packageJson.version, "2.0.5");
+  assert.equal(packageJson.version, "3.0.0");
   assert.match(pagesCss, /\.privacy-policy-panel\s*\{[^}]*animation:\s*none/s);
   assert.match(verifier, /const viteOwnedRootHtml = new Set\([^)]*"key-finder\.html"/);
   assert.match(verifier, /Privacy canonical metadata differs/);

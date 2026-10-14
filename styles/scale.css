@@ -592,7 +592,7 @@ html[data-theme="light"] .scale-control-panel,
 html[data-theme="light"] .scale-summary,
 html[data-theme="light"] .scale-display-toolbar,
 html[data-theme="light"] .fretboard-card {
-    border-color: rgba(88, 72, 58, 0.24);
+    border-color: rgba(var(--ink-rgb), 0.24);
 }
 
 html[data-theme="light"] .fret-cell::before {

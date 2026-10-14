@@ -329,15 +329,15 @@ test("keeps backend, established tools, CSS, and current version byte-identical"
     assert.equal(hash, backendHashes[file], file);
   });
   const frozen = {
-    "styles/components.css": "aa3e2d0875be6e9ba2701064819dbc2c8fcccde4bbba489f33dcdb3ded75ce08",
-    "styles/pages.css": "ea32d53a77c533a49c30a6a2c997058f3cfab0a2d8c8aea554210e9d3e4b170e",
-    "styles/themes.css": "517cfd99f45e39deb3ba57e6c2de67ccb12b14c4750af8c7a6b75a581e1af4a7"
+    "styles/components.css": "d26cc992a0dfdb02efde0484f6ae11611a761678783f1a835d04a1e256cd630c",
+    "styles/pages.css": "7ec12d3109e92fb77f36bdafa878bbb4fec02962882e1cd488d3c370f9dc493f",
+    "styles/themes.css": "fd5bad789dd058dc8ae99bb8341c577724b7240103f8560874150c3fd347d1ec"
   };
   Object.entries(frozen).forEach(([file, expected]) => {
     const hash = crypto.createHash("sha256").update(fs.readFileSync(path.join(root, file))).digest("hex");
     assert.equal(hash, expected, file);
   });
-  assert.equal(JSON.parse(read("package.json")).version, "2.0.5");
+  assert.equal(JSON.parse(read("package.json")).version, "3.0.0");
 });
 
 test("declares the complete 44-case responsive matrix and preserves mobile-safe controls", () => {

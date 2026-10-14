@@ -1,14 +1,17 @@
 import { computed, ref } from "vue";
 
 const THEME_KEY = "jasperMusicTheme";
+// "light" is the v3 paper theme and the default for new visitors.
 const LIGHT_THEME = "light";
+// "default" stays the stored value for the dark ink theme for existing visitors.
 const DEFAULT_THEME = "default";
+const DARK_THEME = DEFAULT_THEME;
 
 function currentTheme() {
-  if (typeof document === "undefined") return DEFAULT_THEME;
-  return document.documentElement.dataset.theme === LIGHT_THEME
-    ? LIGHT_THEME
-    : DEFAULT_THEME;
+  if (typeof document === "undefined") return LIGHT_THEME;
+  return document.documentElement.dataset.theme === DARK_THEME
+    ? DARK_THEME
+    : LIGHT_THEME;
 }
 
 export function useTheme() {
@@ -16,7 +19,7 @@ export function useTheme() {
   const isLight = computed(() => theme.value === LIGHT_THEME);
 
   function setTheme(nextTheme) {
-    const normalizedTheme = nextTheme === LIGHT_THEME ? LIGHT_THEME : DEFAULT_THEME;
+    const normalizedTheme = nextTheme === DARK_THEME ? DARK_THEME : LIGHT_THEME;
     const previousTheme = currentTheme();
     theme.value = normalizedTheme;
     document.documentElement.dataset.theme = normalizedTheme;
@@ -38,7 +41,7 @@ export function useTheme() {
   }
 
   function toggleTheme() {
-    setTheme(isLight.value ? DEFAULT_THEME : LIGHT_THEME);
+    setTheme(isLight.value ? DARK_THEME : LIGHT_THEME);
   }
 
   return {
@@ -49,4 +52,4 @@ export function useTheme() {
   };
 }
 
-export { DEFAULT_THEME, LIGHT_THEME, THEME_KEY };
+export { DARK_THEME, DEFAULT_THEME, LIGHT_THEME, THEME_KEY };

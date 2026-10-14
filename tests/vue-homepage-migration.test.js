@@ -44,7 +44,7 @@ test("preserves Homepage SEO, analytics, CSP-compatible assets, and route metada
 test("preserves Homepage content, links, media, and accessibility contracts in Vue", () => {
   const view = read("src/views/HomeView.vue");
 
-  assert.match(view, /<main class="home-page" id="main-content">/);
+  assert.match(view, /<main class="home-page v3-home" id="main-content">/);
   assert.match(view, /<section class="home-hero" id="home">/);
   assert.match(view, /<h1>\{\{ home\.hero\.title \}\}<\/h1>/);
   assert.match(view, /:aria-label="home\.accessibility\.siteOverview"/);
@@ -147,8 +147,8 @@ test("localizes Homepage form, image, and accessibility text without changing be
   assert.match(view, /subscribeStatusCode\.value = "saving"/);
   assert.match(view, /subscribeStatusCode\.value = result\.status === "already_subscribed" \? "already" : "success"/);
   assert.match(view, /subscribeStatusCode\.value = "error"/);
-  assert.match(view, /:alt="home\.about\.imageAlt"/);
-  assert.match(view, /<figcaption>\{\{ home\.about\.imageCaption \}\}<\/figcaption>/);
+  // v3: the About portrait was removed at the owner's request; the hero uses the site silhouette.
+  assert.doesNotMatch(view, /home\.about\.image(?:Alt|Caption)|assets\/images\/cover\.jpeg/);
   assert.match(view, /:aria-label="home\.accessibility\.watchYouTube"/);
   assert.match(view, /:aria-label="home\.accessibility\.emailJamTracksHub"/);
   assert.match(view, /:aria-label="home\.accessibility\.openFeedback"/);
@@ -198,7 +198,9 @@ test("keeps the compact About, contact, and Subscribe experience localized and c
   assert.match(view, /@submit\.prevent="handleSubscribe"/);
   assert.match(view, /data-subscribe-endpoint="\/api\/subscribe"/);
   assert.match(view, /data-subscribe-source="homepage-about"/);
-  assert.match(view, /<img :src="'assets\/images\/cover\.jpeg'" :alt="home\.about\.imageAlt" width="600" height="900" \/>/);
+  assert.doesNotMatch(view, /about-portrait|assets\/images\/cover\.jpeg/);
+  assert.match(view, /<div class="v3-sleeve-stage" aria-hidden="true">/);
+  assert.match(view, /<img class="v3-sleeve-art" :src="'assets\/images\/icon\.png'" alt=""/);
 });
 
 test("renders three separate About paragraphs in both English and Traditional Chinese", async () => {
@@ -369,7 +371,7 @@ test("keeps Tracks independently Vue-owned and other legacy pages outside the Ho
   const keyFinderHtml = read("key-finder.html");
   const workspaceHtml = read("song-workspace.html");
 
-  assert.equal(packageJson.version, "2.0.5");
+  assert.equal(packageJson.version, "3.0.0");
   assert.match(tracksHtml, /src\/entries\/tracks\.js/);
   assert.doesNotMatch(tracksHtml, /scripts\/tracks\.js/);
   assert.match(keyFinderHtml, /src\/entries\/key-finder\.js/);

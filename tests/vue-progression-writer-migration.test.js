@@ -353,9 +353,9 @@ test("preserves SEO, page-level Umami, CSP, URL privacy, and no custom progressi
 test("keeps every shared music/backend consumer byte-identical", () => {
   const expectedHashes = {
     "scripts/chord-shapes.js": "00189b548b9d6fe48daab6c3ea68fd2a2a2baf9e39d16d638df1b0e8d19c1c04",
-    "styles/chord-dictionary.css": "4fbcdc99c18949c5961ea933224b9aabbae1a06c655960885549e657faa63f53",
-    "styles/pages.css": "ea32d53a77c533a49c30a6a2c997058f3cfab0a2d8c8aea554210e9d3e4b170e",
-    "styles/themes.css": "517cfd99f45e39deb3ba57e6c2de67ccb12b14c4750af8c7a6b75a581e1af4a7",
+    "styles/chord-dictionary.css": "0fe2af95a2598cd252e850bbb7035e02a8ca89af671a81234fe7f614f0852653",
+    "styles/pages.css": "7ec12d3109e92fb77f36bdafa878bbb4fec02962882e1cd488d3c370f9dc493f",
+    "styles/themes.css": "fd5bad789dd058dc8ae99bb8341c577724b7240103f8560874150c3fd347d1ec",
     "scripts/song-workspace-core.js": "d792e65873c140deda2ac576370bcd940d14e1f35d9fb5da88bbd11431b28ecb",
     "scripts/song-workspace-storage.js": "b11c00dcb5cafb3ca414ccc9fec59bd6931dc39fe3658ecec33003f4d7d210ae",
     "scripts/song-workspace-import.js": "7c04c4890176ac235d93f29ed9ca2440466978b7973fbb4e07e5c3ee9d311b56",
@@ -378,7 +378,7 @@ test("updates deterministic Cloudflare ownership without changing version or bac
   assert.match(verifier, /Progression Writer canonical metadata differs/);
   assert.match(verifier, /Progression Writer still loads a legacy page runtime/);
   assert.match(verifier, /compiled Vue Progression Writer mount marker is missing/);
-  assert.equal(packageJson.version, "2.0.5");
+  assert.equal(packageJson.version, "3.0.0");
   assert.deepEqual(packageJson.dependencies, { vue: "3.5.42" });
   ["vue-router", "pinia", "vue-i18n", "@vueuse/core", "vitest", "@vue/test-utils"].forEach(name => {
     assert.equal(packageJson.dependencies?.[name], undefined);

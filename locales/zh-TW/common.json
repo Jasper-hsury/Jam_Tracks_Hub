@@ -101,6 +101,14 @@
         ]
       }
     },
+    "tracklist": {
+      "label": "曲目表",
+      "recordSide": "A 面",
+      "sides": {
+        "a": "A 面 — 練習與理解",
+        "b": "B 面 — 創作與演奏"
+      }
+    },
     "about": {
       "eyebrow": "關於 JAM TRACKS HUB",
       "imageAlt": "Jasper 在舞台上彈奏木吉他",
