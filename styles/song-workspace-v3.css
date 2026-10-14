@@ -1029,4 +1029,118 @@ html[data-theme] body[data-vue-page="song-workspace"] .workspace-global-add-type
     border-color: var(--ink);
 }
 
+/* Phones -------------------------------------------------------------------------------- */
+@media (max-width: 760px) {
+    html[data-theme] body[data-vue-page="song-workspace"] .song-workspace-page {
+        margin-top: 32px;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-section-heading {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-section-heading h2 {
+        font-size: 30px;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-create-area {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-main-disclosure {
+        margin-top: 16px;
+        padding: 16px;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-entry-card {
+        grid-template-columns: 40px minmax(0, 1fr) 44px;
+        gap: 2px 12px;
+        padding: 16px 0;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-entry-card::after {
+        width: 44px;
+        height: 44px;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-entry-index {
+        font-size: 24px;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-entry-card strong {
+        font-size: 22px;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-entry-card > span:last-child {
+        font-size: 14px;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-import-card {
+        padding: 20px;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-song-card {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas: "identity" "meta" "actions" "menu";
+        padding: 18px 0;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-song-card h3 {
+        font-size: 24px;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-song-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-song-actions .workspace-button {
+        width: 100%;
+        min-height: 46px;
+        border-radius: var(--radius-control);
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-song-download-menu {
+        justify-self: stretch;
+    }
+
+    /* The chord view and the chord shapes scroll sideways instead of wrapping. */
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-segmented {
+        display: flex;
+        flex-wrap: nowrap;
+        max-width: 100%;
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-segmented button {
+        flex: none;
+        white-space: nowrap;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-chart-panel {
+        padding: 20px;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-shapes-panel {
+        padding: 18px;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-editor:not(.is-read-mode) .workspace-shape-cards {
+        display: flex;
+        gap: 10px;
+        margin: 0 -18px;
+        padding: 0 18px 4px;
+        overflow-x: auto;
+        scroll-snap-type: x proximity;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-editor:not(.is-read-mode) .workspace-shape-card {
+        flex: 0 0 200px;
+        scroll-snap-align: start;
+    }
+}
+
 }

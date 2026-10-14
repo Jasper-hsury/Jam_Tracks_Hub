@@ -80,3 +80,12 @@ test("read mode hides the heading, performance mode is a dark stage and dialogs 
   assert.match(css, /\.workspace-dialog:not\(\.workspace-performance\) \{[^}]*border-top: 3px double var\(--ink\);/);
   assert.match(css, /#createSourceInput \{\s*font-family: ui-monospace/);
 });
+
+test("phones get one column, scrollable chord views and a swipeable shape strip", () => {
+  const phone = css.slice(css.indexOf("@media (max-width: 760px)"));
+  assert.ok(phone.length > 0);
+  assert.match(phone, /\.workspace-create-area \{\s*grid-template-columns: minmax\(0, 1fr\);/);
+  assert.match(phone, /\.workspace-song-card \{[^}]*grid-template-areas: "identity" "meta" "actions" "menu";/);
+  assert.match(phone, /\.workspace-segmented \{[^}]*flex-wrap: nowrap;[^}]*overflow-x: auto;/);
+  assert.match(phone, /\.workspace-editor:not\(\.is-read-mode\) \.workspace-shape-cards \{[^}]*overflow-x: auto;/);
+});
