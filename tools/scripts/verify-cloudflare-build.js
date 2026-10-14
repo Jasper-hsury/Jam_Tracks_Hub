@@ -580,6 +580,7 @@ if (/src\/entries\/song-workspace\.js/.test(migratedSongWorkspace)) {
   "styles/themes.css?v=20261014-v3-rounded",
   "styles/chord-dictionary.css?v=20261014-v3-liner-notes",
   "styles/song-workspace.css?v=20261014-v3-liner-notes",
+  "styles/song-workspace-v3.css?v=20261015-v3-song-workspace",
   "scripts/chord-shapes.js?v=20260827-picker-json-fix",
   "scripts/song-workspace-core.js?v=20260827-picker-json-fix",
   "scripts/song-workspace-storage.js?v=20260828-settings-ux",
