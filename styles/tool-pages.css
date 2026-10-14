@@ -1783,3 +1783,80 @@ html[data-theme] main.v3-tool-page .chord-shape-card .diagram-base-fret {
     right: calc(100% + 13px);
     font-size: 11px;
 }
+
+/* Fields that fit their text ------------------------------------------------- */
+/* The chord search sits under the heading at full width instead of being
+   squeezed beside it. */
+html[data-theme] main.v3-tool-page .dictionary-browser-heading {
+    display: grid;
+    gap: 18px;
+}
+
+html[data-theme] main.v3-tool-page .dictionary-search {
+    flex: none;
+    width: 100%;
+}
+
+/* Safari ignores min-height on native selects, so draw them ourselves. */
+html[data-theme] main.v3-tool-page :is(.scale-select-field select, .progression-writer-saved-picker select) {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    min-height: 46px;
+    padding: 0 40px 0 14px;
+    background-image:
+        linear-gradient(45deg, transparent 50%, var(--ink) 50%),
+        linear-gradient(135deg, var(--ink) 50%, transparent 50%);
+    background-position:
+        calc(100% - 20px) 50%,
+        calc(100% - 15px) 50%;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+/* Softer corners on controls --------------------------------------------------- */
+html[data-theme] main.v3-tool-page {
+    --tool-control-radius: 6px;
+}
+
+html[data-theme] main.v3-tool-page :is(
+    .dictionary-root-grid button,
+    .dictionary-quality-button,
+    .dictionary-position-filter button,
+    .dictionary-pagination button,
+    .v3-selected-band .dictionary-play-button,
+    .dictionary-search input,
+    .scale-root-grid button,
+    .scale-range-buttons button,
+    .scale-play-button,
+    .scale-download-button,
+    .scale-select-field select,
+    .select-key-button,
+    .key-button,
+    .primary-button,
+    .secondary-button,
+    .v3-download-button,
+    .note-answer-grid button,
+    .trainer-score,
+    .api-status,
+    .upload-file-label,
+    .analyze-file-button,
+    .key-finder-form input,
+    .progression-writer-chord-field input,
+    .progression-writer-saved-picker select,
+    .scale-interval-chip
+) {
+    border-radius: var(--tool-control-radius);
+}
+
+html[data-theme] main.v3-tool-page :is(.segmented-control, .v3-mode-buttons, .progression-extension-toggle) {
+    overflow: hidden;
+    border-radius: var(--tool-control-radius);
+}
+
+html[data-theme] main.v3-tool-page :is(.v3-tool-no, .dictionary-category-heading > span) {
+    border-radius: 4px;
+}

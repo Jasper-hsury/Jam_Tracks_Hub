@@ -164,3 +164,10 @@ test("the band is a softer cocoa brown in both themes and every page fetches the
   pages.forEach(page => assert.match(read(page), /themes\.css\?v=20261014-v3-cocoa-band"/, page));
   assert.doesNotMatch(read("vite.config.mjs") + read("tools/scripts/verify-cloudflare-build.js"), /themes\.css\?v=20261014-v3-liner-notes/);
 });
+
+test("tool page fields fit their text in Safari and controls get softer corners", () => {
+  assert.match(css, /main\.v3-tool-page \.dictionary-browser-heading \{\s*display: grid;/);
+  assert.match(css, /:is\(\.scale-select-field select, \.progression-writer-saved-picker select\) \{\s*-webkit-appearance: none;\s*appearance: none;[^}]*min-height: 46px;/);
+  assert.match(css, /--tool-control-radius: 6px;/);
+  assert.match(css, /:is\(\.segmented-control, \.v3-mode-buttons, \.progression-extension-toggle\) \{\s*overflow: hidden;\s*border-radius: var\(--tool-control-radius\);/);
+});
