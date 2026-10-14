@@ -35,3 +35,22 @@ test("v3 Tracks styles outrank the legacy light-theme rules and keep 40px key op
   assert.match(block, /html\[data-theme\] main\.tracks-library-page \.track-controls \{[^}]*border-bottom: 1px solid var\(--line\);[^}]*background: none;[^}]*box-shadow: none;/);
   assert.match(block, /\.track-key-checkbox-visual \{\s*height: 40px;/);
 });
+
+test("each track row is a record sleeve with a decorative disc and no nested links", () => {
+  const card = read("src/components/tracks/TrackCard.vue");
+  assert.match(card, /<span class="v3-track-no" aria-hidden="true">\{\{ track\.id \}\}<\/span>/);
+  assert.match(card, /<div class="track-cover-media v3-sleeve" aria-hidden="true">\s*<span class="v3-disc">/);
+  assert.match(card, /<span v-if="hasYouTubeLink" class="v3-open-hint" aria-hidden="true">YouTube ↗<\/span>/);
+  assert.match(card, /class="v3-download-button"[\s\S]*data-card-action="slides"[\s\S]*download[\s\S]*@click\.stop="activateDownload"/);
+  assert.doesNotMatch(card, /uiverse-download-button/);
+  assert.equal((card.match(/<a\b/g) || []).length, 1);
+});
+
+test("the record slides out only for hover-capable pointers without reduced motion", () => {
+  const css = read("styles/pages.css");
+  const block = css.slice(css.indexOf("v3 Tracks rows"));
+  assert.match(block, /@media \(hover: hover\) and \(prefers-reduced-motion: no-preference\) \{[\s\S]*?\.track-card:hover \.v3-disc,[\s\S]*?\.track-card:focus-visible \.v3-disc,[\s\S]*?\.track-card:focus-within \.v3-disc \{\s*left: 180px;\s*transform: rotate\(60deg\);/);
+  assert.match(block, /@media \(prefers-reduced-motion: reduce\) \{[\s\S]*?transition: none;/);
+  assert.match(block, /@media \(max-width: 760px\) \{[\s\S]*?\.track-card \{\s*grid-template-columns: 1fr;/);
+  assert.match(block, /\.v3-download-button \{[^}]*width: 44px;[^}]*height: 44px;/);
+});

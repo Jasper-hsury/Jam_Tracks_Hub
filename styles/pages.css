@@ -7482,3 +7482,314 @@ html[data-theme] main.tracks-library-page .track-result-count {
         flex-direction: column;
     }
 }
+
+/* v3 Tracks rows: each cover is a record sleeve; the record slides out on
+   hover or keyboard focus. Touch screens keep the record half out and
+   reduced motion keeps it still. */
+html[data-theme] main.tracks-library-page .all-tracks-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 8px;
+}
+
+html[data-theme] main.tracks-library-page .track-card {
+    display: grid;
+    grid-template-columns: 52px 300px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 24px;
+    min-height: 0;
+    margin: 0 -16px;
+    padding: 18px 16px;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    overflow: visible;
+    transform: none;
+    transition: background-color 0.25s ease;
+}
+
+html[data-theme] main.tracks-library-page .track-card::before {
+    content: none;
+    display: none;
+}
+
+html[data-theme] main.tracks-library-page .track-card:hover,
+html[data-theme] main.tracks-library-page .track-card:focus-visible,
+html[data-theme] main.tracks-library-page .track-card:focus-within {
+    border-color: var(--line);
+    background: var(--accent-soft);
+    box-shadow: none;
+    transform: none;
+}
+
+html[data-theme] main.tracks-library-page .track-card-clickable:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+}
+
+html[data-theme] main.tracks-library-page .track-card > :not(.track-cover-media) {
+    position: static;
+    z-index: auto;
+}
+
+html[data-theme] main.tracks-library-page .v3-track-no {
+    color: var(--text-muted);
+    font-family: var(--font-serif);
+    font-size: 20px;
+}
+
+html[data-theme] main.tracks-library-page .track-cover-media.v3-sleeve,
+html[data-theme] main.tracks-library-page .track-card:hover .track-cover-media.v3-sleeve {
+    position: relative;
+    inset: auto;
+    z-index: auto;
+    width: 300px;
+    height: 117px;
+    border: 0;
+    background: none;
+    opacity: 1;
+    filter: none;
+}
+
+html[data-theme] main.tracks-library-page .v3-disc {
+    position: absolute;
+    top: 4px;
+    left: 128px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 109px;
+    height: 109px;
+    border-radius: 50%;
+    background: #1f1a15;
+    transition:
+        left 0.5s cubic-bezier(0.2, 0.7, 0.2, 1),
+        transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+html[data-theme="default"] main.tracks-library-page .v3-disc {
+    box-shadow: 0 0 0 1px var(--line);
+}
+
+html[data-theme] main.tracks-library-page .v3-disc::before,
+html[data-theme] main.tracks-library-page .v3-disc::after {
+    position: absolute;
+    border: 1px solid #3b342d;
+    border-radius: 50%;
+    content: "";
+}
+
+html[data-theme] main.tracks-library-page .v3-disc::before {
+    inset: 10%;
+}
+
+html[data-theme] main.tracks-library-page .v3-disc::after {
+    inset: 22%;
+}
+
+html[data-theme] main.tracks-library-page .v3-disc-label {
+    position: relative;
+    width: 34%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background: var(--sleeve);
+}
+
+html[data-theme] main.tracks-library-page .v3-disc-label::after {
+    position: absolute;
+    inset: 44%;
+    border-radius: 50%;
+    background: #f2ede3;
+    content: "";
+}
+
+html[data-theme] main.tracks-library-page .v3-sleeve-cover {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 208px;
+    height: 117px;
+    object-fit: cover;
+    box-shadow: 6px 6px 0 rgba(var(--ink-rgb), 0.12);
+}
+
+html[data-theme="default"] main.tracks-library-page .v3-sleeve-cover {
+    box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.45);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    html[data-theme] main.tracks-library-page .track-card:hover .v3-disc,
+    html[data-theme] main.tracks-library-page .track-card:focus-visible .v3-disc,
+    html[data-theme] main.tracks-library-page .track-card:focus-within .v3-disc {
+        left: 180px;
+        transform: rotate(60deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html[data-theme] main.tracks-library-page .v3-disc,
+    html[data-theme] main.tracks-library-page .track-card {
+        transition: none;
+    }
+}
+
+html[data-theme] main.tracks-library-page .track-card-main {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+}
+
+html[data-theme] main.tracks-library-page .track-card .track-title-display {
+    margin: 0;
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.2;
+    transition: color 0.2s ease;
+}
+
+html[data-theme]:lang(zh) main.tracks-library-page .track-card .track-title-display {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.45;
+}
+
+html[data-theme] main.tracks-library-page .track-card:hover .track-title-display,
+html[data-theme] main.tracks-library-page .track-card:focus-visible .track-title-display {
+    color: var(--accent);
+}
+
+html[data-theme] main.tracks-library-page .track-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+}
+
+html[data-theme] main.tracks-library-page .track-meta span {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    color: var(--text-muted);
+    background: none;
+    box-shadow: none;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+html[data-theme] main.tracks-library-page .track-meta span:first-child {
+    padding: 4px 9px;
+    color: var(--accent);
+    background: var(--accent-soft);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+html[data-theme] main.tracks-library-page .track-card:hover .track-meta span:first-child,
+html[data-theme] main.tracks-library-page .track-card:focus-within .track-meta span:first-child {
+    background: var(--paper);
+}
+
+html[data-theme] main.tracks-library-page .track-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 14px;
+}
+
+html[data-theme] main.tracks-library-page .v3-open-hint {
+    color: var(--accent);
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+html[data-theme] main.tracks-library-page .v3-download-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    box-sizing: border-box;
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    background: transparent;
+    transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+html[data-theme] main.tracks-library-page .v3-download-button:hover,
+html[data-theme] main.tracks-library-page .v3-download-button:focus-visible {
+    color: var(--paper);
+    background: var(--ink);
+}
+
+html[data-theme] main.tracks-library-page .v3-download-button:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+}
+
+html[data-theme] main.tracks-library-page .v3-download-button.is-activating {
+    border-color: var(--accent);
+    color: var(--on-accent);
+    background: var(--accent);
+}
+
+html[data-theme] main.tracks-library-page .v3-download-icon {
+    width: 18px;
+    height: 18px;
+}
+
+@media (max-width: 960px) {
+    html[data-theme] main.tracks-library-page .track-card {
+        grid-template-columns: 300px minmax(0, 1fr) auto;
+    }
+
+    html[data-theme] main.tracks-library-page .v3-track-no {
+        display: none;
+    }
+}
+
+@media (max-width: 760px) {
+    html[data-theme] main.tracks-library-page .track-card {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        margin: 0;
+        padding: 22px 0;
+    }
+
+    html[data-theme] main.tracks-library-page .track-cover-media.v3-sleeve,
+    html[data-theme] main.tracks-library-page .track-card:hover .track-cover-media.v3-sleeve {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 2.4 / 1;
+    }
+
+    html[data-theme] main.tracks-library-page .v3-sleeve-cover {
+        width: 74%;
+        height: auto;
+        aspect-ratio: 16 / 9;
+    }
+
+    html[data-theme] main.tracks-library-page .v3-disc,
+    html[data-theme] main.tracks-library-page .track-card:hover .v3-disc,
+    html[data-theme] main.tracks-library-page .track-card:focus-within .v3-disc {
+        top: 4%;
+        left: 55%;
+        width: 38%;
+        height: auto;
+        aspect-ratio: 1 / 1;
+        transform: none;
+    }
+
+    html[data-theme] main.tracks-library-page .track-actions {
+        justify-content: space-between;
+    }
+}

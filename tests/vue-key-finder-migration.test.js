@@ -330,7 +330,7 @@ test("keeps backend, established tools, CSS, and current version byte-identical"
   });
   const frozen = {
     "styles/components.css": "d26cc992a0dfdb02efde0484f6ae11611a761678783f1a835d04a1e256cd630c",
-    "styles/pages.css": "d3b8795f1443c5fee5dc517a3ad82b0aeee95c4d2ca209d7ce8171b9ac93d6da",
+    "styles/pages.css": "b5f2c19ad6f060ff37e91226f173a7cc56352994566a162eeb310ea20c90b574",
     "styles/themes.css": "fd5bad789dd058dc8ae99bb8341c577724b7240103f8560874150c3fd347d1ec"
   };
   Object.entries(frozen).forEach(([file, expected]) => {

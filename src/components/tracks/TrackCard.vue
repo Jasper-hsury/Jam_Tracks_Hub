@@ -97,10 +97,14 @@ onBeforeUnmount(() => {
     @click="handleCardClick"
     @keydown="handleCardKeydown"
   >
-    <div class="track-cover-media" aria-hidden="true">
+    <span class="v3-track-no" aria-hidden="true">{{ track.id }}</span>
+    <div class="track-cover-media v3-sleeve" aria-hidden="true">
+      <span class="v3-disc">
+        <span class="v3-disc-label"></span>
+      </span>
       <img
         v-if="coverUrl"
-        class="track-cover-image"
+        class="track-cover-image v3-sleeve-cover"
         :src="coverUrl"
         alt=""
         loading="lazy"
@@ -119,26 +123,22 @@ onBeforeUnmount(() => {
       </p>
     </div>
     <div class="track-actions">
-      <div class="track-secondary-actions">
-        <a
-          :href="track.downloadUrl"
-          class="track-link track-secondary-action secondary-track-link uiverse-download-button track-slides-download-link"
-          :class="{ 'is-activating': activating }"
-          data-card-action="slides"
-          download
-          :aria-label="downloadLabel"
-          :aria-busy="activating ? 'true' : null"
-          @click.stop="activateDownload"
-        >
-          <span class="uiverse-download-button-circle track-slides-download-circle" aria-hidden="true">
-            <svg class="uiverse-download-button-icon track-slides-download-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M12 5v11m0 0-4-4m4 4 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path>
-              <path d="M6 19h12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path>
-            </svg>
-            <span class="uiverse-download-button-square track-slides-download-square"></span>
-          </span>
-        </a>
-      </div>
+      <span v-if="hasYouTubeLink" class="v3-open-hint" aria-hidden="true">YouTube ↗</span>
+      <a
+        :href="track.downloadUrl"
+        class="v3-download-button"
+        :class="{ 'is-activating': activating }"
+        data-card-action="slides"
+        download
+        :aria-label="downloadLabel"
+        :aria-busy="activating ? 'true' : null"
+        @click.stop="activateDownload"
+      >
+        <svg class="v3-download-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 5v11m0 0-4-4m4 4 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path>
+          <path d="M6 19h12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path>
+        </svg>
+      </a>
     </div>
   </article>
 </template>
