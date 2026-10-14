@@ -1484,3 +1484,260 @@ html[data-theme] main.v3-tool-page .string-reference-grid strong {
     font-size: 30px;
     font-weight: 400;
 }
+
+/* Song Key Finder ------------------------------------------------------------ */
+html[data-theme] main.v3-tool-page .key-finder-panel,
+html[data-theme] main.v3-tool-page .key-finder-panel:hover {
+    margin-top: 0;
+    padding: 32px;
+    color: var(--text-body);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+    transform: none;
+}
+
+html[data-theme] main.v3-tool-page .key-finder-panel .tool-section-heading {
+    text-align: left;
+}
+
+html[data-theme] main.v3-tool-page .key-finder-panel .tool-section-heading h2 {
+    margin: 0 0 10px;
+    color: var(--ink);
+    font-size: 34px;
+    text-align: left;
+}
+
+html[data-theme] main.v3-tool-page .key-finder-panel .tool-section-heading p {
+    max-width: 760px;
+    margin: 0;
+    color: var(--text-body);
+    text-align: left;
+}
+
+html[data-theme] main.v3-tool-page .key-finder-status-row {
+    gap: 10px;
+}
+
+html[data-theme] main.v3-tool-page .api-status {
+    min-height: 34px;
+    padding: 0 12px;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+html[data-theme] main.v3-tool-page .status-dot {
+    background: var(--accent);
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .api-status.is-online .status-dot {
+    background: var(--success);
+}
+
+html[data-theme] main.v3-tool-page .api-status.is-offline .status-dot {
+    background: var(--danger);
+}
+
+html[data-theme] main.v3-tool-page .helper-start-button {
+    color: var(--ink);
+    border-bottom: 1px solid var(--accent);
+    border-radius: 0;
+}
+
+html[data-theme] main.v3-tool-page .service-wake-panel {
+    padding: 16px 18px;
+    color: var(--ink);
+    background: var(--surface-sunken);
+    border: 1px solid var(--line);
+    border-radius: 0;
+}
+
+html[data-theme] main.v3-tool-page .service-wake-panel p {
+    color: var(--text-body);
+}
+
+html[data-theme] main.v3-tool-page .service-wake-link {
+    color: var(--ink);
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent);
+}
+
+html[data-theme] main.v3-tool-page .key-finder-divider {
+    margin-top: 24px;
+    color: var(--text-muted);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+}
+
+html[data-theme] main.v3-tool-page .key-finder-divider-primary {
+    color: var(--accent);
+}
+
+html[data-theme] main.v3-tool-page .key-finder-divider::before,
+html[data-theme] main.v3-tool-page .key-finder-divider::after {
+    background: var(--line);
+}
+
+html[data-theme] main.v3-tool-page .upload-file-label {
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px dashed var(--ink);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .upload-file-label:hover,
+html[data-theme] main.v3-tool-page .key-finder-upload input[type="file"]:focus + .upload-file-label {
+    border-style: solid;
+    border-color: var(--ink);
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .key-finder-upload input[type="file"]:focus-visible + .upload-file-label {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+}
+
+html[data-theme] main.v3-tool-page .upload-file-label span {
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+}
+
+html[data-theme] main.v3-tool-page .upload-file-label strong {
+    color: var(--ink);
+    font-weight: 600;
+}
+
+html[data-theme] main.v3-tool-page .upload-file-label small,
+html[data-theme] main.v3-tool-page .upload-privacy-note {
+    color: var(--text-muted);
+}
+
+html[data-theme] main.v3-tool-page .analyze-file-button {
+    min-height: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .key-finder-form input {
+    min-height: 52px;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .key-finder-form input:is(:hover, :focus) {
+    border-color: var(--ink);
+}
+
+html[data-theme] main.v3-tool-page .helper-install-details {
+    margin-top: 24px;
+    padding: 0;
+    background: none;
+    border: 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .helper-install-details[open] {
+    padding-bottom: 20px;
+}
+
+html[data-theme] main.v3-tool-page .helper-install-details summary {
+    min-height: 52px;
+    color: var(--ink);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+}
+
+html[data-theme] main.v3-tool-page .helper-install-details summary::after {
+    color: var(--ink);
+    font-weight: 400;
+}
+
+html[data-theme] main.v3-tool-page .key-finder-result {
+    margin-top: 24px;
+    padding: 20px 0 0;
+    color: var(--text-body);
+    background: none;
+    border: 0;
+    border-top: 1px solid var(--ink);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .key-finder-result.key-finder-empty {
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-style: italic;
+}
+
+html[data-theme]:lang(zh) main.v3-tool-page .key-finder-result.key-finder-empty {
+    font-style: normal;
+}
+
+html[data-theme] main.v3-tool-page .key-finder-final {
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: clamp(44px, 5vw, 64px);
+    font-weight: 400;
+    line-height: 1;
+}
+
+html[data-theme] main.v3-tool-page :is(.certainty-badge, .result-explanation-card, .result-evidence-grid div, .key-finder-candidates li, .analysis-progress-bar, .confidence-bar) {
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page :is(.result-explanation-card, .result-evidence-grid div, .key-finder-candidates li) {
+    color: var(--text-body);
+    background: var(--paper);
+    border: 1px solid var(--line);
+}
+
+html[data-theme] main.v3-tool-page .key-finder-candidates li span {
+    color: var(--ink);
+}
+
+html[data-theme] main.v3-tool-page :is(.confidence-bar, .analysis-progress-bar) {
+    background: var(--surface-sunken);
+}
+
+html[data-theme] main.v3-tool-page :is(.confidence-bar, .analysis-progress-bar) span {
+    background: var(--accent);
+    border-radius: 0;
+}
+
+html[data-theme] main.v3-tool-page .analysis-history {
+    margin-top: 24px;
+    background: none;
+    border: 0;
+    border-top: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page :is(.confidence-note, .result-explanation) {
+    background: var(--surface-sunken);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme] main.v3-tool-page .certainty-badge {
+    background: transparent;
+}

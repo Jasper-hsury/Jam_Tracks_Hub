@@ -134,3 +134,12 @@ test("Fretboard Trainer shows the question as a dark band and marks answers with
   assert.match(css, /\.note-answer-grid button\.is-wrong \{[^}]*border: 2px solid var\(--danger\);[^}]*text-decoration: line-through;/);
   assert.match(css, /\.note-answer-grid button \{\s*min-height: 52px;/);
 });
+
+test("Key Finder keeps its flow and restyles upload, status and result surfaces", () => {
+  const view = read("src/views/KeyFinderView.vue");
+  ["key-finder-status-row", "service-wake-panel", "key-finder-divider-primary", "upload-file-label", "key-finder-link-form", "helper-install-details", "key-finder-result"]
+    .forEach(name => assert.match(view, new RegExp(name), name));
+  assert.match(css, /main\.v3-tool-page \.upload-file-label \{[^}]*border: 1px dashed var\(--ink\);/);
+  assert.match(css, /main\.v3-tool-page \.key-finder-result\.key-finder-empty \{[^}]*font-style: italic;/);
+  assert.match(css, /main\.v3-tool-page \.key-finder-panel,\s*html\[data-theme\] main\.v3-tool-page \.key-finder-panel:hover \{[^}]*border-radius: 0;/);
+});
