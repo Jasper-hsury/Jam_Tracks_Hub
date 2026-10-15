@@ -760,6 +760,13 @@
       "25": "特定使用方式是否受到允許，取決於內容與適用法律；僅在本機處理並不會使某項使用方式當然合法。"
     }
   },
+  "policyPage": {
+    "onThisPage": "本頁內容",
+    "sectionCount": "{{count}} 個段落",
+    "backToTop": "回到頂端",
+    "legalEyebrow": "網站政策",
+    "privacyEyebrow": "隱私權政策"
+  },
   "legal": {
     "title": "法律與使用規範",
     "effectiveDate": "生效日期：2026 年 8 月 27 日",

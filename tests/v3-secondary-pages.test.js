@@ -73,3 +73,35 @@ test("Feedback splits the intro and the form and keeps its status live region", 
   assert.match(css, /main\.feedback-page \.feedback-status\[data-tone="success"\]::before \{\s*content: "✓";/);
   assert.doesNotMatch(css, /\.feedback-status:empty \{\s*display: none;/);
 });
+
+test("Legal and Privacy number every section and list them in an On this page nav", () => {
+  const english = JSON.parse(read("locales/en/common.json"));
+  const traditionalChinese = JSON.parse(read("locales/zh-TW/common.json"));
+  assert.deepEqual(Object.keys(english.policyPage), Object.keys(traditionalChinese.policyPage));
+  assert.match(english.policyPage.sectionCount, /\{\{count\}\}/);
+  assert.match(traditionalChinese.policyPage.sectionCount, /\{\{count\}\}/);
+
+  const contents = read("src/components/site/PolicyContents.vue");
+  assert.match(contents, /:aria-expanded="open \? 'true' : 'false'"/);
+  assert.match(contents, /:aria-current="currentId === section\.id \? 'location' : null"/);
+  assert.match(contents, /window\.removeEventListener\("scroll", scheduleUpdate\)/);
+
+  [
+    ["src/views/LegalView.vue", ["terms", "song-workspace", "copyright", "exports", "privacy", "limitations"]],
+    ["src/views/PrivacyView.vue", ["extension", "data-processed", "storage-retention", "data-use", "sharing-security", "your-choices", "song-workspace-local-storage", "user-content", "contact"]]
+  ].forEach(([file, ids]) => {
+    const view = read(file);
+    assert.match(view, /<PolicyContents /, file);
+    assert.match(view, /class="policy-back-to-top" href="#main-content"/, file);
+    ids.forEach((id, index) => {
+      assert.match(view, new RegExp(`id: "${id}"`), `${file} lists ${id}`);
+      assert.match(view, new RegExp(`<div id="${id}" class="result-section policy-section">\\s*<span class="policy-section-number" aria-hidden="true">${String(index + 1).padStart(2, "0")}</span>`), `${file} numbers ${id}`);
+    });
+  });
+
+  assert.match(css, /\.policy-contents \{\s*position: sticky;/);
+  assert.match(css, /\.policy-section \{[^}]*scroll-margin-top: 96px;/);
+  const phone = css.slice(css.indexOf("@media (max-width: 760px)"));
+  assert.match(phone, /\.policy-contents ol \{\s*display: none;/);
+  assert.match(phone, /\.policy-contents\.is-open ol \{\s*display: block;/);
+});

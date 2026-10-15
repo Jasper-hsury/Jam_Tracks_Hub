@@ -760,6 +760,13 @@
       "25": "Whether a particular use is permitted depends on the content and applicable law; local processing alone does not make a use lawful."
     }
   },
+  "policyPage": {
+    "onThisPage": "On this page",
+    "sectionCount": "{{count}} sections",
+    "backToTop": "Back to top",
+    "legalEyebrow": "Policy",
+    "privacyEyebrow": "Privacy policy"
+  },
   "legal": {
     "title": "Legal & Usage Policy",
     "effectiveDate": "Effective date: August 27, 2026",
