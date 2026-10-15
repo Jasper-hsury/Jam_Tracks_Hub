@@ -46,7 +46,9 @@ test("the five secondary pages load the v3 stylesheet last, and no other page lo
 });
 
 test("every v3 secondary page rule is screen-only and scoped to the page's main element", () => {
-  const body = css.replace(/\/\*[\s\S]*?\*\//g, "").trim();
+  const body = css.replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/@keyframes [\w-]+ \{(?:[^{}]*\{[^{}]*\})+\s*\}/g, "")
+    .trim();
   assert.match(body, /^@media screen \{/);
   const selectors = body
     .replace(/^@media screen \{/, "")
@@ -104,4 +106,23 @@ test("Legal and Privacy number every section and list them in an On this page na
   const phone = css.slice(css.indexOf("@media (max-width: 760px)"));
   assert.match(phone, /\.policy-contents ol \{\s*display: none;/);
   assert.match(phone, /\.policy-contents\.is-open ol \{\s*display: block;/);
+});
+
+test("404 shows a sleeve and record, and Service Waking spins a record that stops for reduced motion", () => {
+  const english = JSON.parse(read("locales/en/common.json"));
+  const traditionalChinese = JSON.parse(read("locales/zh-TW/common.json"));
+  assert.deepEqual(Object.keys(english.statusPages), Object.keys(traditionalChinese.statusPages));
+
+  const notFound = read("src/views/NotFoundView.vue");
+  assert.match(notFound, /<div class="status-page-art" aria-hidden="true">/);
+  assert.match(notFound, /statusPages\.notFoundSleeveCaption/);
+
+  const waking = read("src/views/ServiceWakingView.vue");
+  assert.match(waking, /class="status-page-record status-page-record-spinning" viewBox="0 0 300 300" aria-hidden="true"/);
+  assert.match(waking, /<div class="status-page-status" :data-state="statusKey">\s*<span class="status-page-dot" aria-hidden="true"><\/span>\s*<p id="wakeMessage" role="status" aria-live="polite">/);
+  assert.doesNotMatch(waking, /jh-loader/);
+
+  assert.match(css, /\.status-page-record-spinning \{[^}]*animation: secondary-record-spin 3\.2s linear infinite;/);
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\) \{\s*html\[data-theme\] main\.status-page :is\(\.status-page-record-spinning, \.status-page-dot\) \{\s*animation: none;/);
+  assert.match(css, /\.status-page-status\[data-state="unavailable"\] \.status-page-dot \{\s*background: var\(--danger\);/);
 });

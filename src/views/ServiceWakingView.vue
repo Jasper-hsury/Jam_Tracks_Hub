@@ -100,27 +100,39 @@ onBeforeUnmount(function() {
 
 <template>
   <main class="status-page" id="main-content">
-    <span class="jh-loader status-page-spinner" aria-hidden="true">
-      <span class="jh-loader-dot"></span>
-      <span class="jh-loader-dot"></span>
-      <span class="jh-loader-dot"></span>
-    </span>
-    <p class="status-page-code">{{ copy.service.keyFinder }}</p>
-    <h1>{{ copy.service.wakingAnalyzer }}</h1>
-    <p id="wakeMessage" role="status" aria-live="polite">
-      {{ statusMessage }}
-    </p>
-    <div class="status-page-actions">
-      <button
-        class="primary-button"
-        id="retryWakeButton"
-        type="button"
-        :disabled="checking"
-        @click="checkService"
-      >
-        {{ copy.service.checkAgain }}
-      </button>
-      <a class="secondary-button" href="key-finder.html">{{ copy.service.backToKeyFinder }}</a>
+    <svg class="status-page-record status-page-record-spinning" viewBox="0 0 300 300" aria-hidden="true" focusable="false">
+      <circle class="status-page-record-vinyl" cx="150" cy="150" r="148"></circle>
+      <circle class="status-page-record-groove" cx="150" cy="150" r="132"></circle>
+      <circle class="status-page-record-groove" cx="150" cy="150" r="118"></circle>
+      <circle class="status-page-record-groove" cx="150" cy="150" r="104"></circle>
+      <circle class="status-page-record-groove" cx="150" cy="150" r="90"></circle>
+      <circle class="status-page-record-groove" cx="150" cy="150" r="76"></circle>
+      <path class="status-page-record-shine" d="M150 20a130 130 0 0 1 112 64"></path>
+      <circle class="status-page-record-label" cx="150" cy="150" r="52"></circle>
+      <rect class="status-page-record-mark" x="146" y="104" width="8" height="18" rx="2"></rect>
+      <circle class="status-page-record-hole" cx="150" cy="150" r="5"></circle>
+    </svg>
+    <div class="status-page-copy">
+      <p class="status-page-code">{{ copy.service.keyFinder }}</p>
+      <h1>{{ copy.service.wakingAnalyzer }}</h1>
+      <div class="status-page-status" :data-state="statusKey">
+        <span class="status-page-dot" aria-hidden="true"></span>
+        <p id="wakeMessage" role="status" aria-live="polite">
+          {{ statusMessage }}
+        </p>
+      </div>
+      <div class="status-page-actions">
+        <button
+          class="primary-button"
+          id="retryWakeButton"
+          type="button"
+          :disabled="checking"
+          @click="checkService"
+        >
+          {{ copy.service.checkAgain }}
+        </button>
+        <a class="secondary-button" href="key-finder.html">{{ copy.service.backToKeyFinder }}</a>
+      </div>
     </div>
   </main>
 </template>

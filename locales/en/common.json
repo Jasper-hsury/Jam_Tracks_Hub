@@ -729,6 +729,9 @@
     "returnHome": "Return Home",
     "openKeyFinder": "Open Key Finder"
   },
+  "statusPages": {
+    "notFoundSleeveCaption": "Track not found"
+  },
   "privacy": {
     "title": "Jam Tracks Hub Privacy & User Content",
     "effectiveDate": "Effective date: August 27, 2026",

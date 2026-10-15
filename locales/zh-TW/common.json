@@ -729,6 +729,9 @@
     "returnHome": "返回首頁",
     "openKeyFinder": "開啟調性分析"
   },
+  "statusPages": {
+    "notFoundSleeveCaption": "找不到這首曲目"
+  },
   "privacy": {
     "title": "Jam Tracks Hub 隱私與使用者內容",
     "effectiveDate": "生效日期：2026 年 8 月 27 日",
