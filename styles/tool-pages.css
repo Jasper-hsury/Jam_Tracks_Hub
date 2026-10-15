@@ -1925,3 +1925,52 @@ html[data-theme] main.v3-tool-page.chord-progressions-page .progression-shape-ca
         transition: none;
     }
 }
+
+/* Chord Progressions mini shapes share the chord-shape palette used by Chord
+   Dictionary, Progression Writer and Song Workspace. */
+html[data-theme] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone) {
+    --tone-bg: #9d6a3d;
+    --tone-fg: #fffaf2;
+}
+
+html[data-theme] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone)[data-tone-family="root"] {
+    --tone-bg: #2d7b76;
+    --tone-fg: #fffdf8;
+}
+
+html[data-theme] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone)[data-tone-family="third"] {
+    --tone-bg: #9d6a3d;
+}
+
+html[data-theme] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone)[data-tone-family="fifth"] {
+    --tone-bg: #b88b56;
+}
+
+html[data-theme] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone)[data-tone-family="seventh"] {
+    --tone-bg: #b06b7a;
+}
+
+html[data-theme] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone)[data-tone-family="extension"] {
+    --tone-bg: #7a8c74;
+}
+
+html[data-theme="default"] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone)[data-tone-family="root"] {
+    --tone-bg: #f2ede3;
+    --tone-fg: #2b211a;
+}
+
+html[data-theme="default"] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone)[data-tone-family="third"] {
+    --tone-bg: #9f6b45;
+}
+
+html[data-theme="default"] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone)[data-tone-family="fifth"] {
+    --tone-bg: #7f8970;
+}
+
+html[data-theme="default"] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone)[data-tone-family="seventh"] {
+    --tone-bg: #9a6472;
+}
+
+html[data-theme="default"] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone)[data-tone-family="extension"] {
+    --tone-bg: #6f7964;
+}

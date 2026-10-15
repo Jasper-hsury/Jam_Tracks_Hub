@@ -6,7 +6,7 @@ const test = require("node:test");
 const root = path.resolve(__dirname, "..");
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
 const css = read("styles/tool-pages.css");
-const TOOL_STYLESHEET = "styles/tool-pages.css?v=20261014-v3-tools";
+const TOOL_STYLESHEET = "styles/tool-pages.css?v=20261015-v3-chord-palette";
 
 const toolPages = [
   { html: "chord-dictionary.html", view: "ChordDictionaryView", aside: "standardTuning" },
@@ -203,4 +203,17 @@ test("Chord Progressions cards lift like a record from a sleeve, and stay still 
   assert.match(block, /@media \(hover: hover\) and \(prefers-reduced-motion: no-preference\) \{[^}]*\.progression-shape-card:hover \{\s*transform: translate\(-2px, -3px\);/);
   assert.match(block, /@media \(prefers-reduced-motion: reduce\) \{[^}]*\.progression-shape-card \{\s*transition: none;/);
   assert.match(block, /\.key-button:hover:not\(\[aria-pressed="true"\]\) \{\s*color: var\(--ink\);/);
+});
+
+test("Chord Progressions mini shapes use the shared chord-shape palette", () => {
+  const block = css.slice(css.indexOf("Chord Progressions mini shapes share the chord-shape palette"));
+  assert.ok(block.length > 0);
+  [["root", "#2d7b76"], ["third", "#9d6a3d"], ["fifth", "#b88b56"], ["seventh", "#b06b7a"]].forEach(([family, color]) => {
+    assert.match(block, new RegExp(`html\\[data-theme\\] main\\.v3-tool-page\\.chord-progressions-page :is\\(\\.progression-fret-marker, \\.progression-open-tone\\)\\[data-tone-family="${family}"\\] \\{\\s*--tone-bg: ${color};`), family);
+  });
+  [["root", "#f2ede3"], ["third", "#9f6b45"], ["fifth", "#7f8970"], ["seventh", "#9a6472"]].forEach(([family, color]) => {
+    assert.match(block, new RegExp(`html\\[data-theme="default"\\] main\\.v3-tool-page\\.chord-progressions-page :is\\(\\.progression-fret-marker, \\.progression-open-tone\\)\\[data-tone-family="${family}"\\] \\{\\s*--tone-bg: ${color};`), family);
+  });
+  const dictionary = read("styles/themes.css") + read("styles/chord-dictionary.css");
+  ["#2d7b76", "#9d6a3d", "#b88b56", "#b06b7a"].forEach(color => assert.ok(dictionary.includes(color), color));
 });
