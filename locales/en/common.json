@@ -729,6 +729,9 @@
     "returnHome": "Return Home",
     "openKeyFinder": "Open Key Finder"
   },
+  "statusPages": {
+    "notFoundSleeveCaption": "Track not found"
+  },
   "privacy": {
     "title": "Jam Tracks Hub Privacy & User Content",
     "effectiveDate": "Effective date: August 27, 2026",
@@ -759,6 +762,13 @@
       "24": "Users are responsible for ensuring they have the rights or legal permission necessary for content they import, use, export, or share.",
       "25": "Whether a particular use is permitted depends on the content and applicable law; local processing alone does not make a use lawful."
     }
+  },
+  "policyPage": {
+    "onThisPage": "On this page",
+    "sectionCount": "{{count}} sections",
+    "backToTop": "Back to top",
+    "legalEyebrow": "Policy",
+    "privacyEyebrow": "Privacy policy"
   },
   "legal": {
     "title": "Legal & Usage Policy",

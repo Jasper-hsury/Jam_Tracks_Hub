@@ -142,7 +142,7 @@ test("keeps Feedback bounded, mutation-free in tests, and preserves legacy outpu
   const verifier = read("tools/scripts/verify-cloudflare-build.js");
   const testSource = read("tests/vue-feedback-migration.test.js");
 
-  assert.equal(packageJson.version, "3.3.0");
+  assert.equal(packageJson.version, "3.4.0");
   assert.equal(packageJson.dependencies.vue, "3.5.42");
   assert.match(verifier, /const viteOwnedRootHtml = new Set\([^)]*"key-finder\.html"/);
   assert.match(verifier, /Feedback canonical metadata differs/);

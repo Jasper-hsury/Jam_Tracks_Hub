@@ -140,6 +140,7 @@ Array.from(migrated404.matchAll(/(?:href|src)="([^"]+)"/g), match => match[1])
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261014-v3-tracks",
   "styles/themes.css?v=20261014-v3-rounded",
+  "styles/secondary-pages.css?v=20261015-v3-secondary",
   "scripts/site-animations.js?v=20261014-tracks-entrance-once"
 ].forEach(function(asset) {
   if (!migrated404.includes(asset)) fail(`404 legacy asset path differs: ${asset}`);
@@ -162,7 +163,8 @@ if (/src\/entries\/legal\.js/.test(migratedLegal)) fail("Legal source entry leak
   "styles/base.css?v=20261014-v3-liner-notes",
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261014-v3-tracks",
-  "styles/themes.css?v=20261014-v3-rounded"
+  "styles/themes.css?v=20261014-v3-rounded",
+  "styles/secondary-pages.css?v=20261015-v3-secondary"
 ].forEach(function(asset) {
   if (!migratedLegal.includes(asset)) fail(`Legal legacy asset path differs: ${asset}`);
 });
@@ -185,6 +187,7 @@ if (/src\/entries\/privacy\.js/.test(migratedPrivacy)) fail("Privacy source entr
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261014-v3-tracks",
   "styles/themes.css?v=20261014-v3-rounded",
+  "styles/secondary-pages.css?v=20261015-v3-secondary",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
   "scripts/site-animations.js?v=20261014-tracks-entrance-once"
@@ -219,6 +222,7 @@ if (/src\/entries\/service-waking\.js/.test(migratedServiceWaking)) {
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261014-v3-tracks",
   "styles/themes.css?v=20261014-v3-rounded",
+  "styles/secondary-pages.css?v=20261015-v3-secondary",
   "scripts/site-config.js?v=20260729-youtube-key-api",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
@@ -253,6 +257,7 @@ if (/src\/entries\/feedback\.js/.test(migratedFeedback)) {
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261014-v3-tracks",
   "styles/themes.css?v=20261014-v3-rounded",
+  "styles/secondary-pages.css?v=20261015-v3-secondary",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
   "scripts/site-animations.js?v=20261014-tracks-entrance-once"
