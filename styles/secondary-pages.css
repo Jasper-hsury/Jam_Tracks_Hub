@@ -726,6 +726,20 @@ html[data-theme] main.status-page:has(.status-page-status[data-state="unavailabl
     }
 }
 
+/* Tablets: the 404 sleeve moves above the message */
+@media (max-width: 960px) {
+    html[data-theme] main.status-page:has(> .status-page-art) {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 32px;
+    }
+
+    html[data-theme] main.status-page .status-page-art {
+        order: -1;
+        width: 460px;
+        max-width: 100%;
+    }
+}
+
 /* Phones ----------------------------------------------------------------------- */
 @media (max-width: 760px) {
     html[data-theme] main:is(.feedback-page, .legal-page, .privacy-page) {

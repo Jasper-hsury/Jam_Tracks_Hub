@@ -126,3 +126,9 @@ test("404 shows a sleeve and record, and Service Waking spins a record that stop
   assert.match(css, /@media \(prefers-reduced-motion: reduce\) \{\s*html\[data-theme\] main\.status-page :is\(\.status-page-record-spinning, \.status-page-dot\) \{\s*animation: none;/);
   assert.match(css, /\.status-page-status\[data-state="unavailable"\] \.status-page-dot \{\s*background: var\(--danger\);/);
 });
+
+test("the 404 sleeve stacks above the message on tablets", () => {
+  const tablet = css.slice(css.indexOf("@media (max-width: 960px)"), css.indexOf("@media (max-width: 760px)"));
+  assert.match(tablet, /main\.status-page:has\(> \.status-page-art\) \{\s*grid-template-columns: minmax\(0, 1fr\);/);
+  assert.match(tablet, /\.status-page-art \{\s*order: -1;/);
+});
