@@ -29,13 +29,23 @@ const sections = computed(() => [
   { id: "user-content", title: privacy.value.body["22"] },
   { id: "contact", title: privacy.value.body["16"] }
 ]);
+// The title wraps only between the brand and the rest, never inside either.
+const titleParts = computed(function() {
+  const brand = "Jam Tracks Hub";
+  const title = privacy.value.title;
+  return title.startsWith(`${brand} `) ? [brand, title.slice(brand.length + 1)] : [title];
+});
 const sectionCount = computed(() => policyPage.value.sectionCount.replace("{{count}}", sections.value.length));
 </script>
 
 <template>
   <main id="main-content" class="tracks-page privacy-page">
     <p class="v3-page-eyebrow">{{ policyPage.privacyEyebrow }}</p>
-    <h1 class="privacy-page-title">{{ privacy.title }}</h1>
+    <h1 class="privacy-page-title">
+      <template v-for="(part, index) in titleParts" :key="index">
+        <span class="privacy-title-part">{{ part }}</span>{{ index < titleParts.length - 1 ? " " : "" }}
+      </template>
+    </h1>
     <div class="v3-page-meta">
       <p class="privacy-page-metadata">{{ privacy.effectiveDate }}</p>
       <span>{{ sectionCount }}</span>

@@ -25,7 +25,9 @@ html[data-theme] main.v3-tool-page .v3-tool-eyebrow {
     flex-wrap: wrap;
     align-items: center;
     gap: 8px 12px;
+    max-width: none;
     margin: 0 0 18px;
+    text-align: left;
     color: var(--accent);
     font-family: var(--font-sans);
     font-size: 12px;
@@ -110,6 +112,42 @@ html[data-theme]:lang(zh) main.v3-tool-page .v3-tool-heading .hero-tagline {
 
     html[data-theme] main.v3-tool-page .v3-tool-heading {
         margin-bottom: 24px;
+        text-align: center;
+    }
+
+    /* Phones: a compact, centred heading (desktop and tablet stay left). */
+    html[data-theme] main.v3-tool-page .v3-tool-eyebrow {
+        justify-content: center;
+        margin-bottom: 8px;
+        font-size: 10.5px;
+        text-align: center;
+    }
+
+    html[data-theme] main.v3-tool-page .v3-tool-heading h1 {
+        font-size: 34px;
+        line-height: 1.08;
+        text-align: center;
+    }
+
+    html[data-theme] main.v3-tool-page .v3-tool-heading .hero-tagline {
+        margin-top: 6px;
+        font-size: 16px;
+        text-align: center;
+        text-wrap: balance;
+    }
+
+    /* Longer intros stay centred but narrower, with balanced line lengths. */
+    html[data-theme] main.v3-tool-page .v3-tool-heading .trainer-lead {
+        max-width: 34ch;
+        margin-inline: auto;
+        text-align: center;
+        text-wrap: balance;
+    }
+
+    html[data-theme] main.v3-tool-page .v3-tool-meta {
+        justify-content: center;
+        margin-top: 16px;
+        text-align: center;
     }
 }
 
@@ -2047,4 +2085,13 @@ html[data-theme] main.v3-tool-page.chord-progressions-page .progression-voicing-
 
 html[data-theme] main.v3-tool-page.chord-progressions-page .progression-voicing-card.has-grouped-bars .progression-voicing-summary:not(:first-child) > * {
     max-width: 560px;
+}
+
+/* Chord Progressions key mode: once the legacy rule stacks the heading on
+   narrow screens, keep it on the left edge instead of the desktop
+   bottom-right alignment. */
+@media (max-width: 768px) {
+    html[data-theme] main.v3-tool-page .key-mode-heading {
+        align-items: flex-start;
+    }
 }

@@ -6,7 +6,7 @@ const test = require("node:test");
 const root = path.resolve(__dirname, "..");
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
 const css = read("styles/song-workspace-v3.css");
-const STYLESHEET = "styles/song-workspace-v3.css?v=20261015-v3-song-workspace";
+const STYLESHEET = "styles/song-workspace-v3.css?v=20261016-inner-pages";
 const SCOPE = /^html\[data-theme(?:="default")?\](?::lang\(zh\))? body\[data-vue-page="song-workspace"\]/;
 
 function splitTopLevel(group) {
@@ -98,4 +98,18 @@ test("phones get one column, scrollable chord views and a swipeable shape strip"
   assert.match(phone, /\.workspace-song-card \{[^}]*grid-template-areas: "identity" "meta" "actions" "menu";/);
   assert.match(phone, /\.workspace-segmented \{[^}]*flex-wrap: nowrap;[^}]*overflow-x: auto;/);
   assert.match(phone, /\.workspace-editor:not\(\.is-read-mode\) \.workspace-shape-cards \{[^}]*overflow-x: auto;/);
+});
+
+test("Song Workspace uses the tool pages' column and starts its heading as high as theirs", () => {
+  const page = 'html\\[data-theme\\] body\\[data-vue-page="song-workspace"\\]';
+  assert.match(css, new RegExp(`${page} \\.song-workspace-page \\{[^}]*box-sizing: content-box;[^}]*max-width: 1200px;[^}]*margin-inline: auto;[^}]*padding-inline: 40px;`));
+  assert.match(css, new RegExp(`${page}:not\\(\\.song-workspace-read-mode\\) \\.song-workspace-page \\{\\s*padding-top: 0;`));
+  assert.match(css, new RegExp(`@media \\(max-width: 760px\\) \\{\\s*${page} \\.song-workspace-page \\{\\s*margin-top: 32px;\\s*padding-inline: 16px;`));
+});
+
+test("the Song Workspace start screen gets the compact, centred phone heading; the editor keeps its own", () => {
+  const start = 'body\\[data-vue-page="song-workspace"\\] \\.song-workspace-page:not\\(:has\\(#workspaceEditorView:not\\(\\[hidden\\]\\)\\)\\)';
+  assert.match(css, new RegExp(`${start} \\.song-workspace-hero \\{\\s*text-align: center;`));
+  assert.match(css, new RegExp(`${start} \\.song-workspace-hero h1 \\{\\s*font-size: 34px;`));
+  assert.match(css, new RegExp(`${start} \\.song-workspace-promises \\{\\s*justify-content: center;`));
 });

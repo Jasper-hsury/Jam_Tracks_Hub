@@ -6,7 +6,7 @@ const test = require("node:test");
 const root = path.resolve(__dirname, "..");
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
 const css = read("styles/tool-pages.css");
-const TOOL_STYLESHEET = "styles/tool-pages.css?v=20261016-progression-cards";
+const TOOL_STYLESHEET = "styles/tool-pages.css?v=20261016-inner-pages";
 
 const toolPages = [
   { html: "chord-dictionary.html", view: "ChordDictionaryView", aside: "standardTuning" },
@@ -234,4 +234,21 @@ test("grouped Chord Progressions put each group of bars directly above its own s
     assert.match(css, new RegExp(`${card} \\.progression-voicing-summary:nth-child\\(${group}\\) \\{ order: ${group * 2 - 1}; \\}`));
     assert.match(css, new RegExp(`${card} \\.progression-chord-voicing-group:nth-child\\(${group}\\) \\{ order: ${group * 2}; \\}`));
   });
+});
+
+test("tool eyebrows stay left-aligned on phones even though they reuse the homepage eyebrow class", () => {
+  assert.match(css, /html\[data-theme\] main\.v3-tool-page \.v3-tool-eyebrow \{[^}]*max-width: none;[^}]*text-align: left;/);
+});
+
+test("phones get a compact, centred tool heading while desktop and tablet stay left", () => {
+  const phone = css.slice(css.indexOf("@media (max-width: 760px)"));
+  assert.match(phone, /main\.v3-tool-page \.v3-tool-heading \{\s*margin-bottom: 24px;\s*text-align: center;/);
+  assert.match(phone, /main\.v3-tool-page \.v3-tool-eyebrow \{\s*justify-content: center;[^}]*font-size: 10\.5px;/);
+  assert.match(phone, /main\.v3-tool-page \.v3-tool-heading h1 \{\s*font-size: 34px;\s*line-height: 1\.08;\s*text-align: center;/);
+  assert.match(phone, /main\.v3-tool-page \.v3-tool-meta \{\s*justify-content: center;/);
+});
+
+test("phone heading intros stay centred with balanced lines, and the stacked key mode heading sits on the left", () => {
+  assert.match(css, /\.v3-tool-heading \.trainer-lead \{\s*max-width: 34ch;\s*margin-inline: auto;\s*text-align: center;\s*text-wrap: balance;/);
+  assert.match(css, /@media \(max-width: 768px\) \{\s*html\[data-theme\] main\.v3-tool-page \.key-mode-heading \{\s*align-items: flex-start;/);
 });

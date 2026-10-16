@@ -17,9 +17,19 @@ html[data-theme="default"] body[data-vue-page="song-workspace"] {
 }
 
 /* Page heading ------------------------------------------------------------- */
+/* Same column as the tool pages: 1200px of content inside 40px gutters (16px
+   on phones), and the heading starts as high as theirs. */
 html[data-theme] body[data-vue-page="song-workspace"] .song-workspace-page {
+    box-sizing: content-box;
+    width: auto;
     max-width: 1200px;
     margin-top: 56px;
+    margin-inline: auto;
+    padding-inline: 40px;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"]:not(.song-workspace-read-mode) .song-workspace-page {
+    padding-top: 0;
 }
 
 html[data-theme] body[data-vue-page="song-workspace"] .song-workspace-hero {
@@ -1119,6 +1129,44 @@ html[data-theme] body[data-vue-page="song-workspace"] .workspace-anchor-preview 
 @media (max-width: 760px) {
     html[data-theme] body[data-vue-page="song-workspace"] .song-workspace-page {
         margin-top: 32px;
+        padding-inline: 16px;
+    }
+
+    /* The start screen gets the tool pages' compact, centred phone heading. */
+    html[data-theme] body[data-vue-page="song-workspace"] .song-workspace-page:not(:has(#workspaceEditorView:not([hidden]))) .song-workspace-hero {
+        text-align: center;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .song-workspace-page:not(:has(#workspaceEditorView:not([hidden]))) .song-workspace-hero > .result-kicker {
+        margin-bottom: 8px;
+        font-size: 10.5px;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .song-workspace-page:not(:has(#workspaceEditorView:not([hidden]))) .song-workspace-hero h1 {
+        font-size: 34px;
+        line-height: 1.08;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .song-workspace-page:not(:has(#workspaceEditorView:not([hidden]))) .song-workspace-hero .hero-tagline {
+        margin-top: 6px;
+        font-size: 16px;
+        text-align: center;
+        text-wrap: balance;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .song-workspace-page:not(:has(#workspaceEditorView:not([hidden]))) .song-workspace-lead {
+        max-width: 34ch;
+        margin-inline: auto;
+        text-wrap: balance;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .song-workspace-page:not(:has(#workspaceEditorView:not([hidden]))) .song-workspace-promises {
+        justify-content: center;
+        margin-top: 16px;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .song-workspace-page:not(:has(#workspaceEditorView:not([hidden]))) .song-workspace-promises > .workspace-save-state {
+        margin-left: 0;
     }
 
     html[data-theme] body[data-vue-page="song-workspace"] .workspace-section-heading {

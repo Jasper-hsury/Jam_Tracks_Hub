@@ -6,7 +6,7 @@ const test = require("node:test");
 const root = path.resolve(__dirname, "..");
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
 const css = read("styles/secondary-pages.css");
-const STYLESHEET = "styles/secondary-pages.css?v=20261015-v3-secondary";
+const STYLESHEET = "styles/secondary-pages.css?v=20261016-inner-pages";
 const PAGES = {
   "feedback.html": "",
   "legal.html": "",
@@ -131,4 +131,25 @@ test("the 404 sleeve stacks above the message on tablets", () => {
   const tablet = css.slice(css.indexOf("@media (max-width: 960px)"), css.indexOf("@media (max-width: 760px)"));
   assert.match(tablet, /main\.status-page:has\(> \.status-page-art\) \{\s*grid-template-columns: minmax\(0, 1fr\);/);
   assert.match(tablet, /\.status-page-art \{\s*order: -1;/);
+});
+
+test("Feedback, Legal and Privacy share the tool pages' 1200px column and heading size", () => {
+  assert.match(css, /html\[data-theme\] main:is\(\.feedback-page, \.legal-page, \.privacy-page\) \{\s*box-sizing: border-box;\s*width: 100%;\s*max-width: 1280px;[^}]*padding: 0 40px;/);
+  assert.match(css, /html\[data-theme\] main:is\(\.feedback-page, \.legal-page, \.privacy-page\) h1 \{\s*margin: 0;\s*font-size: clamp\(46px, 6vw, 76px\);\s*line-height: 1\.02;/);
+});
+
+test("Feedback, Legal and Privacy get the compact, centred phone heading", () => {
+  assert.match(css, /main:is\(\.feedback-page, \.legal-page, \.privacy-page\) > :is\(\.hero-eyebrow, \.v3-page-eyebrow, h1, \.hero-tagline, \.legal-page-intro\) \{\s*text-align: center;/);
+  assert.match(css, /@media \(max-width: 760px\) \{[\s\S]*?main:is\(\.feedback-page, \.legal-page, \.privacy-page\) h1 \{\s*font-size: 34px;\s*line-height: 1\.08;/);
+  assert.match(css, /main:is\(\.legal-page, \.privacy-page\) \.v3-page-meta \{\s*justify-content: center;\s*margin-top: 16px;/);
+});
+
+test("the Privacy title only ever breaks between the brand and the rest", () => {
+  const view = read("src/views/PrivacyView.vue");
+  assert.match(view, /title\.startsWith\(`\$\{brand\} `\) \? \[brand, title\.slice\(brand\.length \+ 1\)\] : \[title\]/);
+  assert.match(view, /<span class="privacy-title-part">\{\{ part \}\}<\/span>/);
+  assert.match(css, /main\.privacy-page \.privacy-title-part \{\s*display: inline-block;/);
+  ["en", "zh-TW"].forEach(locale => {
+    assert.match(JSON.parse(read(`locales/${locale}/common.json`)).privacy.title, /^Jam Tracks Hub /);
+  });
 });

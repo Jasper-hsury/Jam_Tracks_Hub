@@ -20,7 +20,7 @@ html[data-theme="default"] main:is(.feedback-page, .legal-page, .privacy-page, .
 html[data-theme] main:is(.feedback-page, .legal-page, .privacy-page) {
     box-sizing: border-box;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 64px auto 0;
     padding: 0 40px;
 }
@@ -56,13 +56,19 @@ html[data-theme]:lang(zh) main:is(.feedback-page, .legal-page, .privacy-page, .s
 
 html[data-theme] main:is(.feedback-page, .legal-page, .privacy-page) h1 {
     margin: 0;
-    font-size: clamp(42px, 6vw, 68px);
-    line-height: 1.03;
+    font-size: clamp(46px, 6vw, 76px);
+    line-height: 1.02;
     text-align: left;
 }
 
 html[data-theme]:lang(zh) main:is(.feedback-page, .legal-page, .privacy-page) h1 {
     line-height: 1.15;
+}
+
+/* "Jam Tracks Hub" and the rest of the Privacy title each stay whole, so a
+   title that needs two lines breaks right after the brand. */
+html[data-theme] main.privacy-page .privacy-title-part {
+    display: inline-block;
 }
 
 html[data-theme] main:is(.feedback-page, .legal-page, .privacy-page, .status-page) :is(button, a, input, textarea, summary):focus-visible {
@@ -745,6 +751,39 @@ html[data-theme] main.status-page:has(.status-page-status[data-state="unavailabl
     html[data-theme] main:is(.feedback-page, .legal-page, .privacy-page) {
         margin-top: 36px;
         padding: 0 16px;
+    }
+
+    /* Phones: the tool pages' compact, centred heading. */
+    html[data-theme] main:is(.feedback-page, .legal-page, .privacy-page) > :is(.hero-eyebrow, .v3-page-eyebrow, h1, .hero-tagline, .legal-page-intro) {
+        text-align: center;
+    }
+
+    html[data-theme] main:is(.feedback-page, .legal-page, .privacy-page) > :is(.hero-eyebrow, .v3-page-eyebrow) {
+        margin-bottom: 8px;
+        font-size: 10.5px;
+    }
+
+    html[data-theme] main:is(.feedback-page, .legal-page, .privacy-page) h1 {
+        font-size: 34px;
+        line-height: 1.08;
+    }
+
+    html[data-theme] main.feedback-page .hero-tagline {
+        margin: 6px auto 0;
+        font-size: 16px;
+        text-wrap: balance;
+    }
+
+    html[data-theme] main:is(.legal-page, .privacy-page) .legal-page-intro {
+        max-width: 34ch;
+        margin-inline: auto;
+        text-wrap: balance;
+    }
+
+    html[data-theme] main:is(.legal-page, .privacy-page) .v3-page-meta {
+        justify-content: center;
+        margin-top: 16px;
+        text-align: center;
     }
 
     html[data-theme] main.feedback-page .feedback-panel {
