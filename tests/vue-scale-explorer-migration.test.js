@@ -316,7 +316,7 @@ test("removes only the page-owned legacy runtime and keeps frozen boundaries", (
   assert.doesNotMatch(read("package.json"), /scripts\/scale\.js/);
   assert.doesNotMatch(implementation, /localStorage|sessionStorage|indexedDB|fetch\(|XMLHttpRequest|WebSocket|umami\.track|data-umami-event/);
   ["chord-dictionary.html", "progression-writer.html", "key-finder.html", "song-workspace.html", "worker.js", "wrangler.jsonc", "functions/api/feedback.js", "functions/api/subscribe.js"].forEach(file => assert.ok(fs.existsSync(path.join(root, file)), file));
-  assert.equal(packageJson.version, "3.4.0");
+  assert.equal(packageJson.version, "3.5.0");
   assert.deepEqual(packageJson.dependencies, { vue: "3.5.42" });
   ["vue-router", "pinia", "vue-i18n", "@vueuse/core"].forEach(name => assert.equal(packageJson.dependencies[name], undefined));
 });

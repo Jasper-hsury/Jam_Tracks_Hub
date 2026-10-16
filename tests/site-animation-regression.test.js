@@ -15,14 +15,13 @@ const locale = read("src/i18n/useSiteLocale.js");
 const animationsJs = read("scripts/site-animations.js");
 const pagesCss = read("styles/pages.css");
 
-test("homepage keeps the established Tracks Hub SplitText entrance", () => {
+test("homepage title writes itself instead of the old SplitText character rise", () => {
     assert.match(indexHtml, /<div id="vue-home-root"><\/div>/);
     assert.match(indexHtml, /assets\/vendor\/gsap\/SplitText\.min\.js/);
     assert.doesNotMatch(indexHtml, /scripts\/i18n\.js/);
-    assert.match(indexHtml, /scripts\/site-animations\.js\?v=20261014-tracks-entrance-once/);
-    assert.match(animationsJs, /const homeTitle = document\.querySelector\("\.home-hero h1"\)/);
-    assert.match(animationsJs, /charsClass:\s*"home-split-char"/);
-    assert.match(animationsJs, /\.fromTo\(titleChars,[\s\S]*stagger:\s*0\.026/s);
+    assert.match(indexHtml, /scripts\/site-animations\.js\?v=20261016-hero-handwriting/);
+    assert.doesNotMatch(animationsJs, /\.home-hero h1|\.home-hero \.signature-slogan|home-split-char|animateHomeHeroText|homeHeroSplits/);
+    assert.match(animationsJs, /The homepage title, rule and tagline animate themselves \(HomeHeroTitle\.vue\)/);
 });
 
 test("Vue localization preserves the animation-owned SplitText lifecycle", () => {
@@ -31,7 +30,6 @@ test("Vue localization preserves the animation-owned SplitText lifecycle", () =>
     assert.match(animationsJs, /await waitForHomeAnimationLayout\(\);[\s\S]*animatePageEntrance\(\);/s);
     assert.doesNotMatch(animationsJs, /pageEntranceNeedsTranslations|window\.JasperI18n/);
     assert.match(animationsJs, /function disposeHomeTextAnimation\(\)/);
-    assert.match(animationsJs, /homeHeroSplits\.forEach\(split => split\?\.revert\?\.\(\)\)/);
     assert.match(animationsJs, /waitForHomeAnimationLayout/);
     assert.match(animationsJs, /window\.addEventListener\("jasper:language-change", rebuildHomeTextAnimation\)/);
 });
@@ -77,13 +75,13 @@ test("Privacy uses stable policy typography without panel hover or title transfo
     assert.match(pagesCss, /\.privacy-page \.privacy-policy-panel:hover\s*\{[^}]*background:\s*var\(--panel-background\)[^}]*box-shadow:\s*0 10px 26px var\(--shadow-color\)[^}]*transform:\s*none/s);
     assert.match(animationsJs, /heroPiecesForEntrance[\s\S]*\.filter\(target => !target\.closest\("\.privacy-page"\)\)/s);
     assert.match(animationsJs, /if \(heroPiecesForEntrance\.length\) \{\s*gsap\.set\(heroPiecesForEntrance/s);
-    assert.match(animationsJs, /if \(fallbackHeroPieces\.length\) \{\s*timeline\.to\(fallbackHeroPieces/s);
+    assert.match(animationsJs, /if \(heroPiecesForEntrance\.length\) \{\s*timeline\.to\(heroPiecesForEntrance/s);
     assert.match(animationsJs, /revealTargets[\s\S]*\.filter\(target => !target\.closest\("\.privacy-page"\)\)/s);
 });
 
 test("Song Workspace reuses the shared page entrance without changing its application modules", () => {
     assert.match(workspaceHtml, /assets\/vendor\/gsap\/gsap\.min\.js/);
-    assert.match(workspaceHtml, /scripts\/site-animations\.js\?v=20261014-tracks-entrance-once/);
+    assert.match(workspaceHtml, /scripts\/site-animations\.js\?v=20261016-hero-handwriting/);
     assert.match(animationsJs, /const isSongWorkspacePage = Boolean\(document\.querySelector\("\.song-workspace-page"\)\)/);
     assert.match(animationsJs, /"\.song-workspace-hero > \.result-kicker"[\s\S]*"\.workspace-create-area > \.workspace-section-heading"/s);
     assert.match(animationsJs, /if \(isSongWorkspacePage\) \{[\s\S]*\.workspace-entry-grid > \.workspace-entry-card[\s\S]*stagger:\s*0\.065/s);

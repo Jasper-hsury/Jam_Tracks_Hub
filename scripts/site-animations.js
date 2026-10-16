@@ -6,8 +6,6 @@
     const hasSplitText = Boolean(window.SplitText);
     const hasDrawSvg = Boolean(window.DrawSVGPlugin);
     const hasMotionPath = Boolean(window.MotionPathPlugin);
-    let homeHeroTimeline = null;
-    let homeHeroSplits = [];
     let homeStepIntroTimeline = null;
     let homeTextAnimationGeneration = 0;
 
@@ -71,10 +69,6 @@
     }
 
     function disposeHomeTextAnimation() {
-        homeHeroTimeline?.kill?.();
-        homeHeroTimeline = null;
-        homeHeroSplits.forEach(split => split?.revert?.());
-        homeHeroSplits = [];
         homeStepIntroTimeline?.scrollTrigger?.kill?.();
         homeStepIntroTimeline?.kill?.();
         homeStepIntroTimeline = null;
@@ -84,70 +78,6 @@
             delete card._homeStepText;
             delete card._homeStepTextReady;
         });
-
-        if (hasGsap) {
-            gsap.set([
-                ".home-hero h1",
-                ".home-hero .signature-slogan",
-                ".home-hero h1 .home-split-char",
-                ".home-hero .signature-slogan .home-split-word"
-            ], { clearProps: "transform,opacity,filter" });
-        }
-    }
-
-    function animateHomeHeroText() {
-        const homeTitle = document.querySelector(".home-hero h1");
-        const homeSlogan = document.querySelector(".home-hero .signature-slogan");
-        if (!homeTitle || !homeSlogan || !hasGsap || !hasSplitText) {
-            return;
-        }
-
-        const titleSplit = createSplitText(homeTitle, {
-            type: "words,chars",
-            wordsClass: "home-split-word",
-            charsClass: "home-split-char"
-        });
-        const sloganSplit = createSplitText(homeSlogan, {
-            type: "words",
-            wordsClass: "home-split-word"
-        });
-        const titleChars = titleSplit?.chars || [];
-        const sloganWords = sloganSplit?.words || [];
-        homeHeroSplits = [titleSplit, sloganSplit].filter(Boolean);
-
-        if (!titleChars.length || !sloganWords.length) {
-            gsap.set([homeTitle, homeSlogan], { clearProps: "transform,opacity" });
-            return;
-        }
-
-        gsap.set([homeTitle, homeSlogan], { opacity: 1 });
-        homeHeroTimeline = gsap.timeline({ defaults: { ease: "power3.out" } })
-            .fromTo(titleChars, {
-                yPercent: 112,
-                opacity: 0,
-                rotateX: -24
-            }, {
-                yPercent: 0,
-                opacity: 1,
-                rotateX: 0,
-                duration: 0.72,
-                stagger: 0.026,
-                ease: "back.out(1.24)",
-                clearProps: "transform,opacity"
-            })
-            .fromTo(sloganWords, {
-                y: 16,
-                opacity: 0,
-                rotateX: -12
-            }, {
-                y: 0,
-                opacity: 1,
-                rotateX: 0,
-                duration: 0.48,
-                stagger: 0.075,
-                ease: "power3.out",
-                clearProps: "transform,opacity"
-            }, "-=0.28");
     }
 
     function rebuildHomeTextAnimation() {
@@ -163,7 +93,6 @@
                 if (generation !== homeTextAnimationGeneration) {
                     return;
                 }
-                animateHomeHeroText();
                 rebuildHomeStepTextAnimation();
                 window.ScrollTrigger?.refresh?.();
             });
@@ -173,13 +102,8 @@
         const isTracksPage = Boolean(document.querySelector(".tracks-library-page"));
         const isDictionaryPage = Boolean(document.querySelector(".chord-dictionary-page"));
         const isSongWorkspacePage = Boolean(document.querySelector(".song-workspace-page"));
-        const homeTitle = document.querySelector(".home-hero h1");
-        const homeSlogan = document.querySelector(".home-hero .signature-slogan");
-        const shouldSplitHomeHero = Boolean(homeTitle && homeSlogan && hasGsap && hasSplitText);
         const heroPieces = elements([
             ".home-hero .home-eyebrow",
-            ".home-hero h1",
-            ".home-hero .signature-slogan",
             ".home-hero .home-lead",
             ".home-hero .hero-actions > *",
             ".page-heading-row",
@@ -198,10 +122,8 @@
             ".workspace-create-area > .workspace-section-heading"
         ].join(", "));
         const navPieces = elements(".navbar .logo, .navbar .nav-links > li");
-        const heroPiecesForEntrance = (shouldSplitHomeHero
-            ? heroPieces.filter(target => target !== homeTitle && target !== homeSlogan)
-            : heroPieces)
-            .filter(target => !target.closest(".privacy-page"));
+        // The homepage title, rule and tagline animate themselves (HomeHeroTitle.vue).
+        const heroPiecesForEntrance = heroPieces.filter(target => !target.closest(".privacy-page"));
 
         if (!hasGsap) {
             applyCssEntrance([document.querySelector(".navbar"), ...navPieces, ...heroPieces].filter(Boolean));
@@ -214,37 +136,7 @@
             gsap.set(heroPiecesForEntrance, { y: 22, opacity: 0 });
         }
 
-        const titleSplit = shouldSplitHomeHero
-            ? createSplitText(homeTitle, {
-                type: "words,chars",
-                wordsClass: "home-split-word",
-                charsClass: "home-split-char"
-            })
-            : null;
-        const sloganSplit = shouldSplitHomeHero
-            ? createSplitText(homeSlogan, {
-                type: "words",
-                wordsClass: "home-split-word"
-            })
-            : null;
-        const titleChars = titleSplit?.chars || [];
-        const sloganWords = sloganSplit?.words || [];
-        const splitReady = shouldSplitHomeHero && titleChars.length && sloganWords.length;
-        if (shouldSplitHomeHero) {
-            homeHeroSplits = [titleSplit, sloganSplit].filter(Boolean);
-        }
-
-        if (splitReady) {
-            gsap.set([homeTitle, homeSlogan], { opacity: 1 });
-            gsap.set([...titleChars, ...sloganWords], { opacity: 0 });
-        } else if (shouldSplitHomeHero) {
-            gsap.set([homeTitle, homeSlogan], { y: 22, opacity: 0 });
-        }
-
         const timeline = gsap.timeline({ defaults: { ease: "power3.out" } });
-        if (shouldSplitHomeHero) {
-            homeHeroTimeline = timeline;
-        }
         timeline
             .to(".navbar", { y: 0, opacity: 1, duration: 0.52 })
             .to(navPieces, {
@@ -255,62 +147,13 @@
                 clearProps: "transform,opacity"
             }, "-=0.3");
 
-        if (splitReady) {
-            const homeEyebrow = heroPiecesForEntrance.filter(target => target.matches(".home-hero .home-eyebrow"));
-            const remainingHeroPieces = heroPiecesForEntrance.filter(target => !target.matches(".home-hero .home-eyebrow"));
-
-            timeline
-                .to(homeEyebrow, {
-                    y: 0,
-                    opacity: 1,
-                    duration: 0.42,
-                    clearProps: "transform,opacity"
-                }, "-=0.12")
-                .fromTo(titleChars, {
-                    yPercent: 112,
-                    opacity: 0,
-                    rotateX: -24
-                }, {
-                    yPercent: 0,
-                    opacity: 1,
-                    rotateX: 0,
-                    duration: 0.72,
-                    stagger: 0.026,
-                    ease: "back.out(1.24)",
-                    clearProps: "transform,opacity"
-                }, "-=0.08")
-                .fromTo(sloganWords, {
-                    y: 16,
-                    opacity: 0,
-                    rotateX: -12
-                }, {
-                    y: 0,
-                    opacity: 1,
-                    rotateX: 0,
-                    duration: 0.48,
-                    stagger: 0.075,
-                    ease: "power3.out",
-                    clearProps: "transform,opacity"
-                }, "-=0.28")
-                .to(remainingHeroPieces, {
-                    y: 0,
-                    opacity: 1,
-                    duration: 0.58,
-                    stagger: 0.06
-                }, "-=0.24");
-        } else {
-            const fallbackHeroPieces = shouldSplitHomeHero
-                ? [...heroPiecesForEntrance, homeTitle, homeSlogan].filter(Boolean)
-                : heroPiecesForEntrance;
-
-            if (fallbackHeroPieces.length) {
-                timeline.to(fallbackHeroPieces, {
-                    y: 0,
-                    opacity: 1,
-                    duration: 0.64,
-                    stagger: isTracksPage ? 0.1 : 0.07
-                }, "-=0.18");
-            }
+        if (heroPiecesForEntrance.length) {
+            timeline.to(heroPiecesForEntrance, {
+                y: 0,
+                opacity: 1,
+                duration: 0.64,
+                stagger: isTracksPage ? 0.1 : 0.07
+            }, "-=0.18");
         }
 
         const secondaryEntrancePieces = elements([

@@ -183,7 +183,7 @@ The screenshot shows the creation/start screen, not an active editor or Performa
 - [Development Log](https://github.com/Jasper-hsury/Jam_Tracks_Hub_Development_Log): public development history, release notes, and product evolution in the separate log repository.
 - [GitHub Workflow](docs/GITHUB_WORKFLOW.md): contribution and review process.
 
-The latest published release is `v3.3.0`, the fourth batch of the v3 Liner Notes redesign (Song Workspace). `package.json` declares `3.4.0` for the next batch (Feedback, Legal, Privacy, 404 and Service Waking); its tag and Release are published when that batch ships.
+The latest published release is `v3.4.0`, the fifth batch of the v3 Liner Notes redesign (Feedback, Legal, Privacy, 404 and Service Waking). `package.json` declares `3.5.0` for the handwritten homepage title; its tag and Release are published when it ships.
 
 ## Local Development
 

@@ -1,0 +1,153 @@
+/* ====================
+   v3 Homepage title: handwritten "Jam Tracks Hub"
+   Loaded last on the homepage only. HomeHeroTitle.vue writes the Yellowtail
+   title stroke by stroke, then the waveform, double rule and tagline follow.
+   data-phase on .home-hero-title-block: pending → writing → done. A block that
+   starts at "done" (reduced motion, or the font never loaded) shows everything
+   at once with no transition.
+   ==================== */
+
+html[data-theme] .v3-home .home-hero-title-block {
+    width: min(100%, 940px);
+    margin: 18px auto 0;
+}
+
+html[data-theme] .v3-home .home-hero .home-hero-title {
+    position: relative;
+    width: 100%;
+    margin: 0;
+    font-size: inherit;
+    line-height: 1;
+    letter-spacing: 0;
+}
+
+html[data-theme] .v3-home .home-hero-title-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+html[data-theme] .v3-home .home-hero-title-art {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+}
+
+html[data-theme] .v3-home .home-hero-title-art text {
+    font-family: "Yellowtail", "Brush Script MT", cursive;
+    font-size: 156px;
+    font-weight: 400;
+}
+
+html[data-theme] .v3-home .home-hero-title-art .is-jam {
+    fill: var(--accent);
+}
+
+html[data-theme] .v3-home .home-hero-title-art .is-tracks {
+    fill: var(--ink);
+}
+
+html[data-theme] .v3-home .home-hero-title-wave {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    height: 30px;
+    margin: 6px 6% 0;
+}
+
+html[data-theme] .v3-home .home-hero-title-wave span {
+    flex: 1;
+    border-radius: 2px 2px 0 0;
+    background: var(--line);
+}
+
+html[data-theme] .v3-home .home-hero-title-wave span.is-hot {
+    background: var(--accent);
+    opacity: 0.7;
+}
+
+html[data-theme] .v3-home .home-hero-title-rule {
+    height: 5px;
+    margin: 10px 6% 0;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    transform-origin: left center;
+}
+
+html[data-theme] .v3-home .home-hero-title-block .signature-slogan {
+    margin-top: 22px;
+}
+
+/* While the pen writes, only the masked glyphs show; the solid copy fills in after. */
+html[data-theme] .v3-home .home-hero-title-block:is([data-phase="pending"], [data-phase="writing"]) .home-hero-title-solid {
+    opacity: 0;
+}
+
+html[data-theme] .v3-home .home-hero-title-block:is([data-phase="pending"], [data-phase="writing"]) .home-hero-title-wave {
+    clip-path: inset(0 100% 0 0);
+}
+
+html[data-theme] .v3-home .home-hero-title-block:is([data-phase="pending"], [data-phase="writing"]) .home-hero-title-rule {
+    transform: scaleX(0);
+}
+
+html[data-theme] .v3-home .home-hero-title-block:is([data-phase="pending"], [data-phase="writing"]) .signature-slogan {
+    opacity: 0;
+    transform: translateY(8px);
+}
+
+html[data-theme] .v3-home .home-hero-title-block[data-phase="done"] .home-hero-title-solid {
+    opacity: 1;
+    transition: opacity 0.6s ease;
+}
+
+html[data-theme] .v3-home .home-hero-title-block[data-phase="done"] .home-hero-title-wave {
+    clip-path: inset(0 0 0 0);
+    transition: clip-path 0.9s cubic-bezier(0.45, 0, 0.25, 1);
+}
+
+html[data-theme] .v3-home .home-hero-title-block[data-phase="done"] .home-hero-title-rule {
+    transform: scaleX(1);
+    transition: transform 0.5s 0.35s cubic-bezier(0.6, 0, 0.2, 1);
+}
+
+html[data-theme] .v3-home .home-hero-title-block[data-phase="done"] .signature-slogan {
+    opacity: 1;
+    transform: none;
+    transition: opacity 0.5s 0.6s ease, transform 0.5s 0.6s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html[data-theme] .v3-home .home-hero-title-block * {
+        transition: none !important;
+    }
+}
+
+@media (max-width: 640px) {
+    html[data-theme] .v3-home .home-hero-title-block {
+        margin-top: 12px;
+    }
+
+    html[data-theme] .v3-home .home-hero-title-wave {
+        gap: 3px;
+        height: 16px;
+        margin-top: 4px;
+    }
+
+    html[data-theme] .v3-home .home-hero-title-wave span:nth-child(even) {
+        display: none;
+    }
+
+    html[data-theme] .v3-home .home-hero-title-rule {
+        height: 4px;
+        margin-top: 8px;
+    }
+
+    html[data-theme] .v3-home .home-hero-title-block .signature-slogan {
+        margin-top: 18px;
+    }
+}
