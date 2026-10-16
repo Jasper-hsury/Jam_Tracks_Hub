@@ -59,14 +59,14 @@ test("preserves Tracks SEO, analytics, CSS, and GSAP dependencies", () => {
 
   assert.match(html, /<title>Backing Tracks \| Jam Tracks Hub<\/title>/);
   assert.match(html, /content="Browse original weekly guitar backing tracks by key, mood, and release order, then download slide decks for focused practice\."/);
-  assert.match(html, /<link rel="canonical" href="https:\/\/jamtrackshub\.com\/tracks\.html">/);
-  assert.match(html, /property="og:url" content="https:\/\/jamtrackshub\.com\/tracks\.html"/);
+  assert.match(html, /<link rel="canonical" href="https:\/\/jamtrackshub\.com\/tracks">/);
+  assert.match(html, /property="og:url" content="https:\/\/jamtrackshub\.com\/tracks"/);
   assert.match(html, /name="twitter:card" content="summary_large_image"/);
   assert.match(html, /<script defer src="https:\/\/cloud\.umami\.is\/script\.js" data-website-id="[^"]+"><\/script>/);
   assert.match(html, /assets\/vendor\/gsap\/gsap\.min\.js/);
   assert.match(html, /assets\/vendor\/gsap\/Flip\.min\.js/);
   assert.match(html, /assets\/vendor\/gsap\/ScrollTrigger\.min\.js/);
-  assert.match(html, /scripts\/site-animations\.js\?v=20261016-hero-handwriting/);
+  assert.match(html, /scripts\/site-animations\.js\?v=20261017-polish/);
   assert.doesNotMatch(html, /data-umami-event|unsafe-eval|unsafe-inline/);
 });
 
@@ -212,12 +212,12 @@ test("keeps Vue-owned filters, card links, localization, and rapid-safe Flip lif
   assert.doesNotMatch(view + card, /v-html|innerHTML|data-umami-event|window\.umami|analytics/i);
 });
 
-test("keeps the download fix and non-Tracks runtimes intact at version 3.5.2", () => {
+test("keeps the download fix and non-Tracks runtimes intact at version 3.5.3", () => {
   const packageJson = JSON.parse(read("package.json"));
   const keyFinder = read("key-finder.html");
   const workspace = read("song-workspace.html");
 
-  assert.equal(packageJson.version, "3.5.2");
+  assert.equal(packageJson.version, "3.5.3");
   assert.deepEqual(packageJson.dependencies, { vue: "3.5.42" });
   assert.match(keyFinder, /src\/entries\/key-finder\.js/);
   assert.doesNotMatch(keyFinder, /scripts\/key-finder\.js/);

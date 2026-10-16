@@ -197,7 +197,7 @@
   "pages": {
     "tracks": {
       "title": "所有即興伴奏",
-      "tagline": "捕捉感受，譜出心聲。",
+      "tagline": "按下播放，找到你的律動。",
       "libraryCount": "{{count}} 首原創即興伴奏",
       "filtersLabel": "篩選",
       "keyLabel": "調性",
@@ -376,7 +376,7 @@
     },
     "chordProgressions": {
       "title": "和弦進行",
-      "tagline": "捕捉感受，譜出心聲。",
+      "tagline": "學會撐起每首歌的和弦走向。",
       "eyebrow": "調性 • 三和弦與七和弦 • 常見進行",
       "explorerTitle": "和弦進行探索器",
       "intro": "選擇調性，在三和弦與七和弦之間切換，並比較適合吉他的根音位置和弦配置。",
@@ -415,7 +415,7 @@
     },
     "progressionWriter": {
       "title": "自訂你的和弦進行",
-      "tagline": "捕捉感受，譜出心聲。",
+      "tagline": "你的和弦、你的順序，整理成一張乾淨的譜。",
       "eyebrow": "歌曲資訊 • 自訂和弦 • 匯出圖片",
       "modeTitle": "和弦進行",
       "format": "進行格式",
@@ -497,7 +497,7 @@
       "suggestionLabel": "改善建議",
       "suggestionPlaceholder": "這個頁面或工具可以如何變得更實用？",
       "submit": "送出回饋",
-      "backToHome": "回到主頁",
+      "backToHome": "回到首頁",
       "sending": "送出中……",
       "success": "謝謝，你的回饋已送出。",
       "error": "目前無法送出回饋，請稍後再試。",
@@ -726,14 +726,14 @@
   "notFound": {
     "title": "這個頁面錯過了第一拍。",
     "copy": "連結可能已移動，但音樂仍在這裡。",
-    "returnHome": "返回首頁",
+    "returnHome": "回到首頁",
     "openKeyFinder": "開啟調性分析"
   },
   "statusPages": {
     "notFoundSleeveCaption": "找不到這首曲目"
   },
   "privacy": {
-    "title": "Jam Tracks Hub 隱私與使用者內容",
+    "title": "隱私與使用者內容",
     "effectiveDate": "生效日期：2026 年 8 月 27 日",
     "body": {
       "01": "擴充功能用途",
@@ -955,6 +955,6 @@
     "keyFinder": "調性分析",
     "starting": "服務正在啟動。閒置後重新啟動可能需要一小段時間。",
     "checkAgain": "再次檢查",
-    "backToKeyFinder": "返回調性分析"
+    "backToKeyFinder": "回到調性分析"
   }
 }

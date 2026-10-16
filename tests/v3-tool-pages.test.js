@@ -6,7 +6,7 @@ const test = require("node:test");
 const root = path.resolve(__dirname, "..");
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
 const css = read("styles/tool-pages.css");
-const TOOL_STYLESHEET = "styles/tool-pages.css?v=20261016-inner-pages";
+const TOOL_STYLESHEET = "styles/tool-pages.css?v=20261017-polish";
 
 const toolPages = [
   { html: "chord-dictionary.html", view: "ChordDictionaryView", aside: "standardTuning" },

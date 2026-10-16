@@ -38,14 +38,14 @@ test("preserves Fretboard Trainer SEO, analytics, CSS, and animation assets", ()
 
   assert.match(html, /<title>Fretboard Trainer \| Jam Tracks Hub<\/title>/);
   assert.match(html, /content="Practice guitar fretboard note names with random string and fret questions across standard tuning\."/);
-  assert.match(html, /<link rel="canonical" href="https:\/\/jamtrackshub\.com\/fretboard-trainer\.html">/);
-  assert.match(html, /property="og:url" content="https:\/\/jamtrackshub\.com\/fretboard-trainer\.html"/);
+  assert.match(html, /<link rel="canonical" href="https:\/\/jamtrackshub\.com\/fretboard-trainer">/);
+  assert.match(html, /property="og:url" content="https:\/\/jamtrackshub\.com\/fretboard-trainer"/);
   assert.match(html, /name="twitter:card" content="summary_large_image"/);
   assert.match(html, /<script defer src="https:\/\/cloud\.umami\.is\/script\.js" data-website-id="[^"]+"><\/script>/);
   assert.match(html, /styles\/fretboard-trainer\.css\?v=20261014-v3-liner-notes/);
   assert.match(html, /assets\/vendor\/gsap\/gsap\.min\.js/);
   assert.match(html, /assets\/vendor\/gsap\/ScrollTrigger\.min\.js/);
-  assert.match(html, /scripts\/site-animations\.js\?v=20261016-hero-handwriting/);
+  assert.match(html, /scripts\/site-animations\.js\?v=20261017-polish/);
   assert.doesNotMatch(html, /data-umami-event|unsafe-eval|unsafe-inline|vue(?:\.global)?\.js/);
 });
 
@@ -212,7 +212,7 @@ test("adds no trainer persistence, audio, router, network, or custom analytics",
   assert.doesNotMatch(implementation, /document\.title|location\.(?:search|hash)|history\./);
 });
 
-test("removes only the page-owned legacy trainer runtime at version 3.5.2", () => {
+test("removes only the page-owned legacy trainer runtime at version 3.5.3", () => {
   const packageJson = JSON.parse(read("package.json"));
   const html = read("fretboard-trainer.html");
 
@@ -221,7 +221,7 @@ test("removes only the page-owned legacy trainer runtime at version 3.5.2", () =
   assert.match(read("src/components/site/SiteHeader.vue"), /fretboard-trainer\.html/);
   assert.match(read("src/i18n/useSiteLocale.js"), /jasper:language-change/);
   assert.match(read("scripts/site-animations.js"), /\.trainer-heading/);
-  assert.equal(packageJson.version, "3.5.2");
+  assert.equal(packageJson.version, "3.5.3");
   assert.equal(packageJson.dependencies.vue, "3.5.42");
   assert.equal(packageJson.dependencies["vue-router"], undefined);
 });

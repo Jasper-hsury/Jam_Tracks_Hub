@@ -251,8 +251,8 @@ test("preserves Scale Explorer SEO, analytics, CSP, CSS, and animation assets", 
 
   assert.match(html, /<title>Scale Explorer \| Jam Tracks Hub<\/title>/);
   assert.match(html, /content="Build printable guitar scale diagrams by root note, scale type, fret range, and note or degree labels\."/);
-  assert.match(html, /<link rel="canonical" href="https:\/\/jamtrackshub\.com\/scale\.html">/);
-  assert.match(html, /property="og:url" content="https:\/\/jamtrackshub\.com\/scale\.html"/);
+  assert.match(html, /<link rel="canonical" href="https:\/\/jamtrackshub\.com\/scale">/);
+  assert.match(html, /property="og:url" content="https:\/\/jamtrackshub\.com\/scale"/);
   assert.match(html, /https:\/\/cloud\.umami\.is\/script\.js/);
   ["theme-init.js", "i18n-init.js", "styles/base.css", "styles/components.css", "styles/pages.css", "styles/themes.css", "styles/scale.css", "gsap.min.js", "ScrollTrigger.min.js", "site-animations.js"].forEach(asset => {
     assert.match(html, new RegExp(asset.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), asset);
@@ -316,7 +316,7 @@ test("removes only the page-owned legacy runtime and keeps frozen boundaries", (
   assert.doesNotMatch(read("package.json"), /scripts\/scale\.js/);
   assert.doesNotMatch(implementation, /localStorage|sessionStorage|indexedDB|fetch\(|XMLHttpRequest|WebSocket|umami\.track|data-umami-event/);
   ["chord-dictionary.html", "progression-writer.html", "key-finder.html", "song-workspace.html", "worker.js", "wrangler.jsonc", "functions/api/feedback.js", "functions/api/subscribe.js"].forEach(file => assert.ok(fs.existsSync(path.join(root, file)), file));
-  assert.equal(packageJson.version, "3.5.2");
+  assert.equal(packageJson.version, "3.5.3");
   assert.deepEqual(packageJson.dependencies, { vue: "3.5.42" });
   ["vue-router", "pinia", "vue-i18n", "@vueuse/core"].forEach(name => assert.equal(packageJson.dependencies[name], undefined));
 });

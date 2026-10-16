@@ -24,8 +24,8 @@ test("preserves the public 404 metadata and action contract", () => {
   assert.match(html, /<title>Page Not Found \| Jam Tracks Hub<\/title>/);
   assert.match(html, /<meta name="description" content="The requested Jam Tracks Hub page could not be found\. Return to backing tracks or guitar tools\.">/);
   assert.match(html, /<meta name="robots" content="noindex">/);
-  assert.match(html, /<link rel="canonical" href="https:\/\/jamtrackshub\.com\/404\.html">/);
-  assert.match(html, /<meta property="og:url" content="https:\/\/jamtrackshub\.com\/404\.html">/);
+  assert.match(html, /<link rel="canonical" href="https:\/\/jamtrackshub\.com\/404">/);
+  assert.match(html, /<meta property="og:url" content="https:\/\/jamtrackshub\.com\/404">/);
   assert.match(html, /<body data-i18n-title="titles\.notFound">/);
   assert.match(html, /<script defer src="https:\/\/cloud\.umami\.is\/script\.js" data-website-id="[^"]+"><\/script>/);
 
@@ -54,13 +54,13 @@ test("keeps Vue and legacy i18n DOM ownership separate", () => {
   assert.deepEqual(english.notFound, {
     title: "This page missed the downbeat.",
     copy: "The link may have moved, but the music is still here.",
-    returnHome: "Return Home",
+    returnHome: "Back to Home",
     openKeyFinder: "Open Key Finder"
   });
   assert.deepEqual(traditionalChinese.notFound, {
     title: "這個頁面錯過了第一拍。",
     copy: "連結可能已移動，但音樂仍在這裡。",
-    returnHome: "返回首頁",
+    returnHome: "回到首頁",
     openKeyFinder: "開啟調性分析"
   });
 });
@@ -89,7 +89,7 @@ test("does not expand the Vue application architecture", () => {
     assert.equal(packageJson.dependencies?.[name], undefined);
     assert.equal(packageJson.devDependencies?.[name], undefined);
   });
-  assert.equal(packageJson.version, "3.5.2");
+  assert.equal(packageJson.version, "3.5.3");
 });
 
 test("keeps the complete Phase 2A responsive matrix on established shared breakpoints", () => {

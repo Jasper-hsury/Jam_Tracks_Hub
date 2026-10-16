@@ -341,7 +341,7 @@ test("preserves SEO, page-level Umami, CSP, URL privacy, and no custom progressi
   const source = [html, read("src/views/ProgressionWriterView.vue"), read("src/composables/useProgressionWriter.js")].join("\n");
   assert.match(html, /<title>Write Your Own Progression \| Jam Tracks Hub<\/title>/);
   assert.match(html, /content="Write custom chord progressions, choose guitar voicings, save drafts, and export clean printable chord diagrams\."/);
-  assert.match(html, /href="https:\/\/jamtrackshub\.com\/progression-writer\.html"/);
+  assert.match(html, /href="https:\/\/jamtrackshub\.com\/progression-writer"/);
   assert.match(html, /https:\/\/cloud\.umami\.is\/script\.js/);
   assert.doesNotMatch(source, /data-umami-event|umami\.track|fetch\(|XMLHttpRequest|navigator\.sendBeacon|history\.|pushState|replaceState|vue-router/);
   const headers = read("_headers");
@@ -354,7 +354,7 @@ test("keeps every shared music/backend consumer byte-identical", () => {
   const expectedHashes = {
     "scripts/chord-shapes.js": "00189b548b9d6fe48daab6c3ea68fd2a2a2baf9e39d16d638df1b0e8d19c1c04",
     "styles/chord-dictionary.css": "0fe2af95a2598cd252e850bbb7035e02a8ca89af671a81234fe7f614f0852653",
-    "styles/pages.css": "68559b5a821c003cd8f5740bed226ad9126b8590bfe848edbe0bbec9297c9d28",
+    "styles/pages.css": "d6ed0e363e0657e3ac0986356ccb7c556b34eeff450172f2f1f988ba2c45847e",
     "styles/themes.css": "81fba6e5d22f9fdc36a9fba45f5008bef541d936c12ceb37487b6b983575f22a",
     "scripts/song-workspace-core.js": "d792e65873c140deda2ac576370bcd940d14e1f35d9fb5da88bbd11431b28ecb",
     "scripts/song-workspace-storage.js": "b11c00dcb5cafb3ca414ccc9fec59bd6931dc39fe3658ecec33003f4d7d210ae",
@@ -378,7 +378,7 @@ test("updates deterministic Cloudflare ownership without changing version or bac
   assert.match(verifier, /Progression Writer canonical metadata differs/);
   assert.match(verifier, /Progression Writer still loads a legacy page runtime/);
   assert.match(verifier, /compiled Vue Progression Writer mount marker is missing/);
-  assert.equal(packageJson.version, "3.5.2");
+  assert.equal(packageJson.version, "3.5.3");
   assert.deepEqual(packageJson.dependencies, { vue: "3.5.42" });
   ["vue-router", "pinia", "vue-i18n", "@vueuse/core", "vitest", "@vue/test-utils"].forEach(name => {
     assert.equal(packageJson.dependencies?.[name], undefined);

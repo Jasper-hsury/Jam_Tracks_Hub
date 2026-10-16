@@ -25,8 +25,8 @@ test("preserves Service Waking metadata, analytics, shell, and shared runtime", 
 
   assert.match(html, /<title>Waking the Analyzer \| Jam Tracks Hub<\/title>/);
   assert.match(html, /<meta name="robots" content="noindex">/);
-  assert.match(html, /<link rel="canonical" href="https:\/\/jamtrackshub\.com\/service-waking\.html">/);
-  assert.match(html, /<meta property="og:url" content="https:\/\/jamtrackshub\.com\/service-waking\.html">/);
+  assert.match(html, /<link rel="canonical" href="https:\/\/jamtrackshub\.com\/service-waking">/);
+  assert.match(html, /<meta property="og:url" content="https:\/\/jamtrackshub\.com\/service-waking">/);
   assert.match(html, /<body data-i18n-title="service\.wakingAnalyzer">/);
   assert.match(html, /<script defer src="https:\/\/cloud\.umami\.is\/script\.js" data-website-id="[^"]+"><\/script>/);
   assert.match(html, /scripts\/site-config\.js\?v=20260729-youtube-key-api/);
@@ -94,7 +94,7 @@ test("keeps Service Waking bounded and preserves remaining legacy output", () =>
   const packageJson = JSON.parse(read("package.json"));
   const verifier = read("tools/scripts/verify-cloudflare-build.js");
 
-  assert.equal(packageJson.version, "3.5.2");
+  assert.equal(packageJson.version, "3.5.3");
   assert.equal(packageJson.dependencies.vue, "3.5.42");
   assert.match(verifier, /const viteOwnedRootHtml = new Set\([^)]*"key-finder\.html"/);
   assert.match(verifier, /Service Waking canonical metadata differs/);

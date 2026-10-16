@@ -19,7 +19,7 @@ test("homepage title writes itself instead of the old SplitText character rise",
     assert.match(indexHtml, /<div id="vue-home-root"><\/div>/);
     assert.match(indexHtml, /assets\/vendor\/gsap\/SplitText\.min\.js/);
     assert.doesNotMatch(indexHtml, /scripts\/i18n\.js/);
-    assert.match(indexHtml, /scripts\/site-animations\.js\?v=20261016-hero-handwriting/);
+    assert.match(indexHtml, /scripts\/site-animations\.js\?v=20261017-polish/);
     assert.doesNotMatch(animationsJs, /\.home-hero h1|\.home-hero \.signature-slogan|home-split-char|animateHomeHeroText|homeHeroSplits/);
     assert.match(animationsJs, /The homepage title, rule and tagline animate themselves \(HomeHeroTitle\.vue\)/);
 });
@@ -73,15 +73,15 @@ test("Privacy uses stable policy typography without panel hover or title transfo
     assert.match(pagesCss, /\.privacy-policy-panel\s*\{[^}]*animation:\s*none/s);
     assert.match(pagesCss, /\.privacy-policy-panel \.section-title,\s*\.privacy-policy-panel \.result-section h2\s*\{[^}]*font-family:\s*var\(--font-sans\)[^}]*font-size:\s*24px[^}]*font-weight:\s*700[^}]*line-height:\s*1\.25/s);
     assert.match(pagesCss, /\.privacy-page \.privacy-policy-panel:hover\s*\{[^}]*background:\s*var\(--panel-background\)[^}]*box-shadow:\s*0 10px 26px var\(--shadow-color\)[^}]*transform:\s*none/s);
-    assert.match(animationsJs, /heroPiecesForEntrance[\s\S]*\.filter\(target => !target\.closest\("\.privacy-page"\)\)/s);
+    assert.match(animationsJs, /heroPiecesForEntrance[\s\S]*\.filter\(target => !target\.closest\("\.privacy-page, \.legal-page"\)\)/s);
     assert.match(animationsJs, /if \(heroPiecesForEntrance\.length\) \{\s*gsap\.set\(heroPiecesForEntrance/s);
     assert.match(animationsJs, /if \(heroPiecesForEntrance\.length\) \{\s*timeline\.to\(heroPiecesForEntrance/s);
-    assert.match(animationsJs, /revealTargets[\s\S]*\.filter\(target => !target\.closest\("\.privacy-page"\)\)/s);
+    assert.match(animationsJs, /revealTargets[\s\S]*\.filter\(target => !target\.closest\("\.privacy-page, \.legal-page"\)\)/s);
 });
 
 test("Song Workspace reuses the shared page entrance without changing its application modules", () => {
     assert.match(workspaceHtml, /assets\/vendor\/gsap\/gsap\.min\.js/);
-    assert.match(workspaceHtml, /scripts\/site-animations\.js\?v=20261016-hero-handwriting/);
+    assert.match(workspaceHtml, /scripts\/site-animations\.js\?v=20261017-polish/);
     assert.match(animationsJs, /const isSongWorkspacePage = Boolean\(document\.querySelector\("\.song-workspace-page"\)\)/);
     assert.match(animationsJs, /"\.song-workspace-hero > \.result-kicker"[\s\S]*"\.workspace-create-area > \.workspace-section-heading"/s);
     assert.match(animationsJs, /if \(isSongWorkspacePage\) \{[\s\S]*\.workspace-entry-grid > \.workspace-entry-card[\s\S]*stagger:\s*0\.065/s);

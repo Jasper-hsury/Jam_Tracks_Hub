@@ -1,0 +1,2 @@
+# Cloudflare prepends its managed content signals to this file.
+Sitemap: https://jamtrackshub.com/sitemap.xml

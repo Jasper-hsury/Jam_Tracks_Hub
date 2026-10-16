@@ -6558,7 +6558,7 @@ html[data-theme] .v3-home .hero-actions .primary-button,
 html[data-theme] .v3-home .hero-actions .secondary-button {
     display: inline-flex;
     align-items: center;
-    min-height: 48px;
+    min-height: 46px;
     box-sizing: border-box;
     padding: 0 24px;
     border: 1px solid var(--ink);
@@ -7309,7 +7309,7 @@ html[data-theme] main.tracks-library-page .hero-tagline {
     margin: 0;
     color: var(--accent);
     font-family: var(--font-serif);
-    font-size: clamp(20px, 2.2vw, 26px);
+    font-size: clamp(19px, 2vw, 24px);
     font-style: italic;
 }
 
@@ -7442,7 +7442,7 @@ html[data-theme] main.tracks-library-page .v3-sort-buttons {
 }
 
 html[data-theme] main.tracks-library-page .v3-sort-button {
-    min-height: 42px;
+    min-height: 44px;
     padding: 0 16px;
     border: 0;
     color: var(--ink);

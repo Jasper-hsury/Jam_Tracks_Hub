@@ -20,8 +20,10 @@ const rootFiles = [
   "legal.html",
   "privacy-policy.html",
   "progression-writer.html",
+  "robots.txt",
   "scale.html",
   "service-waking.html",
+  "sitemap.xml",
   "song-workspace.html",
   "tracks.html"
 ];

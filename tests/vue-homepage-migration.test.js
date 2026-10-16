@@ -369,7 +369,7 @@ test("keeps Tracks independently Vue-owned and other legacy pages outside the Ho
   const keyFinderHtml = read("key-finder.html");
   const workspaceHtml = read("song-workspace.html");
 
-  assert.equal(packageJson.version, "3.5.2");
+  assert.equal(packageJson.version, "3.5.3");
   assert.match(tracksHtml, /src\/entries\/tracks\.js/);
   assert.doesNotMatch(tracksHtml, /scripts\/tracks\.js/);
   assert.match(keyFinderHtml, /src\/entries\/key-finder\.js/);

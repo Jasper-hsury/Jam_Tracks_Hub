@@ -197,7 +197,7 @@
   "pages": {
     "tracks": {
       "title": "All Backing Tracks",
-      "tagline": "Capture the Feeling. Compose the Meaning.",
+      "tagline": "Press play. Find your groove.",
       "libraryCount": "{{count}} original tracks",
       "filtersLabel": "Filters",
       "keyLabel": "Key",
@@ -376,7 +376,7 @@
     },
     "chordProgressions": {
       "title": "Chord Progressions",
-      "tagline": "Capture the Feeling. Compose the Meaning.",
+      "tagline": "Learn the moves songs are built on.",
       "eyebrow": "Keys • triads & sevenths • common progressions",
       "explorerTitle": "Chord Progression Explorer",
       "intro": "Choose a key, switch between triads and seventh chords, then compare guitar-friendly root-position voicings.",
@@ -415,7 +415,7 @@
     },
     "progressionWriter": {
       "title": "Write Your Own Progression",
-      "tagline": "Capture the Feeling. Compose the Meaning.",
+      "tagline": "Your chords, your order, one clean chart.",
       "eyebrow": "Song info • custom chords • image export",
       "modeTitle": "Chord Progression",
       "format": "Progression format",
@@ -726,14 +726,14 @@
   "notFound": {
     "title": "This page missed the downbeat.",
     "copy": "The link may have moved, but the music is still here.",
-    "returnHome": "Return Home",
+    "returnHome": "Back to Home",
     "openKeyFinder": "Open Key Finder"
   },
   "statusPages": {
     "notFoundSleeveCaption": "Track not found"
   },
   "privacy": {
-    "title": "Jam Tracks Hub Privacy & User Content",
+    "title": "Privacy & User Content",
     "effectiveDate": "Effective date: August 27, 2026",
     "body": {
       "01": "What the extension does",
