@@ -143,3 +143,13 @@ test("Feedback, Legal and Privacy get the compact, centred phone heading", () =>
   assert.match(css, /@media \(max-width: 760px\) \{[\s\S]*?main:is\(\.feedback-page, \.legal-page, \.privacy-page\) h1 \{\s*font-size: 34px;\s*line-height: 1\.08;/);
   assert.match(css, /main:is\(\.legal-page, \.privacy-page\) \.v3-page-meta \{\s*justify-content: center;\s*margin-top: 16px;/);
 });
+
+test("the Privacy title only ever breaks between the brand and the rest", () => {
+  const view = read("src/views/PrivacyView.vue");
+  assert.match(view, /title\.startsWith\(`\$\{brand\} `\) \? \[brand, title\.slice\(brand\.length \+ 1\)\] : \[title\]/);
+  assert.match(view, /<span class="privacy-title-part">\{\{ part \}\}<\/span>/);
+  assert.match(css, /main\.privacy-page \.privacy-title-part \{\s*display: inline-block;/);
+  ["en", "zh-TW"].forEach(locale => {
+    assert.match(JSON.parse(read(`locales/${locale}/common.json`)).privacy.title, /^Jam Tracks Hub /);
+  });
+});
