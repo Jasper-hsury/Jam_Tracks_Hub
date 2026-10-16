@@ -6,7 +6,7 @@ const test = require("node:test");
 const root = path.resolve(__dirname, "..");
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
 const css = read("styles/tool-pages.css");
-const TOOL_STYLESHEET = "styles/tool-pages.css?v=20261015-v3-chord-palette";
+const TOOL_STYLESHEET = "styles/tool-pages.css?v=20261016-progression-cards";
 
 const toolPages = [
   { html: "chord-dictionary.html", view: "ChordDictionaryView", aside: "standardTuning" },
@@ -216,4 +216,22 @@ test("Chord Progressions mini shapes use the shared chord-shape palette", () => 
   });
   const dictionary = read("styles/themes.css") + read("styles/chord-dictionary.css");
   ["#2d7b76", "#9d6a3d", "#b88b56", "#b06b7a"].forEach(color => assert.ok(dictionary.includes(color), color));
+});
+
+test("Chord Progressions cards stack chords above full-width shapes sized by the card, not the viewport", () => {
+  const page = "html\\[data-theme\\] main\\.v3-tool-page\\.chord-progressions-page";
+  assert.match(css, new RegExp(`${page} :is\\(\\.progression-voicing-card, \\.progression-voicing-card\\.has-four-voicings\\) \\{\\s*grid-template-columns: minmax\\(0, 1fr\\);\\s*container-type: inline-size;`));
+  assert.match(css, new RegExp(`${page} :is\\(\\.progression-voicing-summary, \\.progression-summary-stack\\) \\{\\s*width: 100%;\\s*max-width: 560px;`));
+  assert.match(css, /@container \(min-width: 440px\) \{[^}]*\{\s*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\);/);
+  assert.match(css, /@container \(min-width: 880px\) \{[^}]*\{\s*grid-template-columns: repeat\(auto-fit, minmax\(200px, 1fr\)\);/);
+  assert.match(css, new RegExp(`${page} \\.progression-mini-neck \\{\\s*justify-self: center;\\s*width: calc\\(100% \\* 5 / 6\\);`));
+});
+
+test("grouped Chord Progressions put each group of bars directly above its own shapes", () => {
+  const card = "html\\[data-theme\\] main\\.v3-tool-page\\.chord-progressions-page \\.progression-voicing-card\\.has-grouped-bars";
+  assert.match(css, new RegExp(`${card} :is\\(\\.progression-summary-stack, \\.progression-voicing-stack\\) \\{\\s*display: contents;`));
+  [1, 2, 3, 4].forEach(group => {
+    assert.match(css, new RegExp(`${card} \\.progression-voicing-summary:nth-child\\(${group}\\) \\{ order: ${group * 2 - 1}; \\}`));
+    assert.match(css, new RegExp(`${card} \\.progression-chord-voicing-group:nth-child\\(${group}\\) \\{ order: ${group * 2}; \\}`));
+  });
 });

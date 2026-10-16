@@ -1974,3 +1974,77 @@ html[data-theme="default"] main.v3-tool-page.chord-progressions-page :is(.progre
 html[data-theme="default"] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone)[data-tone-family="extension"] {
     --tone-bg: #6f7964;
 }
+
+/* Chord Progressions cards: the chords sit above their shapes at every width,
+   so the shapes get the card's full width instead of a narrow side column.
+   The card is a size container: four shapes per row once each can be about
+   200px wide, two on medium cards and one on phones. */
+html[data-theme] main.v3-tool-page.chord-progressions-page :is(.progression-voicing-card, .progression-voicing-card.has-four-voicings) {
+    grid-template-columns: minmax(0, 1fr);
+    container-type: inline-size;
+}
+
+html[data-theme] main.v3-tool-page.chord-progressions-page :is(.progression-voicing-summary, .progression-summary-stack) {
+    width: 100%;
+    max-width: 560px;
+}
+
+html[data-theme] main.v3-tool-page.chord-progressions-page :is(.progression-chord-voicings, .progression-voicing-card.has-four-voicings .progression-chord-voicings) {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+@container (min-width: 440px) {
+    html[data-theme] main.v3-tool-page.chord-progressions-page :is(.progression-chord-voicings, .progression-voicing-card.has-four-voicings .progression-chord-voicings) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@container (min-width: 880px) {
+    html[data-theme] main.v3-tool-page.chord-progressions-page :is(.progression-chord-voicings, .progression-voicing-card.has-four-voicings .progression-chord-voicings) {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+}
+
+/* Inset the neck to five sixths so its strings line up with the open-string
+   and string-name columns, and edge dots stay clear of the fret number. */
+html[data-theme] main.v3-tool-page.chord-progressions-page .progression-mini-diagram {
+    width: 100%;
+    max-width: 260px;
+    margin-inline: auto;
+}
+
+html[data-theme] main.v3-tool-page.chord-progressions-page .progression-mini-neck {
+    justify-self: center;
+    width: calc(100% * 5 / 6);
+}
+
+/* Grouped progressions (12-bar blues and friends): each group of bars sits
+   directly above its own shapes instead of every group, then every shape. */
+html[data-theme] main.v3-tool-page.chord-progressions-page .progression-voicing-card.has-grouped-bars :is(.progression-summary-stack, .progression-voicing-stack) {
+    display: contents;
+}
+
+html[data-theme] main.v3-tool-page.chord-progressions-page .progression-voicing-card.has-grouped-bars .progression-voicing-summary:nth-child(1) { order: 1; }
+html[data-theme] main.v3-tool-page.chord-progressions-page .progression-voicing-card.has-grouped-bars .progression-chord-voicing-group:nth-child(1) { order: 2; }
+html[data-theme] main.v3-tool-page.chord-progressions-page .progression-voicing-card.has-grouped-bars .progression-voicing-summary:nth-child(2) { order: 3; }
+html[data-theme] main.v3-tool-page.chord-progressions-page .progression-voicing-card.has-grouped-bars .progression-chord-voicing-group:nth-child(2) { order: 4; }
+html[data-theme] main.v3-tool-page.chord-progressions-page .progression-voicing-card.has-grouped-bars .progression-voicing-summary:nth-child(3) { order: 5; }
+html[data-theme] main.v3-tool-page.chord-progressions-page .progression-voicing-card.has-grouped-bars .progression-chord-voicing-group:nth-child(3) { order: 6; }
+html[data-theme] main.v3-tool-page.chord-progressions-page .progression-voicing-card.has-grouped-bars .progression-voicing-summary:nth-child(4) { order: 7; }
+html[data-theme] main.v3-tool-page.chord-progressions-page .progression-voicing-card.has-grouped-bars .progression-chord-voicing-group:nth-child(4) { order: 8; }
+
+html[data-theme] main.v3-tool-page.chord-progressions-page .progression-voicing-card.has-grouped-bars .progression-voicing-summary:not(:last-child) {
+    padding-bottom: 0;
+    border-bottom: 0;
+}
+
+html[data-theme] main.v3-tool-page.chord-progressions-page .progression-voicing-card.has-grouped-bars .progression-voicing-summary:not(:first-child) {
+    max-width: none;
+    margin-top: 6px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+}
+
+html[data-theme] main.v3-tool-page.chord-progressions-page .progression-voicing-card.has-grouped-bars .progression-voicing-summary:not(:first-child) > * {
+    max-width: 560px;
+}
