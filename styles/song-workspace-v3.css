@@ -61,7 +61,7 @@ html[data-theme] body[data-vue-page="song-workspace"] .song-workspace-hero h1 {
 
 html[data-theme] body[data-vue-page="song-workspace"] .song-workspace-hero .hero-tagline {
     margin: 10px 0 0;
-    color: var(--ink);
+    color: var(--accent);
     font-family: var(--font-serif);
     font-size: clamp(19px, 2vw, 24px);
     font-style: italic;
@@ -165,7 +165,7 @@ html[data-theme] body[data-vue-page="song-workspace"] .workspace-section-heading
     margin: 0;
     color: var(--ink);
     font-family: var(--font-serif);
-    font-size: 36px;
+    font-size: 30px;
     font-weight: 400;
     line-height: 1.08;
 }
@@ -182,7 +182,7 @@ html[data-theme] body[data-vue-page="song-workspace"] .workspace-button {
     border: 1px solid var(--ink);
     border-radius: var(--radius-control);
     box-shadow: none;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 600;
     transform: none;
 }
@@ -1176,7 +1176,7 @@ html[data-theme] body[data-vue-page="song-workspace"] .workspace-anchor-preview 
     }
 
     html[data-theme] body[data-vue-page="song-workspace"] .workspace-section-heading h2 {
-        font-size: 30px;
+        font-size: 24px;
     }
 
     html[data-theme] body[data-vue-page="song-workspace"] .workspace-create-area {

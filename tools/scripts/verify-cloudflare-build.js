@@ -105,21 +105,30 @@ if (/src\/entries\/home\.js/.test(migratedHome)) fail("Homepage source entry lea
   "scripts/i18n-init.js?v=20260804-no-language-flash",
   "styles/base.css?v=20261014-v3-liner-notes",
   "styles/components.css?v=20261014-v3-liner-notes",
-  "styles/pages.css?v=20261016-inner-pages",
+  "styles/pages.css?v=20261017-polish",
   "styles/themes.css?v=20261014-v3-rounded",
   "styles/home-title.css?v=20261016-tagline-stagger",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
   "assets/vendor/gsap/SplitText.min.js",
-  "scripts/site-animations.js?v=20261016-hero-handwriting"
+  "scripts/site-animations.js?v=20261017-polish"
 ].forEach(function(asset) {
   if (!migratedHome.includes(asset)) fail(`Homepage legacy asset path differs: ${asset}`);
 });
 if (/assets\/vue\/home-[^"]+\.css/.test(migratedHome)) fail("Homepage shared CSS was incorrectly rebundled");
 
+["robots.txt", "sitemap.xml"].forEach(function(file) {
+  if (!fs.existsSync(path.join(dist, file))) fail(`${file} is missing from the Cloudflare build`);
+});
+const sitemap = fs.readFileSync(path.join(dist, "sitemap.xml"), "utf8");
+if (/\.html</.test(sitemap) || /404|service-waking/.test(sitemap)) fail("sitemap.xml must list clean, indexable URLs only");
+if (!/Sitemap: https:\/\/jamtrackshub\.com\/sitemap\.xml/.test(fs.readFileSync(path.join(dist, "robots.txt"), "utf8"))) {
+  fail("robots.txt must point to the sitemap");
+}
+
 const migrated404 = fs.readFileSync(path.join(dist, "404.html"), "utf8");
 if (!/<meta name="robots" content="noindex">/.test(migrated404)) fail("404 noindex metadata is missing");
-if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/404\.html">/.test(migrated404)) {
+if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/404">/.test(migrated404)) {
   fail("404 canonical metadata differs");
 }
 if (!/<div id="vue-404-root"><\/div>/.test(migrated404)) fail("404 Vue mount target is missing");
@@ -139,17 +148,17 @@ Array.from(migrated404.matchAll(/(?:href|src)="([^"]+)"/g), match => match[1])
   "scripts/i18n-init.js?v=20260902-404-route-root",
   "styles/base.css?v=20261014-v3-liner-notes",
   "styles/components.css?v=20261014-v3-liner-notes",
-  "styles/pages.css?v=20261016-inner-pages",
+  "styles/pages.css?v=20261017-polish",
   "styles/themes.css?v=20261014-v3-rounded",
-  "styles/secondary-pages.css?v=20261016-inner-pages",
-  "scripts/site-animations.js?v=20261016-hero-handwriting"
+  "styles/secondary-pages.css?v=20261017-polish",
+  "scripts/site-animations.js?v=20261017-polish"
 ].forEach(function(asset) {
   if (!migrated404.includes(asset)) fail(`404 legacy asset path differs: ${asset}`);
 });
 if (/assets\/vue\/404-[^"]+\.css/.test(migrated404)) fail("404 shared CSS was incorrectly rebundled");
 
 const migratedLegal = fs.readFileSync(path.join(dist, "legal.html"), "utf8");
-if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/legal\.html">/.test(migratedLegal)) {
+if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/legal">/.test(migratedLegal)) {
   fail("Legal canonical metadata differs");
 }
 if (!/<div id="vue-legal-root"><\/div>/.test(migratedLegal)) fail("Legal Vue mount target is missing");
@@ -163,16 +172,16 @@ if (/src\/entries\/legal\.js/.test(migratedLegal)) fail("Legal source entry leak
 [
   "styles/base.css?v=20261014-v3-liner-notes",
   "styles/components.css?v=20261014-v3-liner-notes",
-  "styles/pages.css?v=20261016-inner-pages",
+  "styles/pages.css?v=20261017-polish",
   "styles/themes.css?v=20261014-v3-rounded",
-  "styles/secondary-pages.css?v=20261016-inner-pages"
+  "styles/secondary-pages.css?v=20261017-polish"
 ].forEach(function(asset) {
   if (!migratedLegal.includes(asset)) fail(`Legal legacy asset path differs: ${asset}`);
 });
 if (/assets\/vue\/legal-[^"]+\.css/.test(migratedLegal)) fail("Legal shared CSS was incorrectly rebundled");
 
 const migratedPrivacy = fs.readFileSync(path.join(dist, "privacy-policy.html"), "utf8");
-if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/privacy-policy\.html">/.test(migratedPrivacy)) {
+if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/privacy-policy">/.test(migratedPrivacy)) {
   fail("Privacy canonical metadata differs");
 }
 if (!/<div id="vue-privacy-root"><\/div>/.test(migratedPrivacy)) fail("Privacy Vue mount target is missing");
@@ -186,12 +195,12 @@ if (/src\/entries\/privacy\.js/.test(migratedPrivacy)) fail("Privacy source entr
 [
   "styles/base.css?v=20261014-v3-liner-notes",
   "styles/components.css?v=20261014-v3-liner-notes",
-  "styles/pages.css?v=20261016-inner-pages",
+  "styles/pages.css?v=20261017-polish",
   "styles/themes.css?v=20261014-v3-rounded",
-  "styles/secondary-pages.css?v=20261016-inner-pages",
+  "styles/secondary-pages.css?v=20261017-polish",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20261016-hero-handwriting"
+  "scripts/site-animations.js?v=20261017-polish"
 ].forEach(function(asset) {
   if (!migratedPrivacy.includes(asset)) fail(`Privacy legacy asset path differs: ${asset}`);
 });
@@ -201,7 +210,7 @@ const migratedServiceWaking = fs.readFileSync(path.join(dist, "service-waking.ht
 if (!/<meta name="robots" content="noindex">/.test(migratedServiceWaking)) {
   fail("Service Waking noindex metadata is missing");
 }
-if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/service-waking\.html">/.test(migratedServiceWaking)) {
+if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/service-waking">/.test(migratedServiceWaking)) {
   fail("Service Waking canonical metadata differs");
 }
 if (!/<div id="vue-service-waking-root"><\/div>/.test(migratedServiceWaking)) {
@@ -221,13 +230,13 @@ if (/src\/entries\/service-waking\.js/.test(migratedServiceWaking)) {
   "scripts/i18n-init.js?v=20260804-no-language-flash",
   "styles/base.css?v=20261014-v3-liner-notes",
   "styles/components.css?v=20261014-v3-liner-notes",
-  "styles/pages.css?v=20261016-inner-pages",
+  "styles/pages.css?v=20261017-polish",
   "styles/themes.css?v=20261014-v3-rounded",
-  "styles/secondary-pages.css?v=20261016-inner-pages",
+  "styles/secondary-pages.css?v=20261017-polish",
   "scripts/site-config.js?v=20260729-youtube-key-api",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20261016-hero-handwriting"
+  "scripts/site-animations.js?v=20261017-polish"
 ].forEach(function(asset) {
   if (!migratedServiceWaking.includes(asset)) fail(`Service Waking legacy asset path differs: ${asset}`);
 });
@@ -236,7 +245,7 @@ if (/assets\/vue\/service-waking-[^"]+\.css/.test(migratedServiceWaking)) {
 }
 
 const migratedFeedback = fs.readFileSync(path.join(dist, "feedback.html"), "utf8");
-if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/feedback\.html">/.test(migratedFeedback)) {
+if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/feedback">/.test(migratedFeedback)) {
   fail("Feedback canonical metadata differs");
 }
 if (!/<div id="vue-feedback-root"><\/div>/.test(migratedFeedback)) {
@@ -256,12 +265,12 @@ if (/src\/entries\/feedback\.js/.test(migratedFeedback)) {
   "scripts/i18n-init.js?v=20260804-no-language-flash",
   "styles/base.css?v=20261014-v3-liner-notes",
   "styles/components.css?v=20261014-v3-liner-notes",
-  "styles/pages.css?v=20261016-inner-pages",
+  "styles/pages.css?v=20261017-polish",
   "styles/themes.css?v=20261014-v3-rounded",
-  "styles/secondary-pages.css?v=20261016-inner-pages",
+  "styles/secondary-pages.css?v=20261017-polish",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20261016-hero-handwriting"
+  "scripts/site-animations.js?v=20261017-polish"
 ].forEach(function(asset) {
   if (!migratedFeedback.includes(asset)) fail(`Feedback legacy asset path differs: ${asset}`);
 });
@@ -270,7 +279,7 @@ if (/assets\/vue\/feedback-[^"]+\.css/.test(migratedFeedback)) {
 }
 
 const migratedTracks = fs.readFileSync(path.join(dist, "tracks.html"), "utf8");
-if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/tracks\.html">/.test(migratedTracks)) {
+if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/tracks">/.test(migratedTracks)) {
   fail("Tracks canonical metadata differs");
 }
 if (!/<meta name="description" content="Browse original weekly guitar backing tracks by key, mood, and release order, then download slide decks for focused practice\.">/.test(migratedTracks)) {
@@ -293,12 +302,12 @@ if (/src\/entries\/tracks\.js/.test(migratedTracks)) {
   "scripts/i18n-init.js?v=20260804-no-language-flash",
   "styles/base.css?v=20261014-v3-liner-notes",
   "styles/components.css?v=20261014-v3-liner-notes",
-  "styles/pages.css?v=20261016-inner-pages",
+  "styles/pages.css?v=20261017-polish",
   "styles/themes.css?v=20261014-v3-rounded",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/Flip.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20261016-hero-handwriting"
+  "scripts/site-animations.js?v=20261017-polish"
 ].forEach(function(asset) {
   if (!migratedTracks.includes(asset)) fail(`Tracks legacy asset path differs: ${asset}`);
 });
@@ -310,7 +319,7 @@ if (/scripts\/(?:site|i18n|tracks)\.js/.test(migratedTracks)) {
 }
 
 const migratedFretboardTrainer = fs.readFileSync(path.join(dist, "fretboard-trainer.html"), "utf8");
-if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/fretboard-trainer\.html">/.test(migratedFretboardTrainer)) {
+if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/fretboard-trainer">/.test(migratedFretboardTrainer)) {
   fail("Fretboard Trainer canonical metadata differs");
 }
 if (!/<meta name="description" content="Practice guitar fretboard note names with random string and fret questions across standard tuning\.">/.test(migratedFretboardTrainer)) {
@@ -333,13 +342,13 @@ if (/src\/entries\/fretboard-trainer\.js/.test(migratedFretboardTrainer)) {
   "scripts/i18n-init.js?v=20260804-no-language-flash",
   "styles/base.css?v=20261014-v3-liner-notes",
   "styles/components.css?v=20261014-v3-liner-notes",
-  "styles/pages.css?v=20261016-inner-pages",
+  "styles/pages.css?v=20261017-polish",
   "styles/themes.css?v=20261014-v3-rounded",
-  "styles/tool-pages.css?v=20261016-inner-pages",
+  "styles/tool-pages.css?v=20261017-polish",
   "styles/fretboard-trainer.css?v=20261014-v3-liner-notes",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20261016-hero-handwriting"
+  "scripts/site-animations.js?v=20261017-polish"
 ].forEach(function(asset) {
   if (!migratedFretboardTrainer.includes(asset)) fail(`Fretboard Trainer legacy asset path differs: ${asset}`);
 });
@@ -351,7 +360,7 @@ if (/scripts\/(?:site|i18n|fretboard-trainer)\.js/.test(migratedFretboardTrainer
 }
 
 const migratedChordProgressions = fs.readFileSync(path.join(dist, "chord-progressions.html"), "utf8");
-if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/chord-progressions\.html">/.test(migratedChordProgressions)) {
+if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/chord-progressions">/.test(migratedChordProgressions)) {
   fail("Chord Progressions canonical metadata differs");
 }
 if (!/<meta name="description" content="Explore common major and minor chord progressions by key with guitar-friendly chord shapes\.">/.test(migratedChordProgressions)) {
@@ -374,12 +383,12 @@ if (/src\/entries\/chord-progressions\.js/.test(migratedChordProgressions)) {
   "scripts/i18n-init.js?v=20260804-no-language-flash",
   "styles/base.css?v=20261014-v3-liner-notes",
   "styles/components.css?v=20261014-v3-liner-notes",
-  "styles/pages.css?v=20261016-inner-pages",
+  "styles/pages.css?v=20261017-polish",
   "styles/themes.css?v=20261014-v3-rounded",
-  "styles/tool-pages.css?v=20261016-inner-pages",
+  "styles/tool-pages.css?v=20261017-polish",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20261016-hero-handwriting"
+  "scripts/site-animations.js?v=20261017-polish"
 ].forEach(function(asset) {
   if (!migratedChordProgressions.includes(asset)) fail(`Chord Progressions legacy asset path differs: ${asset}`);
 });
@@ -391,7 +400,7 @@ if (/scripts\/(?:site|i18n|chords)\.js/.test(migratedChordProgressions)) {
 }
 
 const migratedScaleExplorer = fs.readFileSync(path.join(dist, "scale.html"), "utf8");
-if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/scale\.html">/.test(migratedScaleExplorer)) {
+if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/scale">/.test(migratedScaleExplorer)) {
   fail("Scale Explorer canonical metadata differs");
 }
 if (!/<meta name="description" content="Build printable guitar scale diagrams by root note, scale type, fret range, and note or degree labels\.">/.test(migratedScaleExplorer)) {
@@ -414,13 +423,13 @@ if (/src\/entries\/scale-explorer\.js/.test(migratedScaleExplorer)) {
   "scripts/i18n-init.js?v=20260804-no-language-flash",
   "styles/base.css?v=20261014-v3-liner-notes",
   "styles/components.css?v=20261014-v3-liner-notes",
-  "styles/pages.css?v=20261016-inner-pages",
+  "styles/pages.css?v=20261017-polish",
   "styles/themes.css?v=20261014-v3-rounded",
-  "styles/tool-pages.css?v=20261016-inner-pages",
+  "styles/tool-pages.css?v=20261017-polish",
   "styles/scale.css?v=20261014-v3-liner-notes",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20261016-hero-handwriting"
+  "scripts/site-animations.js?v=20261017-polish"
 ].forEach(function(asset) {
   if (!migratedScaleExplorer.includes(asset)) fail(`Scale Explorer legacy asset path differs: ${asset}`);
 });
@@ -432,7 +441,7 @@ if (/scripts\/(?:site|i18n|scale)\.js/.test(migratedScaleExplorer)) {
 }
 
 const migratedChordDictionary = fs.readFileSync(path.join(dist, "chord-dictionary.html"), "utf8");
-if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/chord-dictionary\.html">/.test(migratedChordDictionary)) {
+if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/chord-dictionary">/.test(migratedChordDictionary)) {
   fail("Chord Dictionary canonical metadata differs");
 }
 if (!/<meta name="description" content="Search guitar chords by symbol, formula, notes, and playable voicings with shape filters\.">/.test(migratedChordDictionary)) {
@@ -455,14 +464,14 @@ if (/src\/entries\/chord-dictionary\.js/.test(migratedChordDictionary)) {
   "scripts/i18n-init.js?v=20260804-no-language-flash",
   "styles/base.css?v=20261014-v3-liner-notes",
   "styles/components.css?v=20261014-v3-liner-notes",
-  "styles/pages.css?v=20261016-inner-pages",
+  "styles/pages.css?v=20261017-polish",
   "styles/themes.css?v=20261014-v3-rounded",
-  "styles/tool-pages.css?v=20261016-inner-pages",
+  "styles/tool-pages.css?v=20261017-polish",
   "styles/chord-dictionary.css?v=20261014-v3-liner-notes",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/Flip.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20261016-hero-handwriting"
+  "scripts/site-animations.js?v=20261017-polish"
 ].forEach(function(asset) {
   if (!migratedChordDictionary.includes(asset)) fail(`Chord Dictionary legacy asset path differs: ${asset}`);
 });
@@ -474,7 +483,7 @@ if (/scripts\/(?:site|i18n|chord-dictionary)\.js/.test(migratedChordDictionary))
 }
 
 const migratedProgressionWriter = fs.readFileSync(path.join(dist, "progression-writer.html"), "utf8");
-if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/progression-writer\.html">/.test(migratedProgressionWriter)) {
+if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/progression-writer">/.test(migratedProgressionWriter)) {
   fail("Progression Writer canonical metadata differs");
 }
 if (!/<meta name="description" content="Write custom chord progressions, choose guitar voicings, save drafts, and export clean printable chord diagrams\.">/.test(migratedProgressionWriter)) {
@@ -498,13 +507,13 @@ if (/src\/entries\/progression-writer\.js/.test(migratedProgressionWriter)) {
   "styles/base.css?v=20261014-v3-liner-notes",
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/chord-dictionary.css?v=20261014-v3-liner-notes",
-  "styles/pages.css?v=20261016-inner-pages",
+  "styles/pages.css?v=20261017-polish",
   "styles/themes.css?v=20261014-v3-rounded",
-  "styles/tool-pages.css?v=20261016-inner-pages",
+  "styles/tool-pages.css?v=20261017-polish",
   "scripts/chord-shapes.js?v=20260826-workspace-hardening",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20261016-hero-handwriting"
+  "scripts/site-animations.js?v=20261017-polish"
 ].forEach(function(asset) {
   if (!migratedProgressionWriter.includes(asset)) fail(`Progression Writer legacy asset path differs: ${asset}`);
 });
@@ -516,7 +525,7 @@ if (/scripts\/(?:site|i18n|progression-writer)\.js/.test(migratedProgressionWrit
 }
 
 const migratedKeyFinder = fs.readFileSync(path.join(dist, "key-finder.html"), "utf8");
-if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/key-finder\.html">/.test(migratedKeyFinder)) {
+if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/key-finder">/.test(migratedKeyFinder)) {
   fail("Key Finder canonical metadata differs");
 }
 if (!/<meta name="description" content="Upload audio files to estimate song keys, with optional YouTube link analysis when cloud access is available\.">/.test(migratedKeyFinder)) {
@@ -539,12 +548,12 @@ if (/src\/entries\/key-finder\.js/.test(migratedKeyFinder)) {
   "scripts/i18n-init.js?v=20260804-no-language-flash",
   "styles/base.css?v=20261014-v3-liner-notes",
   "styles/components.css?v=20261014-v3-liner-notes",
-  "styles/pages.css?v=20261016-inner-pages",
+  "styles/pages.css?v=20261017-polish",
   "styles/themes.css?v=20261014-v3-rounded",
-  "styles/tool-pages.css?v=20261016-inner-pages",
+  "styles/tool-pages.css?v=20261017-polish",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20261016-hero-handwriting"
+  "scripts/site-animations.js?v=20261017-polish"
 ].forEach(function(asset) {
   if (!migratedKeyFinder.includes(asset)) fail(`Key Finder legacy asset path differs: ${asset}`);
 });
@@ -556,7 +565,7 @@ if (/scripts\/(?:site|i18n|site-config|key-finder)\.js/.test(migratedKeyFinder))
 }
 
 const migratedSongWorkspace = fs.readFileSync(path.join(dist, "song-workspace.html"), "utf8");
-if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/song-workspace\.html">/.test(migratedSongWorkspace)) {
+if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/song-workspace">/.test(migratedSongWorkspace)) {
   fail("Song Workspace canonical metadata differs");
 }
 if (!/<meta name="description" content="Create, transpose, simplify, save, and perform chord and lyric charts locally in your browser\.">/.test(migratedSongWorkspace)) {
@@ -582,17 +591,17 @@ if (/src\/entries\/song-workspace\.js/.test(migratedSongWorkspace)) {
   "scripts/i18n-init.js?v=20260826-song-workspace",
   "styles/base.css?v=20261014-v3-liner-notes",
   "styles/components.css?v=20261014-v3-liner-notes",
-  "styles/pages.css?v=20261016-inner-pages",
+  "styles/pages.css?v=20261017-polish",
   "styles/themes.css?v=20261014-v3-rounded",
   "styles/chord-dictionary.css?v=20261014-v3-liner-notes",
   "styles/song-workspace.css?v=20261014-v3-liner-notes",
-  "styles/song-workspace-v3.css?v=20261016-inner-pages",
+  "styles/song-workspace-v3.css?v=20261017-polish",
   "scripts/chord-shapes.js?v=20260827-picker-json-fix",
   "scripts/song-workspace-core.js?v=20260827-picker-json-fix",
   "scripts/song-workspace-storage.js?v=20260828-settings-ux",
   "scripts/song-workspace-import.js?v=20260827-picker-json-fix",
   "assets/vendor/gsap/gsap.min.js",
-  "scripts/site-animations.js?v=20261016-hero-handwriting"
+  "scripts/site-animations.js?v=20261017-polish"
 ].forEach(function(asset) {
   if (!migratedSongWorkspace.includes(asset)) fail(`Song Workspace legacy-compatible asset path differs: ${asset}`);
 });

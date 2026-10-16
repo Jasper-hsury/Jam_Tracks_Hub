@@ -33,8 +33,8 @@ test("preserves Privacy metadata, analytics, theme, locale, shell, and animation
   const html = read("privacy-policy.html");
 
   assert.match(html, /<title>Privacy &amp; User Content \| Jam Tracks Hub<\/title>/);
-  assert.match(html, /<link rel="canonical" href="https:\/\/jamtrackshub\.com\/privacy-policy\.html">/);
-  assert.match(html, /<meta property="og:url" content="https:\/\/jamtrackshub\.com\/privacy-policy\.html">/);
+  assert.match(html, /<link rel="canonical" href="https:\/\/jamtrackshub\.com\/privacy-policy">/);
+  assert.match(html, /<meta property="og:url" content="https:\/\/jamtrackshub\.com\/privacy-policy">/);
   assert.match(html, /<body data-i18n-title="titles\.privacy">/);
   assert.match(html, /scripts\/theme-init\.js\?v=20261014-v3-paper-default/);
   assert.match(html, /scripts\/i18n-init\.js\?v=20260804-no-language-flash/);
@@ -43,7 +43,7 @@ test("preserves Privacy metadata, analytics, theme, locale, shell, and animation
   assert.doesNotMatch(html, /<footer class="footer">/);
   assert.doesNotMatch(html, /scripts\/(?:site|i18n)\.js/);
   assert.match(html, /assets\/vendor\/gsap\/gsap\.min\.js/);
-  assert.match(html, /scripts\/site-animations\.js\?v=20261016-hero-handwriting/);
+  assert.match(html, /scripts\/site-animations\.js\?v=20261017-polish/);
 });
 
 test("renders the established Privacy structure from canonical locale resources", () => {

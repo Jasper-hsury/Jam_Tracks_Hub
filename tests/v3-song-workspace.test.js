@@ -6,7 +6,7 @@ const test = require("node:test");
 const root = path.resolve(__dirname, "..");
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
 const css = read("styles/song-workspace-v3.css");
-const STYLESHEET = "styles/song-workspace-v3.css?v=20261016-inner-pages";
+const STYLESHEET = "styles/song-workspace-v3.css?v=20261017-polish";
 const SCOPE = /^html\[data-theme(?:="default")?\](?::lang\(zh\))? body\[data-vue-page="song-workspace"\]/;
 
 function splitTopLevel(group) {

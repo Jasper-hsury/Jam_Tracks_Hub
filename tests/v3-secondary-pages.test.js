@@ -6,7 +6,7 @@ const test = require("node:test");
 const root = path.resolve(__dirname, "..");
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
 const css = read("styles/secondary-pages.css");
-const STYLESHEET = "styles/secondary-pages.css?v=20261016-inner-pages";
+const STYLESHEET = "styles/secondary-pages.css?v=20261017-polish";
 const PAGES = {
   "feedback.html": "",
   "legal.html": "",
@@ -144,12 +144,10 @@ test("Feedback, Legal and Privacy get the compact, centred phone heading", () =>
   assert.match(css, /main:is\(\.legal-page, \.privacy-page\) \.v3-page-meta \{\s*justify-content: center;\s*margin-top: 16px;/);
 });
 
-test("the Privacy title only ever breaks between the brand and the rest", () => {
+test("Privacy and Legal titles carry no brand prefix", () => {
   const view = read("src/views/PrivacyView.vue");
-  assert.match(view, /title\.startsWith\(`\$\{brand\} `\) \? \[brand, title\.slice\(brand\.length \+ 1\)\] : \[title\]/);
-  assert.match(view, /<span class="privacy-title-part">\{\{ part \}\}<\/span>/);
-  assert.match(css, /main\.privacy-page \.privacy-title-part \{\s*display: inline-block;/);
-  ["en", "zh-TW"].forEach(locale => {
-    assert.match(JSON.parse(read(`locales/${locale}/common.json`)).privacy.title, /^Jam Tracks Hub /);
-  });
+  assert.match(view, /<h1 class="privacy-page-title">\{\{ privacy\.title \}\}<\/h1>/);
+  assert.doesNotMatch(css, /privacy-title-part/);
+  assert.equal(JSON.parse(read("locales/en/common.json")).privacy.title, "Privacy & User Content");
+  assert.equal(JSON.parse(read("locales/zh-TW/common.json")).privacy.title, "隱私與使用者內容");
 });

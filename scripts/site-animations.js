@@ -123,7 +123,7 @@
         ].join(", "));
         const navPieces = elements(".navbar .logo, .navbar .nav-links > li");
         // The homepage title, rule and tagline animate themselves (HomeHeroTitle.vue).
-        const heroPiecesForEntrance = heroPieces.filter(target => !target.closest(".privacy-page"));
+        const heroPiecesForEntrance = heroPieces.filter(target => !target.closest(".privacy-page, .legal-page"));
 
         if (!hasGsap) {
             applyCssEntrance([document.querySelector(".navbar"), ...navPieces, ...heroPieces].filter(Boolean));
@@ -238,7 +238,7 @@
             .filter(target => !target.matches(".tracks-library-page .track-controls"))
             .filter(target => !target.closest(".trainer-page"))
             .filter(target => !target.closest(".song-workspace-page"))
-            .filter(target => !target.closest(".privacy-page"));
+            .filter(target => !target.closest(".privacy-page, .legal-page"));
 
         if (!hasGsap || !hasScrollTrigger) {
             if (!("IntersectionObserver" in window)) {

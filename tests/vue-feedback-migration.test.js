@@ -25,8 +25,8 @@ test("preserves Feedback metadata, analytics, shell, and page route", () => {
 
   assert.match(html, /<title>Feedback \| Jam Tracks Hub<\/title>/);
   assert.match(html, /<meta name="description" content="Share a topic and suggestion to help improve Jam Tracks Hub\.">/);
-  assert.match(html, /<link rel="canonical" href="https:\/\/jamtrackshub\.com\/feedback\.html">/);
-  assert.match(html, /<meta property="og:url" content="https:\/\/jamtrackshub\.com\/feedback\.html">/);
+  assert.match(html, /<link rel="canonical" href="https:\/\/jamtrackshub\.com\/feedback">/);
+  assert.match(html, /<meta property="og:url" content="https:\/\/jamtrackshub\.com\/feedback">/);
   assert.match(html, /<body data-i18n-title="titles\.feedback">/);
   assert.match(html, /<script defer src="https:\/\/cloud\.umami\.is\/script\.js" data-website-id="[^"]+"><\/script>/);
   assert.doesNotMatch(html, /<nav class="navbar"/);

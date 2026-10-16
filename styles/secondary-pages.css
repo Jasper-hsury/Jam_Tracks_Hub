@@ -65,12 +65,6 @@ html[data-theme]:lang(zh) main:is(.feedback-page, .legal-page, .privacy-page) h1
     line-height: 1.15;
 }
 
-/* "Jam Tracks Hub" and the rest of the Privacy title each stay whole, so a
-   title that needs two lines breaks right after the brand. */
-html[data-theme] main.privacy-page .privacy-title-part {
-    display: inline-block;
-}
-
 html[data-theme] main:is(.feedback-page, .legal-page, .privacy-page, .status-page) :is(button, a, input, textarea, summary):focus-visible {
     outline: 2px solid var(--focus);
     outline-offset: 3px;
@@ -142,7 +136,7 @@ html[data-theme] main:is(.feedback-page, .legal-page, .privacy-page, .status-pag
 html[data-theme] main.feedback-page .hero-tagline {
     max-width: 820px;
     margin: 12px 0 0;
-    color: var(--ink);
+    color: var(--accent);
     font-family: var(--font-serif);
     font-size: clamp(19px, 2vw, 22px);
     font-style: italic;
@@ -188,7 +182,7 @@ html[data-theme] main.feedback-page .feedback-panel .tool-section-heading {
 
 html[data-theme] main.feedback-page .feedback-panel h2 {
     margin: 0;
-    font-size: 36px;
+    font-size: 30px;
     line-height: 1.08;
 }
 
@@ -793,7 +787,7 @@ html[data-theme] main.status-page:has(.status-page-status[data-state="unavailabl
     }
 
     html[data-theme] main.feedback-page .feedback-panel h2 {
-        font-size: 28px;
+        font-size: 24px;
     }
 
     html[data-theme] main.feedback-page .feedback-form {

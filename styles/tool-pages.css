@@ -49,7 +49,7 @@ html[data-theme] main.v3-tool-page .v3-tool-heading h1 {
 
 html[data-theme] main.v3-tool-page .v3-tool-heading .hero-tagline {
     margin: 10px 0 0;
-    color: var(--ink);
+    color: var(--accent);
     font-family: var(--font-serif);
     font-size: clamp(19px, 2vw, 24px);
     font-style: italic;
@@ -311,6 +311,8 @@ html[data-theme] main.v3-tool-page .v3-selected-band #selectedChordDescription {
 html[data-theme] main.v3-tool-page .v3-selected-band .dictionary-play-button {
     min-height: 46px;
     padding: 0 20px;
+    font-size: 15px;
+    font-weight: 600;
     color: var(--band);
     background: var(--on-band);
     border: 1px solid var(--on-band);
@@ -605,6 +607,8 @@ html[data-theme] main.v3-tool-page .scale-summary p:not(.scale-section-kicker) {
 html[data-theme] main.v3-tool-page :is(.scale-play-button, .scale-download-button) {
     min-height: 46px;
     padding: 0 20px;
+    font-size: 15px;
+    font-weight: 600;
     border-radius: 0;
     box-shadow: none;
     transform: none;
@@ -785,7 +789,7 @@ html[data-theme] main.v3-tool-page .select-key-button {
     border: 1px solid var(--ink);
     border-radius: 0;
     box-shadow: none;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 600;
     transform: none;
 }
@@ -1109,7 +1113,7 @@ html[data-theme] main.v3-tool-page :is(.primary-button, .secondary-button) {
     padding: 0 20px;
     border-radius: 0;
     box-shadow: none;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 600;
     letter-spacing: 0;
     text-transform: none;
@@ -1536,7 +1540,7 @@ html[data-theme] main.v3-tool-page .key-finder-panel .tool-section-heading {
 html[data-theme] main.v3-tool-page .key-finder-panel .tool-section-heading h2 {
     margin: 0 0 10px;
     color: var(--ink);
-    font-size: 34px;
+    font-size: 30px;
     text-align: left;
 }
 
@@ -1660,7 +1664,7 @@ html[data-theme] main.v3-tool-page .analyze-file-button {
 }
 
 html[data-theme] main.v3-tool-page .key-finder-form input {
-    min-height: 52px;
+    min-height: 46px;
     color: var(--ink);
     background: var(--paper);
     border: 1px solid var(--line);
@@ -2094,4 +2098,19 @@ html[data-theme] main.v3-tool-page.chord-progressions-page .progression-voicing-
     html[data-theme] main.v3-tool-page .key-mode-heading {
         align-items: flex-start;
     }
+}
+
+/* Section headings: 30px on every tool page, 24px on phones. Key Finder's
+   link row and helper downloads use the standard 46px control height. */
+@media (max-width: 760px) {
+    html[data-theme] main.v3-tool-page :is(.dictionary-browser-heading h2, .scale-control-heading h2, .key-selector > .tool-section-heading h2, .key-mode-heading h2, .section-title, .trainer-card h2, .key-finder-panel .tool-section-heading h2) {
+        font-size: 24px;
+    }
+}
+
+html[data-theme] main.v3-tool-page .key-finder-link-form :is(input, .secondary-button),
+html[data-theme] main.v3-tool-page .helper-download-link {
+    box-sizing: border-box;
+    min-height: 46px;
+    height: 46px;
 }

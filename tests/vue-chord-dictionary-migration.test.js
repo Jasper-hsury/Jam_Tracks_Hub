@@ -211,8 +211,8 @@ test("preserves SEO, analytics, CSP, shared CSS, and animation assets", () => {
 
   assert.match(html, /<title>Chord Dictionary \| Jam Tracks Hub<\/title>/);
   assert.match(html, /content="Search guitar chords by symbol, formula, notes, and playable voicings with shape filters\."/);
-  assert.match(html, /<link rel="canonical" href="https:\/\/jamtrackshub\.com\/chord-dictionary\.html">/);
-  assert.match(html, /property="og:url" content="https:\/\/jamtrackshub\.com\/chord-dictionary\.html"/);
+  assert.match(html, /<link rel="canonical" href="https:\/\/jamtrackshub\.com\/chord-dictionary">/);
+  assert.match(html, /property="og:url" content="https:\/\/jamtrackshub\.com\/chord-dictionary"/);
   assert.match(html, /https:\/\/cloud\.umami\.is\/script\.js/);
   ["theme-init.js", "i18n-init.js", "styles/base.css", "styles/components.css", "styles/pages.css", "styles/themes.css", "styles/chord-dictionary.css", "gsap.min.js", "Flip.min.js", "ScrollTrigger.min.js", "site-animations.js"].forEach(asset => {
     assert.match(html, new RegExp(asset.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), asset);

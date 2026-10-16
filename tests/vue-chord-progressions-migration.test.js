@@ -111,8 +111,8 @@ test("preserves SEO, analytics, theme, locale, shared styles, and animation asse
 
   assert.match(html, /<title>Chord Progressions \| Jam Tracks Hub<\/title>/);
   assert.match(html, /<meta name="description" content="Explore common major and minor chord progressions by key with guitar-friendly chord shapes\.">/);
-  assert.match(html, /<link rel="canonical" href="https:\/\/jamtrackshub\.com\/chord-progressions\.html">/);
-  assert.match(html, /property="og:url" content="https:\/\/jamtrackshub\.com\/chord-progressions\.html"/);
+  assert.match(html, /<link rel="canonical" href="https:\/\/jamtrackshub\.com\/chord-progressions">/);
+  assert.match(html, /property="og:url" content="https:\/\/jamtrackshub\.com\/chord-progressions"/);
   assert.match(html, /https:\/\/cloud\.umami\.is\/script\.js/);
   ["theme-init.js", "i18n-init.js", "styles/base.css", "styles/components.css", "styles/pages.css", "styles/themes.css", "gsap.min.js", "ScrollTrigger.min.js", "site-animations.js"].forEach(asset => {
     assert.match(html, new RegExp(asset.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), asset);

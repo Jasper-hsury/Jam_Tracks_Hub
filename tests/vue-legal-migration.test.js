@@ -23,8 +23,8 @@ test("preserves Legal metadata, analytics, theme, locale, and shared shell", () 
   const html = read("legal.html");
 
   assert.match(html, /<title>Legal &amp; Usage Policy \| Jam Tracks Hub<\/title>/);
-  assert.match(html, /<link rel="canonical" href="https:\/\/jamtrackshub\.com\/legal\.html">/);
-  assert.match(html, /<meta property="og:url" content="https:\/\/jamtrackshub\.com\/legal\.html">/);
+  assert.match(html, /<link rel="canonical" href="https:\/\/jamtrackshub\.com\/legal">/);
+  assert.match(html, /<meta property="og:url" content="https:\/\/jamtrackshub\.com\/legal">/);
   assert.match(html, /<body data-i18n-title="titles\.legal">/);
   assert.match(html, /scripts\/theme-init\.js\?v=20261014-v3-paper-default/);
   assert.match(html, /scripts\/i18n-init\.js\?v=20260827-legal-footer/);
