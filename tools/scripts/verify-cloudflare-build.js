@@ -107,10 +107,11 @@ if (/src\/entries\/home\.js/.test(migratedHome)) fail("Homepage source entry lea
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261014-v3-tracks",
   "styles/themes.css?v=20261014-v3-rounded",
+  "styles/home-title.css?v=20261016-hero-handwriting",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
   "assets/vendor/gsap/SplitText.min.js",
-  "scripts/site-animations.js?v=20261014-tracks-entrance-once"
+  "scripts/site-animations.js?v=20261016-hero-handwriting"
 ].forEach(function(asset) {
   if (!migratedHome.includes(asset)) fail(`Homepage legacy asset path differs: ${asset}`);
 });
@@ -141,7 +142,7 @@ Array.from(migrated404.matchAll(/(?:href|src)="([^"]+)"/g), match => match[1])
   "styles/pages.css?v=20261014-v3-tracks",
   "styles/themes.css?v=20261014-v3-rounded",
   "styles/secondary-pages.css?v=20261015-v3-secondary",
-  "scripts/site-animations.js?v=20261014-tracks-entrance-once"
+  "scripts/site-animations.js?v=20261016-hero-handwriting"
 ].forEach(function(asset) {
   if (!migrated404.includes(asset)) fail(`404 legacy asset path differs: ${asset}`);
 });
@@ -190,7 +191,7 @@ if (/src\/entries\/privacy\.js/.test(migratedPrivacy)) fail("Privacy source entr
   "styles/secondary-pages.css?v=20261015-v3-secondary",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20261014-tracks-entrance-once"
+  "scripts/site-animations.js?v=20261016-hero-handwriting"
 ].forEach(function(asset) {
   if (!migratedPrivacy.includes(asset)) fail(`Privacy legacy asset path differs: ${asset}`);
 });
@@ -226,7 +227,7 @@ if (/src\/entries\/service-waking\.js/.test(migratedServiceWaking)) {
   "scripts/site-config.js?v=20260729-youtube-key-api",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20261014-tracks-entrance-once"
+  "scripts/site-animations.js?v=20261016-hero-handwriting"
 ].forEach(function(asset) {
   if (!migratedServiceWaking.includes(asset)) fail(`Service Waking legacy asset path differs: ${asset}`);
 });
@@ -260,7 +261,7 @@ if (/src\/entries\/feedback\.js/.test(migratedFeedback)) {
   "styles/secondary-pages.css?v=20261015-v3-secondary",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20261014-tracks-entrance-once"
+  "scripts/site-animations.js?v=20261016-hero-handwriting"
 ].forEach(function(asset) {
   if (!migratedFeedback.includes(asset)) fail(`Feedback legacy asset path differs: ${asset}`);
 });
@@ -297,7 +298,7 @@ if (/src\/entries\/tracks\.js/.test(migratedTracks)) {
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/Flip.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20261014-tracks-entrance-once"
+  "scripts/site-animations.js?v=20261016-hero-handwriting"
 ].forEach(function(asset) {
   if (!migratedTracks.includes(asset)) fail(`Tracks legacy asset path differs: ${asset}`);
 });
@@ -338,7 +339,7 @@ if (/src\/entries\/fretboard-trainer\.js/.test(migratedFretboardTrainer)) {
   "styles/fretboard-trainer.css?v=20261014-v3-liner-notes",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20261014-tracks-entrance-once"
+  "scripts/site-animations.js?v=20261016-hero-handwriting"
 ].forEach(function(asset) {
   if (!migratedFretboardTrainer.includes(asset)) fail(`Fretboard Trainer legacy asset path differs: ${asset}`);
 });
@@ -378,7 +379,7 @@ if (/src\/entries\/chord-progressions\.js/.test(migratedChordProgressions)) {
   "styles/tool-pages.css?v=20261015-v3-chord-palette",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20261014-tracks-entrance-once"
+  "scripts/site-animations.js?v=20261016-hero-handwriting"
 ].forEach(function(asset) {
   if (!migratedChordProgressions.includes(asset)) fail(`Chord Progressions legacy asset path differs: ${asset}`);
 });
@@ -419,7 +420,7 @@ if (/src\/entries\/scale-explorer\.js/.test(migratedScaleExplorer)) {
   "styles/scale.css?v=20261014-v3-liner-notes",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20261014-tracks-entrance-once"
+  "scripts/site-animations.js?v=20261016-hero-handwriting"
 ].forEach(function(asset) {
   if (!migratedScaleExplorer.includes(asset)) fail(`Scale Explorer legacy asset path differs: ${asset}`);
 });
@@ -461,7 +462,7 @@ if (/src\/entries\/chord-dictionary\.js/.test(migratedChordDictionary)) {
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/Flip.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20261014-tracks-entrance-once"
+  "scripts/site-animations.js?v=20261016-hero-handwriting"
 ].forEach(function(asset) {
   if (!migratedChordDictionary.includes(asset)) fail(`Chord Dictionary legacy asset path differs: ${asset}`);
 });
@@ -503,7 +504,7 @@ if (/src\/entries\/progression-writer\.js/.test(migratedProgressionWriter)) {
   "scripts/chord-shapes.js?v=20260826-workspace-hardening",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20261014-tracks-entrance-once"
+  "scripts/site-animations.js?v=20261016-hero-handwriting"
 ].forEach(function(asset) {
   if (!migratedProgressionWriter.includes(asset)) fail(`Progression Writer legacy asset path differs: ${asset}`);
 });
@@ -543,7 +544,7 @@ if (/src\/entries\/key-finder\.js/.test(migratedKeyFinder)) {
   "styles/tool-pages.css?v=20261015-v3-chord-palette",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20261014-tracks-entrance-once"
+  "scripts/site-animations.js?v=20261016-hero-handwriting"
 ].forEach(function(asset) {
   if (!migratedKeyFinder.includes(asset)) fail(`Key Finder legacy asset path differs: ${asset}`);
 });
@@ -591,7 +592,7 @@ if (/src\/entries\/song-workspace\.js/.test(migratedSongWorkspace)) {
   "scripts/song-workspace-storage.js?v=20260828-settings-ux",
   "scripts/song-workspace-import.js?v=20260827-picker-json-fix",
   "assets/vendor/gsap/gsap.min.js",
-  "scripts/site-animations.js?v=20261014-tracks-entrance-once"
+  "scripts/site-animations.js?v=20261016-hero-handwriting"
 ].forEach(function(asset) {
   if (!migratedSongWorkspace.includes(asset)) fail(`Song Workspace legacy-compatible asset path differs: ${asset}`);
 });

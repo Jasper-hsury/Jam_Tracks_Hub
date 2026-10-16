@@ -3,6 +3,7 @@ import { computed, ref } from "vue";
 import trackCatalog from "../../data/tracks.json";
 import englishMessages from "../../locales/en/common.json";
 import traditionalChineseMessages from "../../locales/zh-TW/common.json";
+import HomeHeroTitle from "../components/home/HomeHeroTitle.vue";
 import TrackTitle from "../components/home/TrackTitle.vue";
 import { useSiteLocale } from "../i18n/useSiteLocale.js";
 import {
@@ -157,8 +158,7 @@ async function handleSubscribe() {
     <section class="home-hero" id="home">
       <div class="home-section-inner">
         <p class="home-eyebrow">{{ home.hero.eyebrow }}</p>
-        <h1>{{ home.hero.title }}</h1>
-        <p class="signature-slogan">{{ home.hero.tagline }}</p>
+        <HomeHeroTitle :title="home.hero.title" :tagline="home.hero.tagline" />
 
         <div class="v3-hero-grid">
           <div class="v3-sleeve-stage" aria-hidden="true">

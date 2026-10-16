@@ -46,7 +46,7 @@ test("preserves Homepage content, links, media, and accessibility contracts in V
 
   assert.match(view, /<main class="home-page v3-home" id="main-content">/);
   assert.match(view, /<section class="home-hero" id="home">/);
-  assert.match(view, /<h1>\{\{ home\.hero\.title \}\}<\/h1>/);
+  assert.match(view, /<HomeHeroTitle :title="home\.hero\.title" :tagline="home\.hero\.tagline" \/>/);
   assert.match(view, /:aria-label="home\.accessibility\.siteOverview"/);
   assert.match(view, /aria-labelledby="homeToolsTitle"/);
   assert.match(view, /aria-labelledby="featuredAudioTitle"/);
@@ -347,21 +347,19 @@ test("preserves Subscribe UI states without production mutation", () => {
   assert.doesNotMatch(source, /https:\/\/jamtrackshub\.com\/api\/subscribe/);
 });
 
-test("owns SplitText lifecycle after Vue locale render and font readiness", () => {
+test("owns the step-card SplitText lifecycle after Vue locale render and font readiness", () => {
   const animations = read("scripts/site-animations.js");
 
   assert.match(animations, /async function waitForHomeAnimationLayout\(\)/);
   assert.match(animations, /await document\.fonts\.ready/);
   assert.match(animations, /await nextAnimationFrame\(\);\s*await nextAnimationFrame\(\);/);
   assert.match(animations, /function disposeHomeTextAnimation\(\)/);
-  assert.match(animations, /homeHeroTimeline\?\.kill\?\.\(\)/);
-  assert.match(animations, /homeHeroSplits\.forEach\(split => split\?\.revert\?\.\(\)\)/);
   assert.match(animations, /homeStepIntroTimeline\?\.scrollTrigger\?\.kill\?\.\(\)/);
   assert.match(animations, /delete card\._homeStepTextReady/);
   assert.match(animations, /const generation = \+\+homeTextAnimationGeneration/);
   assert.match(animations, /generation !== homeTextAnimationGeneration/);
-  assert.match(animations, /animateHomeHeroText\(\)/);
-  assert.match(animations, /animateHomeHeroText\(\);\s*rebuildHomeStepTextAnimation\(\);/);
+  assert.doesNotMatch(animations, /animateHomeHeroText/);
+  assert.match(animations, /\.then\(\(\) => \{[\s\S]*rebuildHomeStepTextAnimation\(\);\s*window\.ScrollTrigger\?\.refresh\?\.\(\);/);
   assert.match(animations, /window\.addEventListener\("jasper:language-change", rebuildHomeTextAnimation\)/);
 });
 
