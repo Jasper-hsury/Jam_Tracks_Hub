@@ -112,6 +112,38 @@ html[data-theme]:lang(zh) main.v3-tool-page .v3-tool-heading .hero-tagline {
 
     html[data-theme] main.v3-tool-page .v3-tool-heading {
         margin-bottom: 24px;
+        text-align: center;
+    }
+
+    /* Phones: a compact, centred heading (desktop and tablet stay left). */
+    html[data-theme] main.v3-tool-page .v3-tool-eyebrow {
+        justify-content: center;
+        margin-bottom: 8px;
+        font-size: 10.5px;
+        text-align: center;
+    }
+
+    html[data-theme] main.v3-tool-page .v3-tool-heading h1 {
+        font-size: 34px;
+        line-height: 1.08;
+        text-align: center;
+    }
+
+    html[data-theme] main.v3-tool-page .v3-tool-heading .hero-tagline {
+        margin-top: 6px;
+        font-size: 16px;
+        text-align: center;
+    }
+
+    html[data-theme] main.v3-tool-page .v3-tool-heading .trainer-lead {
+        margin-inline: auto;
+        text-align: center;
+    }
+
+    html[data-theme] main.v3-tool-page .v3-tool-meta {
+        justify-content: center;
+        margin-top: 16px;
+        text-align: center;
     }
 }
 

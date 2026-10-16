@@ -71,9 +71,9 @@ test("the Tracks toolbar animates in once, from the entrance timeline only", () 
   assert.equal(read("vite.config.mjs").split("scripts/site-animations.js?v=").length - 1, 1);
 });
 
-test("Tracks shares the tool pages' column, heading size and left-aligned phone heading", () => {
+test("Tracks shares the tool pages' column, heading size and compact centred phone heading", () => {
   const css = read("styles/pages.css");
   assert.match(css, /html\[data-theme\] main\.tracks-library-page \{\s*max-width: 1200px;/);
   assert.match(css, /html\[data-theme\] main\.tracks-library-page h1 \{[^}]*font-size: clamp\(46px, 6vw, 76px\);[^}]*line-height: 1\.02;/);
-  assert.match(css, /@media \(max-width: 760px\) \{\s*html\[data-theme\] main\.tracks-library-page \{\s*padding: 0 16px;\s*\}\s*html\[data-theme\] main\.tracks-library-page \.page-heading-row \{\s*justify-items: start;\s*text-align: left;/);
+  assert.match(css, /@media \(max-width: 760px\) \{\s*html\[data-theme\] main\.tracks-library-page \{\s*padding: 0 16px;\s*\}\s*html\[data-theme\] main\.tracks-library-page \.page-heading-row \{\s*justify-items: center;\s*text-align: center;\s*\}[\s\S]*?main\.tracks-library-page h1 \{\s*margin-bottom: 6px;\s*font-size: 34px;/);
 });

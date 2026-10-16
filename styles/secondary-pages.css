@@ -747,6 +747,36 @@ html[data-theme] main.status-page:has(.status-page-status[data-state="unavailabl
         padding: 0 16px;
     }
 
+    /* Phones: the tool pages' compact, centred heading. */
+    html[data-theme] main:is(.feedback-page, .legal-page, .privacy-page) > :is(.hero-eyebrow, .v3-page-eyebrow, h1, .hero-tagline, .legal-page-intro) {
+        text-align: center;
+    }
+
+    html[data-theme] main:is(.feedback-page, .legal-page, .privacy-page) > :is(.hero-eyebrow, .v3-page-eyebrow) {
+        margin-bottom: 8px;
+        font-size: 10.5px;
+    }
+
+    html[data-theme] main:is(.feedback-page, .legal-page, .privacy-page) h1 {
+        font-size: 34px;
+        line-height: 1.08;
+    }
+
+    html[data-theme] main.feedback-page .hero-tagline {
+        margin: 6px auto 0;
+        font-size: 16px;
+    }
+
+    html[data-theme] main:is(.legal-page, .privacy-page) .legal-page-intro {
+        margin-inline: auto;
+    }
+
+    html[data-theme] main:is(.legal-page, .privacy-page) .v3-page-meta {
+        justify-content: center;
+        margin-top: 16px;
+        text-align: center;
+    }
+
     html[data-theme] main.feedback-page .feedback-panel {
         grid-template-columns: minmax(0, 1fr);
         gap: 20px;

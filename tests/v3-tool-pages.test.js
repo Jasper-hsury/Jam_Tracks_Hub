@@ -239,3 +239,11 @@ test("grouped Chord Progressions put each group of bars directly above its own s
 test("tool eyebrows stay left-aligned on phones even though they reuse the homepage eyebrow class", () => {
   assert.match(css, /html\[data-theme\] main\.v3-tool-page \.v3-tool-eyebrow \{[^}]*max-width: none;[^}]*text-align: left;/);
 });
+
+test("phones get a compact, centred tool heading while desktop and tablet stay left", () => {
+  const phone = css.slice(css.indexOf("@media (max-width: 760px)"));
+  assert.match(phone, /main\.v3-tool-page \.v3-tool-heading \{\s*margin-bottom: 24px;\s*text-align: center;/);
+  assert.match(phone, /main\.v3-tool-page \.v3-tool-eyebrow \{\s*justify-content: center;[^}]*font-size: 10\.5px;/);
+  assert.match(phone, /main\.v3-tool-page \.v3-tool-heading h1 \{\s*font-size: 34px;\s*line-height: 1\.08;\s*text-align: center;/);
+  assert.match(phone, /main\.v3-tool-page \.v3-tool-meta \{\s*justify-content: center;/);
+});

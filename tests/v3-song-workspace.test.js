@@ -106,3 +106,10 @@ test("Song Workspace uses the tool pages' column and starts its heading as high 
   assert.match(css, new RegExp(`${page}:not\\(\\.song-workspace-read-mode\\) \\.song-workspace-page \\{\\s*padding-top: 0;`));
   assert.match(css, new RegExp(`@media \\(max-width: 760px\\) \\{\\s*${page} \\.song-workspace-page \\{\\s*margin-top: 32px;\\s*padding-inline: 16px;`));
 });
+
+test("the Song Workspace start screen gets the compact, centred phone heading; the editor keeps its own", () => {
+  const start = 'body\\[data-vue-page="song-workspace"\\] \\.song-workspace-page:not\\(:has\\(#workspaceEditorView:not\\(\\[hidden\\]\\)\\)\\)';
+  assert.match(css, new RegExp(`${start} \\.song-workspace-hero \\{\\s*text-align: center;`));
+  assert.match(css, new RegExp(`${start} \\.song-workspace-hero h1 \\{\\s*font-size: 34px;`));
+  assert.match(css, new RegExp(`${start} \\.song-workspace-promises \\{\\s*justify-content: center;`));
+});

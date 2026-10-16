@@ -7472,16 +7472,30 @@ html[data-theme] main.tracks-library-page .track-result-count {
     font-weight: 500;
 }
 
-/* Phones: the heading stays left-aligned like every other inner page (the
-   pre-v3 rule centred it), with the tool pages' 16px gutter. */
+/* Phones: the tool pages' 16px gutter and their compact, centred heading. */
 @media (max-width: 760px) {
     html[data-theme] main.tracks-library-page {
         padding: 0 16px;
     }
 
     html[data-theme] main.tracks-library-page .page-heading-row {
-        justify-items: start;
-        text-align: left;
+        justify-items: center;
+        text-align: center;
+    }
+
+    html[data-theme] main.tracks-library-page .v3-tracks-eyebrow {
+        margin-bottom: 8px;
+        font-size: 10.5px;
+    }
+
+    html[data-theme] main.tracks-library-page h1 {
+        margin-bottom: 6px;
+        font-size: 34px;
+        line-height: 1.08;
+    }
+
+    html[data-theme] main.tracks-library-page .hero-tagline {
+        font-size: 16px;
     }
 }
 

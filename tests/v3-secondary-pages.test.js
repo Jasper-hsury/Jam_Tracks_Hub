@@ -137,3 +137,9 @@ test("Feedback, Legal and Privacy share the tool pages' 1200px column and headin
   assert.match(css, /html\[data-theme\] main:is\(\.feedback-page, \.legal-page, \.privacy-page\) \{\s*box-sizing: border-box;\s*width: 100%;\s*max-width: 1280px;[^}]*padding: 0 40px;/);
   assert.match(css, /html\[data-theme\] main:is\(\.feedback-page, \.legal-page, \.privacy-page\) h1 \{\s*margin: 0;\s*font-size: clamp\(46px, 6vw, 76px\);\s*line-height: 1\.02;/);
 });
+
+test("Feedback, Legal and Privacy get the compact, centred phone heading", () => {
+  assert.match(css, /main:is\(\.feedback-page, \.legal-page, \.privacy-page\) > :is\(\.hero-eyebrow, \.v3-page-eyebrow, h1, \.hero-tagline, \.legal-page-intro\) \{\s*text-align: center;/);
+  assert.match(css, /@media \(max-width: 760px\) \{[\s\S]*?main:is\(\.feedback-page, \.legal-page, \.privacy-page\) h1 \{\s*font-size: 34px;\s*line-height: 1\.08;/);
+  assert.match(css, /main:is\(\.legal-page, \.privacy-page\) \.v3-page-meta \{\s*justify-content: center;\s*margin-top: 16px;/);
+});
