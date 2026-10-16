@@ -77,3 +77,7 @@ test("Tracks shares the tool pages' column, heading size and compact centred pho
   assert.match(css, /html\[data-theme\] main\.tracks-library-page h1 \{[^}]*font-size: clamp\(46px, 6vw, 76px\);[^}]*line-height: 1\.02;/);
   assert.match(css, /@media \(max-width: 760px\) \{\s*html\[data-theme\] main\.tracks-library-page \{\s*padding: 0 16px;\s*\}\s*html\[data-theme\] main\.tracks-library-page \.page-heading-row \{\s*justify-items: center;\s*text-align: center;\s*\}[\s\S]*?main\.tracks-library-page h1 \{\s*margin-bottom: 6px;\s*font-size: 34px;/);
 });
+
+test("Tracks toolbar labels never break onto two lines", () => {
+  assert.match(read("styles/pages.css"), /main\.tracks-library-page \.track-sort-caption \{[^}]*white-space: nowrap;/);
+});

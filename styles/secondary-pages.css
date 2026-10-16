@@ -765,10 +765,13 @@ html[data-theme] main.status-page:has(.status-page-status[data-state="unavailabl
     html[data-theme] main.feedback-page .hero-tagline {
         margin: 6px auto 0;
         font-size: 16px;
+        text-wrap: balance;
     }
 
     html[data-theme] main:is(.legal-page, .privacy-page) .legal-page-intro {
+        max-width: 34ch;
         margin-inline: auto;
+        text-wrap: balance;
     }
 
     html[data-theme] main:is(.legal-page, .privacy-page) .v3-page-meta {

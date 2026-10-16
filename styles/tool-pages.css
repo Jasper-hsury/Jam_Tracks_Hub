@@ -133,11 +133,15 @@ html[data-theme]:lang(zh) main.v3-tool-page .v3-tool-heading .hero-tagline {
         margin-top: 6px;
         font-size: 16px;
         text-align: center;
+        text-wrap: balance;
     }
 
+    /* Longer intros stay centred but narrower, with balanced line lengths. */
     html[data-theme] main.v3-tool-page .v3-tool-heading .trainer-lead {
+        max-width: 34ch;
         margin-inline: auto;
         text-align: center;
+        text-wrap: balance;
     }
 
     html[data-theme] main.v3-tool-page .v3-tool-meta {
@@ -2081,4 +2085,13 @@ html[data-theme] main.v3-tool-page.chord-progressions-page .progression-voicing-
 
 html[data-theme] main.v3-tool-page.chord-progressions-page .progression-voicing-card.has-grouped-bars .progression-voicing-summary:not(:first-child) > * {
     max-width: 560px;
+}
+
+/* Chord Progressions key mode: once the legacy rule stacks the heading on
+   narrow screens, keep it on the left edge instead of the desktop
+   bottom-right alignment. */
+@media (max-width: 768px) {
+    html[data-theme] main.v3-tool-page .key-mode-heading {
+        align-items: flex-start;
+    }
 }

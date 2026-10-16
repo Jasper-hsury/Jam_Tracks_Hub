@@ -1150,10 +1150,14 @@ html[data-theme] body[data-vue-page="song-workspace"] .workspace-anchor-preview 
     html[data-theme] body[data-vue-page="song-workspace"] .song-workspace-page:not(:has(#workspaceEditorView:not([hidden]))) .song-workspace-hero .hero-tagline {
         margin-top: 6px;
         font-size: 16px;
+        text-align: center;
+        text-wrap: balance;
     }
 
     html[data-theme] body[data-vue-page="song-workspace"] .song-workspace-page:not(:has(#workspaceEditorView:not([hidden]))) .song-workspace-lead {
+        max-width: 34ch;
         margin-inline: auto;
+        text-wrap: balance;
     }
 
     html[data-theme] body[data-vue-page="song-workspace"] .song-workspace-page:not(:has(#workspaceEditorView:not([hidden]))) .song-workspace-promises {

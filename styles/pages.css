@@ -7348,6 +7348,7 @@ html[data-theme] main.tracks-library-page .track-sort-caption {
     font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
+    white-space: nowrap;
 }
 
 html[data-theme]:lang(zh) main.tracks-library-page .track-toolbar-label,
@@ -7496,6 +7497,7 @@ html[data-theme] main.tracks-library-page .track-result-count {
 
     html[data-theme] main.tracks-library-page .hero-tagline {
         font-size: 16px;
+        text-wrap: balance;
     }
 }
 

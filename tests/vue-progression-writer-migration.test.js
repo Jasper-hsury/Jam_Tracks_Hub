@@ -354,7 +354,7 @@ test("keeps every shared music/backend consumer byte-identical", () => {
   const expectedHashes = {
     "scripts/chord-shapes.js": "00189b548b9d6fe48daab6c3ea68fd2a2a2baf9e39d16d638df1b0e8d19c1c04",
     "styles/chord-dictionary.css": "0fe2af95a2598cd252e850bbb7035e02a8ca89af671a81234fe7f614f0852653",
-    "styles/pages.css": "9804187785b7d70af510059fd8292958af47e98017bbda1b63e032042156d709",
+    "styles/pages.css": "68559b5a821c003cd8f5740bed226ad9126b8590bfe848edbe0bbec9297c9d28",
     "styles/themes.css": "81fba6e5d22f9fdc36a9fba45f5008bef541d936c12ceb37487b6b983575f22a",
     "scripts/song-workspace-core.js": "d792e65873c140deda2ac576370bcd940d14e1f35d9fb5da88bbd11431b28ecb",
     "scripts/song-workspace-storage.js": "b11c00dcb5cafb3ca414ccc9fec59bd6931dc39fe3658ecec33003f4d7d210ae",

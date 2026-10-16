@@ -247,3 +247,8 @@ test("phones get a compact, centred tool heading while desktop and tablet stay l
   assert.match(phone, /main\.v3-tool-page \.v3-tool-heading h1 \{\s*font-size: 34px;\s*line-height: 1\.08;\s*text-align: center;/);
   assert.match(phone, /main\.v3-tool-page \.v3-tool-meta \{\s*justify-content: center;/);
 });
+
+test("phone heading intros stay centred with balanced lines, and the stacked key mode heading sits on the left", () => {
+  assert.match(css, /\.v3-tool-heading \.trainer-lead \{\s*max-width: 34ch;\s*margin-inline: auto;\s*text-align: center;\s*text-wrap: balance;/);
+  assert.match(css, /@media \(max-width: 768px\) \{\s*html\[data-theme\] main\.v3-tool-page \.key-mode-heading \{\s*align-items: flex-start;/);
+});
