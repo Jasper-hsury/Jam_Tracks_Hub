@@ -107,7 +107,7 @@ if (/src\/entries\/home\.js/.test(migratedHome)) fail("Homepage source entry lea
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261014-v3-tracks",
   "styles/themes.css?v=20261014-v3-rounded",
-  "styles/home-title.css?v=20261016-hero-handwriting",
+  "styles/home-title.css?v=20261016-tagline-stagger",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
   "assets/vendor/gsap/SplitText.min.js",

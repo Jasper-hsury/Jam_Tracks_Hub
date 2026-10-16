@@ -27,7 +27,7 @@ const legacyHtmlAssets = [
   "styles/song-workspace-v3.css?v=20261015-v3-song-workspace",
   "styles/tool-pages.css?v=20261015-v3-chord-palette",
   "styles/secondary-pages.css?v=20261015-v3-secondary",
-  "styles/home-title.css?v=20261016-hero-handwriting",
+  "styles/home-title.css?v=20261016-tagline-stagger",
   "scripts/site-config.js?v=20260729-youtube-key-api",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/Flip.min.js",

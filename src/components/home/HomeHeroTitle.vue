@@ -1,5 +1,5 @@
 <script setup>
-import { nextTick, onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
 import {
   HERO_TITLE_BOX,
   HERO_TITLE_BRUSH,
@@ -12,7 +12,7 @@ import {
   strokePath
 } from "./heroTitleStrokes.mjs";
 
-defineProps({
+const props = defineProps({
   title: {
     type: String,
     required: true
@@ -36,6 +36,12 @@ const titleWords = [
 const waveBars = Array.from({ length: 48 }, function(_, index) {
   const level = 0.25 + 0.75 * Math.abs(Math.sin(index * 0.55) * Math.cos(index * 0.21));
   return { height: `${Math.round(level * 100)}%`, hot: index % 8 === 0 };
+});
+
+// The tagline sits on two staggered lines: first sentence left, the rest right.
+const taglineLines = computed(function() {
+  const match = props.tagline.match(/^(.+?[.!?。！？，,])\s*(\S.*)$/u);
+  return match ? [match[1], match[2]] : [props.tagline];
 });
 
 const prefersReducedMotion = typeof window === "undefined"
@@ -201,6 +207,10 @@ onBeforeUnmount(function() {
       <span v-for="(bar, index) in waveBars" :key="index" :class="{ 'is-hot': bar.hot }" :style="{ height: bar.height }"></span>
     </div>
     <div class="home-hero-title-rule" aria-hidden="true"></div>
-    <p class="signature-slogan">{{ tagline }}</p>
+    <p class="signature-slogan home-hero-tagline">
+      <template v-for="(line, index) in taglineLines" :key="index">
+        <span class="home-hero-tagline-line">{{ line }}</span>{{ index < taglineLines.length - 1 ? " " : "" }}
+      </template>
+    </p>
   </div>
 </template>

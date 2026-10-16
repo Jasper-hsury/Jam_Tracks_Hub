@@ -82,6 +82,34 @@ html[data-theme] .v3-home .home-hero-title-block .signature-slogan {
     margin-top: 22px;
 }
 
+/* Two staggered lines: the first sentence hugs the left, the second the right. */
+html[data-theme] .v3-home .home-hero-title-block .home-hero-tagline {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    max-width: 100%;
+    margin-inline: auto;
+    line-height: 1.25;
+}
+
+html[data-theme] .v3-home .home-hero-tagline-line:first-child {
+    align-self: flex-start;
+    padding-inline-end: 2.4em;
+    text-align: left;
+}
+
+html[data-theme] .v3-home .home-hero-tagline-line:last-child {
+    align-self: flex-end;
+    padding-inline-start: 2.4em;
+    text-align: right;
+}
+
+html[data-theme] .v3-home .home-hero-tagline-line:first-child:last-child {
+    align-self: center;
+    padding-inline: 0;
+    text-align: center;
+}
+
 /* While the pen writes, only the masked glyphs show; the solid copy fills in after. */
 html[data-theme] .v3-home .home-hero-title-block:is([data-phase="pending"], [data-phase="writing"]) .home-hero-title-solid {
     opacity: 0;
@@ -149,5 +177,13 @@ html[data-theme] .v3-home .home-hero-title-block[data-phase="done"] .signature-s
 
     html[data-theme] .v3-home .home-hero-title-block .signature-slogan {
         margin-top: 18px;
+    }
+
+    html[data-theme] .v3-home .home-hero-tagline-line:first-child {
+        padding-inline-end: 1.6em;
+    }
+
+    html[data-theme] .v3-home .home-hero-tagline-line:last-child {
+        padding-inline-start: 1.6em;
     }
 }

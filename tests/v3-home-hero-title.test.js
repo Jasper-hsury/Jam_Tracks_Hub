@@ -10,7 +10,7 @@ const loadStrokes = () => import(pathToFileURL(path.join(root, "src/components/h
 const component = read("src/components/home/HomeHeroTitle.vue");
 const css = read("styles/home-title.css");
 const indexHtml = read("index.html");
-const titleCssKey = "styles/home-title.css?v=20261016-hero-handwriting";
+const titleCssKey = "styles/home-title.css?v=20261016-tagline-stagger";
 
 test("homepage title reads Jam Tracks Hub in both languages", () => {
   assert.equal(JSON.parse(read("locales/en/common.json")).home.hero.title, "Jam Tracks Hub");
@@ -47,7 +47,8 @@ test("the title is one accessible h1 with a decorative, per-glyph masked SVG", (
   assert.match(component, /<svg class="home-hero-title-art" :viewBox="viewBox" aria-hidden="true" focusable="false">/);
   assert.match(component, /<mask\s+v-for="glyph in glyphs"/);
   assert.match(component, /<g v-for="glyph in glyphs" :key="glyph\.maskId" :mask="`url\(#\$\{glyph\.maskId\}\)`">\s*<rect [^>]*fill="none" \/>/);
-  assert.match(component, /<p class="signature-slogan">\{\{ tagline \}\}<\/p>/);
+  assert.match(component, /<p class="signature-slogan home-hero-tagline">/);
+  assert.match(component, /<span class="home-hero-tagline-line">\{\{ line \}\}<\/span>/);
   assert.match(component, /class="home-hero-title-wave" aria-hidden="true"/);
   assert.match(component, /class="home-hero-title-rule" aria-hidden="true"/);
 });
@@ -78,4 +79,21 @@ test("homepage alone loads Yellowtail and the title stylesheet, with the cache k
     });
   assert.ok(read("vite.config.mjs").includes(`"${titleCssKey}"`));
   assert.ok(read("tools/scripts/verify-cloudflare-build.js").includes(`"${titleCssKey}"`));
+});
+
+test("the tagline splits after its first sentence into a left line and a right line", () => {
+  const split = tagline => {
+    const match = tagline.match(/^(.+?[.!?。！？，,])\s*(\S.*)$/u);
+    return match ? [match[1], match[2]] : [tagline];
+  };
+  assert.match(component, /props\.tagline\.match\(\/\^\(\.\+\?\[\.!\?。！？，,\]\)\\s\*\(\\S\.\*\)\$\/u\)/);
+  const en = JSON.parse(read("locales/en/common.json")).home.hero.tagline;
+  const zh = JSON.parse(read("locales/zh-TW/common.json")).home.hero.tagline;
+  assert.deepEqual(split(en), ["Capture the Feeling.", "Compose the Meaning."]);
+  assert.deepEqual(split(zh), ["捕捉感受，", "譜出心聲。"]);
+
+  assert.match(css, /\.home-hero-tagline \{\s*display: flex;\s*flex-direction: column;\s*width: fit-content;/);
+  assert.match(css, /\.home-hero-tagline-line:first-child \{\s*align-self: flex-start;/);
+  assert.match(css, /\.home-hero-tagline-line:last-child \{\s*align-self: flex-end;/);
+  assert.match(css, /\.home-hero-tagline-line:first-child:last-child \{\s*align-self: center;/);
 });
