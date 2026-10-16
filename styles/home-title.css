@@ -82,6 +82,49 @@ html[data-theme] .v3-home .home-hero-title-block .signature-slogan {
     margin-top: 22px;
 }
 
+/* A tagline that would wrap splits after its first sentence (HomeHeroTitle.vue
+   adds .is-split): the first line hugs the left, the second the right. One that
+   fits stays a single centred line. The sizer measures the one-line width. */
+html[data-theme] .v3-home .home-hero-tagline {
+    position: relative;
+}
+
+html[data-theme] .v3-home .home-hero-tagline-sizer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+html[data-theme] .v3-home .home-hero-tagline-sizer > span {
+    white-space: nowrap;
+}
+
+html[data-theme] .v3-home .home-hero-tagline.is-split {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    max-width: 100%;
+    margin-inline: auto;
+    line-height: 1.25;
+}
+
+html[data-theme] .v3-home .home-hero-tagline.is-split .home-hero-tagline-line:first-child {
+    align-self: flex-start;
+    padding-inline-end: 1.6em;
+    text-align: left;
+}
+
+html[data-theme] .v3-home .home-hero-tagline.is-split .home-hero-tagline-line:nth-child(2) {
+    align-self: flex-end;
+    padding-inline-start: 1.6em;
+    text-align: right;
+}
+
 /* While the pen writes, only the masked glyphs show; the solid copy fills in after. */
 html[data-theme] .v3-home .home-hero-title-block:is([data-phase="pending"], [data-phase="writing"]) .home-hero-title-solid {
     opacity: 0;
