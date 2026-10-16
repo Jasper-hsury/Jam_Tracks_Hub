@@ -47,7 +47,7 @@ test("the title is one accessible h1 with a decorative, per-glyph masked SVG", (
   assert.match(component, /<svg class="home-hero-title-art" :viewBox="viewBox" aria-hidden="true" focusable="false">/);
   assert.match(component, /<mask\s+v-for="glyph in glyphs"/);
   assert.match(component, /<g v-for="glyph in glyphs" :key="glyph\.maskId" :mask="`url\(#\$\{glyph\.maskId\}\)`">\s*<rect [^>]*fill="none" \/>/);
-  assert.match(component, /<p class="signature-slogan home-hero-tagline">/);
+  assert.match(component, /<p ref="taglineElement" class="signature-slogan home-hero-tagline" :class="\{ 'is-split': taglineSplit \}">/);
   assert.match(component, /<span class="home-hero-tagline-line">\{\{ line \}\}<\/span>/);
   assert.match(component, /class="home-hero-title-wave" aria-hidden="true"/);
   assert.match(component, /class="home-hero-title-rule" aria-hidden="true"/);
@@ -59,7 +59,7 @@ test("writing waits for Yellowtail, respects reduced motion, and never leaves th
   assert.match(component, /document\.fonts\.load\(fontSpec, HERO_TITLE_TEXT\)/);
   assert.match(component, /if \(!fontReady \|\| !solidText\.value\?\.getExtentOfChar\) \{\s*phase\.value = "done";/);
   assert.match(component, /catch \(error\) \{[\s\S]*glyphs\.value = \[\];\s*phase\.value = "done";/);
-  assert.match(component, /onBeforeUnmount\(function\(\) \{\s*disposed = true;\s*window\.cancelAnimationFrame\(frame\);/);
+  assert.match(component, /onBeforeUnmount\(function\(\) \{\s*disposed = true;\s*taglineObserver\?\.disconnect\(\);\s*window\.cancelAnimationFrame\(frame\);/);
 });
 
 test("title stylesheet hides the solid copy only while writing and drops transitions for reduced motion", () => {
@@ -81,7 +81,7 @@ test("homepage alone loads Yellowtail and the title stylesheet, with the cache k
   assert.ok(read("tools/scripts/verify-cloudflare-build.js").includes(`"${titleCssKey}"`));
 });
 
-test("the tagline splits after its first sentence into a left line and a right line", () => {
+test("the tagline splits onto staggered lines only when one line does not fit", () => {
   const split = tagline => {
     const match = tagline.match(/^(.+?[.!?。！？，,])\s*(\S.*)$/u);
     return match ? [match[1], match[2]] : [tagline];
@@ -92,8 +92,15 @@ test("the tagline splits after its first sentence into a left line and a right l
   assert.deepEqual(split(en), ["Capture the Feeling.", "Compose the Meaning."]);
   assert.deepEqual(split(zh), ["捕捉感受，", "譜出心聲。"]);
 
-  assert.match(css, /\.home-hero-tagline \{\s*display: flex;\s*flex-direction: column;\s*width: fit-content;/);
-  assert.match(css, /\.home-hero-tagline-line:first-child \{\s*align-self: flex-start;/);
-  assert.match(css, /\.home-hero-tagline-line:last-child \{\s*align-self: flex-end;/);
-  assert.match(css, /\.home-hero-tagline-line:first-child:last-child \{\s*align-self: center;/);
+  assert.match(component, /:class="\{ 'is-split': taglineSplit \}"/);
+  assert.match(component, /taglineSplit\.value = taglineLines\.value\.length > 1 && oneLineWidth > available;/);
+  assert.match(component, /new ResizeObserver\(measureTagline\)/);
+  assert.match(component, /watch\(\(\) => props\.tagline, \(\) => nextTick\(measureTagline\)\)/);
+  assert.match(component, /<span class="home-hero-tagline-sizer" aria-hidden="true"><span ref="taglineSizer">\{\{ tagline \}\}<\/span><\/span>/);
+
+  assert.match(css, /\.home-hero-tagline-sizer \{[^}]*width: 0;[^}]*overflow: hidden;[^}]*visibility: hidden;/);
+  assert.match(css, /\.home-hero-tagline\.is-split \{\s*display: flex;\s*flex-direction: column;\s*width: fit-content;/);
+  assert.match(css, /\.home-hero-tagline\.is-split \.home-hero-tagline-line:first-child \{\s*align-self: flex-start;/);
+  assert.match(css, /\.home-hero-tagline\.is-split \.home-hero-tagline-line:nth-child\(2\) \{\s*align-self: flex-end;/);
+  assert.doesNotMatch(css, /\.home-hero-tagline \{[^}]*display: flex;/);
 });

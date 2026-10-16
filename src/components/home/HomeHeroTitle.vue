@@ -1,5 +1,5 @@
 <script setup>
-import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import {
   HERO_TITLE_BOX,
   HERO_TITLE_BRUSH,
@@ -38,7 +38,8 @@ const waveBars = Array.from({ length: 48 }, function(_, index) {
   return { height: `${Math.round(level * 100)}%`, hot: index % 8 === 0 };
 });
 
-// The tagline sits on two staggered lines: first sentence left, the rest right.
+// A tagline too wide for one line splits after its first sentence onto two
+// staggered lines (first left, rest right); one that fits stays on one line.
 const taglineLines = computed(function() {
   const match = props.tagline.match(/^(.+?[.!?。！？，,])\s*(\S.*)$/u);
   return match ? [match[1], match[2]] : [props.tagline];
@@ -50,6 +51,10 @@ const prefersReducedMotion = typeof window === "undefined"
 const phase = ref(prefersReducedMotion ? "done" : "pending");
 const glyphs = ref([]);
 const solidText = ref(null);
+const taglineElement = ref(null);
+const taglineSizer = ref(null);
+const taglineSplit = ref(false);
+let taglineObserver = null;
 const strokeElements = [];
 let frame = 0;
 let releaseTimer = 0;
@@ -132,6 +137,24 @@ function write(paths) {
   frame = window.requestAnimationFrame(step);
 }
 
+function measureTagline() {
+  const available = taglineElement.value?.parentElement?.clientWidth;
+  if (!available || !taglineSizer.value) return;
+  const oneLineWidth = taglineSizer.value.getBoundingClientRect().width;
+  taglineSplit.value = taglineLines.value.length > 1 && oneLineWidth > available;
+}
+
+watch(() => props.tagline, () => nextTick(measureTagline));
+
+onMounted(function() {
+  measureTagline();
+  document.fonts?.ready?.then(measureTagline).catch(() => {});
+  if (typeof ResizeObserver === "function" && taglineElement.value?.parentElement) {
+    taglineObserver = new ResizeObserver(measureTagline);
+    taglineObserver.observe(taglineElement.value.parentElement);
+  }
+});
+
 onMounted(async function() {
   if (phase.value === "done") return;
   const fontReady = await waitForTitleFont();
@@ -157,6 +180,7 @@ onMounted(async function() {
 
 onBeforeUnmount(function() {
   disposed = true;
+  taglineObserver?.disconnect();
   window.cancelAnimationFrame(frame);
   window.clearTimeout(releaseTimer);
 });
@@ -207,10 +231,11 @@ onBeforeUnmount(function() {
       <span v-for="(bar, index) in waveBars" :key="index" :class="{ 'is-hot': bar.hot }" :style="{ height: bar.height }"></span>
     </div>
     <div class="home-hero-title-rule" aria-hidden="true"></div>
-    <p class="signature-slogan home-hero-tagline">
+    <p ref="taglineElement" class="signature-slogan home-hero-tagline" :class="{ 'is-split': taglineSplit }">
       <template v-for="(line, index) in taglineLines" :key="index">
         <span class="home-hero-tagline-line">{{ line }}</span>{{ index < taglineLines.length - 1 ? " " : "" }}
       </template>
+      <span class="home-hero-tagline-sizer" aria-hidden="true"><span ref="taglineSizer">{{ tagline }}</span></span>
     </p>
   </div>
 </template>

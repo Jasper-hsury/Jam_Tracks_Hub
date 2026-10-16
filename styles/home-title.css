@@ -82,8 +82,29 @@ html[data-theme] .v3-home .home-hero-title-block .signature-slogan {
     margin-top: 22px;
 }
 
-/* Two staggered lines: the first sentence hugs the left, the second the right. */
-html[data-theme] .v3-home .home-hero-title-block .home-hero-tagline {
+/* A tagline that would wrap splits after its first sentence (HomeHeroTitle.vue
+   adds .is-split): the first line hugs the left, the second the right. One that
+   fits stays a single centred line. The sizer measures the one-line width. */
+html[data-theme] .v3-home .home-hero-tagline {
+    position: relative;
+}
+
+html[data-theme] .v3-home .home-hero-tagline-sizer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+html[data-theme] .v3-home .home-hero-tagline-sizer > span {
+    white-space: nowrap;
+}
+
+html[data-theme] .v3-home .home-hero-tagline.is-split {
     display: flex;
     flex-direction: column;
     width: fit-content;
@@ -92,22 +113,16 @@ html[data-theme] .v3-home .home-hero-title-block .home-hero-tagline {
     line-height: 1.25;
 }
 
-html[data-theme] .v3-home .home-hero-tagline-line:first-child {
+html[data-theme] .v3-home .home-hero-tagline.is-split .home-hero-tagline-line:first-child {
     align-self: flex-start;
-    padding-inline-end: 2.4em;
+    padding-inline-end: 1.6em;
     text-align: left;
 }
 
-html[data-theme] .v3-home .home-hero-tagline-line:last-child {
+html[data-theme] .v3-home .home-hero-tagline.is-split .home-hero-tagline-line:nth-child(2) {
     align-self: flex-end;
-    padding-inline-start: 2.4em;
+    padding-inline-start: 1.6em;
     text-align: right;
-}
-
-html[data-theme] .v3-home .home-hero-tagline-line:first-child:last-child {
-    align-self: center;
-    padding-inline: 0;
-    text-align: center;
 }
 
 /* While the pen writes, only the masked glyphs show; the solid copy fills in after. */
@@ -177,13 +192,5 @@ html[data-theme] .v3-home .home-hero-title-block[data-phase="done"] .signature-s
 
     html[data-theme] .v3-home .home-hero-title-block .signature-slogan {
         margin-top: 18px;
-    }
-
-    html[data-theme] .v3-home .home-hero-tagline-line:first-child {
-        padding-inline-end: 1.6em;
-    }
-
-    html[data-theme] .v3-home .home-hero-tagline-line:last-child {
-        padding-inline-start: 1.6em;
     }
 }
