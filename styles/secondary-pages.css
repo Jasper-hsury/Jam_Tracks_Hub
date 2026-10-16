@@ -20,7 +20,7 @@ html[data-theme="default"] main:is(.feedback-page, .legal-page, .privacy-page, .
 html[data-theme] main:is(.feedback-page, .legal-page, .privacy-page) {
     box-sizing: border-box;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 64px auto 0;
     padding: 0 40px;
 }
@@ -56,8 +56,8 @@ html[data-theme]:lang(zh) main:is(.feedback-page, .legal-page, .privacy-page, .s
 
 html[data-theme] main:is(.feedback-page, .legal-page, .privacy-page) h1 {
     margin: 0;
-    font-size: clamp(42px, 6vw, 68px);
-    line-height: 1.03;
+    font-size: clamp(46px, 6vw, 76px);
+    line-height: 1.02;
     text-align: left;
 }
 

@@ -7258,7 +7258,7 @@ html[data-theme] .v3-home .home-subscribe-status {
    the earlier Tracks rules above stay inert.
    ==================== */
 html[data-theme] main.tracks-library-page {
-    max-width: 1180px;
+    max-width: 1200px;
     margin-top: 64px;
 }
 
@@ -7294,10 +7294,10 @@ html[data-theme] main.tracks-library-page h1 {
     margin: 0 0 12px;
     color: var(--ink);
     font-family: var(--font-serif);
-    font-size: clamp(48px, 7vw, 96px);
+    font-size: clamp(46px, 6vw, 76px);
     font-weight: 400;
-    line-height: 0.95;
-    letter-spacing: -0.025em;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
 }
 
 html[data-theme]:lang(zh) main.tracks-library-page h1 {
@@ -7470,6 +7470,19 @@ html[data-theme] main.tracks-library-page .track-result-count {
     color: var(--text-muted);
     font-size: 14px;
     font-weight: 500;
+}
+
+/* Phones: the heading stays left-aligned like every other inner page (the
+   pre-v3 rule centred it), with the tool pages' 16px gutter. */
+@media (max-width: 760px) {
+    html[data-theme] main.tracks-library-page {
+        padding: 0 16px;
+    }
+
+    html[data-theme] main.tracks-library-page .page-heading-row {
+        justify-items: start;
+        text-align: left;
+    }
 }
 
 @media (max-width: 640px) {

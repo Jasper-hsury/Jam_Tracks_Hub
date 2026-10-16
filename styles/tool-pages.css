@@ -25,7 +25,9 @@ html[data-theme] main.v3-tool-page .v3-tool-eyebrow {
     flex-wrap: wrap;
     align-items: center;
     gap: 8px 12px;
+    max-width: none;
     margin: 0 0 18px;
+    text-align: left;
     color: var(--accent);
     font-family: var(--font-sans);
     font-size: 12px;

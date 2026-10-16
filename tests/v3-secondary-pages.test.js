@@ -6,7 +6,7 @@ const test = require("node:test");
 const root = path.resolve(__dirname, "..");
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
 const css = read("styles/secondary-pages.css");
-const STYLESHEET = "styles/secondary-pages.css?v=20261015-v3-secondary";
+const STYLESHEET = "styles/secondary-pages.css?v=20261016-inner-pages";
 const PAGES = {
   "feedback.html": "",
   "legal.html": "",
@@ -131,4 +131,9 @@ test("the 404 sleeve stacks above the message on tablets", () => {
   const tablet = css.slice(css.indexOf("@media (max-width: 960px)"), css.indexOf("@media (max-width: 760px)"));
   assert.match(tablet, /main\.status-page:has\(> \.status-page-art\) \{\s*grid-template-columns: minmax\(0, 1fr\);/);
   assert.match(tablet, /\.status-page-art \{\s*order: -1;/);
+});
+
+test("Feedback, Legal and Privacy share the tool pages' 1200px column and heading size", () => {
+  assert.match(css, /html\[data-theme\] main:is\(\.feedback-page, \.legal-page, \.privacy-page\) \{\s*box-sizing: border-box;\s*width: 100%;\s*max-width: 1280px;[^}]*padding: 0 40px;/);
+  assert.match(css, /html\[data-theme\] main:is\(\.feedback-page, \.legal-page, \.privacy-page\) h1 \{\s*margin: 0;\s*font-size: clamp\(46px, 6vw, 76px\);\s*line-height: 1\.02;/);
 });

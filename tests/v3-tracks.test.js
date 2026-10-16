@@ -57,7 +57,7 @@ test("the record slides out only for hover-capable pointers without reduced moti
 
 test("pages.css carries a fresh cache key so v3.1 markup never meets the cached v3.0 stylesheet", () => {
   const pages = ["tracks.html", "index.html", "song-workspace.html"];
-  pages.forEach(page => assert.match(read(page), /styles\/pages\.css\?v=20261014-v3-tracks/, page));
+  pages.forEach(page => assert.match(read(page), /styles\/pages\.css\?v=20261016-inner-pages/, page));
   assert.doesNotMatch(read("tracks.html"), /styles\/pages\.css\?v=20261014-v3-liner-notes/);
 });
 
@@ -69,4 +69,11 @@ test("the Tracks toolbar animates in once, from the entrance timeline only", () 
   fs.readdirSync(root).filter(file => file.endsWith(".html") && read(file).includes("site-animations.js"))
     .forEach(file => assert.ok(read(file).includes(key), file));
   assert.equal(read("vite.config.mjs").split("scripts/site-animations.js?v=").length - 1, 1);
+});
+
+test("Tracks shares the tool pages' column, heading size and left-aligned phone heading", () => {
+  const css = read("styles/pages.css");
+  assert.match(css, /html\[data-theme\] main\.tracks-library-page \{\s*max-width: 1200px;/);
+  assert.match(css, /html\[data-theme\] main\.tracks-library-page h1 \{[^}]*font-size: clamp\(46px, 6vw, 76px\);[^}]*line-height: 1\.02;/);
+  assert.match(css, /@media \(max-width: 760px\) \{\s*html\[data-theme\] main\.tracks-library-page \{\s*padding: 0 16px;\s*\}\s*html\[data-theme\] main\.tracks-library-page \.page-heading-row \{\s*justify-items: start;\s*text-align: left;/);
 });

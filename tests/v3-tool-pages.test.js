@@ -6,7 +6,7 @@ const test = require("node:test");
 const root = path.resolve(__dirname, "..");
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
 const css = read("styles/tool-pages.css");
-const TOOL_STYLESHEET = "styles/tool-pages.css?v=20261016-progression-cards";
+const TOOL_STYLESHEET = "styles/tool-pages.css?v=20261016-inner-pages";
 
 const toolPages = [
   { html: "chord-dictionary.html", view: "ChordDictionaryView", aside: "standardTuning" },
@@ -234,4 +234,8 @@ test("grouped Chord Progressions put each group of bars directly above its own s
     assert.match(css, new RegExp(`${card} \\.progression-voicing-summary:nth-child\\(${group}\\) \\{ order: ${group * 2 - 1}; \\}`));
     assert.match(css, new RegExp(`${card} \\.progression-chord-voicing-group:nth-child\\(${group}\\) \\{ order: ${group * 2}; \\}`));
   });
+});
+
+test("tool eyebrows stay left-aligned on phones even though they reuse the homepage eyebrow class", () => {
+  assert.match(css, /html\[data-theme\] main\.v3-tool-page \.v3-tool-eyebrow \{[^}]*max-width: none;[^}]*text-align: left;/);
 });
