@@ -66,7 +66,7 @@ test("preserves Tracks SEO, analytics, CSS, and GSAP dependencies", () => {
   assert.match(html, /assets\/vendor\/gsap\/gsap\.min\.js/);
   assert.match(html, /assets\/vendor\/gsap\/Flip\.min\.js/);
   assert.match(html, /assets\/vendor\/gsap\/ScrollTrigger\.min\.js/);
-  assert.match(html, /scripts\/site-animations\.js\?v=20261017-polish/);
+  assert.match(html, /scripts\/site-animations\.js\?v=20261018-v4-jazz-stage/);
   assert.doesNotMatch(html, /data-umami-event|unsafe-eval|unsafe-inline/);
 });
 

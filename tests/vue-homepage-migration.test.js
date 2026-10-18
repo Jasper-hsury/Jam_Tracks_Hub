@@ -45,8 +45,8 @@ test("preserves Homepage content, links, media, and accessibility contracts in V
   const view = read("src/views/HomeView.vue");
 
   assert.match(view, /<main class="home-page v3-home" id="main-content">/);
-  assert.match(view, /<section class="home-hero" id="home">/);
-  assert.match(view, /<HomeHeroTitle :title="home\.hero\.title" :tagline="home\.hero\.tagline" \/>/);
+  assert.match(view, /<section class="home-hero v4-hero" id="home">/);
+  assert.match(view, /<h1 class="v4-hero-title" :aria-label="home\.hero\.title">/);
   assert.match(view, /:aria-label="home\.accessibility\.siteOverview"/);
   assert.match(view, /aria-labelledby="homeToolsTitle"/);
   assert.match(view, /aria-labelledby="featuredAudioTitle"/);
@@ -199,7 +199,7 @@ test("keeps the compact About, contact, and Subscribe experience localized and c
   assert.match(view, /data-subscribe-endpoint="\/api\/subscribe"/);
   assert.match(view, /data-subscribe-source="homepage-about"/);
   assert.doesNotMatch(view, /about-portrait|assets\/images\/cover\.jpeg/);
-  assert.match(view, /<div class="v3-sleeve-stage" aria-hidden="true">/);
+  assert.match(view, /<div class="v3-sleeve-stage v4-record-stage" aria-hidden="true">/);
   assert.match(view, /<img class="v3-sleeve-art" :src="'assets\/images\/icon\.png'" alt=""/);
 });
 
@@ -229,9 +229,9 @@ test("surfaces Song Workspace through the hero and four purpose-led workflow gro
   const zh = JSON.parse(read("locales/zh-TW/common.json"));
 
   assert.match(config, /"\/song-workspace", "\/song-workspace\.html"/);
-  assert.match(view, /<a href="tracks\.html" class="primary-button">\{\{ home\.hero\.exploreTracks \}\}<\/a>/);
+  assert.match(view, /<a href="tracks\.html" class="primary-button v4-knob-button">\s*<span>\{\{ home\.hero\.exploreTracks \}\}<\/span>/);
   assert.match(view, /<a href="\/song-workspace" class="secondary-button">\{\{ home\.hero\.openSongWorkspace \}\}<\/a>/);
-  assert.ok(view.indexOf('href="tracks.html" class="primary-button"') < view.indexOf('href="/song-workspace" class="secondary-button"'));
+  assert.ok(view.indexOf('href="tracks.html" class="primary-button v4-knob-button"') < view.indexOf('href="/song-workspace" class="secondary-button"'));
 
   assert.equal((view.match(/id: "(?:practice|understand|create|playSongs)"/g) || []).length, 4);
   ["practice", "understand", "create", "playSongs"].forEach(group => {

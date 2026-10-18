@@ -43,7 +43,7 @@ test("preserves Privacy metadata, analytics, theme, locale, shell, and animation
   assert.doesNotMatch(html, /<footer class="footer">/);
   assert.doesNotMatch(html, /scripts\/(?:site|i18n)\.js/);
   assert.match(html, /assets\/vendor\/gsap\/gsap\.min\.js/);
-  assert.match(html, /scripts\/site-animations\.js\?v=20261017-polish/);
+  assert.match(html, /scripts\/site-animations\.js\?v=20261018-v4-jazz-stage/);
 });
 
 test("renders the established Privacy structure from canonical locale resources", () => {

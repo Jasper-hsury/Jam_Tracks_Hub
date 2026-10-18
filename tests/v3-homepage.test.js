@@ -35,7 +35,7 @@ test("tracklist copy is localized in English and Traditional Chinese", () => {
 });
 
 test("record sleeve hero is decorative, uses the site silhouette, and shows no portrait", () => {
-  assert.match(view, /<div class="v3-sleeve-stage" aria-hidden="true">/);
+  assert.match(view, /<div class="v3-sleeve-stage v4-record-stage" aria-hidden="true">/);
   assert.match(view, /:src="'assets\/images\/icon\.png'" alt=""/);
   assert.doesNotMatch(view, /cover\.jpeg|about-portrait|home-jam-mark/);
   assert.match(css, /html\[data-theme\] \.v3-home \.v3-sleeve \{[^}]*z-index: 2;[^}]*background: var\(--sleeve\);/);

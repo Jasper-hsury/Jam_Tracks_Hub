@@ -64,6 +64,11 @@
       "eyebrow": "Backing tracks • Fretboard tools • Song analysis",
       "title": "Jam Tracks Hub",
       "tagline": "Capture the Feeling. Compose the Meaning.",
+      "stageTaglines": {
+        "day": ["House lights up.", "Let's rehearse."],
+        "night": ["Lights down.", "You're on."]
+      },
+      "volume": "Volume {{number}}",
       "description": "Original practice tracks and focused tools for musicians who want to listen, understand harmony, map the fretboard, and create with purpose.",
       "exploreTracks": "Browse Backing Tracks",
       "openSongWorkspace": "Open Song Workspace",

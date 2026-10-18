@@ -3,7 +3,6 @@ import { computed, ref } from "vue";
 import trackCatalog from "../../data/tracks.json";
 import englishMessages from "../../locales/en/common.json";
 import traditionalChineseMessages from "../../locales/zh-TW/common.json";
-import HomeHeroTitle from "../components/home/HomeHeroTitle.vue";
 import TrackTitle from "../components/home/TrackTitle.vue";
 import { useSiteLocale } from "../i18n/useSiteLocale.js";
 import {
@@ -63,6 +62,7 @@ const home = computed(() => localeMessages.value.home);
 const tracks = computed(() => localeMessages.value.pages.tracks);
 const isTraditionalChinese = computed(() => language.value === "zh-TW");
 const featuredTrack = releases[0];
+const featuredVolume = computed(() => home.value.hero.volume.replace("{{number}}", featuredTrack.id.replace(/^W/, "")));
 const subscribeForm = ref(null);
 const emailInput = ref(null);
 const email = ref("");
@@ -155,36 +155,54 @@ async function handleSubscribe() {
 
 <template>
   <main class="home-page v3-home" id="main-content">
-    <section class="home-hero" id="home">
-      <div class="home-section-inner">
-        <p class="home-eyebrow">{{ home.hero.eyebrow }}</p>
-        <HomeHeroTitle :title="home.hero.title" :tagline="home.hero.tagline" />
+    <section class="home-hero v4-hero" id="home">
+      <div class="home-section-inner v4-hero-stage-row">
+        <div class="v4-hero-title-block">
+          <h1 class="v4-hero-title" :aria-label="home.hero.title">
+            <span class="v4-title-jam" aria-hidden="true">Jam</span>
+            <span class="v4-title-line" aria-hidden="true">Tracks</span>
+            <span class="v4-title-line" aria-hidden="true">Hub</span>
+          </h1>
+          <p class="v4-volume">{{ featuredVolume }}<br>{{ home.tracklist.recordSide }}</p>
+        </div>
 
-        <div class="v3-hero-grid">
-          <div class="v3-sleeve-stage" aria-hidden="true">
-            <div class="v3-record">
-              <span class="v3-record-label">{{ home.tracklist.recordSide }}<br>{{ featuredTrack.id }}</span>
-            </div>
-            <div class="v3-sleeve">
-              <span class="v3-sleeve-brand">Jam Tracks Hub</span>
-              <img class="v3-sleeve-art" :src="'assets/images/icon.png'" alt="" width="2048" height="2048" decoding="async" />
-              <span class="v3-sleeve-stage-line"></span>
-              <span class="v3-sleeve-tagline">{{ home.hero.tagline }}</span>
+        <div class="v4-stage-tray">
+          <div class="v4-stage">
+            <span class="v4-stage-glow" aria-hidden="true"></span>
+            <div class="v3-sleeve-stage v4-record-stage" aria-hidden="true">
+              <div class="v3-record v4-record">
+                <span class="v3-record-label">{{ home.tracklist.recordSide }}<br>{{ featuredTrack.id }}</span>
+              </div>
+              <div class="v3-sleeve">
+                <span class="v3-sleeve-brand">Jam Tracks Hub</span>
+                <img class="v3-sleeve-art" :src="'assets/images/icon.png'" alt="" width="2048" height="2048" decoding="async" />
+                <span class="v3-sleeve-stage-line"></span>
+                <span class="v3-sleeve-tagline">{{ home.hero.tagline }}</span>
+              </div>
             </div>
           </div>
+        </div>
+      </div>
 
-          <div class="v3-hero-copy">
-            <p class="home-lead">{{ home.hero.description }}</p>
-            <div class="hero-actions">
-              <a href="tracks.html" class="primary-button">{{ home.hero.exploreTracks }}</a>
-              <a href="/song-workspace" class="secondary-button">{{ home.hero.openSongWorkspace }}</a>
-            </div>
-            <dl class="home-metrics" :aria-label="home.accessibility.siteOverview">
-              <div><dt>18</dt><dd>{{ home.hero.stats.tracks }}</dd></div>
-              <div><dt>24</dt><dd>{{ home.hero.stats.keys }}</dd></div>
-              <div><dt>7</dt><dd>{{ home.hero.stats.tools }}</dd></div>
-            </dl>
-          </div>
+      <div class="home-section-inner v4-hero-copy">
+        <div class="v4-hero-intro">
+          <p class="v4-stage-tagline" data-theme-copy="day">{{ home.hero.stageTaglines.day[0] }}<br><span>{{ home.hero.stageTaglines.day[1] }}</span></p>
+          <p class="v4-stage-tagline" data-theme-copy="night">{{ home.hero.stageTaglines.night[0] }}<br><span>{{ home.hero.stageTaglines.night[1] }}</span></p>
+          <p class="home-lead">{{ home.hero.description }}</p>
+        </div>
+        <dl class="home-metrics" :aria-label="home.accessibility.siteOverview">
+          <div><dt>18</dt><dd>{{ home.hero.stats.tracks }}</dd></div>
+          <div><dt>24</dt><dd>{{ home.hero.stats.keys }}</dd></div>
+          <div><dt>7</dt><dd>{{ home.hero.stats.tools }}</dd></div>
+        </dl>
+        <div class="hero-actions">
+          <a href="tracks.html" class="primary-button v4-knob-button">
+            <span>{{ home.hero.exploreTracks }}</span>
+            <span class="v4-knob" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="15" height="15"><path d="M7 4.5v15l13-7.5z"></path></svg>
+            </span>
+          </a>
+          <a href="/song-workspace" class="secondary-button">{{ home.hero.openSongWorkspace }}</a>
         </div>
       </div>
     </section>

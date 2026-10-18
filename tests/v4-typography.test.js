@@ -12,20 +12,22 @@ const pages = [
   "privacy-policy.html", "progression-writer.html", "scale.html", "service-waking.html",
   "song-workspace.html", "tracks.html"
 ];
-const fontUrl = "https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@400;600&family=Public+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap";
+const fontUrl = "https://fonts.googleapis.com/css2?family=Anton&family=DM+Serif+Display:ital@0;1&family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@500&family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap";
 
-test("defines the v3 serif and sans font tokens with Chinese fallbacks", () => {
-  assert.match(themes, /--font-serif: "DM Serif Display", "Noto Serif TC", serif;/);
-  assert.match(themes, /--font-sans: "Public Sans", "Noto Sans TC", sans-serif;/);
+test("defines the v4 Anton display and Work Sans text tokens with Chinese fallbacks", () => {
+  assert.match(themes, /--font-display: "Anton", "Noto Sans TC", sans-serif;/);
+  assert.match(themes, /--font-serif: var\(--font-display\);/);
+  assert.match(themes, /--font-sans: "Work Sans", "Noto Sans TC", sans-serif;/);
+  assert.match(themes, /--font-sleeve: "DM Serif Display", "Noto Serif TC", serif;/);
 });
 
-test("never synthesizes bold or italic glyphs and keeps Chinese headings at 600", () => {
+test("never synthesizes bold or italic glyphs and sets Chinese headings in Noto Sans TC 900", () => {
   assert.match(themes, /html \{\s*font-synthesis: none;\s*\}/);
-  assert.match(themes, /:lang\(zh\) :is\(h1, h2, h3\) \{\s*font-weight: 600;\s*letter-spacing: 0;\s*\}/);
+  assert.match(themes, /:lang\(zh\) :is\(h1, h2, h3\) \{\s*font-weight: 900;\s*letter-spacing: 0;\s*\}/);
   assert.match(themes, /h1,\s*h2 \{\s*font-family: var\(--font-serif\);/);
 });
 
-test("every Vue page entry loads the same v3 font families", () => {
+test("every Vue page entry loads the same v4 font families", () => {
   pages.forEach(page => assert.ok(read(page).includes(fontUrl), page));
 });
 

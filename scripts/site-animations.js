@@ -122,7 +122,7 @@
             ".workspace-create-area > .workspace-section-heading"
         ].join(", "));
         const navPieces = elements(".navbar .logo, .navbar .nav-links > li");
-        // The homepage title, rule and tagline animate themselves (HomeHeroTitle.vue).
+        // The homepage title stays still; the record on its stage carries the motion (HomeView.vue).
         const heroPiecesForEntrance = heroPieces.filter(target => !target.closest(".privacy-page, .legal-page"));
 
         if (!hasGsap) {

@@ -65,7 +65,7 @@ test("the Tracks toolbar animates in once, from the entrance timeline only", () 
   const animations = read("scripts/site-animations.js");
   assert.match(animations, /timeline\.from\("\.tracks-library-page \.track-controls"/);
   assert.match(animations, /\.filter\(target => !target\.matches\("\.tracks-library-page \.track-controls"\)\)/);
-  const key = "scripts/site-animations.js?v=20261017-polish";
+  const key = "scripts/site-animations.js?v=20261018-v4-jazz-stage";
   fs.readdirSync(root).filter(file => file.endsWith(".html") && read(file).includes("site-animations.js"))
     .forEach(file => assert.ok(read(file).includes(key), file));
   assert.equal(read("vite.config.mjs").split("scripts/site-animations.js?v=").length - 1, 1);
