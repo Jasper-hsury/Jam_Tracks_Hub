@@ -26,7 +26,57 @@ function roundedRect(context, x, y, width, height, radius) {
   context.closePath();
 }
 
-export function createScaleExportModel({ rootPitch, scaleId, fretStart, fretEnd, labelMode, localizedScaleName }) {
+// Image palettes follow the site's day and night themes (v4 Jazz Stage).
+const IMAGE_THEMES = Object.freeze({
+  light: Object.freeze({
+    page: "#ece7de",
+    glow: "rgba(242, 183, 5, 0.22)",
+    tray: "#f8f5ef",
+    trayEdge: "rgba(15, 43, 76, 0.08)",
+    labelCell: "#efe9df",
+    cell: "#f8f5ef",
+    cellAlt: "#f2ede5",
+    grid: "#d6cec0",
+    string: "#9ca6b2",
+    nut: "#0f2b4c",
+    marker: "#b8ad9a",
+    ink: "#0f2b4c",
+    muted: "#4e5d70",
+    noteRing: "#ffffff",
+    stage: "#0f2b4c",
+    stageEdge: "rgba(15, 43, 76, 0)"
+  }),
+  dark: Object.freeze({
+    page: "#081627",
+    glow: "rgba(242, 183, 5, 0.18)",
+    tray: "#0f223a",
+    trayEdge: "rgba(255, 255, 255, 0.1)",
+    labelCell: "#132a47",
+    cell: "#0f223a",
+    cellAlt: "#122843",
+    grid: "#2a4566",
+    string: "#5f7896",
+    nut: "#f1e9d8",
+    marker: "#4c6a8f",
+    ink: "#f1e9d8",
+    muted: "#9fb3c8",
+    noteRing: "#f1e9d8",
+    stage: "#0f2b4c",
+    stageEdge: "rgba(255, 255, 255, 0.1)"
+  })
+});
+const STAGE_TEXT = "#f1e9d8";
+const STAGE_MUTED = "#c9d3de";
+const HIGHLIGHT = "#f2b705";
+const DISPLAY_FONT = "'DM Serif Display', 'Noto Serif TC', Georgia, serif";
+const TEXT_FONT = "'Work Sans', 'Noto Sans TC', Arial, sans-serif";
+const BRAND_FONT = "Anton, Impact, 'Arial Narrow', sans-serif";
+
+export function imageThemeFor(imageTheme) {
+  return imageTheme === "dark" ? "dark" : "light";
+}
+
+export function createScaleExportModel({ rootPitch, scaleId, fretStart, fretEnd, labelMode, localizedScaleName, imageTheme }) {
   const visibleFrets = Array.from(
     { length: Number(fretEnd) - Number(fretStart) + 1 },
     (_, index) => Number(fretStart) + index
@@ -34,50 +84,73 @@ export function createScaleExportModel({ rootPitch, scaleId, fretStart, fretEnd,
   const scale = scaleDefinition(scaleId);
   const noteNames = noteNamesForRoot(rootPitch);
   const pitchClasses = scalePitchClasses(rootPitch, scaleId);
-  const outerPadding = 54;
+  const margin = 32;
+  const inset = 36;
+  const outerPadding = margin + inset;
   const labelWidth = 68;
   const cellWidth = 82;
   const rowHeight = 66;
-  const titleHeight = 158;
-  const legendHeight = 72;
+  const bandHeight = 226;
+  const trayGap = 18;
+  const headerRowHeight = 28;
   const markerHeight = 34;
-  const footerHeight = 58;
+  const footerHeight = 76;
   const boardWidth = labelWidth + visibleFrets.length * cellWidth;
   const width = Math.max(1040, outerPadding * 2 + boardWidth);
-  const boardTop = titleHeight + legendHeight;
-  const height = boardTop + 28 + STRINGS.length * rowHeight + markerHeight + footerHeight;
+  const trayTop = margin + bandHeight + trayGap;
+  const boardTop = trayTop + inset;
+  const trayHeight = inset + headerRowHeight + STRINGS.length * rowHeight + markerHeight + inset - 12;
+  const height = trayTop + trayHeight + footerHeight;
   const root = rootName(rootPitch);
+  const themeName = imageThemeFor(imageTheme);
 
   return {
+    bandHeight,
     boardTop,
     cellWidth,
-    fileName: `${root}-${scale.name}-frets-${fretStart}-${fretEnd}`
+    fileName: `${root}-${scale.name}-frets-${fretStart}-${fretEnd}${themeName === "dark" ? "-dark" : ""}`
       .toLowerCase()
       .replace(/#/g, "sharp")
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-|-$/g, ""),
+    headerRowHeight,
     height,
+    inset,
     intervalColors: INTERVAL_COLORS,
     labelMode,
     labelWidth,
-    legendHeight,
     localizedScaleName,
+    margin,
+    markerHeight,
     noteNames,
     outerPadding,
+    palette: IMAGE_THEMES[themeName],
     pitchClasses,
     root,
     rootPitch: Number(rootPitch),
     rowHeight,
     scale,
     strings: STRINGS,
-    titleHeight,
+    themeName,
+    trayHeight,
+    trayTop,
     visibleFrets,
     width
   };
 }
 
+function fillRadialGlow(context, x, y, radius, color) {
+  if (typeof context.createRadialGradient !== "function") return;
+  const glow = context.createRadialGradient(x, y, 0, x, y, radius);
+  glow.addColorStop(0, color);
+  glow.addColorStop(1, "rgba(242, 183, 5, 0)");
+  context.fillStyle = glow;
+  context.fillRect(x - radius, y - radius, radius * 2, radius * 2);
+}
+
 export function drawScaleImage(documentRef, state) {
   const model = createScaleExportModel(state);
+  const palette = model.palette;
   const canvas = documentRef.createElement("canvas");
   const scaleFactor = 2;
   canvas.width = model.width * scaleFactor;
@@ -85,79 +158,118 @@ export function drawScaleImage(documentRef, state) {
   const context = canvas.getContext("2d");
   context.scale(scaleFactor, scaleFactor);
 
-  context.fillStyle = "#f5efe6";
+  // Page and a warm stage light in the top right corner.
+  context.fillStyle = palette.page;
   context.fillRect(0, 0, model.width, model.height);
-  context.fillStyle = "#fffdf9";
-  roundedRect(context, 24, 24, model.width - 48, model.height - 48, 14);
+  fillRadialGlow(context, model.width - 120, -60, 620, palette.glow);
+
+  // The navy stage: scale name, description and interval chips.
+  const bandX = model.margin;
+  const bandY = model.margin;
+  const bandWidth = model.width - model.margin * 2;
+  context.save();
+  roundedRect(context, bandX, bandY, bandWidth, model.bandHeight, 30);
+  context.fillStyle = palette.stage;
   context.fill();
-  context.strokeStyle = "#d8c8b7";
+  if (typeof context.clip === "function") {
+    context.clip();
+    fillRadialGlow(context, bandX + bandWidth - 140, bandY - 80, 420, "rgba(242, 183, 5, 0.3)");
+  }
+  context.restore();
+  roundedRect(context, bandX, bandY, bandWidth, model.bandHeight, 30);
+  context.strokeStyle = palette.stageEdge;
   context.lineWidth = 1;
   context.stroke();
 
-  context.fillStyle = "#8e613d";
-  context.font = "700 34px Georgia, serif";
-  context.fillText(`${model.root} ${model.localizedScaleName}`, model.outerPadding, 74);
-  context.fillStyle = "#4d433b";
-  context.font = "600 16px Arial, sans-serif";
+  const textX = model.outerPadding;
+  context.textAlign = "left";
+  context.textBaseline = "alphabetic";
+  context.fillStyle = HIGHLIGHT;
+  context.font = `600 15px ${TEXT_FONT}`;
+  context.fillText("Jam Tracks Hub · Scale Explorer", textX, bandY + 52);
+  context.textAlign = "right";
+  context.fillStyle = STAGE_MUTED;
+  context.font = `500 14px ${TEXT_FONT}`;
+  context.fillText("Standard tuning: E A D G B E", bandX + bandWidth - model.inset, bandY + 52);
+
+  context.textAlign = "left";
+  context.fillStyle = STAGE_TEXT;
+  context.font = `400 48px ${DISPLAY_FONT}`;
+  context.fillText(`${model.root} ${model.localizedScaleName}`, textX, bandY + 110);
+  context.fillStyle = STAGE_MUTED;
+  context.font = `500 16px ${TEXT_FONT}`;
   context.fillText(
     `Guitar scale diagram · frets ${state.fretStart}-${state.fretEnd} · ${model.labelMode === "note" ? "note names" : "scale degrees"}`,
-    model.outerPadding,
-    105
+    textX,
+    bandY + 142
   );
-  context.fillStyle = "#766b62";
-  context.font = "14px Arial, sans-serif";
-  context.fillText("Standard tuning: E A D G B E", model.outerPadding, 132);
 
-  let legendX = model.outerPadding;
+  let legendX = textX;
+  const chipTop = bandY + 164;
   model.scale.intervals.forEach((interval, index) => {
     const label = `${model.scale.degrees[index]}  ${model.noteNames[(model.rootPitch + interval) % 12]}`;
-    context.font = "700 13px Arial, sans-serif";
-    const chipWidth = Math.max(68, context.measureText(label).width + 28);
+    context.font = `700 14px ${TEXT_FONT}`;
+    const chipWidth = Math.max(72, context.measureText(label).width + 32);
     context.fillStyle = model.intervalColors[index];
-    roundedRect(context, legendX, model.titleHeight + 11, chipWidth, 34, 17);
+    roundedRect(context, legendX, chipTop, chipWidth, 36, 18);
     context.fill();
     if (index === 0) {
-      context.strokeStyle = "#6c2c3c";
+      context.strokeStyle = STAGE_TEXT;
       context.lineWidth = 2;
       context.stroke();
     }
     context.fillStyle = "#ffffff";
     context.textAlign = "center";
     context.textBaseline = "middle";
-    context.fillText(label, legendX + chipWidth / 2, model.titleHeight + 28);
-    legendX += chipWidth + 9;
+    context.fillText(label, legendX + chipWidth / 2, chipTop + 18.5);
+    context.textAlign = "left";
+    context.textBaseline = "alphabetic";
+    legendX += chipWidth + 10;
   });
+
+  // The fretboard sits on a soft rounded tray.
+  roundedRect(context, model.margin, model.trayTop, bandWidth, model.trayHeight, 30);
+  context.fillStyle = palette.tray;
+  context.fill();
+  context.strokeStyle = palette.trayEdge;
+  context.lineWidth = 1;
+  context.stroke();
 
   const boardX = model.outerPadding;
   context.textAlign = "center";
   context.textBaseline = "middle";
-  context.fillStyle = "#766b62";
-  context.font = "700 13px Arial, sans-serif";
-  context.fillText("String", boardX + model.labelWidth / 2, model.boardTop + 14);
+  context.fillStyle = palette.muted;
+  context.font = `700 13px ${TEXT_FONT}`;
+  context.fillText("String", boardX + model.labelWidth / 2, model.boardTop + 12);
   model.visibleFrets.forEach((fret, index) => {
-    context.fillText(String(fret), boardX + model.labelWidth + index * model.cellWidth + model.cellWidth / 2, model.boardTop + 14);
+    context.fillText(String(fret), boardX + model.labelWidth + index * model.cellWidth + model.cellWidth / 2, model.boardTop + 12);
   });
 
-  const stringsTop = model.boardTop + 28;
+  const stringsTop = model.boardTop + model.headerRowHeight;
   model.strings.forEach((string, stringIndex) => {
     const rowY = stringsTop + stringIndex * model.rowHeight;
-    context.fillStyle = "#f1e7db";
+    context.fillStyle = palette.labelCell;
     context.fillRect(boardX, rowY, model.labelWidth, model.rowHeight);
-    context.strokeStyle = "#cfbda9";
+    context.strokeStyle = palette.grid;
     context.lineWidth = 1;
     context.strokeRect(boardX, rowY, model.labelWidth, model.rowHeight);
-    context.fillStyle = "#7d5435";
-    context.font = "700 16px Arial, sans-serif";
+    context.fillStyle = palette.ink;
+    context.font = `700 16px ${TEXT_FONT}`;
     context.fillText(string.name, boardX + model.labelWidth / 2, rowY + model.rowHeight / 2);
 
     model.visibleFrets.forEach((fret, fretIndex) => {
       const cellX = boardX + model.labelWidth + fretIndex * model.cellWidth;
-      context.fillStyle = fret % 2 === 0 ? "#fbf7f1" : "#f7f0e7";
+      context.fillStyle = fret % 2 === 0 ? palette.cell : palette.cellAlt;
       context.fillRect(cellX, rowY, model.cellWidth, model.rowHeight);
-      context.strokeStyle = fret === 0 ? "#a77a51" : "#c7b5a2";
-      context.lineWidth = fret === 0 ? 4 : 1.4;
+      context.strokeStyle = palette.grid;
+      context.lineWidth = 1.2;
       context.strokeRect(cellX, rowY, model.cellWidth, model.rowHeight);
-      context.strokeStyle = "#9b8c7e";
+      if (fret === 0) {
+        // The nut: one heavy bar where the open strings meet the first fret.
+        context.fillStyle = palette.nut;
+        context.fillRect(cellX + model.cellWidth - 3, rowY, 6, model.rowHeight);
+      }
+      context.strokeStyle = palette.string;
       context.lineWidth = 1;
       context.beginPath();
       context.moveTo(cellX, rowY + model.rowHeight / 2);
@@ -175,7 +287,7 @@ export function drawScaleImage(documentRef, state) {
       context.beginPath();
       context.arc(centerX, centerY, radius, 0, Math.PI * 2);
       context.fill();
-      context.strokeStyle = intervalIndex === 0 ? "#ffffff" : "#f7eee6";
+      context.strokeStyle = palette.noteRing;
       context.lineWidth = intervalIndex === 0 ? 4 : 2;
       context.stroke();
       if (intervalIndex === 0) {
@@ -186,7 +298,7 @@ export function drawScaleImage(documentRef, state) {
         context.stroke();
       }
       context.fillStyle = "#ffffff";
-      context.font = "700 13px Arial, sans-serif";
+      context.font = `700 13px ${TEXT_FONT}`;
       context.fillText(
         model.labelMode === "note" ? model.noteNames[pitch] : model.scale.degrees[intervalIndex],
         centerX,
@@ -195,11 +307,11 @@ export function drawScaleImage(documentRef, state) {
     });
   });
 
-  const markersY = stringsTop + model.strings.length * model.rowHeight + 16;
+  const markersY = stringsTop + model.strings.length * model.rowHeight + 17;
   model.visibleFrets.forEach((fret, index) => {
     if (!EXPORT_FRET_POSITION_MARKERS.includes(fret)) return;
     const centerX = boardX + model.labelWidth + index * model.cellWidth + model.cellWidth / 2;
-    context.fillStyle = "#b18a64";
+    context.fillStyle = palette.marker;
     const dots = fret === 12 ? [-7, 7] : [0];
     dots.forEach(offset => {
       context.beginPath();
@@ -208,12 +320,34 @@ export function drawScaleImage(documentRef, state) {
     });
   });
 
-  context.textAlign = "right";
+  // Footer: the wordmark on the left, the site and rights on the right.
+  const footerY = model.trayTop + model.trayHeight + 46;
   context.textBaseline = "alphabetic";
-  context.fillStyle = "#86786c";
-  context.font = "12px Arial, sans-serif";
-  context.fillText("@ 2026 Jam Tracks Hub. All rights reserved.", model.width - model.outerPadding, model.height - 34);
+  context.textAlign = "left";
+  context.fillStyle = palette.ink;
+  context.font = `400 22px ${BRAND_FONT}`;
+  context.fillText("JAM TRACKS HUB", model.margin + 4, footerY);
+  context.textAlign = "right";
+  context.fillStyle = palette.muted;
+  context.font = `500 13px ${TEXT_FONT}`;
+  context.fillText("jamtrackshub.com · © 2026 Jam Tracks Hub. All rights reserved.", model.width - model.margin - 4, footerY);
   return { canvas, model };
+}
+
+// Chinese web fonts arrive in unicode-range slices, so ask for the exact title text.
+async function loadImageFonts(documentRef, title) {
+  const fonts = documentRef.fonts;
+  if (!fonts || typeof fonts.load !== "function") return;
+  try {
+    await Promise.all([
+      fonts.load(`400 48px ${DISPLAY_FONT}`, title),
+      fonts.load(`500 16px ${TEXT_FONT}`),
+      fonts.load(`700 14px ${TEXT_FONT}`),
+      fonts.load(`400 22px ${BRAND_FONT}`)
+    ]);
+  } catch (error) {
+    // Draw with the fallback fonts when a web font cannot load.
+  }
 }
 
 function escapeHtml(value) {
@@ -249,9 +383,10 @@ function showIosImagePreview(previewWindow, url, fileName, saveImageHint) {
   return true;
 }
 
-export function downloadScalePng({ documentRef = document, windowRef = window, saveImageHint, ...state }) {
+export async function downloadScalePng({ documentRef = document, windowRef = window, saveImageHint, ...state }) {
   const usePreview = isIosSafariLike(windowRef);
   const previewWindow = usePreview ? windowRef.open("", "_blank") : null;
+  await loadImageFonts(documentRef, `${rootName(state.rootPitch)} ${state.localizedScaleName}`);
   const { canvas, model } = drawScaleImage(documentRef, state);
 
   return new Promise(resolve => {

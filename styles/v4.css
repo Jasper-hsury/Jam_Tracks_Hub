@@ -1,0 +1,1257 @@
+/* ====================
+   v4 Jazz Stage
+   Jazz-sleeve type (Anton display, Work Sans text), soft rounded trays and
+   pill controls, and a warm stage light. Loaded last on every page.
+   Day theme: html[data-theme="light"]. Night theme: every other value.
+   ==================== */
+
+/* Global type and page light */
+html[data-theme] body {
+    background:
+        radial-gradient(1100px 1100px at 92% -14%, var(--glow), transparent 70%) no-repeat,
+        var(--paper);
+    color: var(--text-body);
+    font-family: var(--font-sans);
+}
+
+/* Page titles are Anton capitals. The main element's id outranks the page
+   stylesheets, which still name the serif token for their titles. */
+html[data-theme] #main-content h1 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+html[data-theme]:lang(zh) #main-content h1 {
+    font-weight: 900;
+}
+
+/* Section headings keep DM Serif Display in their own case, as on v3. */
+html[data-theme] main :is(h2, h3) {
+    text-transform: none;
+}
+
+/* Anton until the web font arrives: Impact scaled to Anton's width and
+   given Anton's vertical metrics, so the big titles barely move on swap. */
+@font-face {
+    font-family: "Anton Fallback";
+    src: local("Impact");
+    size-adjust: 92%;
+    ascent-override: 128%;
+    descent-override: 36%;
+    line-gap-override: 0%;
+}
+
+/* Track titles carry keys such as Cm and F#m: never force them to capitals. */
+html[data-theme] :is([data-track-heading], .track-title-display, .track-title-name, .track-title-key) {
+    text-transform: none;
+}
+
+/* Copy that belongs to one theme only. */
+html[data-theme="light"] [data-theme-copy="night"],
+html[data-theme]:not([data-theme="light"]) [data-theme-copy="day"] {
+    display: none;
+}
+
+/* Shared buttons: pills everywhere. */
+html[data-theme] :is(.primary-button, .secondary-button) {
+    border-radius: 999px;
+}
+
+html[data-theme] .v4-knob-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+}
+
+html[data-theme] .v4-knob {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: var(--on-highlight);
+    background: var(--highlight);
+    transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+html[data-theme] .v4-knob svg {
+    display: block;
+    fill: currentColor;
+}
+
+html[data-theme] .v4-knob-button:hover .v4-knob {
+    transform: translateX(3px);
+}
+
+/* ====================
+   Shared shell
+   Desktop: a floating pill. Tablet and phone keep the full-width bar and drawer.
+   ==================== */
+html[data-theme] .navbar {
+    background-color: var(--glass-strong);
+    border-bottom: 1px solid var(--glass-border);
+    box-shadow: none;
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+html[data-theme] .navbar .logo {
+    font-family: var(--font-display);
+    font-size: 22px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--ink);
+}
+
+html[data-theme] .navbar .logo:hover,
+html[data-theme] .navbar .logo:focus-visible {
+    color: var(--accent);
+}
+
+html[data-theme] .navbar .nav-links a {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+html[data-theme] .navbar .theme-toggle,
+html[data-theme] .navbar .theme-toggle.is-light-theme,
+html[data-theme] .navbar .language-switch-button,
+html[data-theme] .navbar .nav-menu-button,
+html[data-theme] .navbar .nav-compact-tools summary,
+html[data-theme] .navbar .nav-compact-tools summary:hover,
+html[data-theme] .navbar .nav-compact-tools.is-active summary,
+html[data-theme] .navbar .nav-compact-tools[open] summary {
+    border: 0;
+    border-radius: 999px;
+    color: var(--ink);
+    background: rgba(var(--ink-rgb), 0.07);
+}
+
+html[data-theme] .navbar .theme-toggle:hover,
+html[data-theme] .navbar .theme-toggle.is-light-theme:hover,
+html[data-theme] .navbar .language-switch-button:hover,
+html[data-theme] .navbar .nav-compact-tools[open] summary,
+html[data-theme] .navbar .nav-compact-tools summary:hover {
+    color: var(--on-highlight);
+    background: var(--highlight);
+}
+
+html[data-theme] .navbar .nav-compact-tools-menu {
+    border: 1px solid var(--glass-border);
+    border-radius: 22px;
+    background: var(--surface);
+    box-shadow: 0 24px 50px -30px var(--shadow-color);
+}
+
+@media (min-width: 1181px) {
+    html[data-theme] .navbar.navbar-smart-scroll {
+        top: 14px;
+        right: 16px;
+        left: 16px;
+        width: auto;
+        max-width: 1408px;
+        margin: 0 auto;
+        padding: 6px 8px 6px 26px;
+        border: 1px solid var(--glass-border);
+        border-radius: 999px;
+        box-shadow:
+            0 1px 0 rgba(255, 255, 255, 0.35) inset,
+            0 18px 40px -26px var(--shadow-color);
+    }
+
+    html[data-theme] .navbar.navbar-smart-scroll.menu-open,
+    html[data-theme] .navbar.navbar-smart-scroll:focus-within {
+        top: 14px;
+    }
+
+    html[data-theme] .navbar.navbar-smart-scroll.is-scroll-hidden {
+        top: calc((var(--site-navbar-height, 64px) + 20px) * -1);
+    }
+
+    html[data-theme] .site-navbar-spacer {
+        box-sizing: content-box;
+        padding-top: 14px;
+    }
+
+    html[data-theme] .navbar .nav-links {
+        gap: 2px;
+    }
+
+    html[data-theme] .navbar .nav-links > li > a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 40px;
+        padding: 0 12px;
+        border-radius: 999px;
+    }
+
+    html[data-theme] .navbar .nav-links > li > a:hover {
+        color: var(--ink);
+        background: rgba(var(--ink-rgb), 0.07);
+    }
+
+    html[data-theme] .navbar .nav-links > li > a.active {
+        color: var(--paper);
+        background: var(--ink);
+    }
+
+    html[data-theme] .navbar .nav-links a.active::after {
+        display: none;
+    }
+
+    html[data-theme] .navbar .nav-theme-item {
+        gap: 6px;
+        margin-left: 6px;
+    }
+}
+
+@media (max-width: 1180px) {
+    html[data-theme] .navbar .nav-links {
+        background: var(--paper);
+        border-left: 1px solid var(--glass-border);
+    }
+
+    html[data-theme] .navbar .logo {
+        font-size: clamp(22px, 5vw, 30px);
+    }
+}
+
+html[data-theme] .footer {
+    margin-top: 120px;
+    padding: 32px 40px;
+    border-top: 6px solid var(--highlight);
+    color: var(--text-muted);
+    background: transparent;
+    font-size: 14px;
+}
+
+html[data-theme] .footer a,
+html[data-theme] .footer .social-links a {
+    color: var(--ink);
+    font-weight: 600;
+}
+
+html[data-theme] .footer a:hover,
+html[data-theme] .footer a:focus-visible {
+    color: var(--accent);
+}
+
+/* ====================
+   Homepage
+   ==================== */
+html[data-theme] .v3-home .home-section-inner,
+html[data-theme] .v3-home .home-feature-inner {
+    width: min(1360px, calc(100% - 64px));
+}
+
+html[data-theme] .v3-home .home-hero.v4-hero {
+    padding: 40px 0 0;
+    text-align: left;
+}
+
+html[data-theme] .v3-home .v4-hero-stage-row {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: center;
+    gap: 24px;
+}
+
+html[data-theme] .v3-home .v4-hero-title-block {
+    grid-column: span 6;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+html[data-theme] .v3-home .home-hero h1.v4-hero-title {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1em;
+    margin: 0;
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-weight: 400;
+    line-height: 0.9;
+    letter-spacing: 0;
+    text-align: left;
+    text-transform: uppercase;
+}
+
+html[data-theme] .v3-home .v4-title-jam {
+    color: var(--highlight);
+    font-size: clamp(140px, 18vw, 260px);
+    line-height: 0.86;
+}
+
+html[data-theme="light"] .v3-home .v4-title-jam {
+    text-shadow: 6px 6px 0 var(--ink);
+}
+
+html[data-theme] .v3-home .v4-title-line {
+    font-size: clamp(84px, 10.8vw, 156px);
+}
+
+html[data-theme] .v3-home .v4-volume {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 21px;
+    font-style: italic;
+    line-height: 1.3;
+}
+
+html[data-theme]:lang(zh) .v3-home .v4-volume {
+    font-style: normal;
+}
+
+/* The record sits on a stage: a navy window in a soft tray by day, the open stage at night. */
+html[data-theme] .v3-home .v4-stage-tray {
+    grid-column: span 6;
+}
+
+html[data-theme="light"] .v3-home .v4-stage-tray {
+    padding: 10px;
+    border-radius: 44px;
+    background: rgba(255, 255, 255, 0.55);
+    box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.9) inset,
+        0 50px 100px -40px rgba(15, 43, 76, 0.4);
+}
+
+html[data-theme] .v3-home .v4-stage {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    padding: 64px 40px 52px;
+    border-radius: 34px;
+    isolation: isolate;
+}
+
+html[data-theme="light"] .v3-home .v4-stage {
+    background: var(--stage);
+}
+
+html[data-theme]:not([data-theme="light"]) .v3-home .v4-stage {
+    overflow: visible;
+    padding: 30px 0 50px;
+}
+
+html[data-theme] .v3-home .v4-stage-glow {
+    position: absolute;
+    z-index: -1;
+    top: -260px;
+    left: 50%;
+    width: 760px;
+    height: 760px;
+    margin-left: -330px;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(242, 183, 5, 0.4), rgba(242, 183, 5, 0.1) 55%, rgba(242, 183, 5, 0) 76%);
+    pointer-events: none;
+}
+
+html[data-theme]:not([data-theme="light"]) .v3-home .v4-stage-glow {
+    background: radial-gradient(closest-side, rgba(242, 183, 5, 0.28), rgba(242, 183, 5, 0.07) 55%, rgba(242, 183, 5, 0) 76%);
+}
+
+html[data-theme] .v3-home .v4-record-stage {
+    max-width: 560px;
+}
+
+/* Leave room on the right for the record to slide out on hover. */
+@media (min-width: 641px) {
+    html[data-theme] .v3-home .v4-record-stage {
+        translate: -32px 0;
+    }
+}
+
+html[data-theme] .v3-home .v4-record {
+    background: repeating-radial-gradient(circle at 50% 50%, #131210 0 3px, #1e1b17 3px 4px);
+    box-shadow: 0 34px 60px -20px rgba(0, 0, 0, 0.7);
+    /* Same hover as the Tracks page records: it rests in the sleeve, then
+       slides out about 52px while turning 60 degrees. */
+    transition:
+        translate 0.5s cubic-bezier(0.2, 0.7, 0.2, 1),
+        rotate 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    html[data-theme] .v3-home .v4-stage-tray:hover .v4-record {
+        translate: 14% 0;
+        rotate: 60deg;
+    }
+}
+
+html[data-theme] .v3-home .v4-record .v3-record-label {
+    color: var(--on-highlight);
+    background: var(--highlight);
+    font-family: var(--font-display);
+    font-size: clamp(11px, 1.1vw, 15px);
+    text-transform: uppercase;
+}
+
+html[data-theme] .v3-home .v4-record-stage .v3-sleeve {
+    border-radius: 4px;
+    box-shadow: 0 40px 70px -26px rgba(0, 0, 0, 0.75);
+}
+
+html[data-theme] .v3-home .v4-record-stage :is(.v3-sleeve-brand, .v3-sleeve-tagline) {
+    font-family: var(--font-sleeve);
+}
+
+/* Tagline, intro, numbers and actions under the yellow rule. */
+html[data-theme] .v3-home .v4-hero-copy {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: start;
+    gap: 24px;
+    margin-top: 48px;
+    padding-top: 28px;
+    border-top: 6px solid var(--highlight);
+}
+
+html[data-theme] .v3-home .v4-hero-intro {
+    grid-column: span 6;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+html[data-theme] .v3-home .v4-stage-tagline {
+    margin: 0;
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: clamp(44px, 4.6vw, 66px);
+    line-height: 0.95;
+    text-transform: uppercase;
+}
+
+html[data-theme] .v3-home .v4-stage-tagline span {
+    color: var(--v4-teal);
+}
+
+html[data-theme]:not([data-theme="light"]) .v3-home .v4-stage-tagline span {
+    color: var(--highlight);
+}
+
+html[data-theme]:lang(zh) .v3-home .v4-stage-tagline {
+    font-size: clamp(36px, 3.6vw, 50px);
+    font-weight: 900;
+    line-height: 1.15;
+}
+
+html[data-theme] .v3-home .home-hero .home-lead {
+    max-width: 46ch;
+    margin: 0;
+    color: var(--text-body);
+    font-family: var(--font-sans);
+    font-size: 19px;
+    line-height: 1.6;
+}
+
+html[data-theme] .v3-home .home-hero .home-metrics {
+    grid-column: span 2;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+html[data-theme] .v3-home .home-hero .home-metrics > div {
+    padding: 0;
+    border: 0;
+}
+
+html[data-theme] .v3-home .home-hero .home-metrics dt {
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: 48px;
+    line-height: 1;
+}
+
+html[data-theme] .v3-home .home-hero .home-metrics dd {
+    margin: 4px 0 0;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+html[data-theme]:lang(zh) .v3-home .home-hero .home-metrics dd {
+    letter-spacing: 0.04em;
+}
+
+html[data-theme] .v3-home .home-hero .hero-actions {
+    grid-column: span 4;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 12px;
+    margin: 0;
+}
+
+html[data-theme] .v3-home .hero-actions :is(.primary-button, .secondary-button) {
+    min-height: 54px;
+    padding: 0 26px;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+html[data-theme] .v3-home .hero-actions .primary-button {
+    padding-right: 7px;
+    border: 0;
+    color: var(--paper);
+    background: var(--ink);
+}
+
+html[data-theme] .v3-home .hero-actions .secondary-button {
+    border: 1px solid rgba(var(--ink-rgb), 0.16);
+    color: var(--ink);
+    background: var(--glass-strong);
+}
+
+html[data-theme] .v3-home .hero-actions .primary-button:hover,
+html[data-theme] .v3-home .hero-actions .secondary-button:hover {
+    transform: translateY(-2px);
+}
+
+html[data-theme] .v3-home .hero-actions .secondary-button:hover {
+    color: var(--ink);
+    background: var(--glass-strong);
+    border-color: var(--ink);
+}
+
+/* Toolbox: the tracklist becomes one rounded navy stage, joined to the featured video. */
+html[data-theme] .v3-home .home-tools.v3-band,
+html[data-theme] .v3-home .v3-band--feature {
+    width: min(1360px, calc(100% - 64px));
+    margin: 0 auto;
+    border: 0;
+    background: var(--stage);
+}
+
+html[data-theme]:not([data-theme="light"]) .v3-home .home-tools.v3-band,
+html[data-theme]:not([data-theme="light"]) .v3-home .v3-band--feature {
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1px var(--glass-border);
+}
+
+html[data-theme] .v3-home .home-tools.v3-band {
+    position: relative;
+    overflow: hidden;
+    margin-top: 120px;
+    padding: 72px 0 56px;
+    border-radius: var(--radius-panel) var(--radius-panel) 0 0;
+}
+
+html[data-theme] .v3-home .home-tools.v3-band::before {
+    content: "";
+    position: absolute;
+    top: -200px;
+    right: -160px;
+    width: 640px;
+    height: 640px;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(242, 183, 5, 0.22), rgba(242, 183, 5, 0));
+    pointer-events: none;
+}
+
+html[data-theme] .v3-home .v3-band--feature {
+    padding: 0 0 64px;
+    border-radius: 0 0 var(--radius-panel) var(--radius-panel);
+}
+
+html[data-theme] .v3-home .home-tools .home-section-inner,
+html[data-theme] .v3-home .v3-band--feature .home-feature-inner {
+    position: relative;
+    width: calc(100% - 96px);
+}
+
+html[data-theme] .v3-home .v3-band h2 {
+    color: var(--on-band);
+    font-family: var(--font-serif);
+    font-size: clamp(44px, 5.6vw, 80px);
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+}
+
+html[data-theme]:lang(zh) .v3-home .v3-band h2 {
+    font-size: clamp(34px, 4.4vw, 56px);
+}
+
+html[data-theme] .v3-home .v3-band .home-eyebrow {
+    color: var(--highlight);
+}
+
+html[data-theme] .v3-home .v3-side-title {
+    color: var(--highlight);
+    font-family: var(--font-sans);
+    font-size: 19px;
+}
+
+html[data-theme] .v3-home .v3-tracklist-group > strong {
+    color: var(--on-band-muted);
+    font-size: 12px;
+}
+
+html[data-theme] .v3-home .home-workflow-link {
+    border-top-color: rgba(241, 233, 216, 0.14);
+    border-radius: 0;
+    transition: background-color 0.25s ease, padding 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+html[data-theme] .v3-home .v3-tracklist-group:nth-child(2n) .home-workflow-link:last-child {
+    border-bottom-color: rgba(241, 233, 216, 0.14);
+}
+
+html[data-theme] .v3-home .home-workflow-link:hover {
+    padding-left: 10px;
+}
+
+html[data-theme] .v3-home .v3-track-no {
+    color: var(--highlight);
+    font-family: var(--font-display);
+    font-size: 17px;
+}
+
+html[data-theme] .v3-home .v3-track-name {
+    font-family: var(--font-serif);
+    font-size: 26px;
+    line-height: 1.2;
+}
+
+html[data-theme]:lang(zh) .v3-home .v3-track-name {
+    font-size: 21px;
+    font-weight: 600;
+}
+
+html[data-theme] .v3-home .home-feature-inner {
+    padding: 28px;
+    border: 0;
+    border-radius: 26px;
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+html[data-theme] .v3-home .v3-band--feature h2 {
+    font-size: clamp(30px, 3vw, 42px);
+    line-height: 1;
+}
+
+html[data-theme]:lang(zh) .v3-home .v3-band--feature h2 {
+    font-size: clamp(24px, 2.4vw, 32px);
+    line-height: 1.3;
+}
+
+html[data-theme] .v3-home .home-video-player iframe {
+    border-radius: 18px;
+}
+
+/* Sessions: the latest releases as rounded record cards. */
+html[data-theme] .v3-home .home-releases {
+    padding: 120px 0 40px;
+}
+
+html[data-theme] .v3-home .home-releases .home-section-heading {
+    align-items: flex-end;
+    padding-bottom: 0;
+    border-bottom: 0;
+}
+
+html[data-theme] .v3-home .home-releases .home-eyebrow,
+html[data-theme] .v3-home .about-copy .home-eyebrow {
+    color: var(--accent);
+}
+
+html[data-theme] .v3-home .home-releases h2 {
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: clamp(44px, 5.6vw, 80px);
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+}
+
+html[data-theme]:lang(zh) .v3-home :is(.home-releases h2, .about-copy h2) {
+    font-size: clamp(34px, 4.4vw, 56px);
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+html[data-theme] .v3-home .text-link {
+    color: var(--ink);
+}
+
+html[data-theme] .v3-home .home-release-grid {
+    gap: 18px;
+}
+
+html[data-theme] .v3-home .home-release-card {
+    gap: 0;
+    padding: 8px;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-card);
+    background: var(--glass);
+    box-shadow: 0 24px 50px -36px var(--shadow-color);
+    transition: transform 0.6s cubic-bezier(0.32, 0.72, 0, 1), box-shadow 0.6s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+html[data-theme="light"] .v3-home .home-release-card {
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset, 0 24px 50px -36px var(--shadow-color);
+}
+
+html[data-theme] .v3-home .home-release-card:hover {
+    transform: translateY(-6px);
+}
+
+html[data-theme] .v3-home .release-cover-link {
+    position: relative;
+    overflow: hidden;
+    border-radius: 23px;
+}
+
+/* Covers show as published: no tint, no shading. */
+html[data-theme] .v3-home .release-cover-link::after {
+    content: none;
+}
+
+html[data-theme] .v3-home .release-copy {
+    gap: 10px;
+    padding: 18px 14px 14px;
+}
+
+html[data-theme] .v3-home .release-number {
+    color: var(--accent);
+    font-family: var(--font-display);
+    font-size: 18px;
+    letter-spacing: 0.04em;
+}
+
+html[data-theme] .v3-home .release-copy h3 {
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: 25px;
+    line-height: 1.2;
+}
+
+html[data-theme]:lang(zh) .v3-home .release-copy h3 {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+html[data-theme] .v3-home .track-meta span {
+    padding: 4px 10px;
+    border-radius: 999px;
+    color: var(--ink);
+    background: rgba(var(--ink-rgb), 0.07);
+    font-size: 13px;
+}
+
+/* About and Subscribe on a soft tray. */
+html[data-theme] .v3-home .home-about {
+    padding: 80px 0 0;
+    border-top: 0;
+    background: none;
+}
+
+html[data-theme] .v3-home .home-about-layout {
+    padding-top: 0;
+    border-top: 0;
+}
+
+html[data-theme] .v3-home .about-copy h2 {
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: clamp(38px, 3.8vw, 56px);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+}
+
+html[data-theme] .v3-home .about-connect {
+    padding: 32px;
+    border: 1px solid var(--glass-border);
+    border-radius: 26px;
+    background: var(--glass-strong);
+}
+
+html[data-theme] .v3-home .about-copy {
+    padding: 56px;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-panel);
+    background: var(--glass);
+}
+
+html[data-theme] .v3-home .home-about-summary {
+    color: var(--text-body);
+    font-size: 17px;
+}
+
+html[data-theme] .v3-home .v3-connect-button {
+    border-radius: 999px;
+    border-color: rgba(var(--ink-rgb), 0.18);
+}
+
+html[data-theme] .v3-home .v3-connect-button--primary {
+    border-color: var(--ink);
+    color: var(--paper);
+    background: var(--ink);
+}
+
+html[data-theme] .v3-home .home-subscribe-card {
+    border-top: 0;
+}
+
+html[data-theme] .v3-home .home-subscribe-title {
+    font-family: var(--font-sans);
+    font-size: 18px;
+    font-weight: 600;
+}
+
+html[data-theme] .v3-home .about-connect .home-subscribe-form {
+    gap: 8px;
+}
+
+html[data-theme] .v3-home .home-subscribe-form input[type="email"] {
+    min-height: 52px;
+    padding: 0 20px;
+    border: 1px solid rgba(var(--ink-rgb), 0.18);
+    border-radius: 999px;
+    background: var(--glass-strong);
+}
+
+html[data-theme] .v3-home .home-subscribe-button {
+    min-height: 52px;
+    padding: 0 24px;
+    border: 0;
+    border-radius: 999px;
+    color: var(--on-highlight);
+    background: var(--highlight);
+    font-weight: 700;
+}
+
+/* Homepage on tablets and phones */
+@media (max-width: 980px) {
+    html[data-theme] .v3-home .v4-hero-title-block,
+    html[data-theme] .v3-home .v4-stage-tray,
+    html[data-theme] .v3-home .v4-hero-intro,
+    html[data-theme] .v3-home .home-hero .home-metrics,
+    html[data-theme] .v3-home .home-hero .hero-actions {
+        grid-column: 1 / -1;
+    }
+
+    html[data-theme] .v3-home .home-hero .home-metrics {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 18px 36px;
+    }
+
+    html[data-theme] .v3-home .home-hero .hero-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 640px) {
+    html[data-theme] .v3-home .home-section-inner,
+    html[data-theme] .v3-home .home-tools.v3-band,
+    html[data-theme] .v3-home .v3-band--feature {
+        width: calc(100% - 24px);
+    }
+
+    html[data-theme] .v3-home .home-hero.v4-hero .home-section-inner {
+        width: calc(100% - 32px);
+    }
+
+    html[data-theme] .v3-home .home-tools .home-section-inner,
+    html[data-theme] .v3-home .v3-band--feature .home-feature-inner {
+        width: calc(100% - 40px);
+    }
+
+    html[data-theme] .v3-home .v4-title-jam {
+        font-size: 150px;
+    }
+
+    html[data-theme="light"] .v3-home .v4-title-jam {
+        text-shadow: 4px 4px 0 var(--ink);
+    }
+
+    html[data-theme] .v3-home .v4-title-line {
+        display: inline;
+        font-size: 72px;
+    }
+
+    html[data-theme] .v3-home .home-hero h1.v4-hero-title {
+        display: block;
+    }
+
+    html[data-theme] .v3-home .v4-title-jam {
+        display: block;
+        margin-bottom: 0.1em;
+    }
+
+    html[data-theme] .v3-home .v4-volume {
+        text-align: left;
+    }
+
+    html[data-theme] .v3-home .v4-record-stage .v3-sleeve-tagline {
+        font-size: 10px;
+    }
+
+    html[data-theme] .v3-home .v4-title-line + .v4-title-line {
+        margin-left: 0.22em;
+    }
+
+    html[data-theme="light"] .v3-home .v4-stage-tray {
+        padding: 8px;
+        border-radius: 32px;
+    }
+
+    html[data-theme] .v3-home .v4-stage {
+        padding: 36px 16px 30px;
+        border-radius: 25px;
+    }
+
+    html[data-theme] .v3-home .home-hero .hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    html[data-theme] .v3-home .hero-actions :is(.primary-button, .secondary-button) {
+        justify-content: space-between;
+        min-height: 58px;
+    }
+
+    html[data-theme] .v3-home .hero-actions .secondary-button {
+        justify-content: center;
+    }
+
+    html[data-theme] .v3-home .home-tools.v3-band {
+        margin-top: 80px;
+        padding-top: 48px;
+    }
+
+    html[data-theme] .v3-home .about-copy {
+        padding: 28px 22px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html[data-theme] .v3-home .v4-record {
+        transition: none;
+    }
+}
+
+/* ====================
+   Inner pages
+   Rounded trays for panels, a yellow rule under every page heading, the navy
+   stage for highlighted results, and pills for controls.
+   ==================== */
+:root {
+    --radius-control: 14px;
+}
+
+/* Page heading rule */
+html[data-theme] main.v3-tool-page .v3-tool-meta,
+html[data-theme] main:is(.legal-page, .privacy-page) .v3-page-meta,
+html[data-theme] body[data-vue-page="song-workspace"] .song-workspace-promises {
+    border-top: 6px solid var(--highlight);
+}
+
+html[data-theme] main.tracks-library-page .page-heading-row,
+html[data-theme] body[data-vue-page="song-workspace"] .song-workspace-page:has(#workspaceEditorView:not([hidden])) .song-workspace-hero {
+    border-bottom: 6px solid var(--highlight);
+}
+
+/* Taglines stay Anton; the main element's id outranks the page stylesheets. */
+html[data-theme] #main-content :is(.hero-tagline, .signature-slogan) {
+    color: var(--v4-teal);
+    font-family: var(--font-display);
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: 0;
+}
+
+html[data-theme]:not([data-theme="light"]) #main-content :is(.hero-tagline, .signature-slogan) {
+    color: var(--highlight);
+}
+
+html[data-theme]:lang(zh) #main-content :is(.hero-tagline, .signature-slogan) {
+    font-weight: 900;
+}
+
+/* Panels become soft rounded trays. */
+html[data-theme] main.v3-tool-page :is(.dictionary-browser, .dictionary-detail, .scale-control-panel, .scale-display-toolbar, .fretboard-card, .key-options, .key-result, .progression-shape-card, .progression-writer-panel, .progression-writer-meta, .progression-writer-entry, .progression-writer-saved, .trainer-card, .key-finder-panel),
+html[data-theme] body[data-vue-page="song-workspace"] :is(.workspace-import-card, .workspace-settings-disclosure, .workspace-chart-panel, .workspace-shapes-panel, .workspace-read-toolbar),
+html[data-theme] main.tracks-library-page .track-key-options {
+    border-color: var(--glass-border);
+    border-radius: var(--radius-card);
+    box-shadow: 0 30px 60px -44px var(--shadow-color);
+}
+
+html[data-theme="light"] main.v3-tool-page :is(.dictionary-browser, .dictionary-detail, .scale-control-panel, .scale-display-toolbar, .fretboard-card, .key-options, .key-result, .progression-shape-card, .progression-writer-panel, .progression-writer-meta, .progression-writer-entry, .progression-writer-saved, .trainer-card, .key-finder-panel),
+html[data-theme="light"] body[data-vue-page="song-workspace"] :is(.workspace-import-card, .workspace-settings-disclosure, .workspace-chart-panel, .workspace-shapes-panel, .workspace-read-toolbar) {
+    box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.9) inset,
+        0 30px 60px -44px var(--shadow-color);
+}
+
+/* Panels that open with a navy band clip it to their curve. */
+html[data-theme] main.v3-tool-page :is(.dictionary-detail, .key-result, .trainer-card) {
+    overflow: hidden;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-dialog:not(.workspace-performance) {
+    border-top: 6px solid var(--highlight);
+    border-radius: var(--radius-card);
+}
+
+/* Highlighted results sit on the navy stage under a warm light. */
+html[data-theme] main.v3-tool-page :is(.v3-selected-band, .scale-summary, .progression-selected-heading, .trainer-question-card),
+html[data-theme] body[data-vue-page="song-workspace"] :is(#chartKeySummary, .workspace-read-summary) {
+    position: relative;
+    isolation: isolate;
+    color: var(--on-band);
+    background:
+        radial-gradient(520px 420px at 92% -30%, rgba(242, 183, 5, 0.26), rgba(242, 183, 5, 0) 70%),
+        var(--stage);
+    border-color: transparent;
+}
+
+html[data-theme] main.v3-tool-page :is(.scale-summary, .progression-selected-heading, .trainer-question-card),
+html[data-theme] body[data-vue-page="song-workspace"] :is(#chartKeySummary, .workspace-read-summary) {
+    border-radius: 24px;
+}
+
+html[data-theme] main.v3-tool-page .v3-selected-band h2 {
+    font-size: clamp(56px, 6vw, 88px);
+    line-height: 1;
+}
+
+/* Controls: pills for buttons, soft corners for fields and grid keys. */
+html[data-theme] main.v3-tool-page button,
+html[data-theme] main :is(.primary-button, .secondary-button, .text-button, .select-key-button, .dictionary-play-button, .scale-play-button, .scale-download-button, .workspace-button, .workspace-segmented button) {
+    border-radius: 999px;
+}
+
+html[data-theme] main :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select, textarea) {
+    border-radius: var(--radius-control);
+}
+
+html[data-theme] main :is(.primary-button, .select-key-button.active, .select-key-button[aria-pressed="true"]) {
+    color: var(--paper);
+    background: var(--ink);
+    border-color: var(--ink);
+}
+
+html[data-theme] main .primary-button:hover {
+    color: var(--on-highlight);
+    background: var(--highlight);
+    border-color: var(--highlight);
+}
+
+/* Policy pages read in Work Sans, not display capitals. */
+html[data-theme] main:is(.legal-page, .privacy-page) :is(.result-section h2, .policy-section h2, section h2) {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    text-transform: none;
+}
+
+/* Cards and boxes inside tool panels take a smaller, matching curve. */
+html[data-theme] main.v3-tool-page :is(.chord-shape-card, .progression-shape-card, .trainer-score, .trainer-feedback, .dictionary-category button, .progression-chord-token) {
+    border-radius: 18px;
+}
+
+html[data-theme] main.v3-tool-page .trainer-question-display {
+    overflow: hidden;
+    border-radius: 18px;
+}
+
+html[data-theme] main.v3-tool-page .dictionary-category-heading > :last-child {
+    border-radius: 999px;
+}
+
+/* Form controls inherit the page fonts instead of the browser's default
+   (buttons on several tool pages used to fall back to Arial). Zero
+   specificity, so any rule that names a font still wins. */
+:where(button, input, select, textarea) {
+    font-family: inherit;
+}
+
+/* Large buttons and boxes take a card curve rather than a pill. */
+html[data-theme] main :is(.analyze-file-button, .workspace-entry-card) {
+    border-radius: 24px;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-entry-card::after {
+    border-radius: 50%;
+}
+
+html[data-theme] main :is(.service-wake-panel, .upload-file-label, .helper-install-card, .workspace-main-disclosure, .workspace-local-note, .workspace-empty, .api-status) {
+    border-radius: 20px;
+}
+
+html[data-theme] main .api-status {
+    border-radius: 999px;
+}
+
+/* Feedback: the form sits on a soft tray under the yellow rule. */
+html[data-theme] main.feedback-page .feedback-panel,
+html[data-theme] main.feedback-page .feedback-panel:hover {
+    border-top: 6px solid var(--highlight);
+}
+
+html[data-theme] main.feedback-page .feedback-form {
+    border-color: var(--glass-border);
+    border-radius: var(--radius-card);
+    box-shadow: 0 30px 60px -44px var(--shadow-color);
+}
+
+/* 404 and the waking page: the same red sleeve and black record as the homepage. */
+html[data-theme] main.status-page {
+    --record-vinyl: #16130f;
+    --record-groove: #3a342c;
+    --record-label: #f2b705;
+}
+
+html[data-theme] main.status-page .status-page-sleeve {
+    border: 0;
+    border-radius: 4px;
+    color: #f2ede3;
+    background: var(--sleeve);
+    box-shadow: 0 40px 70px -26px rgba(60, 20, 10, 0.55);
+}
+
+html[data-theme] main.status-page .status-page-sleeve-brand,
+html[data-theme] main.status-page .status-page-sleeve-caption {
+    color: rgba(242, 237, 227, 0.85);
+}
+
+html[data-theme] main.status-page .status-page-sleeve-caption {
+    border-top: 2px solid #f2ede3;
+}
+
+html[data-theme] main.status-page .status-page-sleeve-code {
+    color: #f2ede3;
+    font-family: var(--font-display);
+}
+
+html[data-theme] main.status-page .status-page-actions {
+    border-top: 6px solid var(--highlight);
+}
+
+html[data-theme] main.status-page .status-page-status {
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    background: var(--glass-strong);
+}
+
+html[data-theme] main.tracks-library-page .v3-download-button {
+    border-radius: 50%;
+}
+
+/* Selected keys, chords and filters read like the primary button in both themes. */
+html[data-theme] main.v3-tool-page button:is(.is-selected, .active, [aria-pressed="true"]),
+html[data-theme] main.v3-tool-page .dictionary-category button.is-selected {
+    color: var(--paper);
+    background: var(--ink);
+    border-color: var(--ink);
+}
+
+html[data-theme] main.v3-tool-page button:is(.is-selected, .active, [aria-pressed="true"]) :is(span, small) {
+    color: inherit;
+}
+
+html[data-theme] main.v3-tool-page {
+    --tool-selected-bg: var(--ink);
+    --tool-selected-border: var(--ink);
+    --tool-selected-text: var(--paper);
+}
+
+html[data-theme="default"] main.v3-tool-page .dictionary-quality-button.is-selected span,
+html[data-theme] main.v3-tool-page .dictionary-quality-button.is-selected span {
+    color: inherit;
+    opacity: 0.78;
+}
+
+/* Song Workspace selections: stage navy by day, a lifted navy at night (cream text 5.9:1). */
+html[data-theme] body[data-vue-page="song-workspace"] {
+    --workspace-selected: var(--stage);
+}
+
+html[data-theme="default"] body[data-vue-page="song-workspace"] {
+    --workspace-selected: #2a5d92;
+}
+
+/* Long taglines read in DM Serif italic; Anton stays for short ones. */
+html[data-theme] #main-content.feedback-page .hero-tagline {
+    max-width: 40ch;
+    color: var(--accent);
+    font-family: var(--font-serif);
+    font-size: clamp(22px, 2.2vw, 28px);
+    font-style: italic;
+    line-height: 1.35;
+}
+
+html[data-theme]:not([data-theme="light"]) #main-content.feedback-page .hero-tagline {
+    color: var(--highlight);
+}
+
+html[data-theme]:lang(zh) #main-content.feedback-page .hero-tagline {
+    font-style: normal;
+    font-weight: 600;
+}
+
+/* Labels above headings read in sentence case; capitals stay for data labels
+   such as tuning, stats, fields and filters. */
+html[data-theme] #main-content :is(.home-eyebrow, .hero-eyebrow, .v3-page-eyebrow, .v3-tracks-eyebrow, .result-kicker, .dictionary-kicker, .scale-section-kicker, .trainer-kicker, .workspace-import-type) {
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+/* Scale Explorer: the PNG background toggle sits on the navy stage. */
+html[data-theme] main.v3-tool-page .scale-summary .scale-image-theme {
+    display: inline-flex;
+    padding: 3px;
+    border: 1px solid rgba(241, 233, 216, 0.3);
+    border-radius: 999px;
+    background: transparent;
+}
+
+html[data-theme] main.v3-tool-page .scale-summary .scale-image-theme button {
+    flex: 1 1 0;
+    min-height: 40px;
+    padding: 0 16px;
+    border: 0;
+    border-radius: 999px;
+    color: #f1e9d8;
+    background: transparent;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+html[data-theme] main.v3-tool-page .scale-summary .scale-image-theme button.is-selected,
+html[data-theme] main.v3-tool-page .scale-summary .scale-image-theme button.is-selected:hover {
+    color: #0f2b4c;
+    background: #f1e9d8;
+}
+
+html[data-theme] main.v3-tool-page .scale-summary .scale-image-theme button:not(.is-selected):hover {
+    background: rgba(241, 233, 216, 0.12);
+}
+
+html[data-theme] main.v3-tool-page .scale-summary .scale-image-theme button:focus-visible {
+    outline: 2px solid #f2b705;
+    outline-offset: 2px;
+}

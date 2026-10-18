@@ -15,13 +15,13 @@ const locale = read("src/i18n/useSiteLocale.js");
 const animationsJs = read("scripts/site-animations.js");
 const pagesCss = read("styles/pages.css");
 
-test("homepage title writes itself instead of the old SplitText character rise", () => {
+test("the homepage title stays still instead of the old SplitText character rise", () => {
     assert.match(indexHtml, /<div id="vue-home-root"><\/div>/);
     assert.match(indexHtml, /assets\/vendor\/gsap\/SplitText\.min\.js/);
     assert.doesNotMatch(indexHtml, /scripts\/i18n\.js/);
-    assert.match(indexHtml, /scripts\/site-animations\.js\?v=20261017-polish/);
+    assert.match(indexHtml, /scripts\/site-animations\.js\?v=20261018-v4-jazz-stage/);
     assert.doesNotMatch(animationsJs, /\.home-hero h1|\.home-hero \.signature-slogan|home-split-char|animateHomeHeroText|homeHeroSplits/);
-    assert.match(animationsJs, /The homepage title, rule and tagline animate themselves \(HomeHeroTitle\.vue\)/);
+    assert.match(animationsJs, /The homepage title stays still; the record on its stage carries the motion \(HomeView\.vue\)\./);
 });
 
 test("Vue localization preserves the animation-owned SplitText lifecycle", () => {
@@ -52,7 +52,7 @@ test("homepage workflow does not pin or consume vertical scroll distance", () =>
 });
 
 test("Legal uses the established display and body font roles without artistic tagline styling", () => {
-    assert.match(legalHtml, /family=DM\+Serif\+Display:ital@0;1&family=Noto\+Sans\+TC:wght@400;500;600&family=Noto\+Serif\+TC:wght@400;600&family=Public\+Sans/);
+    assert.match(legalHtml, /family=Anton&family=DM\+Serif\+Display:ital@0;1&family=Noto\+Sans\+TC:wght@400;700;900&family=Noto\+Serif\+TC:wght@600&family=Work\+Sans/);
     assert.match(legalView, /class="tracks-page legal-page"/);
     assert.match(legalView, /class="legal-page-metadata"/);
     assert.doesNotMatch(legalView, /class="hero-tagline"/);
@@ -63,7 +63,7 @@ test("Legal uses the established display and body font roles without artistic ta
 });
 
 test("Privacy uses stable policy typography without panel hover or title transform", () => {
-    assert.match(privacyHtml, /family=DM\+Serif\+Display:ital@0;1&family=Noto\+Sans\+TC:wght@400;500;600&family=Noto\+Serif\+TC:wght@400;600&family=Public\+Sans/);
+    assert.match(privacyHtml, /family=Anton&family=DM\+Serif\+Display:ital@0;1&family=Noto\+Sans\+TC:wght@400;700;900&family=Noto\+Serif\+TC:wght@600&family=Work\+Sans/);
     assert.match(privacyView, /class="tracks-page privacy-page"/);
     assert.match(privacyView, /class="privacy-page-metadata"/);
     assert.match(privacyView, /class="key-finder-panel privacy-policy-panel"/);
@@ -81,7 +81,7 @@ test("Privacy uses stable policy typography without panel hover or title transfo
 
 test("Song Workspace reuses the shared page entrance without changing its application modules", () => {
     assert.match(workspaceHtml, /assets\/vendor\/gsap\/gsap\.min\.js/);
-    assert.match(workspaceHtml, /scripts\/site-animations\.js\?v=20261017-polish/);
+    assert.match(workspaceHtml, /scripts\/site-animations\.js\?v=20261018-v4-jazz-stage/);
     assert.match(animationsJs, /const isSongWorkspacePage = Boolean\(document\.querySelector\("\.song-workspace-page"\)\)/);
     assert.match(animationsJs, /"\.song-workspace-hero > \.result-kicker"[\s\S]*"\.workspace-create-area > \.workspace-section-heading"/s);
     assert.match(animationsJs, /if \(isSongWorkspacePage\) \{[\s\S]*\.workspace-entry-grid > \.workspace-entry-card[\s\S]*stagger:\s*0\.065/s);

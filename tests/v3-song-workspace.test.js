@@ -26,10 +26,10 @@ function splitTopLevel(group) {
   return [...parts, current];
 }
 
-test("Song Workspace loads the v3 stylesheet last, and only Song Workspace loads it", () => {
+test("Song Workspace loads the v3 stylesheet right before v4.css, and only Song Workspace loads it", () => {
   const html = read("song-workspace.html");
   const links = html.match(/<link rel="stylesheet" href="styles\/[^"]+">/g);
-  assert.equal(links.at(-1), `<link rel="stylesheet" href="${STYLESHEET}">`);
+  assert.equal(links.at(-2), `<link rel="stylesheet" href="${STYLESHEET}">`);
   assert.ok(read("vite.config.mjs").includes(`"${STYLESHEET}"`));
   assert.ok(read("tools/scripts/verify-cloudflare-build.js").includes(`"${STYLESHEET}"`));
   fs.readdirSync(root).filter(file => file.endsWith(".html") && file !== "song-workspace.html")

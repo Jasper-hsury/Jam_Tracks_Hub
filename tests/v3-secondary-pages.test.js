@@ -33,10 +33,10 @@ function splitTopLevel(group) {
   return [...parts, current];
 }
 
-test("the five secondary pages load the v3 stylesheet last, and no other page loads it", () => {
+test("the five secondary pages load the v3 stylesheet right before v4.css, and no other page loads it", () => {
   Object.entries(PAGES).forEach(([file, prefix]) => {
     const links = read(file).match(/<link rel="stylesheet" href="\/?styles\/[^"]+">/g);
-    assert.equal(links.at(-1), `<link rel="stylesheet" href="${prefix}${STYLESHEET}">`, file);
+    assert.equal(links.at(-2), `<link rel="stylesheet" href="${prefix}${STYLESHEET}">`, file);
   });
   assert.ok(read("vite.config.mjs").includes(`"${STYLESHEET}"`));
   const verifier = read("tools/scripts/verify-cloudflare-build.js");

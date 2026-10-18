@@ -91,7 +91,7 @@ test("Song Workspace carries the same share tags as every other page", () => {
 test("Privacy starts in English and Legal gets the same page entrance as Privacy", () => {
   assert.match(read("privacy-policy.html"), /<html lang="en">/);
   const legal = read("legal.html");
-  assert.match(legal, /assets\/vendor\/gsap\/gsap\.min\.js[\s\S]*assets\/vendor\/gsap\/ScrollTrigger\.min\.js[\s\S]*scripts\/site-animations\.js\?v=20261017-polish[\s\S]*src\/entries\/legal\.js/);
+  assert.match(legal, /assets\/vendor\/gsap\/gsap\.min\.js[\s\S]*assets\/vendor\/gsap\/ScrollTrigger\.min\.js[\s\S]*scripts\/site-animations\.js\?v=20261018-v4-jazz-stage[\s\S]*src\/entries\/legal\.js/);
   assert.match(read("scripts/site-animations.js"), /heroPieces\.filter\(target => !target\.closest\("\.privacy-page, \.legal-page"\)\)/);
 });
 

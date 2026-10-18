@@ -64,6 +64,11 @@
       "eyebrow": "Backing tracks • Fretboard tools • Song analysis",
       "title": "Jam Tracks Hub",
       "tagline": "Capture the Feeling. Compose the Meaning.",
+      "stageTaglines": {
+        "day": ["House lights up.", "Let's rehearse."],
+        "night": ["Lights down.", "You're on."]
+      },
+      "volume": "Volume {{number}}",
       "description": "Original practice tracks and focused tools for musicians who want to listen, understand harmony, map the fretboard, and create with purpose.",
       "exploreTracks": "Browse Backing Tracks",
       "openSongWorkspace": "Open Song Workspace",
@@ -110,7 +115,7 @@
       }
     },
     "about": {
-      "eyebrow": "ABOUT JAM TRACKS HUB",
+      "eyebrow": "About Jam Tracks Hub",
       "imageAlt": "Jasper playing acoustic guitar on stage",
       "imageCaption": "Jasper, guitarist and music creator",
       "additionalParagraphs": [
@@ -274,6 +279,9 @@
       "playScale": "Play scale",
       "playing": "Playing",
       "downloadPng": "Download PNG",
+      "imageBackground": "Image background",
+      "imageLight": "Light",
+      "imageDark": "Dark",
       "preparing": "Preparing",
       "saveImageHint": "Long press the image, then save or share it.",
       "scaleIntervals": "Scale intervals",

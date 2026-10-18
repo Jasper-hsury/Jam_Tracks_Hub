@@ -45,8 +45,8 @@ test("preserves Homepage content, links, media, and accessibility contracts in V
   const view = read("src/views/HomeView.vue");
 
   assert.match(view, /<main class="home-page v3-home" id="main-content">/);
-  assert.match(view, /<section class="home-hero" id="home">/);
-  assert.match(view, /<HomeHeroTitle :title="home\.hero\.title" :tagline="home\.hero\.tagline" \/>/);
+  assert.match(view, /<section class="home-hero v4-hero" id="home">/);
+  assert.match(view, /<h1 class="v4-hero-title" :aria-label="home\.hero\.title">/);
   assert.match(view, /:aria-label="home\.accessibility\.siteOverview"/);
   assert.match(view, /aria-labelledby="homeToolsTitle"/);
   assert.match(view, /aria-labelledby="featuredAudioTitle"/);
@@ -161,8 +161,8 @@ test("keeps the compact About, contact, and Subscribe experience localized and c
   const zh = JSON.parse(read("locales/zh-TW/common.json"));
   const aboutLinks = view.slice(view.indexOf('<div class="about-links">'), view.indexOf('<form', view.indexOf('<div class="about-links">')));
 
-  assert.equal(en.home.about.eyebrow, "ABOUT JAM TRACKS HUB");
-  assert.equal(zh.home.about.eyebrow, "關於 JAM TRACKS HUB");
+  assert.equal(en.home.about.eyebrow, "About Jam Tracks Hub");
+  assert.equal(zh.home.about.eyebrow, "關於 Jam Tracks Hub");
   assert.equal(en.home.extra["18"], "Built by a guitarist, inspired by real practice.");
   assert.equal(zh.home.extra["18"], "由吉他手打造，源自真實的練習經驗。");
   assert.equal(en.home.extra["19"], "Jam Tracks Hub is designed and built by Jasper as a focused place for the tools he actually needs while practicing. It puts original backing tracks, practical music-theory tools, and a local-first Song Workspace in one place, so you can move naturally from listening and learning to organizing your own songs.");
@@ -199,7 +199,7 @@ test("keeps the compact About, contact, and Subscribe experience localized and c
   assert.match(view, /data-subscribe-endpoint="\/api\/subscribe"/);
   assert.match(view, /data-subscribe-source="homepage-about"/);
   assert.doesNotMatch(view, /about-portrait|assets\/images\/cover\.jpeg/);
-  assert.match(view, /<div class="v3-sleeve-stage" aria-hidden="true">/);
+  assert.match(view, /<div class="v3-sleeve-stage v4-record-stage" aria-hidden="true">/);
   assert.match(view, /<img class="v3-sleeve-art" :src="'assets\/images\/icon\.png'" alt=""/);
 });
 
@@ -229,9 +229,9 @@ test("surfaces Song Workspace through the hero and four purpose-led workflow gro
   const zh = JSON.parse(read("locales/zh-TW/common.json"));
 
   assert.match(config, /"\/song-workspace", "\/song-workspace\.html"/);
-  assert.match(view, /<a href="tracks\.html" class="primary-button">\{\{ home\.hero\.exploreTracks \}\}<\/a>/);
+  assert.match(view, /<a href="tracks\.html" class="primary-button v4-knob-button">\s*<span>\{\{ home\.hero\.exploreTracks \}\}<\/span>/);
   assert.match(view, /<a href="\/song-workspace" class="secondary-button">\{\{ home\.hero\.openSongWorkspace \}\}<\/a>/);
-  assert.ok(view.indexOf('href="tracks.html" class="primary-button"') < view.indexOf('href="/song-workspace" class="secondary-button"'));
+  assert.ok(view.indexOf('href="tracks.html" class="primary-button v4-knob-button"') < view.indexOf('href="/song-workspace" class="secondary-button"'));
 
   assert.equal((view.match(/id: "(?:practice|understand|create|playSongs)"/g) || []).length, 4);
   ["practice", "understand", "create", "playSongs"].forEach(group => {
@@ -369,7 +369,7 @@ test("keeps Tracks independently Vue-owned and other legacy pages outside the Ho
   const keyFinderHtml = read("key-finder.html");
   const workspaceHtml = read("song-workspace.html");
 
-  assert.equal(packageJson.version, "3.5.3");
+  assert.equal(packageJson.version, "4.0.0");
   assert.match(tracksHtml, /src\/entries\/tracks\.js/);
   assert.doesNotMatch(tracksHtml, /scripts\/tracks\.js/);
   assert.match(keyFinderHtml, /src\/entries\/key-finder\.js/);

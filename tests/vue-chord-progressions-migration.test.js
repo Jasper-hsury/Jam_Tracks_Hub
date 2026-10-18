@@ -202,7 +202,7 @@ test("extends deterministic Cloudflare verification without changing backend bou
 test("keeps dependency and version boundaries unchanged", () => {
   const packageJson = JSON.parse(read("package.json"));
 
-  assert.equal(packageJson.version, "3.5.3");
+  assert.equal(packageJson.version, "4.0.0");
   assert.deepEqual(packageJson.dependencies, { vue: "3.5.42" });
   ["vue-router", "pinia", "vue-i18n", "@vueuse/core", "vitest", "@vue/test-utils"].forEach(name => {
     assert.equal(packageJson.dependencies?.[name], undefined);

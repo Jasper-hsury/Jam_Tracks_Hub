@@ -43,7 +43,7 @@ test("preserves Privacy metadata, analytics, theme, locale, shell, and animation
   assert.doesNotMatch(html, /<footer class="footer">/);
   assert.doesNotMatch(html, /scripts\/(?:site|i18n)\.js/);
   assert.match(html, /assets\/vendor\/gsap\/gsap\.min\.js/);
-  assert.match(html, /scripts\/site-animations\.js\?v=20261017-polish/);
+  assert.match(html, /scripts\/site-animations\.js\?v=20261018-v4-jazz-stage/);
 });
 
 test("renders the established Privacy structure from canonical locale resources", () => {
@@ -71,7 +71,7 @@ test("keeps Privacy static and its migration bounded at the current patch versio
   const pagesCss = read("styles/pages.css");
   const verifier = read("tools/scripts/verify-cloudflare-build.js");
 
-  assert.equal(packageJson.version, "3.5.3");
+  assert.equal(packageJson.version, "4.0.0");
   assert.match(pagesCss, /\.privacy-policy-panel\s*\{[^}]*animation:\s*none/s);
   assert.match(verifier, /const viteOwnedRootHtml = new Set\([^)]*"key-finder\.html"/);
   assert.match(verifier, /Privacy canonical metadata differs/);

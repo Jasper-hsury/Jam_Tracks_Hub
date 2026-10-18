@@ -17,11 +17,11 @@ const toolPages = [
   { html: "key-finder.html", view: "KeyFinderView", aside: "uploadFirst" }
 ];
 
-test("every tool page loads the v3 tool stylesheet last", () => {
+test("every tool page loads the v3 tool stylesheet right before v4.css", () => {
   toolPages.forEach(({ html }) => {
     const source = read(html);
     const links = source.match(/<link rel="stylesheet" href="styles\/[^"]+">/g);
-    assert.equal(links.at(-1), `<link rel="stylesheet" href="${TOOL_STYLESHEET}">`, html);
+    assert.equal(links.at(-2), `<link rel="stylesheet" href="${TOOL_STYLESHEET}">`, html);
   });
   assert.ok(read("vite.config.mjs").includes(`"${TOOL_STYLESHEET}"`));
   const verifier = read("tools/scripts/verify-cloudflare-build.js");
@@ -158,13 +158,12 @@ test("Chord Dictionary diagrams inset the neck so edge-string dots stay inside t
   assert.match(css, /\.chord-shape-card \.diagram-base-fret \{\s*right: calc\(100% \+ 13px\);/);
 });
 
-test("the band is a softer cocoa brown in both themes and every page fetches the new themes.css", () => {
+test("the band is the v4 stage navy in both themes and every page fetches the new themes.css", () => {
   const themes = read("styles/themes.css");
-  assert.match(themes, /--band: #3a2f27;\s*--band-edge: #4a3d33;\s*--on-band: #f2ede3;\s*--on-band-muted: #cbbcab;\s*--accent-on-band: #ecc5b4;/);
-  assert.match(themes, /--band: #4a3d33;\s*--band-edge: #4a3d33;\s*--on-band: #f2ede3;\s*--on-band-muted: #d3c6b6;\s*--accent-on-band: #ecc5b4;/);
+  assert.equal((themes.match(/--band: #0f2b4c;\s*--band-edge: #1c3a5e;\s*--on-band: #f1e9d8;\s*--on-band-muted: #c9d3de;\s*--accent-on-band: #f2b705;/g) || []).length, 2);
   const pages = fs.readdirSync(root).filter(file => file.endsWith(".html") && read(file).includes("themes.css"));
   assert.ok(pages.length >= 14);
-  pages.forEach(page => assert.match(read(page), /themes\.css\?v=20261014-v3-rounded"/, page));
+  pages.forEach(page => assert.match(read(page), /themes\.css\?v=20261018-v4-jazz-stage"/, page));
   assert.doesNotMatch(read("vite.config.mjs") + read("tools/scripts/verify-cloudflare-build.js"), /themes\.css\?v=20261014-v3-(?:liner-notes|cocoa-band)/);
 });
 
