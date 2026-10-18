@@ -343,16 +343,28 @@ html[data-theme] .v3-home .v4-record-stage {
     max-width: 560px;
 }
 
+/* Leave room on the right for the record to slide out on hover. */
+@media (min-width: 641px) {
+    html[data-theme] .v3-home .v4-record-stage {
+        translate: -32px 0;
+    }
+}
+
 html[data-theme] .v3-home .v4-record {
     background: repeating-radial-gradient(circle at 50% 50%, #131210 0 3px, #1e1b17 3px 4px);
     box-shadow: 0 34px 60px -20px rgba(0, 0, 0, 0.7);
-    /* The record slides out of the sleeve slowly on hover and eases back. */
-    transition: translate 1.6s cubic-bezier(0.45, 0, 0.25, 1);
-    animation: v4-spin 12s linear infinite;
+    /* Same hover as the Tracks page records: it rests in the sleeve, then
+       slides out about 52px while turning 60 degrees. */
+    transition:
+        translate 0.5s cubic-bezier(0.2, 0.7, 0.2, 1),
+        rotate 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-html[data-theme] .v3-home .v4-stage-tray:hover .v4-record {
-    translate: 40px 0;
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    html[data-theme] .v3-home .v4-stage-tray:hover .v4-record {
+        translate: 14% 0;
+        rotate: 60deg;
+    }
 }
 
 html[data-theme] .v3-home .v4-record .v3-record-label {
@@ -370,12 +382,6 @@ html[data-theme] .v3-home .v4-record-stage .v3-sleeve {
 
 html[data-theme] .v3-home .v4-record-stage :is(.v3-sleeve-brand, .v3-sleeve-tagline) {
     font-family: var(--font-sleeve);
-}
-
-@keyframes v4-spin {
-    to {
-        transform: rotate(360deg);
-    }
 }
 
 /* Tagline, intro, numbers and actions under the yellow rule. */
@@ -897,10 +903,6 @@ html[data-theme] .v3-home .home-subscribe-button {
         border-radius: 25px;
     }
 
-    html[data-theme] .v3-home .v4-stage-tray:hover .v4-record {
-        translate: none;
-    }
-
     html[data-theme] .v3-home .home-hero .hero-actions {
         flex-direction: column;
         align-items: stretch;
@@ -927,11 +929,7 @@ html[data-theme] .v3-home .home-subscribe-button {
 
 @media (prefers-reduced-motion: reduce) {
     html[data-theme] .v3-home .v4-record {
-        animation: none;
-    }
-
-    html[data-theme] .v3-home .v4-stage-tray:hover .v4-record {
-        translate: none;
+        transition: none;
     }
 }
 

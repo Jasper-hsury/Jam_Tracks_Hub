@@ -54,8 +54,8 @@ test("display headings are capitals, but track titles keep keys such as Cm and F
   assert.match(css, /:is\(\[data-track-heading\], \.track-title-display, \.track-title-name, \.track-title-key\) \{\s*text-transform: none;/);
 });
 
-test("the spinning record stops for reduced motion", () => {
-  assert.match(css, /@media \(prefers-reduced-motion: reduce\) \{[\s\S]*\.v4-record \{\s*animation: none;/);
+test("the hero record keeps still for reduced motion", () => {
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\) \{\s*html\[data-theme\] \.v3-home \.v4-record \{\s*transition: none;/);
 });
 
 test("chord, scale and song names keep their case under capital display headings", () => {
@@ -88,7 +88,12 @@ test("homepage covers show without any tint, and the hero title lines never over
   assert.match(css, /h1\.v4-hero-title \{\s*display: flex;\s*flex-direction: column;\s*gap: 0\.1em;/);
 });
 
-test("the hero record slides out of its sleeve slowly on hover", () => {
-  assert.match(css, /\.v3-home \.v4-record \{[^}]*transition: translate 1\.6s cubic-bezier\(0\.45, 0, 0\.25, 1\);/);
-  assert.match(css, /\.v4-stage-tray:hover \.v4-record \{\s*translate: 40px 0;/);
+test("the hero record uses the same hover as the Tracks page records", () => {
+  const pages = fs.readFileSync(path.join(root, "styles/pages.css"), "utf8");
+  const easing = "cubic-bezier\\(0\\.2, 0\\.7, 0\\.2, 1\\)";
+  assert.match(pages, new RegExp(`main\\.tracks-library-page \\.v3-disc \\{[^}]*left 0\\.5s ${easing},\\s*transform 0\\.7s ${easing};`));
+  assert.match(pages, /\.track-card:hover \.v3-disc,[\s\S]*?transform: rotate\(60deg\);/);
+  assert.match(css, new RegExp(`\\.v3-home \\.v4-record \\{[^}]*transition:\\s*translate 0\\.5s ${easing},\\s*rotate 0\\.7s ${easing};`));
+  assert.match(css, /@media \(hover: hover\) and \(prefers-reduced-motion: no-preference\) \{\s*html\[data-theme\] \.v3-home \.v4-stage-tray:hover \.v4-record \{\s*translate: 14% 0;\s*rotate: 60deg;/);
+  assert.doesNotMatch(css, /v4-spin/);
 });
