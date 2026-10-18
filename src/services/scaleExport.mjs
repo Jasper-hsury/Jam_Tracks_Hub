@@ -334,13 +334,13 @@ export function drawScaleImage(documentRef, state) {
   return { canvas, model };
 }
 
-async function loadImageFonts(documentRef) {
+// Chinese web fonts arrive in unicode-range slices, so ask for the exact title text.
+async function loadImageFonts(documentRef, title) {
   const fonts = documentRef.fonts;
   if (!fonts || typeof fonts.load !== "function") return;
   try {
     await Promise.all([
-      fonts.load(`400 48px ${DISPLAY_FONT}`),
-      fonts.load("600 48px 'Noto Serif TC'", "音階"),
+      fonts.load(`400 48px ${DISPLAY_FONT}`, title),
       fonts.load(`500 16px ${TEXT_FONT}`),
       fonts.load(`700 14px ${TEXT_FONT}`),
       fonts.load(`400 22px ${BRAND_FONT}`)
@@ -386,7 +386,7 @@ function showIosImagePreview(previewWindow, url, fileName, saveImageHint) {
 export async function downloadScalePng({ documentRef = document, windowRef = window, saveImageHint, ...state }) {
   const usePreview = isIosSafariLike(windowRef);
   const previewWindow = usePreview ? windowRef.open("", "_blank") : null;
-  await loadImageFonts(documentRef);
+  await loadImageFonts(documentRef, `${rootName(state.rootPitch)} ${state.localizedScaleName}`);
   const { canvas, model } = drawScaleImage(documentRef, state);
 
   return new Promise(resolve => {
