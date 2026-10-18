@@ -346,7 +346,8 @@ html[data-theme] .v3-home .v4-record-stage {
 html[data-theme] .v3-home .v4-record {
     background: repeating-radial-gradient(circle at 50% 50%, #131210 0 3px, #1e1b17 3px 4px);
     box-shadow: 0 34px 60px -20px rgba(0, 0, 0, 0.7);
-    transition: transform 1s cubic-bezier(0.32, 0.72, 0, 1);
+    /* The record slides out of the sleeve slowly on hover and eases back. */
+    transition: translate 1.6s cubic-bezier(0.45, 0, 0.25, 1);
     animation: v4-spin 12s linear infinite;
 }
 

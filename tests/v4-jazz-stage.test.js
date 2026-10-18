@@ -87,3 +87,8 @@ test("homepage covers show without any tint, and the hero title lines never over
   assert.doesNotMatch(css, /release-cover-link::after \{\s*content: "";/);
   assert.match(css, /h1\.v4-hero-title \{\s*display: flex;\s*flex-direction: column;\s*gap: 0\.1em;/);
 });
+
+test("the hero record slides out of its sleeve slowly on hover", () => {
+  assert.match(css, /\.v3-home \.v4-record \{[^}]*transition: translate 1\.6s cubic-bezier\(0\.45, 0, 0\.25, 1\);/);
+  assert.match(css, /\.v4-stage-tray:hover \.v4-record \{\s*translate: 40px 0;/);
+});
