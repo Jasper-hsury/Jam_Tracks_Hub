@@ -183,7 +183,7 @@ The screenshot shows the creation/start screen, not an active editor or Performa
 - [Development Log](https://github.com/Jasper-hsury/Jam_Tracks_Hub_Development_Log): public development history, release notes, and product evolution in the separate log repository.
 - [GitHub Workflow](docs/GITHUB_WORKFLOW.md): contribution and review process.
 
-The latest published release is `v3.5.2`, the inner page consistency fixes. `package.json` declares `3.5.3` for the site polish and SEO cleanup; its tag and Release are published when they ship.
+The latest published release is `v3.5.3`, the site polish and SEO cleanup. `package.json` declares `4.0.0` for the v4 Jazz Stage redesign; its tag and Release are published when they ship.
 
 ## Local Development
 
