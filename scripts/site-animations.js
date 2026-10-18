@@ -291,7 +291,9 @@
         }
 
         const portrait = about.querySelector(".about-portrait");
-        const copyPieces = elements(".about-copy .home-eyebrow, .about-copy h2, .about-copy > p:not(.home-eyebrow), .about-links > *", about);
+        // The links fade in as one row so a hover on Contact or Give Feedback
+        // never interrupts an entrance tween on the button itself.
+        const copyPieces = elements(".about-copy .home-eyebrow, .about-copy h2, .about-copy > p:not(.home-eyebrow), .about-links", about);
 
         if (!hasGsap || !hasScrollTrigger) {
             applyCssEntrance([portrait, ...copyPieces].filter(Boolean));
@@ -861,7 +863,11 @@
             ".primary-button",
             ".secondary-button",
             ".track-primary-action",
-            ".track-secondary-action"
+            ".track-secondary-action",
+            ".v3-connect-button",
+            ".home-subscribe-button",
+            ".scale-play-button",
+            ".scale-download-button"
         ].join(", ");
         const closestElement = eventTarget => {
             if (eventTarget instanceof Element) {

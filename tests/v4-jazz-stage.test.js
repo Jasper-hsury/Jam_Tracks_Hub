@@ -116,3 +116,14 @@ test("the hero record uses the same hover as the Tracks page records", () => {
   assert.match(css, /@media \(hover: hover\) and \(prefers-reduced-motion: no-preference\) \{\s*html\[data-theme\] \.v3-home \.v4-stage-tray:hover \.v4-record \{\s*translate: 14% 0;\s*rotate: 60deg;/);
   assert.doesNotMatch(css, /v4-spin/);
 });
+
+test("Contact, Give Feedback, Subscribe, Play scale and Download PNG share the button hover", () => {
+  const animations = fs.readFileSync(path.join(root, "scripts/site-animations.js"), "utf8");
+  [".v3-connect-button", ".home-subscribe-button", ".scale-play-button", ".scale-download-button"].forEach(selector => {
+    assert.ok(animations.includes(`"${selector}"`), selector);
+  });
+  assert.match(animations, /y: -3,\s*scale: 1\.012,\s*duration: 0\.22,/);
+  // A hover overwrites tweens on its target, so the About buttons must not run their own entrance.
+  assert.match(animations, /\.about-copy > p:not\(\.home-eyebrow\), \.about-links", about\);/);
+  assert.doesNotMatch(animations, /\.about-links > \*/);
+});

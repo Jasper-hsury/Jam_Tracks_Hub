@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onUnmounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import ToolPageHeading from "../components/site/ToolPageHeading.vue";
 import ScaleFretboard from "../components/scale/ScaleFretboard.vue";
 import { useScaleExplorer } from "../composables/useScaleExplorer.js";
@@ -19,6 +19,9 @@ const state = useScaleExplorer();
 const audioPlayer = createScaleAudioPlayer();
 const isPlaying = ref(false);
 const isDownloading = ref(false);
+// The PNG background starts on the site theme; picking one keeps it for this visit.
+const imageTheme = ref(currentSiteTheme());
+const imageThemePicked = ref(false);
 const locale = computed(() => localeMessages[language.value] || localeMessages.en);
 const messages = computed(() => locale.value.pages.scaleExplorer);
 const translatedScale = computed(() => locale.value.scale[state.scale.value.translationId] || {
@@ -28,6 +31,20 @@ const translatedScale = computed(() => locale.value.scale[state.scale.value.tran
 const scaleTitle = computed(() => `${state.root.value} ${translatedScale.value.name}`);
 const fretboardLabel = computed(() => format(messages.value.fretboardLabel, { scale: scaleTitle.value }));
 const chordQuality = computed(() => scaleModeForTools(state.scaleId.value) === "minor" ? "minor" : "major");
+
+function currentSiteTheme() {
+  if (typeof document === "undefined") return "light";
+  return document.documentElement.dataset.theme === "light" ? "light" : "dark";
+}
+
+function pickImageTheme(nextTheme) {
+  imageTheme.value = nextTheme === "dark" ? "dark" : "light";
+  imageThemePicked.value = true;
+}
+
+function followSiteTheme() {
+  if (!imageThemePicked.value) imageTheme.value = currentSiteTheme();
+}
 
 function format(template, variables) {
   return String(template).replace(/\{\{\s*([\w.-]+)\s*\}\}/g, (match, name) =>
@@ -61,6 +78,7 @@ async function downloadScale() {
       fretEnd: state.fretEnd.value,
       labelMode: state.labelMode.value,
       localizedScaleName: translatedScale.value.name,
+      imageTheme: imageTheme.value,
       saveImageHint: messages.value.saveImageHint
     });
   } catch (error) {
@@ -70,9 +88,13 @@ async function downloadScale() {
   }
 }
 
-onUnmounted(() => audioPlayer.dispose(value => {
-  isPlaying.value = value;
-}));
+onMounted(() => window.addEventListener("jasper:theme-change", followSiteTheme));
+onUnmounted(() => {
+  window.removeEventListener("jasper:theme-change", followSiteTheme);
+  audioPlayer.dispose(value => {
+    isPlaying.value = value;
+  });
+});
 </script>
 
 <template>
@@ -132,6 +154,17 @@ onUnmounted(() => audioPlayer.dispose(value => {
             <span aria-hidden="true">&#9654;</span>
             <span>{{ isPlaying ? messages.playing : messages.playScale }}</span>
           </button>
+          <div class="segmented-control scale-image-theme" role="group" :aria-label="messages.imageBackground">
+            <button
+              v-for="option in ['light', 'dark']"
+              :key="option"
+              type="button"
+              :data-image-theme="option"
+              :class="{ 'is-selected': imageTheme === option }"
+              :aria-pressed="String(imageTheme === option)"
+              @click="pickImageTheme(option)"
+            >{{ option === "dark" ? messages.imageDark : messages.imageLight }}</button>
+          </div>
           <button class="scale-download-button" id="downloadScaleButton" type="button" :disabled="isDownloading" @click="downloadScale">
             <span aria-hidden="true">&#8595;</span>
             <span>{{ isDownloading ? messages.preparing : messages.downloadPng }}</span>

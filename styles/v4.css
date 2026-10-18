@@ -1219,3 +1219,39 @@ html[data-theme] #main-content :is(.home-eyebrow, .hero-eyebrow, .v3-page-eyebro
     letter-spacing: 0;
     text-transform: none;
 }
+
+/* Scale Explorer: the PNG background toggle sits on the navy stage. */
+html[data-theme] main.v3-tool-page .scale-summary .scale-image-theme {
+    display: inline-flex;
+    padding: 3px;
+    border: 1px solid rgba(241, 233, 216, 0.3);
+    border-radius: 999px;
+    background: transparent;
+}
+
+html[data-theme] main.v3-tool-page .scale-summary .scale-image-theme button {
+    flex: 1 1 0;
+    min-height: 40px;
+    padding: 0 16px;
+    border: 0;
+    border-radius: 999px;
+    color: #f1e9d8;
+    background: transparent;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+html[data-theme] main.v3-tool-page .scale-summary .scale-image-theme button.is-selected,
+html[data-theme] main.v3-tool-page .scale-summary .scale-image-theme button.is-selected:hover {
+    color: #0f2b4c;
+    background: #f1e9d8;
+}
+
+html[data-theme] main.v3-tool-page .scale-summary .scale-image-theme button:not(.is-selected):hover {
+    background: rgba(241, 233, 216, 0.12);
+}
+
+html[data-theme] main.v3-tool-page .scale-summary .scale-image-theme button:focus-visible {
+    outline: 2px solid #f2b705;
+    outline-offset: 2px;
+}

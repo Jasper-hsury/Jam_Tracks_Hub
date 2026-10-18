@@ -195,6 +195,8 @@ test("preserves PNG content geometry, naming, and iOS preview behavior", async (
     measureText(value) { return { width: String(value).length * 8 }; },
     moveTo() {},
     quadraticCurveTo() {},
+    restore() {},
+    save() {},
     scale() {},
     stroke() {},
     strokeRect() {},
@@ -212,12 +214,12 @@ test("preserves PNG content geometry, naming, and iOS preview behavior", async (
   } }, { rootPitch: 9, scaleId: "minor-pentatonic", fretStart: 0, fretEnd: 15, labelMode: "note", localizedScaleName: "Minor Pentatonic" });
 
   assert.equal(model.fileName, "a-minor-pentatonic-frets-0-15");
-  assert.deepEqual([model.width, model.height], [1488, 746]);
+  assert.deepEqual([model.width, model.height], [1516, 870]);
   assert.equal(model.visibleFrets.length, 16);
   assert.deepEqual(model.intervalColors, ["#b83d55", "#b66c1f", "#267ca6", "#247f5b", "#5d50b2", "#96507c", "#58722f"]);
-  assert.deepEqual([canvas.width, canvas.height], [2976, 1492]);
+  assert.deepEqual([canvas.width, canvas.height], [3032, 1740]);
   assert.equal(rendered.model.fileName, model.fileName);
-  ["A Minor Pentatonic", "1  A", "b3  C", "4  D", "5  E", "b7  G", "Standard tuning: E A D G B E"].forEach(text => {
+  ["A Minor Pentatonic", "1  A", "b3  C", "4  D", "5  E", "b7  G", "Standard tuning: E A D G B E", "JAM TRACKS HUB"].forEach(text => {
     assert.ok(drawnText.includes(text), `PNG includes ${text}`);
   });
   assert.match(source, /canvas\.width = model\.width \* scaleFactor/);
@@ -227,6 +229,27 @@ test("preserves PNG content geometry, naming, and iOS preview behavior", async (
   assert.match(source, /canvas\.toBlob/);
   assert.match(source, /"image\/png"/);
   assert.match(source, /120000/);
+});
+
+test("PNG images come in the site's light and dark palettes, chosen beside Download PNG", async () => {
+  const { createScaleExportModel, imageThemeFor } = await import(path.join(root, "src/services/scaleExport.mjs"));
+  const base = { rootPitch: 9, scaleId: "minor-pentatonic", fretStart: 0, fretEnd: 15, labelMode: "note", localizedScaleName: "Minor Pentatonic" };
+  const light = createScaleExportModel(base);
+  const dark = createScaleExportModel({ ...base, imageTheme: "dark" });
+  assert.equal(light.themeName, "light");
+  assert.equal(light.palette.page, "#ece7de");
+  assert.equal(dark.themeName, "dark");
+  assert.equal(dark.palette.page, "#081627");
+  assert.equal(dark.fileName, "a-minor-pentatonic-frets-0-15-dark");
+  assert.equal(imageThemeFor("anything"), "light");
+  const view = read("src/views/ScaleExplorerView.vue");
+  assert.match(view, /class="segmented-control scale-image-theme" role="group" :aria-label="messages\.imageBackground"/);
+  assert.match(view, /imageTheme: imageTheme\.value,/);
+  assert.match(view, /return document\.documentElement\.dataset\.theme === "light" \? "light" : "dark";/);
+  const en = JSON.parse(read("locales/en/common.json")).pages.scaleExplorer;
+  const zh = JSON.parse(read("locales/zh-TW/common.json")).pages.scaleExplorer;
+  assert.deepEqual([en.imageBackground, en.imageLight, en.imageDark], ["Image background", "Light", "Dark"]);
+  assert.deepEqual([zh.imageBackground, zh.imageLight, zh.imageDark], ["圖片背景", "淺色", "深色"]);
 });
 
 test("makes Scale Explorer the tenth Vue-owned Vite MPA page", () => {
