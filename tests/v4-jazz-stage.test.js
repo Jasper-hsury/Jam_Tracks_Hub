@@ -57,3 +57,27 @@ test("display headings are capitals, but track titles keep keys such as Cm and F
 test("the spinning record stops for reduced motion", () => {
   assert.match(css, /@media \(prefers-reduced-motion: reduce\) \{[\s\S]*\.v4-record \{\s*animation: none;/);
 });
+
+test("chord, scale and song names keep their case under capital display headings", () => {
+  assert.match(css, /:is\(#selectedChordName, #scaleTitle, #songChartTitle, #performanceTitle, \.progression-selected-heading h2\) \{\s*text-transform: none;/);
+});
+
+test("buttons and fields use the page fonts instead of the browser default", () => {
+  assert.match(css, /:where\(button, input, select, textarea\) \{\s*font-family: inherit;/);
+});
+
+test("inner pages share the yellow rule, rounded trays and one selected style in both themes", () => {
+  assert.match(css, /main\.v3-tool-page \.v3-tool-meta,[\s\S]*?border-top: 6px solid var\(--highlight\);/);
+  assert.match(css, /\.dictionary-browser, \.dictionary-detail,[^{]*\.key-finder-panel\),[\s\S]*?border-radius: var\(--radius-card\);/);
+  assert.match(css, /html\[data-theme\] main\.v3-tool-page \{\s*--tool-selected-bg: var\(--ink\);\s*--tool-selected-border: var\(--ink\);\s*--tool-selected-text: var\(--paper\);/);
+  assert.match(css, /html\[data-theme="default"\] body\[data-vue-page="song-workspace"\] \{\s*--workspace-selected: #2a5d92;/);
+});
+
+test("Song Workspace chart lines are not turned into pills", () => {
+  assert.doesNotMatch(css, /html\[data-theme\] main :is\(button,/);
+});
+
+test("404 and the waking page use the homepage's red sleeve and black record", () => {
+  assert.match(css, /main\.status-page \{\s*--record-vinyl: #16130f;[\s\S]*?--record-label: #f2b705;/);
+  assert.match(css, /main\.status-page \.status-page-sleeve \{[^}]*background: var\(--sleeve\);/);
+});

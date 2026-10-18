@@ -940,3 +940,248 @@ html[data-theme] .v3-home .home-subscribe-button {
         translate: none;
     }
 }
+
+/* ====================
+   Inner pages
+   Rounded trays for panels, a yellow rule under every page heading, the navy
+   stage for highlighted results, and pills for controls.
+   ==================== */
+:root {
+    --radius-control: 14px;
+}
+
+/* Names the visitor reads letter by letter keep their own case: chords,
+   scales, song titles and long policy headings. */
+html[data-theme] :is(#selectedChordName, #scaleTitle, #songChartTitle, #performanceTitle, .progression-selected-heading h2) {
+    text-transform: none;
+}
+
+/* Page heading rule */
+html[data-theme] main.v3-tool-page .v3-tool-meta,
+html[data-theme] main:is(.legal-page, .privacy-page) .v3-page-meta,
+html[data-theme] body[data-vue-page="song-workspace"] .song-workspace-promises {
+    border-top: 6px solid var(--highlight);
+}
+
+html[data-theme] main.tracks-library-page .page-heading-row,
+html[data-theme] body[data-vue-page="song-workspace"] .song-workspace-page:has(#workspaceEditorView:not([hidden])) .song-workspace-hero {
+    border-bottom: 6px solid var(--highlight);
+}
+
+html[data-theme] main :is(.hero-tagline, .signature-slogan) {
+    color: var(--v4-teal);
+    font-family: var(--font-display);
+    font-style: normal;
+    letter-spacing: 0;
+}
+
+html[data-theme]:not([data-theme="light"]) main :is(.hero-tagline, .signature-slogan) {
+    color: var(--highlight);
+}
+
+html[data-theme]:lang(zh) main :is(.hero-tagline, .signature-slogan) {
+    font-weight: 900;
+}
+
+/* Panels become soft rounded trays. */
+html[data-theme] main.v3-tool-page :is(.dictionary-browser, .dictionary-detail, .scale-control-panel, .scale-display-toolbar, .fretboard-card, .key-options, .key-result, .progression-shape-card, .progression-writer-panel, .progression-writer-meta, .progression-writer-entry, .progression-writer-saved, .trainer-card, .key-finder-panel),
+html[data-theme] body[data-vue-page="song-workspace"] :is(.workspace-import-card, .workspace-settings-disclosure, .workspace-chart-panel, .workspace-shapes-panel, .workspace-read-toolbar),
+html[data-theme] main.tracks-library-page .track-key-options {
+    border-color: var(--glass-border);
+    border-radius: var(--radius-card);
+    box-shadow: 0 30px 60px -44px var(--shadow-color);
+}
+
+html[data-theme="light"] main.v3-tool-page :is(.dictionary-browser, .dictionary-detail, .scale-control-panel, .scale-display-toolbar, .fretboard-card, .key-options, .key-result, .progression-shape-card, .progression-writer-panel, .progression-writer-meta, .progression-writer-entry, .progression-writer-saved, .trainer-card, .key-finder-panel),
+html[data-theme="light"] body[data-vue-page="song-workspace"] :is(.workspace-import-card, .workspace-settings-disclosure, .workspace-chart-panel, .workspace-shapes-panel, .workspace-read-toolbar) {
+    box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.9) inset,
+        0 30px 60px -44px var(--shadow-color);
+}
+
+/* Panels that open with a navy band clip it to their curve. */
+html[data-theme] main.v3-tool-page :is(.dictionary-detail, .key-result, .trainer-card) {
+    overflow: hidden;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-dialog:not(.workspace-performance) {
+    border-top: 6px solid var(--highlight);
+    border-radius: var(--radius-card);
+}
+
+/* Highlighted results sit on the navy stage under a warm light. */
+html[data-theme] main.v3-tool-page :is(.v3-selected-band, .scale-summary, .progression-selected-heading, .trainer-question-card),
+html[data-theme] body[data-vue-page="song-workspace"] :is(#chartKeySummary, .workspace-read-summary) {
+    position: relative;
+    isolation: isolate;
+    color: var(--on-band);
+    background:
+        radial-gradient(520px 420px at 92% -30%, rgba(242, 183, 5, 0.26), rgba(242, 183, 5, 0) 70%),
+        var(--stage);
+    border-color: transparent;
+}
+
+html[data-theme] main.v3-tool-page :is(.scale-summary, .progression-selected-heading, .trainer-question-card),
+html[data-theme] body[data-vue-page="song-workspace"] :is(#chartKeySummary, .workspace-read-summary) {
+    border-radius: 24px;
+}
+
+html[data-theme] main.v3-tool-page .v3-selected-band h2 {
+    font-size: clamp(56px, 6vw, 88px);
+    line-height: 0.95;
+}
+
+/* Controls: pills for buttons, soft corners for fields and grid keys. */
+html[data-theme] main.v3-tool-page button,
+html[data-theme] main :is(.primary-button, .secondary-button, .text-button, .select-key-button, .dictionary-play-button, .scale-play-button, .scale-download-button, .workspace-button, .workspace-segmented button) {
+    border-radius: 999px;
+}
+
+html[data-theme] main :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select, textarea) {
+    border-radius: var(--radius-control);
+}
+
+html[data-theme] main :is(.primary-button, .select-key-button.active, .select-key-button[aria-pressed="true"]) {
+    color: var(--paper);
+    background: var(--ink);
+    border-color: var(--ink);
+}
+
+html[data-theme] main .primary-button:hover {
+    color: var(--on-highlight);
+    background: var(--highlight);
+    border-color: var(--highlight);
+}
+
+/* Policy pages read in Work Sans, not display capitals. */
+html[data-theme] main:is(.legal-page, .privacy-page) :is(.result-section h2, .policy-section h2, section h2) {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    text-transform: none;
+}
+
+/* Cards and boxes inside tool panels take a smaller, matching curve. */
+html[data-theme] main.v3-tool-page :is(.chord-shape-card, .progression-shape-card, .trainer-score, .trainer-feedback, .dictionary-category button, .progression-chord-token) {
+    border-radius: 18px;
+}
+
+html[data-theme] main.v3-tool-page .trainer-question-display {
+    overflow: hidden;
+    border-radius: 18px;
+}
+
+html[data-theme] main.v3-tool-page .dictionary-category-heading > :last-child {
+    border-radius: 999px;
+}
+
+/* Form controls inherit the page fonts instead of the browser's default
+   (buttons on several tool pages used to fall back to Arial). Zero
+   specificity, so any rule that names a font still wins. */
+:where(button, input, select, textarea) {
+    font-family: inherit;
+}
+
+/* Large buttons and boxes take a card curve rather than a pill. */
+html[data-theme] main :is(.analyze-file-button, .workspace-entry-card) {
+    border-radius: 24px;
+}
+
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-entry-card::after {
+    border-radius: 50%;
+}
+
+html[data-theme] main :is(.service-wake-panel, .upload-file-label, .helper-install-card, .workspace-main-disclosure, .workspace-local-note, .workspace-empty, .api-status) {
+    border-radius: 20px;
+}
+
+html[data-theme] main .api-status {
+    border-radius: 999px;
+}
+
+/* Feedback: the form sits on a soft tray under the yellow rule. */
+html[data-theme] main.feedback-page .feedback-panel,
+html[data-theme] main.feedback-page .feedback-panel:hover {
+    border-top: 6px solid var(--highlight);
+}
+
+html[data-theme] main.feedback-page .feedback-form {
+    border-color: var(--glass-border);
+    border-radius: var(--radius-card);
+    box-shadow: 0 30px 60px -44px var(--shadow-color);
+}
+
+/* 404 and the waking page: the same red sleeve and black record as the homepage. */
+html[data-theme] main.status-page {
+    --record-vinyl: #16130f;
+    --record-groove: #3a342c;
+    --record-label: #f2b705;
+}
+
+html[data-theme] main.status-page .status-page-sleeve {
+    border: 0;
+    border-radius: 4px;
+    color: #f2ede3;
+    background: var(--sleeve);
+    box-shadow: 0 40px 70px -26px rgba(60, 20, 10, 0.55);
+}
+
+html[data-theme] main.status-page .status-page-sleeve-brand,
+html[data-theme] main.status-page .status-page-sleeve-caption {
+    color: rgba(242, 237, 227, 0.85);
+}
+
+html[data-theme] main.status-page .status-page-sleeve-caption {
+    border-top: 2px solid #f2ede3;
+}
+
+html[data-theme] main.status-page .status-page-sleeve-code {
+    color: #f2ede3;
+    font-family: var(--font-display);
+}
+
+html[data-theme] main.status-page .status-page-actions {
+    border-top: 6px solid var(--highlight);
+}
+
+html[data-theme] main.status-page .status-page-status {
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    background: var(--glass-strong);
+}
+
+html[data-theme] main.tracks-library-page .v3-download-button {
+    border-radius: 50%;
+}
+
+/* Selected keys, chords and filters read like the primary button in both themes. */
+html[data-theme] main.v3-tool-page button:is(.is-selected, .active, [aria-pressed="true"]),
+html[data-theme] main.v3-tool-page .dictionary-category button.is-selected {
+    color: var(--paper);
+    background: var(--ink);
+    border-color: var(--ink);
+}
+
+html[data-theme] main.v3-tool-page button:is(.is-selected, .active, [aria-pressed="true"]) :is(span, small) {
+    color: inherit;
+}
+
+html[data-theme] main.v3-tool-page {
+    --tool-selected-bg: var(--ink);
+    --tool-selected-border: var(--ink);
+    --tool-selected-text: var(--paper);
+}
+
+html[data-theme="default"] main.v3-tool-page .dictionary-quality-button.is-selected span,
+html[data-theme] main.v3-tool-page .dictionary-quality-button.is-selected span {
+    color: inherit;
+    opacity: 0.78;
+}
+
+/* Song Workspace selections: stage navy by day, a lifted navy at night (cream text 5.9:1). */
+html[data-theme] body[data-vue-page="song-workspace"] {
+    --workspace-selected: var(--stage);
+}
+
+html[data-theme="default"] body[data-vue-page="song-workspace"] {
+    --workspace-selected: #2a5d92;
+}
