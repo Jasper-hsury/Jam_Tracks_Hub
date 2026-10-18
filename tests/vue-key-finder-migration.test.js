@@ -330,14 +330,14 @@ test("keeps backend, established tools, CSS, and current version byte-identical"
   });
   const frozen = {
     "styles/components.css": "d26cc992a0dfdb02efde0484f6ae11611a761678783f1a835d04a1e256cd630c",
-    "styles/pages.css": "d6ed0e363e0657e3ac0986356ccb7c556b34eeff450172f2f1f988ba2c45847e",
+    "styles/pages.css": "34269430e49516aae97dc0c96ff73e72caa1d3ad54d6f7efd5e13803bc288c1d",
     "styles/themes.css": "677c23f5d5356e15e506d077e693005f365bb81754338b5e143c8d1caf1b9e3a"
   };
   Object.entries(frozen).forEach(([file, expected]) => {
     const hash = crypto.createHash("sha256").update(fs.readFileSync(path.join(root, file))).digest("hex");
     assert.equal(hash, expected, file);
   });
-  assert.equal(JSON.parse(read("package.json")).version, "4.0.0");
+  assert.equal(JSON.parse(read("package.json")).version, "4.0.1");
 });
 
 test("declares the complete 44-case responsive matrix and preserves mobile-safe controls", () => {

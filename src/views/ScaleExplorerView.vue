@@ -79,6 +79,15 @@ async function downloadScale() {
       labelMode: state.labelMode.value,
       localizedScaleName: translatedScale.value.name,
       imageTheme: imageTheme.value,
+      imageText: {
+        tool: messages.value.title,
+        standardTuning: messages.value.standardTuning,
+        subtitle: messages.value.imageSubtitle,
+        noteNames: messages.value.imageNoteNames,
+        scaleDegrees: messages.value.imageScaleDegrees,
+        string: messages.value.string,
+        rights: locale.value.footer.rights
+      },
       saveImageHint: messages.value.saveImageHint
     });
   } catch (error) {

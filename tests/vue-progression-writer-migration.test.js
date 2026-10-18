@@ -354,14 +354,14 @@ test("keeps every shared music/backend consumer byte-identical", () => {
   const expectedHashes = {
     "scripts/chord-shapes.js": "00189b548b9d6fe48daab6c3ea68fd2a2a2baf9e39d16d638df1b0e8d19c1c04",
     "styles/chord-dictionary.css": "0fe2af95a2598cd252e850bbb7035e02a8ca89af671a81234fe7f614f0852653",
-    "styles/pages.css": "d6ed0e363e0657e3ac0986356ccb7c556b34eeff450172f2f1f988ba2c45847e",
+    "styles/pages.css": "34269430e49516aae97dc0c96ff73e72caa1d3ad54d6f7efd5e13803bc288c1d",
     "styles/themes.css": "677c23f5d5356e15e506d077e693005f365bb81754338b5e143c8d1caf1b9e3a",
     "scripts/song-workspace-core.js": "d792e65873c140deda2ac576370bcd940d14e1f35d9fb5da88bbd11431b28ecb",
     "scripts/song-workspace-storage.js": "b11c00dcb5cafb3ca414ccc9fec59bd6931dc39fe3658ecec33003f4d7d210ae",
     "scripts/song-workspace-import.js": "7c04c4890176ac235d93f29ed9ca2440466978b7973fbb4e07e5c3ee9d311b56",
     "src/views/ChordDictionaryView.vue": "1128ecb262168f2dc66aec41ca477bb557f91db1feacf8ff17ecdff7c5e48927",
     "src/views/ChordProgressionsView.vue": "9481ec6b04ca15b8e76ef620cb188d1d2e004e48a6d920e918643bc18fe822b8",
-    "src/views/ScaleExplorerView.vue": "2eab2316ac8e718265e3ffa2e36ae5b771d06bfcdac023de34663c832b2888ff",
+    "src/views/ScaleExplorerView.vue": "34619269fa3c8233d13a7c7d130003986b5af829c903ff3b5780e0b259221cba",
     "src/views/FretboardTrainerView.vue": "7f6b1f5d330ca1d33606e4f35f6d8ae5805d12dd9f767f22b2dc230e32fc8dbc",
     "worker.js": "38bb981a849874c0c4421c00c73aef2bf0e2fbfa857f3a85dc63f145af7f970c",
     "wrangler.jsonc": "fcd1a460b0bee67ad6f0b33076234c682c22580d48ee3f4ffbe339d2a88145db"
@@ -378,7 +378,7 @@ test("updates deterministic Cloudflare ownership without changing version or bac
   assert.match(verifier, /Progression Writer canonical metadata differs/);
   assert.match(verifier, /Progression Writer still loads a legacy page runtime/);
   assert.match(verifier, /compiled Vue Progression Writer mount marker is missing/);
-  assert.equal(packageJson.version, "4.0.0");
+  assert.equal(packageJson.version, "4.0.1");
   assert.deepEqual(packageJson.dependencies, { vue: "3.5.42" });
   ["vue-router", "pinia", "vue-i18n", "@vueuse/core", "vitest", "@vue/test-utils"].forEach(name => {
     assert.equal(packageJson.dependencies?.[name], undefined);

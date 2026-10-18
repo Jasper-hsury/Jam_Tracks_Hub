@@ -1248,7 +1248,8 @@ html[data-theme] main.v3-tool-page .scale-summary .scale-image-theme button.is-s
 }
 
 html[data-theme] main.v3-tool-page .scale-summary .scale-image-theme button:not(.is-selected):hover {
-    background: rgba(241, 233, 216, 0.12);
+    color: #0f2b4c;
+    background: #f2b705;
 }
 
 html[data-theme] main.v3-tool-page .scale-summary .scale-image-theme button:focus-visible {
