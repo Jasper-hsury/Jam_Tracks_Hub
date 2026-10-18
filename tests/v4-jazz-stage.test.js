@@ -127,3 +127,7 @@ test("Contact, Give Feedback, Subscribe, Play scale and Download PNG share the b
   assert.match(animations, /\.about-copy > p:not\(\.home-eyebrow\), \.about-links", about\);/);
   assert.doesNotMatch(animations, /\.about-links > \*/);
 });
+
+test("the PNG background toggle turns yellow with navy text on hover", () => {
+  assert.match(css, /\.scale-image-theme button:not\(\.is-selected\):hover \{\s*color: #0f2b4c;\s*background: #f2b705;/);
+});
