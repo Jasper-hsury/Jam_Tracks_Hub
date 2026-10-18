@@ -6,7 +6,7 @@ const test = require("node:test");
 const root = path.resolve(__dirname, "..");
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
 const css = read("styles/secondary-pages.css");
-const STYLESHEET = "styles/secondary-pages.css?v=20261017-polish";
+const STYLESHEET = "styles/secondary-pages.css?v=20261019-v4-polish";
 const PAGES = {
   "feedback.html": "",
   "legal.html": "",

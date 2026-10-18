@@ -49,7 +49,6 @@ test("homepage keeps the featured embed and never reads Song Workspace data", ()
 });
 
 test("Chinese homepage headings and taglines never use synthesized italics", () => {
-  assert.match(css, /html\[data-theme\]:lang\(zh\) \.v3-home \.home-hero \.signature-slogan \{\s*font-style: normal;/);
   assert.match(css, /html\[data-theme\]:lang\(zh\) \.v3-home \.about-copy h2 \{[^}]*font-style: normal;/);
   assert.match(css, /html\[data-theme\]:lang\(zh\) \.v3-home \.v3-side-title \{[^}]*font-style: normal;/);
 });

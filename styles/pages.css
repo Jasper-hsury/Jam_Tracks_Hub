@@ -6365,11 +6365,6 @@ html[data-theme] .v3-home .home-hero::after {
     display: none;
 }
 
-html[data-theme] .v3-home .home-hero .home-eyebrow {
-    color: var(--accent);
-    text-align: center;
-}
-
 html[data-theme] .v3-home .home-hero h1 {
     width: 100%;
     max-width: none;
@@ -6381,30 +6376,6 @@ html[data-theme] .v3-home .home-hero h1 {
     line-height: 0.9;
     letter-spacing: -0.03em;
     text-align: center;
-}
-
-html[data-theme] .v3-home .home-hero .signature-slogan {
-    margin: 20px 0 0;
-    color: var(--accent);
-    font-family: var(--font-serif);
-    font-size: clamp(22px, 2.4vw, 28px);
-    font-style: italic;
-    font-weight: 400;
-    letter-spacing: 0;
-    text-align: center;
-}
-
-html[data-theme]:lang(zh) .v3-home .home-hero .signature-slogan {
-    font-style: normal;
-    letter-spacing: 0.04em;
-}
-
-html[data-theme] .v3-home .v3-hero-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
-    align-items: center;
-    gap: 56px;
-    margin-top: 64px;
 }
 
 html[data-theme] .v3-home .v3-sleeve-stage {
@@ -6524,12 +6495,6 @@ html[data-theme] .v3-home .v3-sleeve-stage-line {
     left: 0;
     height: 2px;
     background: #f2ede3;
-}
-
-html[data-theme] .v3-home .v3-hero-copy {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
 }
 
 html[data-theme] .v3-home .home-lead {
@@ -7223,11 +7188,6 @@ html[data-theme] .v3-home .home-subscribe-status {
 
     html[data-theme] .v3-home .home-hero {
         padding: 40px 0 56px;
-    }
-
-    html[data-theme] .v3-home .v3-hero-grid {
-        gap: 36px;
-        margin-top: 36px;
     }
 
     html[data-theme] .v3-home .v3-band,

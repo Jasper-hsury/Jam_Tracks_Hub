@@ -5,7 +5,7 @@ const test = require("node:test");
 
 const root = path.resolve(__dirname, "..");
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
-const V4 = "styles/v4.css?v=20261018-v4-jazz-stage";
+const V4 = "styles/v4.css?v=20261019-v4-polish";
 const css = read("styles/v4.css");
 const themes = read("styles/themes.css");
 const pages = fs.readdirSync(root).filter(file => file.endsWith(".html") && read(file).includes("themes.css"));
@@ -130,4 +130,9 @@ test("Contact, Give Feedback, Subscribe, Play scale and Download PNG share the b
 
 test("the PNG background toggle turns yellow with navy text on hover", () => {
   assert.match(css, /\.scale-image-theme button:not\(\.is-selected\):hover \{\s*color: #0f2b4c;\s*background: #f2b705;/);
+});
+
+test("the retired v3 hero layout rules are gone from pages.css", () => {
+  const pages = fs.readFileSync(path.join(root, "styles/pages.css"), "utf8");
+  assert.doesNotMatch(pages, /v3-hero-grid|v3-hero-copy|\.v3-home \.home-hero \.(?:signature-slogan|home-eyebrow)/);
 });
