@@ -81,3 +81,9 @@ test("404 and the waking page use the homepage's red sleeve and black record", (
   assert.match(css, /main\.status-page \{\s*--record-vinyl: #16130f;[\s\S]*?--record-label: #f2b705;/);
   assert.match(css, /main\.status-page \.status-page-sleeve \{[^}]*background: var\(--sleeve\);/);
 });
+
+test("homepage covers show without any tint, and the hero title lines never overlap", () => {
+  assert.match(css, /\.v3-home \.release-cover-link::after \{\s*content: none;/);
+  assert.doesNotMatch(css, /release-cover-link::after \{\s*content: "";/);
+  assert.match(css, /h1\.v4-hero-title \{\s*display: flex;\s*flex-direction: column;\s*gap: 0\.1em;/);
+});

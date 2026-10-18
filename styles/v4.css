@@ -252,11 +252,12 @@ html[data-theme] .v3-home .v4-hero-title-block {
 html[data-theme] .v3-home .home-hero h1.v4-hero-title {
     display: flex;
     flex-direction: column;
+    gap: 0.1em;
     margin: 0;
     color: var(--ink);
     font-family: var(--font-display);
     font-weight: 400;
-    line-height: 0.82;
+    line-height: 0.9;
     letter-spacing: 0;
     text-align: left;
     text-transform: uppercase;
@@ -265,6 +266,7 @@ html[data-theme] .v3-home .home-hero h1.v4-hero-title {
 html[data-theme] .v3-home .v4-title-jam {
     color: var(--highlight);
     font-size: clamp(140px, 18vw, 260px);
+    line-height: 0.86;
 }
 
 html[data-theme="light"] .v3-home .v4-title-jam {
@@ -691,26 +693,9 @@ html[data-theme] .v3-home .release-cover-link {
     border-radius: 23px;
 }
 
+/* Covers show as published: no tint, no shading. */
 html[data-theme] .v3-home .release-cover-link::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: var(--v4-teal);
-    mix-blend-mode: color;
-    transition: opacity 0.45s ease;
-}
-
-html[data-theme] .v3-home .home-release-card:nth-child(2) .release-cover-link::after {
-    background: #c9432c;
-}
-
-html[data-theme] .v3-home .home-release-card:nth-child(3) .release-cover-link::after {
-    background: var(--highlight);
-}
-
-html[data-theme] .v3-home .home-release-card:hover .release-cover-link::after,
-html[data-theme] .v3-home .release-cover-link:focus-visible::after {
-    opacity: 0;
+    content: none;
 }
 
 html[data-theme] .v3-home .release-copy {
@@ -886,6 +871,15 @@ html[data-theme] .v3-home .home-subscribe-button {
 
     html[data-theme] .v3-home .v4-title-jam {
         display: block;
+        margin-bottom: 0.1em;
+    }
+
+    html[data-theme] .v3-home .v4-volume {
+        text-align: left;
+    }
+
+    html[data-theme] .v3-home .v4-record-stage .v3-sleeve-tagline {
+        font-size: 10px;
     }
 
     html[data-theme] .v3-home .v4-title-line + .v4-title-line {
