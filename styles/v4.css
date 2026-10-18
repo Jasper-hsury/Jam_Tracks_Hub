@@ -644,7 +644,7 @@ html[data-theme] .v3-home .home-releases .home-section-heading {
 
 html[data-theme] .v3-home .home-releases .home-eyebrow,
 html[data-theme] .v3-home .about-copy .home-eyebrow {
-    color: var(--v4-teal);
+    color: var(--accent);
 }
 
 html[data-theme] .v3-home .home-releases h2 {
@@ -720,7 +720,7 @@ html[data-theme] .v3-home .release-copy {
 }
 
 html[data-theme] .v3-home .release-number {
-    color: var(--v4-teal);
+    color: var(--accent);
     font-family: var(--font-display);
     font-size: 18px;
     letter-spacing: 0.04em;
