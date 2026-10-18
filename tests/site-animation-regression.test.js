@@ -52,7 +52,7 @@ test("homepage workflow does not pin or consume vertical scroll distance", () =>
 });
 
 test("Legal uses the established display and body font roles without artistic tagline styling", () => {
-    assert.match(legalHtml, /family=Anton&family=DM\+Serif\+Display:ital@0;1&family=Noto\+Sans\+TC:wght@400;500;700;900&family=Noto\+Serif\+TC:wght@500&family=Work\+Sans/);
+    assert.match(legalHtml, /family=Anton&family=DM\+Serif\+Display:ital@0;1&family=Noto\+Sans\+TC:wght@400;500;700;900&family=Noto\+Serif\+TC:wght@500;600&family=Work\+Sans/);
     assert.match(legalView, /class="tracks-page legal-page"/);
     assert.match(legalView, /class="legal-page-metadata"/);
     assert.doesNotMatch(legalView, /class="hero-tagline"/);
@@ -63,7 +63,7 @@ test("Legal uses the established display and body font roles without artistic ta
 });
 
 test("Privacy uses stable policy typography without panel hover or title transform", () => {
-    assert.match(privacyHtml, /family=Anton&family=DM\+Serif\+Display:ital@0;1&family=Noto\+Sans\+TC:wght@400;500;700;900&family=Noto\+Serif\+TC:wght@500&family=Work\+Sans/);
+    assert.match(privacyHtml, /family=Anton&family=DM\+Serif\+Display:ital@0;1&family=Noto\+Sans\+TC:wght@400;500;700;900&family=Noto\+Serif\+TC:wght@500;600&family=Work\+Sans/);
     assert.match(privacyView, /class="tracks-page privacy-page"/);
     assert.match(privacyView, /class="privacy-page-metadata"/);
     assert.match(privacyView, /class="key-finder-panel privacy-policy-panel"/);

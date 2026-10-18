@@ -49,8 +49,14 @@ test("the homepage hero names the site once and keeps the record decorative", ()
   assert.equal(zh.home.hero.volume, "第 {{number}} 輯");
 });
 
-test("display headings are capitals, but track titles keep keys such as Cm and F#m", () => {
-  assert.match(css, /html\[data-theme\] :is\(h1, h2\) \{[^}]*font-family: var\(--font-display\);[^}]*text-transform: uppercase;/);
+test("page titles are Anton capitals, section headings are DM Serif in their own case", () => {
+  assert.match(css, /html\[data-theme\] #main-content h1 \{\s*font-family: var\(--font-display\);[^}]*text-transform: uppercase;/);
+  assert.match(css, /html\[data-theme\] main :is\(h2, h3\) \{\s*text-transform: none;/);
+  assert.match(css, /#main-content :is\(\.hero-tagline, \.signature-slogan\) \{[^}]*font-family: var\(--font-display\);/);
+  for (const selector of [".v3-band h2", ".home-releases h2", ".about-copy h2", ".release-copy h3", ".v3-track-name"]) {
+    const block = css.match(new RegExp(`\\.v3-home ${selector.replace(/[.]/g, "\\$&")} \\{([^}]*)\\}`));
+    assert.ok(block && /font-family: var\(--font-serif\);/.test(block[1]), selector);
+  }
   assert.match(css, /:is\(\[data-track-heading\], \.track-title-display, \.track-title-name, \.track-title-key\) \{\s*text-transform: none;/);
 });
 
@@ -58,8 +64,8 @@ test("the hero record keeps still for reduced motion", () => {
   assert.match(css, /@media \(prefers-reduced-motion: reduce\) \{\s*html\[data-theme\] \.v3-home \.v4-record \{\s*transition: none;/);
 });
 
-test("chord, scale and song names keep their case under capital display headings", () => {
-  assert.match(css, /:is\(#selectedChordName, #scaleTitle, #songChartTitle, #performanceTitle, \.progression-selected-heading h2\) \{\s*text-transform: none;/);
+test("chord, scale and song names stay big Anton type in their own case", () => {
+  assert.match(css, /:is\(#selectedChordName, #scaleTitle, #songChartTitle, #performanceTitle\) \{\s*font-family: var\(--font-display\);[^}]*text-transform: none;/);
 });
 
 test("buttons and fields use the page fonts instead of the browser default", () => {

@@ -46,9 +46,10 @@
     --radius-card: 30px;
     --radius-panel: 34px;
 
-    /* v4 type: Anton display, Work Sans body, Noto Sans TC for Chinese. */
+    /* v4 type: Anton for page titles and display numbers, DM Serif Display for
+       section headings (as on v3), Work Sans for text, Noto TC for Chinese. */
     --font-display: "Anton", "Noto Sans TC", sans-serif;
-    --font-serif: var(--font-display);
+    --font-serif: "DM Serif Display", "Noto Serif TC", serif;
     --font-sans: "Work Sans", "Noto Sans TC", sans-serif;
     --font-sleeve: "DM Serif Display", "Noto Serif TC", serif;
 
@@ -158,8 +159,8 @@ html[data-theme="light"] {
     --glow: rgba(242, 183, 5, 0.22);
 }
 
-/* Anton ships one weight: never fake bold or italic glyphs.
-   Chinese headings resolve to the loaded Noto Sans TC 900 instead. */
+/* Anton and DM Serif Display ship one weight: never fake bold or italic glyphs.
+   Chinese headings resolve to the loaded Noto TC weights instead. */
 html {
     font-synthesis: none;
 }
@@ -179,7 +180,7 @@ h2 {
 }
 
 :lang(zh) :is(h1, h2, h3) {
-    font-weight: 900;
+    font-weight: 600;
     letter-spacing: 0;
 }
 

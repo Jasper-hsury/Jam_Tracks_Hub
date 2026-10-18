@@ -14,14 +14,33 @@ html[data-theme] body {
     font-family: var(--font-sans);
 }
 
-html[data-theme] :is(h1, h2) {
+/* Page titles are Anton capitals. The main element's id outranks the page
+   stylesheets, which still name the serif token for their titles. */
+html[data-theme] #main-content h1 {
     font-family: var(--font-display);
     font-weight: 400;
     letter-spacing: 0;
     text-transform: uppercase;
 }
 
-html[data-theme]:lang(zh) :is(h1, h2, h3) {
+html[data-theme]:lang(zh) #main-content h1 {
+    font-weight: 900;
+}
+
+/* Section headings keep DM Serif Display in their own case, as on v3. */
+html[data-theme] main :is(h2, h3) {
+    text-transform: none;
+}
+
+/* Result names stay big Anton display type, in their own case (Cm7 stays Cm7). */
+html[data-theme] :is(#selectedChordName, #scaleTitle, #songChartTitle, #performanceTitle) {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+html[data-theme]:lang(zh) :is(#selectedChordName, #scaleTitle, #songChartTitle, #performanceTitle) {
     font-weight: 900;
 }
 
@@ -560,14 +579,14 @@ html[data-theme] .v3-home .v3-band--feature .home-feature-inner {
 
 html[data-theme] .v3-home .v3-band h2 {
     color: var(--on-band);
-    font-family: var(--font-display);
-    font-size: clamp(56px, 6.6vw, 96px);
-    line-height: 0.9;
-    letter-spacing: 0;
+    font-family: var(--font-serif);
+    font-size: clamp(44px, 5.6vw, 80px);
+    line-height: 1.02;
+    letter-spacing: -0.01em;
 }
 
 html[data-theme]:lang(zh) .v3-home .v3-band h2 {
-    font-size: clamp(38px, 4.6vw, 60px);
+    font-size: clamp(34px, 4.4vw, 56px);
 }
 
 html[data-theme] .v3-home .v3-band .home-eyebrow {
@@ -606,15 +625,14 @@ html[data-theme] .v3-home .v3-track-no {
 }
 
 html[data-theme] .v3-home .v3-track-name {
-    font-family: var(--font-display);
-    font-size: 30px;
-    line-height: 1.05;
-    text-transform: uppercase;
+    font-family: var(--font-serif);
+    font-size: 26px;
+    line-height: 1.2;
 }
 
 html[data-theme]:lang(zh) .v3-home .v3-track-name {
-    font-size: 22px;
-    font-weight: 900;
+    font-size: 21px;
+    font-weight: 600;
 }
 
 html[data-theme] .v3-home .home-feature-inner {
@@ -657,15 +675,16 @@ html[data-theme] .v3-home .about-copy .home-eyebrow {
 
 html[data-theme] .v3-home .home-releases h2 {
     color: var(--ink);
-    font-family: var(--font-display);
-    font-size: clamp(56px, 6.6vw, 96px);
-    line-height: 0.9;
-    letter-spacing: 0;
+    font-family: var(--font-serif);
+    font-size: clamp(44px, 5.6vw, 80px);
+    line-height: 1.02;
+    letter-spacing: -0.01em;
 }
 
 html[data-theme]:lang(zh) .v3-home :is(.home-releases h2, .about-copy h2) {
-    font-size: clamp(38px, 4.6vw, 60px);
-    line-height: 1.15;
+    font-size: clamp(34px, 4.4vw, 56px);
+    font-weight: 600;
+    line-height: 1.2;
 }
 
 html[data-theme] .v3-home .text-link {
@@ -719,16 +738,15 @@ html[data-theme] .v3-home .release-number {
 
 html[data-theme] .v3-home .release-copy h3 {
     color: var(--ink);
-    font-family: var(--font-display);
-    font-size: 28px;
-    line-height: 1.05;
-    text-transform: uppercase;
+    font-family: var(--font-serif);
+    font-size: 25px;
+    line-height: 1.2;
 }
 
 html[data-theme]:lang(zh) .v3-home .release-copy h3 {
-    font-size: 21px;
-    line-height: 1.35;
-    text-transform: none;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.4;
 }
 
 html[data-theme] .v3-home .track-meta span {
@@ -753,10 +771,10 @@ html[data-theme] .v3-home .home-about-layout {
 
 html[data-theme] .v3-home .about-copy h2 {
     color: var(--ink);
-    font-family: var(--font-display);
-    font-size: clamp(44px, 4.4vw, 64px);
-    line-height: 0.95;
-    letter-spacing: 0;
+    font-family: var(--font-serif);
+    font-size: clamp(38px, 3.8vw, 56px);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
 }
 
 html[data-theme] .v3-home .about-connect {
@@ -942,12 +960,6 @@ html[data-theme] .v3-home .home-subscribe-button {
     --radius-control: 14px;
 }
 
-/* Names the visitor reads letter by letter keep their own case: chords,
-   scales, song titles and long policy headings. */
-html[data-theme] :is(#selectedChordName, #scaleTitle, #songChartTitle, #performanceTitle, .progression-selected-heading h2) {
-    text-transform: none;
-}
-
 /* Page heading rule */
 html[data-theme] main.v3-tool-page .v3-tool-meta,
 html[data-theme] main:is(.legal-page, .privacy-page) .v3-page-meta,
@@ -960,18 +972,20 @@ html[data-theme] body[data-vue-page="song-workspace"] .song-workspace-page:has(#
     border-bottom: 6px solid var(--highlight);
 }
 
-html[data-theme] main :is(.hero-tagline, .signature-slogan) {
+/* Taglines stay Anton; the main element's id outranks the page stylesheets. */
+html[data-theme] #main-content :is(.hero-tagline, .signature-slogan) {
     color: var(--v4-teal);
     font-family: var(--font-display);
     font-style: normal;
+    font-weight: 400;
     letter-spacing: 0;
 }
 
-html[data-theme]:not([data-theme="light"]) main :is(.hero-tagline, .signature-slogan) {
+html[data-theme]:not([data-theme="light"]) #main-content :is(.hero-tagline, .signature-slogan) {
     color: var(--highlight);
 }
 
-html[data-theme]:lang(zh) main :is(.hero-tagline, .signature-slogan) {
+html[data-theme]:lang(zh) #main-content :is(.hero-tagline, .signature-slogan) {
     font-weight: 900;
 }
 
