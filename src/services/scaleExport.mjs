@@ -72,6 +72,32 @@ const DISPLAY_FONT = "'DM Serif Display', 'Noto Serif TC', Georgia, serif";
 const TEXT_FONT = "'Work Sans', 'Noto Sans TC', Arial, sans-serif";
 const BRAND_FONT = "Anton, Impact, 'Arial Narrow', sans-serif";
 
+// English is the fallback; the page passes its own language (imageText).
+const DEFAULT_IMAGE_TEXT = Object.freeze({
+  tool: "Scale Explorer",
+  standardTuning: "Standard tuning: E A D G B E",
+  subtitle: "Guitar scale diagram · frets {{start}}-{{end}} · {{labels}}",
+  noteNames: "note names",
+  scaleDegrees: "scale degrees",
+  string: "String",
+  rights: "© 2026 Jam Tracks Hub. All rights reserved."
+});
+
+export function imageTextFor(state) {
+  const text = { ...DEFAULT_IMAGE_TEXT, ...(state.imageText || {}) };
+  const labels = state.labelMode === "note" ? text.noteNames : text.scaleDegrees;
+  return {
+    kicker: `Jam Tracks Hub · ${text.tool}`,
+    standardTuning: text.standardTuning,
+    subtitle: text.subtitle
+      .replace("{{start}}", String(state.fretStart))
+      .replace("{{end}}", String(state.fretEnd))
+      .replace("{{labels}}", labels),
+    string: text.string,
+    footer: `jamtrackshub.com · ${text.rights}`
+  };
+}
+
 export function imageThemeFor(imageTheme) {
   return imageTheme === "dark" ? "dark" : "light";
 }
@@ -151,6 +177,7 @@ function fillRadialGlow(context, x, y, radius, color) {
 export function drawScaleImage(documentRef, state) {
   const model = createScaleExportModel(state);
   const palette = model.palette;
+  const text = imageTextFor(state);
   const canvas = documentRef.createElement("canvas");
   const scaleFactor = 2;
   canvas.width = model.width * scaleFactor;
@@ -186,11 +213,11 @@ export function drawScaleImage(documentRef, state) {
   context.textBaseline = "alphabetic";
   context.fillStyle = HIGHLIGHT;
   context.font = `600 15px ${TEXT_FONT}`;
-  context.fillText("Jam Tracks Hub · Scale Explorer", textX, bandY + 52);
+  context.fillText(text.kicker, textX, bandY + 52);
   context.textAlign = "right";
   context.fillStyle = STAGE_MUTED;
   context.font = `500 14px ${TEXT_FONT}`;
-  context.fillText("Standard tuning: E A D G B E", bandX + bandWidth - model.inset, bandY + 52);
+  context.fillText(text.standardTuning, bandX + bandWidth - model.inset, bandY + 52);
 
   context.textAlign = "left";
   context.fillStyle = STAGE_TEXT;
@@ -198,11 +225,7 @@ export function drawScaleImage(documentRef, state) {
   context.fillText(`${model.root} ${model.localizedScaleName}`, textX, bandY + 110);
   context.fillStyle = STAGE_MUTED;
   context.font = `500 16px ${TEXT_FONT}`;
-  context.fillText(
-    `Guitar scale diagram · frets ${state.fretStart}-${state.fretEnd} · ${model.labelMode === "note" ? "note names" : "scale degrees"}`,
-    textX,
-    bandY + 142
-  );
+  context.fillText(text.subtitle, textX, bandY + 142);
 
   let legendX = textX;
   const chipTop = bandY + 164;
@@ -240,7 +263,7 @@ export function drawScaleImage(documentRef, state) {
   context.textBaseline = "middle";
   context.fillStyle = palette.muted;
   context.font = `700 13px ${TEXT_FONT}`;
-  context.fillText("String", boardX + model.labelWidth / 2, model.boardTop + 12);
+  context.fillText(text.string, boardX + model.labelWidth / 2, model.boardTop + 12);
   model.visibleFrets.forEach((fret, index) => {
     context.fillText(String(fret), boardX + model.labelWidth + index * model.cellWidth + model.cellWidth / 2, model.boardTop + 12);
   });
@@ -330,19 +353,19 @@ export function drawScaleImage(documentRef, state) {
   context.textAlign = "right";
   context.fillStyle = palette.muted;
   context.font = `500 13px ${TEXT_FONT}`;
-  context.fillText("jamtrackshub.com · © 2026 Jam Tracks Hub. All rights reserved.", model.width - model.margin - 4, footerY);
+  context.fillText(text.footer, model.width - model.margin - 4, footerY);
   return { canvas, model };
 }
 
 // Chinese web fonts arrive in unicode-range slices, so ask for the exact title text.
-async function loadImageFonts(documentRef, title) {
+async function loadImageFonts(documentRef, title, labels) {
   const fonts = documentRef.fonts;
   if (!fonts || typeof fonts.load !== "function") return;
   try {
     await Promise.all([
       fonts.load(`400 48px ${DISPLAY_FONT}`, title),
-      fonts.load(`500 16px ${TEXT_FONT}`),
-      fonts.load(`700 14px ${TEXT_FONT}`),
+      fonts.load(`500 16px ${TEXT_FONT}`, labels),
+      fonts.load(`700 14px ${TEXT_FONT}`, labels),
       fonts.load(`400 22px ${BRAND_FONT}`)
     ]);
   } catch (error) {
@@ -386,7 +409,12 @@ function showIosImagePreview(previewWindow, url, fileName, saveImageHint) {
 export async function downloadScalePng({ documentRef = document, windowRef = window, saveImageHint, ...state }) {
   const usePreview = isIosSafariLike(windowRef);
   const previewWindow = usePreview ? windowRef.open("", "_blank") : null;
-  await loadImageFonts(documentRef, `${rootName(state.rootPitch)} ${state.localizedScaleName}`);
+  const text = imageTextFor(state);
+  await loadImageFonts(
+    documentRef,
+    `${rootName(state.rootPitch)} ${state.localizedScaleName}`,
+    Object.values(text).join(" ")
+  );
   const { canvas, model } = drawScaleImage(documentRef, state);
 
   return new Promise(resolve => {

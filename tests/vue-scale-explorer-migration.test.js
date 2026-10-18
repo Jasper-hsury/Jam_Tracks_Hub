@@ -353,3 +353,33 @@ test("extends deterministic Cloudflare verification for ten Vue pages", () => {
   assert.match(verifier, /compiled Vue Scale Explorer mount marker is missing/);
   assert.match(verifier, /viteOwnedRootHtml[^\n]+scale\.html/);
 });
+
+test("PNG text follows the page language and falls back to English", async () => {
+  const { imageTextFor } = await import(path.join(root, "src/services/scaleExport.mjs"));
+  const zh = JSON.parse(read("locales/zh-TW/common.json"));
+  const messages = zh.pages.scaleExplorer;
+  const state = { fretStart: 0, fretEnd: 15, labelMode: "note" };
+  assert.deepEqual(imageTextFor({
+    ...state,
+    imageText: {
+      tool: messages.title,
+      standardTuning: messages.standardTuning,
+      subtitle: messages.imageSubtitle,
+      noteNames: messages.imageNoteNames,
+      scaleDegrees: messages.imageScaleDegrees,
+      string: messages.string,
+      rights: zh.footer.rights
+    }
+  }), {
+    kicker: "Jam Tracks Hub · 音階",
+    standardTuning: "標準調弦：E A D G B E",
+    subtitle: "吉他音階圖 · 第 0–15 格 · 音名",
+    string: "弦",
+    footer: "jamtrackshub.com · © 2026 Jam Tracks Hub。保留所有權利。"
+  });
+  const english = imageTextFor({ ...state, labelMode: "degree" });
+  assert.equal(english.subtitle, "Guitar scale diagram · frets 0-15 · scale degrees");
+  assert.equal(english.string, "String");
+  const view = read("src/views/ScaleExplorerView.vue");
+  assert.match(view, /imageText: \{\s*tool: messages\.value\.title,[\s\S]*?rights: locale\.value\.footer\.rights\s*\}/);
+});
