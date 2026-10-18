@@ -64,8 +64,21 @@ test("the hero record keeps still for reduced motion", () => {
   assert.match(css, /@media \(prefers-reduced-motion: reduce\) \{\s*html\[data-theme\] \.v3-home \.v4-record \{\s*transition: none;/);
 });
 
-test("chord, scale and song names stay big Anton type in their own case", () => {
-  assert.match(css, /:is\(#selectedChordName, #scaleTitle, #songChartTitle, #performanceTitle\) \{\s*font-family: var\(--font-display\);[^}]*text-transform: none;/);
+test("chord, scale and song names use the section serif like every other heading", () => {
+  assert.doesNotMatch(css, /#selectedChordName[^{]*\{[^}]*font-display/);
+  assert.match(css, /html\[data-theme\] main :is\(h2, h3\) \{\s*text-transform: none;/);
+});
+
+test("Anton falls back to a metric-matched Impact while the web font loads", () => {
+  assert.match(css, /@font-face \{\s*font-family: "Anton Fallback";\s*src: local\("Impact"\);\s*size-adjust: 92%;\s*ascent-override: 128%;\s*descent-override: 36%;\s*line-gap-override: 0%;/);
+});
+
+test("the long Feedback tagline reads in DM Serif italic instead of Anton", () => {
+  assert.match(css, /#main-content\.feedback-page \.hero-tagline \{[^}]*font-family: var\(--font-serif\);[^}]*font-style: italic;/);
+});
+
+test("labels above headings are sentence case, and About is written that way", () => {
+  assert.match(css, /#main-content :is\(\.home-eyebrow, \.hero-eyebrow, \.v3-page-eyebrow, \.v3-tracks-eyebrow, \.result-kicker, \.dictionary-kicker, \.scale-section-kicker, \.trainer-kicker, \.workspace-import-type\) \{[^}]*letter-spacing: 0;\s*text-transform: none;/);
 });
 
 test("buttons and fields use the page fonts instead of the browser default", () => {

@@ -161,8 +161,8 @@ test("keeps the compact About, contact, and Subscribe experience localized and c
   const zh = JSON.parse(read("locales/zh-TW/common.json"));
   const aboutLinks = view.slice(view.indexOf('<div class="about-links">'), view.indexOf('<form', view.indexOf('<div class="about-links">')));
 
-  assert.equal(en.home.about.eyebrow, "ABOUT JAM TRACKS HUB");
-  assert.equal(zh.home.about.eyebrow, "關於 JAM TRACKS HUB");
+  assert.equal(en.home.about.eyebrow, "About Jam Tracks Hub");
+  assert.equal(zh.home.about.eyebrow, "關於 Jam Tracks Hub");
   assert.equal(en.home.extra["18"], "Built by a guitarist, inspired by real practice.");
   assert.equal(zh.home.extra["18"], "由吉他手打造，源自真實的練習經驗。");
   assert.equal(en.home.extra["19"], "Jam Tracks Hub is designed and built by Jasper as a focused place for the tools he actually needs while practicing. It puts original backing tracks, practical music-theory tools, and a local-first Song Workspace in one place, so you can move naturally from listening and learning to organizing your own songs.");

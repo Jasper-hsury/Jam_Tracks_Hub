@@ -48,7 +48,7 @@
 
     /* v4 type: Anton for page titles and display numbers, DM Serif Display for
        section headings (as on v3), Work Sans for text, Noto TC for Chinese. */
-    --font-display: "Anton", "Noto Sans TC", sans-serif;
+    --font-display: "Anton", "Anton Fallback", "Noto Sans TC", sans-serif;
     --font-serif: "DM Serif Display", "Noto Serif TC", serif;
     --font-sans: "Work Sans", "Noto Sans TC", sans-serif;
     --font-sleeve: "DM Serif Display", "Noto Serif TC", serif;

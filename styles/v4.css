@@ -32,16 +32,15 @@ html[data-theme] main :is(h2, h3) {
     text-transform: none;
 }
 
-/* Result names stay big Anton display type, in their own case (Cm7 stays Cm7). */
-html[data-theme] :is(#selectedChordName, #scaleTitle, #songChartTitle, #performanceTitle) {
-    font-family: var(--font-display);
-    font-weight: 400;
-    letter-spacing: 0;
-    text-transform: none;
-}
-
-html[data-theme]:lang(zh) :is(#selectedChordName, #scaleTitle, #songChartTitle, #performanceTitle) {
-    font-weight: 900;
+/* Anton until the web font arrives: Impact scaled to Anton's width and
+   given Anton's vertical metrics, so the big titles barely move on swap. */
+@font-face {
+    font-family: "Anton Fallback";
+    src: local("Impact");
+    size-adjust: 92%;
+    ascent-override: 128%;
+    descent-override: 36%;
+    line-gap-override: 0%;
 }
 
 /* Track titles carry keys such as Cm and F#m: never force them to capitals. */
@@ -1034,7 +1033,7 @@ html[data-theme] body[data-vue-page="song-workspace"] :is(#chartKeySummary, .wor
 
 html[data-theme] main.v3-tool-page .v3-selected-band h2 {
     font-size: clamp(56px, 6vw, 88px);
-    line-height: 0.95;
+    line-height: 1;
 }
 
 /* Controls: pills for buttons, soft corners for fields and grid keys. */
@@ -1190,4 +1189,33 @@ html[data-theme] body[data-vue-page="song-workspace"] {
 
 html[data-theme="default"] body[data-vue-page="song-workspace"] {
     --workspace-selected: #2a5d92;
+}
+
+/* Long taglines read in DM Serif italic; Anton stays for short ones. */
+html[data-theme] #main-content.feedback-page .hero-tagline {
+    max-width: 40ch;
+    color: var(--accent);
+    font-family: var(--font-serif);
+    font-size: clamp(22px, 2.2vw, 28px);
+    font-style: italic;
+    line-height: 1.35;
+}
+
+html[data-theme]:not([data-theme="light"]) #main-content.feedback-page .hero-tagline {
+    color: var(--highlight);
+}
+
+html[data-theme]:lang(zh) #main-content.feedback-page .hero-tagline {
+    font-style: normal;
+    font-weight: 600;
+}
+
+/* Labels above headings read in sentence case; capitals stay for data labels
+   such as tuning, stats, fields and filters. */
+html[data-theme] #main-content :is(.home-eyebrow, .hero-eyebrow, .v3-page-eyebrow, .v3-tracks-eyebrow, .result-kicker, .dictionary-kicker, .scale-section-kicker, .trainer-kicker, .workspace-import-type) {
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
 }
