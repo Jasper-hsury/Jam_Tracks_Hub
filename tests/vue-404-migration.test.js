@@ -89,7 +89,7 @@ test("does not expand the Vue application architecture", () => {
     assert.equal(packageJson.dependencies?.[name], undefined);
     assert.equal(packageJson.devDependencies?.[name], undefined);
   });
-  assert.equal(packageJson.version, "4.0.1");
+  assert.equal(packageJson.version, "4.0.2");
 });
 
 test("keeps the complete Phase 2A responsive matrix on established shared breakpoints", () => {
