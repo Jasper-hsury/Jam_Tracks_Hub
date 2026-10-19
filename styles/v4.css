@@ -259,10 +259,13 @@ html[data-theme] .v3-home .home-hero.v4-hero .home-section-inner {
 }
 
 /* Clip only sideways: the buttons sit on the hero's bottom edge, and a
-   vertical clip cut them off while they rose in or lifted on hover. */
-html[data-theme] .v3-home .home-hero.v4-hero {
-    overflow-x: clip;
-    overflow-y: visible;
+   vertical clip cut them off while they rose in or lifted on hover. Browsers
+   without overflow: clip keep the legacy hidden, which only clips. */
+@supports (overflow: clip) {
+    html[data-theme] .v3-home .home-hero.v4-hero {
+        overflow-x: clip;
+        overflow-y: visible;
+    }
 }
 
 /* Labels and numbers stay left on tablets too (legacy rules centred them). */
@@ -1336,13 +1339,27 @@ html[data-theme] main.v3-tool-page .scale-summary .scale-image-theme button:focu
     outline-offset: 2px;
 }
 
+/* The guitar shape picker (Progression Writer and Song Workspace) uses the
+   same rounded trays and cards as the rest of v4. */
+html[data-theme] .progression-writer-shape-picker-dialog {
+    border-radius: var(--radius-panel);
+}
+
+html[data-theme] .progression-writer-shape-picker-dialog .progression-writer-shape-filter {
+    border-radius: 18px;
+}
+
+html[data-theme] .progression-writer-shape-picker-dialog .progression-writer-shape-picker-card {
+    border-radius: 22px;
+}
+
 /* Song Workspace print and PDF. song-workspace.css is frozen, and its print
    rules hide every child of <body> except the page, which since the Vue
    migration also hides the #vue-song-workspace-root wrapper around it. The
    printed chart uses navy ink on white in both themes and leaves out the
    editing affordances. */
 @media print {
-    html[data-theme],
+    html[data-theme]:has(> body[data-vue-page="song-workspace"]),
     html[data-theme] body[data-vue-page="song-workspace"] {
         background: #fff !important;
     }

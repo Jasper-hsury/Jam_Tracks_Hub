@@ -153,7 +153,7 @@ test("the hero title rises in once with CSS, and stays still for reduced motion"
 
 test("tablets keep the releases heading on the left and the hero buttons unclipped", () => {
   assert.match(css, /html\[data-theme\] \.v3-home \.home-releases \.home-section-heading \{\s*flex-direction: row;\s*align-items: flex-end;/);
-  assert.match(css, /html\[data-theme\] \.v3-home \.home-hero\.v4-hero \{\s*overflow-x: clip;\s*overflow-y: visible;/);
+  assert.match(css, /@supports \(overflow: clip\) \{\s*html\[data-theme\] \.v3-home \.home-hero\.v4-hero \{\s*overflow-x: clip;\s*overflow-y: visible;/);
   assert.match(css, /html\[data-theme\] \.v3-home \.home-eyebrow,\s*html\[data-theme\] \.v3-home \.home-hero \.home-metrics \{\s*text-align: start;/);
 });
 
@@ -180,4 +180,11 @@ test("track slide pages use the v4 night stage instead of the v2 grey", () => {
       assert.match(html, /background-color: #081627;/, file);
     }
   });
+});
+
+test("the shape picker uses v4 rounded trays and cards, and print white only applies to Song Workspace", () => {
+  assert.match(css, /html\[data-theme\] \.progression-writer-shape-picker-dialog \{\s*border-radius: var\(--radius-panel\);/);
+  assert.match(css, /\.progression-writer-shape-picker-dialog \.progression-writer-shape-picker-card \{\s*border-radius: 22px;/);
+  assert.match(css, /html\[data-theme\]:has\(> body\[data-vue-page="song-workspace"\]\),/);
+  assert.doesNotMatch(css, /@media print \{\s*html\[data-theme\],/);
 });
