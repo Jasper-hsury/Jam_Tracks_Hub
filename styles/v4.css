@@ -1452,6 +1452,16 @@ html[data-theme] .chord-diagram .diagram-string-status strong {
     font-size: 9px;
 }
 
+/* Chord dots are plain circles with a very slight top-to-bottom shade: no
+   halo ring, outline or drop shadow. */
+html[data-theme] .chord-diagram :is(.diagram-finger, .diagram-finger.is-root, .diagram-finger[data-tone-family]),
+html[data-theme] .chord-diagram .diagram-string-status strong[data-tone-family],
+html[data-theme] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone) {
+    border: 0;
+    box-shadow: none;
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(0, 0, 0, 0.08));
+}
+
 /* Shape card headings keep the fret list on one line ("8 10 8 9 10 10"
    read as two groups when it broke); the position note moves underneath. */
 html[data-theme] .chord-shape-card-heading {

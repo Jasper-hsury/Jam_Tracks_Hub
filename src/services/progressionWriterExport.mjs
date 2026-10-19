@@ -110,7 +110,8 @@ function svgDiagram(chordItem, x, y, palette, shapeEngine) {
       parts.push(svgText(stringX, y + 12, "O", { fill: palette.muted, size: 11, weight: 700, anchor: "middle" }));
       if (tone) {
         const tonePalette = palette.tone[tone.family] || palette.tone.other;
-        parts.push(`<rect x="${stringX - 13}" y="${y + 17}" width="26" height="17" rx="8.5" fill="${tonePalette.fill}" stroke="${tonePalette.stroke}" stroke-width="1"/>`);
+        parts.push(`<rect x="${stringX - 13}" y="${y + 17}" width="26" height="17" rx="8.5" fill="${tonePalette.fill}"/>`);
+        parts.push(`<rect x="${stringX - 13}" y="${y + 17}" width="26" height="17" rx="8.5" fill="url(#dotShade)"/>`);
         parts.push(svgText(stringX, y + 30, tone.label, { fill: tonePalette.text, size: 10, weight: 700, anchor: "middle" }));
       }
     }
@@ -135,8 +136,9 @@ function svgDiagram(chordItem, x, y, palette, shapeEngine) {
     const stringX = leftX + stringIndex * stringGap;
     const markerY = topY + (row + 0.5) * fretGap;
     const tonePalette = palette.tone[tone?.family || "other"] || palette.tone.other;
-    parts.push(`<circle cx="${stringX}" cy="${markerY}" r="15" fill="${tonePalette.ring}" opacity="0.42"/>`);
-    parts.push(`<circle cx="${stringX}" cy="${markerY}" r="12" fill="${tonePalette.fill}" stroke="${tonePalette.stroke}" stroke-width="2"/>`);
+    // A plain circle with a very slight shade, like the dots on the site.
+    parts.push(`<circle cx="${stringX}" cy="${markerY}" r="13" fill="${tonePalette.fill}"/>`);
+    parts.push(`<circle cx="${stringX}" cy="${markerY}" r="13" fill="url(#dotShade)"/>`);
     parts.push(svgText(stringX, markerY + 4, tone?.label || "", { fill: tonePalette.text, size: 10, weight: 700, anchor: "middle" }));
   });
 
@@ -302,7 +304,7 @@ export function generateProgressionSvg(data, {
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
-    <defs>${svgGlow("pageGlow", width - 120, -60, 620, palette.glow)}${svgGlow("stageGlow", width - margin - 140, margin - 80, 420, "rgba(242, 183, 5, 0.3)")}</defs>
+    <defs>${svgGlow("pageGlow", width - 120, -60, 620, palette.glow)}${svgGlow("stageGlow", width - margin - 140, margin - 80, 420, "rgba(242, 183, 5, 0.3)")}<linearGradient id="dotShade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(255, 255, 255, 0.12)"/><stop offset="1" stop-color="rgba(0, 0, 0, 0.08)"/></linearGradient></defs>
     <rect width="100%" height="100%" fill="${palette.page}"/>
     <rect width="100%" height="100%" fill="url(#pageGlow)"/>
     ${svgRoundedRect(margin, margin, bandWidth, bandHeight, { fill: palette.stage, radius: 30 })}
@@ -416,28 +418,39 @@ export function drawProgressionSvg(svg, { documentRef = document, DOMParserCtor 
   const context = canvas.getContext("2d");
   context.scale(scale, scale);
   const gradients = new Map();
-  Array.from(root.getElementsByTagName("radialGradient")).forEach(gradient => {
+  Array.from(root.querySelectorAll("radialGradient, linearGradient")).forEach(gradient => {
     gradients.set(gradient.getAttribute("id"), gradient);
   });
-  const paint = value => {
+  // Radial gradients use page coordinates; linear ones (the dot shade) span the shape's box.
+  const paint = (value, box) => {
     const match = /^url\(#([^)]+)\)$/.exec(value || "");
     if (!match) return value;
     const gradient = gradients.get(match[1]);
     if (!gradient) return "transparent";
-    const cx = numberAttr(gradient, "cx");
-    const cy = numberAttr(gradient, "cy");
-    const r = numberAttr(gradient, "r");
-    const fill = context.createRadialGradient(cx, cy, 0, cx, cy, r);
+    let fill;
+    if (gradient.nodeName === "linearGradient") {
+      fill = context.createLinearGradient(
+        box.x + numberAttr(gradient, "x1") * box.width,
+        box.y + numberAttr(gradient, "y1") * box.height,
+        box.x + numberAttr(gradient, "x2") * box.width,
+        box.y + numberAttr(gradient, "y2", 1) * box.height
+      );
+    } else {
+      const cx = numberAttr(gradient, "cx");
+      const cy = numberAttr(gradient, "cy");
+      const r = numberAttr(gradient, "r");
+      fill = context.createRadialGradient(cx, cy, 0, cx, cy, r);
+    }
     Array.from(gradient.getElementsByTagName("stop")).forEach(stop => {
       fill.addColorStop(numberAttr(stop, "offset"), stop.getAttribute("stop-color"));
     });
     return fill;
   };
-  const fillAndStroke = element => {
+  const fillAndStroke = (element, box) => {
     const fill = element.getAttribute("fill");
     const stroke = element.getAttribute("stroke");
     if (fill && fill !== "none") {
-      context.fillStyle = paint(fill);
+      context.fillStyle = paint(fill, box);
       context.fill();
     }
     if (stroke && stroke !== "none") {
@@ -461,12 +474,15 @@ export function drawProgressionSvg(svg, { documentRef = document, DOMParserCtor 
     } else if (name === "rect") {
       const rectWidth = element.getAttribute("width") === "100%" ? width : numberAttr(element, "width");
       const rectHeight = element.getAttribute("height") === "100%" ? height : numberAttr(element, "height");
-      roundedRectPath(context, numberAttr(element, "x"), numberAttr(element, "y"), rectWidth, rectHeight, numberAttr(element, "rx"));
-      fillAndStroke(element);
+      const box = { x: numberAttr(element, "x"), y: numberAttr(element, "y"), width: rectWidth, height: rectHeight };
+      roundedRectPath(context, box.x, box.y, rectWidth, rectHeight, numberAttr(element, "rx"));
+      fillAndStroke(element, box);
     } else if (name === "circle") {
+      const r = numberAttr(element, "r");
+      const box = { x: numberAttr(element, "cx") - r, y: numberAttr(element, "cy") - r, width: r * 2, height: r * 2 };
       context.beginPath();
-      context.arc(numberAttr(element, "cx"), numberAttr(element, "cy"), numberAttr(element, "r"), 0, Math.PI * 2);
-      fillAndStroke(element);
+      context.arc(numberAttr(element, "cx"), numberAttr(element, "cy"), r, 0, Math.PI * 2);
+      fillAndStroke(element, box);
     } else if (name === "line") {
       context.beginPath();
       context.moveTo(numberAttr(element, "x1"), numberAttr(element, "y1"));

@@ -218,3 +218,12 @@ test("chord diagram dots are fixed circles narrower than a string space, and fre
   assert.match(css, /html\[data-theme\] \.song-workspace-page \.chord-diagram :is\(\.diagram-finger, \.diagram-string-status strong\) \{\s*width: 23px;/);
   assert.match(css, /html\[data-theme\] \.chord-shape-card-heading strong \{\s*white-space: nowrap;/);
 });
+
+test("chord dots are plain circles with a slight shade, on the site and in the image download", () => {
+  assert.match(css, /\.chord-diagram :is\(\.diagram-finger, \.diagram-finger\.is-root, \.diagram-finger\[data-tone-family\]\),[\s\S]*?:is\(\.progression-fret-marker, \.progression-open-tone\) \{\s*border: 0;\s*box-shadow: none;\s*background-image: linear-gradient\(180deg, rgba\(255, 255, 255, 0\.12\), rgba\(0, 0, 0, 0\.08\)\);/);
+  const exporter = read("src/services/progressionWriterExport.mjs");
+  assert.doesNotMatch(exporter, /opacity="0\.42"/);
+  assert.match(exporter, /<linearGradient id="dotShade" x1="0" y1="0" x2="0" y2="1">/);
+  assert.match(exporter, /r="13" fill="url\(#dotShade\)"/);
+  assert.match(exporter, /createLinearGradient\(/);
+});
