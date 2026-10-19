@@ -234,3 +234,7 @@ test("open-string labels keep a gap above the nut, on the site and in the image 
   assert.match(exporter, /<rect x="\$\{stringX - 13\}" y="\$\{y \+ 12\}" width="26" height="17"/);
   assert.match(exporter, /const topY = y \+ 34;/);
 });
+
+test("dot labels use the real bold, even digits and a cap-trimmed line box so they sit centred", () => {
+  assert.match(css, /:is\(\.progression-fret-marker, \.progression-open-tone\) \{\s*font-weight: 700;\s*font-variant-numeric: tabular-nums;\s*line-height: 1;\s*text-align: center;\s*text-box: trim-both cap alphabetic;/);
+});

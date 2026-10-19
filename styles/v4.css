@@ -1473,6 +1473,17 @@ html[data-theme] .chord-shape-card-heading strong {
     white-space: nowrap;
 }
 
+/* Dot labels sit optically centred: the real 700 weight (800 was synthesised),
+   even-width digits, and a line box trimmed to the cap height and baseline. */
+html[data-theme] .chord-diagram :is(.diagram-finger, .diagram-string-status strong),
+html[data-theme] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone) {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    text-align: center;
+    text-box: trim-both cap alphabetic;
+}
+
 /* Open-string labels sat right on the nut; leave a small gap above it. */
 html[data-theme] .chord-diagram .diagram-status-row {
     padding-bottom: 6px;
