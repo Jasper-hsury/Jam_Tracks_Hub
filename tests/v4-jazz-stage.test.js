@@ -165,3 +165,19 @@ test("Song Workspace prints the chart in day colours, inside the Vue root", () =
   assert.match(print, /:is\(\.workspace-title-trigger small, \.workspace-section-edit-hint, \.workspace-inline-edit-button\) \{\s*display: none !important;/);
   assert.match(read("song-workspace.html"), /<body[^>]*data-vue-page="song-workspace"/);
 });
+
+test("track slide pages use the v4 night stage instead of the v2 grey", () => {
+  const slides = fs.readdirSync(path.join(root, "slides")).filter(file => /^w\d+\.html$/.test(file));
+  assert.equal(slides.length, 18);
+  slides.forEach(file => {
+    const html = read(`slides/${file}`);
+    assert.doesNotMatch(html, /#121212/, file);
+    if (html.includes("<img")) {
+      assert.match(html, /family=DM\+Serif\+Display/, file);
+      assert.match(html, /background: #081627;/, file);
+      assert.match(html, /<p class="kicker">Jam Tracks Hub · Slides<\/p>/, file);
+    } else {
+      assert.match(html, /background-color: #081627;/, file);
+    }
+  });
+});
