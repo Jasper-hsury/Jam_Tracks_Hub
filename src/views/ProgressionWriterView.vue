@@ -148,10 +148,28 @@ async function downloadImage() {
     writer.setStatus(data.error);
     return;
   }
+  // The image speaks the page language: song name, key, section names and labels.
+  const text = messages.value;
+  const sectionNames = { Progression: text.progression, Verse: text.verse, Chorus: text.chorus };
+  if (!String(writer.songName.value || "").trim()) data.songName = text.imageUntitled;
+  data.fileKey = data.key;
+  data.key = `${writer.keyRoot.value || "A"} ${writer.keyQuality.value === "minor" ? text.minor : text.major}`;
+  data.sections.forEach(section => { section.title = sectionNames[section.title] || section.title; });
   const result = await exportProgressionImage(data, {
     separateDownload: writer.separateDownload.value,
     theme: document.documentElement.dataset.theme || "default",
-    shapeEngine: writer.shapeEngine
+    shapeEngine: writer.shapeEngine,
+    imageText: {
+      tool: locale.value.term.progressionWriter,
+      standardTuning: locale.value.pages.scaleExplorer.standardTuning,
+      progression: text.modeTitle,
+      shapes: text.imageShapes,
+      bpm: text.imageBpm,
+      bpmNotSet: text.imageBpmNotSet,
+      fullCards: text.fullShapeCards,
+      separate: text.separateShapes,
+      rights: locale.value.footer.rights
+    }
   });
   writer.setStatus(result.format === "png" ? "Progression image downloaded." : "Progression image downloaded as SVG.");
 }
