@@ -1339,6 +1339,98 @@ html[data-theme] main.v3-tool-page .scale-summary .scale-image-theme button:focu
     outline-offset: 2px;
 }
 
+/* Chord tones: one palette for every chord-shape diagram (Chord Dictionary,
+   Chord Progressions, Progression Writer, Song Workspace, the shape picker
+   and the downloaded progression image). Each interval keeps its hue, but by
+   day the dots are deep with light labels and at night they are light with
+   navy labels, so the 9-10px labels reach 4.5:1 and the dots 3:1 against
+   their cards in both themes. */
+html[data-theme="light"] :is(.chord-dictionary-page, .song-workspace-page, .workspace-shape-dialog, .progression-writer-page, .progression-writer-shape-picker-modal) {
+    --diagram-root-fill: #1d6b6b;
+    --diagram-root-text: #fffaf2;
+    --diagram-root-ring: rgba(29, 107, 107, 0.24);
+    --diagram-third-fill: #8a5528;
+    --diagram-third-text: #fffaf2;
+    --diagram-third-ring: rgba(138, 85, 40, 0.24);
+    --diagram-fifth-fill: #7a6118;
+    --diagram-fifth-text: #fffaf2;
+    --diagram-fifth-ring: rgba(122, 97, 24, 0.24);
+    --diagram-seventh-fill: #9a4a5e;
+    --diagram-seventh-text: #fffaf2;
+    --diagram-seventh-ring: rgba(154, 74, 94, 0.24);
+    --diagram-extension-fill: #4f6a48;
+    --diagram-extension-text: #fffaf2;
+    --diagram-extension-ring: rgba(79, 106, 72, 0.24);
+}
+
+html[data-theme="default"] :is(.chord-dictionary-page, .song-workspace-page, .workspace-shape-dialog, .progression-writer-page, .progression-writer-shape-picker-modal) {
+    --diagram-root-fill: #f1e9d8;
+    --diagram-root-text: #0f2b4c;
+    --diagram-root-ring: rgba(241, 233, 216, 0.24);
+    --diagram-third-fill: #eab183;
+    --diagram-third-text: #0f2b4c;
+    --diagram-third-ring: rgba(234, 177, 131, 0.24);
+    --diagram-fifth-fill: #e6cb6e;
+    --diagram-fifth-text: #0f2b4c;
+    --diagram-fifth-ring: rgba(230, 203, 110, 0.24);
+    --diagram-seventh-fill: #eba7b6;
+    --diagram-seventh-text: #0f2b4c;
+    --diagram-seventh-ring: rgba(235, 167, 182, 0.24);
+    --diagram-extension-fill: #b9cfa9;
+    --diagram-extension-text: #0f2b4c;
+    --diagram-extension-ring: rgba(185, 207, 169, 0.24);
+}
+
+html[data-theme="light"] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone)[data-tone-family="root"] {
+    --tone-bg: #1d6b6b;
+    --tone-fg: #fffaf2;
+}
+
+html[data-theme="light"] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone)[data-tone-family="third"] {
+    --tone-bg: #8a5528;
+    --tone-fg: #fffaf2;
+}
+
+html[data-theme="light"] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone)[data-tone-family="fifth"] {
+    --tone-bg: #7a6118;
+    --tone-fg: #fffaf2;
+}
+
+html[data-theme="light"] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone)[data-tone-family="seventh"] {
+    --tone-bg: #9a4a5e;
+    --tone-fg: #fffaf2;
+}
+
+html[data-theme="light"] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone)[data-tone-family="extension"] {
+    --tone-bg: #4f6a48;
+    --tone-fg: #fffaf2;
+}
+
+html[data-theme="default"] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone)[data-tone-family="root"] {
+    --tone-bg: #f1e9d8;
+    --tone-fg: #0f2b4c;
+}
+
+html[data-theme="default"] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone)[data-tone-family="third"] {
+    --tone-bg: #eab183;
+    --tone-fg: #0f2b4c;
+}
+
+html[data-theme="default"] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone)[data-tone-family="fifth"] {
+    --tone-bg: #e6cb6e;
+    --tone-fg: #0f2b4c;
+}
+
+html[data-theme="default"] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone)[data-tone-family="seventh"] {
+    --tone-bg: #eba7b6;
+    --tone-fg: #0f2b4c;
+}
+
+html[data-theme="default"] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone)[data-tone-family="extension"] {
+    --tone-bg: #b9cfa9;
+    --tone-fg: #0f2b4c;
+}
+
 /* The guitar shape picker (Progression Writer and Song Workspace) uses the
    same rounded trays and cards as the rest of v4. */
 html[data-theme] .progression-writer-shape-picker-dialog {

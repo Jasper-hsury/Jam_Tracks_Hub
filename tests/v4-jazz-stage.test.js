@@ -188,3 +188,26 @@ test("the shape picker uses v4 rounded trays and cards, and print white only app
   assert.match(css, /html\[data-theme\]:has\(> body\[data-vue-page="song-workspace"\]\),/);
   assert.doesNotMatch(css, /@media print \{\s*html\[data-theme\],/);
 });
+
+test("chord-tone dots meet contrast in both themes, on every diagram and in the image download", () => {
+  const lum = hex => {
+    const channels = hex.match(/[0-9a-f]{2}/gi).map(value => parseInt(value, 16) / 255)
+      .map(value => value <= 0.03928 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4);
+    return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
+  };
+  const contrast = (a, b) => (Math.max(lum(a), lum(b)) + 0.05) / (Math.min(lum(a), lum(b)) + 0.05);
+  const palettes = {
+    light: { text: "#fffaf2", cards: ["#f7f0e7", "#ece7de", "#f8f5ef"], fills: { root: "#1d6b6b", third: "#8a5528", fifth: "#7a6118", seventh: "#9a4a5e", extension: "#4f6a48" } },
+    default: { text: "#0f2b4c", cards: ["#132a47", "#0f223a", "#081627"], fills: { root: "#f1e9d8", third: "#eab183", fifth: "#e6cb6e", seventh: "#eba7b6", extension: "#b9cfa9" } }
+  };
+  const exporter = read("src/services/progressionWriterExport.mjs");
+  for (const [theme, palette] of Object.entries(palettes)) {
+    for (const [family, fill] of Object.entries(palette.fills)) {
+      assert.ok(contrast(fill, palette.text) >= 4.5, `${theme} ${family} label`);
+      palette.cards.forEach(card => assert.ok(contrast(fill, card) >= 3, `${theme} ${family} on ${card}`));
+      assert.match(css, new RegExp(`html\\[data-theme="${theme}"\\] :is\\(\\.chord-dictionary-page[^{]*\\{[^}]*--diagram-${family}-fill: ${fill};\\s*--diagram-${family}-text: ${palette.text};`), `${theme} ${family} diagram`);
+      assert.match(css, new RegExp(`html\\[data-theme="${theme}"\\] main\\.v3-tool-page\\.chord-progressions-page [^{]*\\[data-tone-family="${family}"\\] \\{\\s*--tone-bg: ${fill};\\s*--tone-fg: ${palette.text};`), `${theme} ${family} progressions`);
+      assert.match(exporter, new RegExp(`${family}: \\{ fill: "${fill}", stroke: "#[0-9a-f]{6}", text: "${palette.text}"`), `${theme} ${family} export`);
+    }
+  }
+});

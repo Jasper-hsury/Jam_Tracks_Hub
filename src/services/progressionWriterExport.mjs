@@ -55,7 +55,7 @@ function svgGlow(id, cx, cy, r, color) {
 }
 
 // Image palettes follow the site's day and night themes (v4 Jazz Stage).
-// Chord tones keep the chord-shape palette used on every tool page.
+// Chord tones use the same v4 chord-tone palette as the tool pages (v4.css).
 function paletteForTheme(theme) {
   return theme === "light"
     ? {
@@ -64,11 +64,11 @@ function paletteForTheme(theme) {
       card: "#f2ede5", cardEdge: "#e0d8cb", text: "#0f2b4c", muted: "#4e5d70",
       grid: "#8a93a0", nut: "#0f2b4c", stage: "#0f2b4c", stageEdge: "rgba(15, 43, 76, 0)",
       tone: {
-        root: { fill: "#2d7b76", stroke: "#f2ede5", text: "#fffdf8", ring: "#2d7b76" },
-        third: { fill: "#9d6a3d", stroke: "#f2ede5", text: "#fffaf2", ring: "#9d6a3d" },
-        fifth: { fill: "#b88b56", stroke: "#f2ede5", text: "#fffaf2", ring: "#b88b56" },
-        seventh: { fill: "#b06b7a", stroke: "#f2ede5", text: "#fffaf2", ring: "#b06b7a" },
-        extension: { fill: "#7a8c74", stroke: "#f2ede5", text: "#fffaf2", ring: "#7a8c74" },
+        root: { fill: "#1d6b6b", stroke: "#f2ede5", text: "#fffaf2", ring: "#1d6b6b" },
+        third: { fill: "#8a5528", stroke: "#f2ede5", text: "#fffaf2", ring: "#8a5528" },
+        fifth: { fill: "#7a6118", stroke: "#f2ede5", text: "#fffaf2", ring: "#7a6118" },
+        seventh: { fill: "#9a4a5e", stroke: "#f2ede5", text: "#fffaf2", ring: "#9a4a5e" },
+        extension: { fill: "#4f6a48", stroke: "#f2ede5", text: "#fffaf2", ring: "#4f6a48" },
         other: { fill: "#4e5d70", stroke: "#f2ede5", text: "#fffaf2", ring: "#4e5d70" }
       }
     }
@@ -78,12 +78,12 @@ function paletteForTheme(theme) {
       card: "#132a47", cardEdge: "#24405f", text: "#f1e9d8", muted: "#9fb3c8",
       grid: "#5f7896", nut: "#f1e9d8", stage: "#0f2b4c", stageEdge: "rgba(255, 255, 255, 0.1)",
       tone: {
-        root: { fill: "#f2ede3", stroke: "#132a47", text: "#2b211a", ring: "#f2ede3" },
-        third: { fill: "#9f6b45", stroke: "#132a47", text: "#fffaf2", ring: "#9f6b45" },
-        fifth: { fill: "#7f8970", stroke: "#132a47", text: "#fffaf2", ring: "#7f8970" },
-        seventh: { fill: "#9a6472", stroke: "#132a47", text: "#fffaf2", ring: "#9a6472" },
-        extension: { fill: "#6f7964", stroke: "#132a47", text: "#fffaf2", ring: "#6f7964" },
-        other: { fill: "#5f7896", stroke: "#132a47", text: "#fffaf2", ring: "#5f7896" }
+        root: { fill: "#f1e9d8", stroke: "#132a47", text: "#0f2b4c", ring: "#f1e9d8" },
+        third: { fill: "#eab183", stroke: "#132a47", text: "#0f2b4c", ring: "#eab183" },
+        fifth: { fill: "#e6cb6e", stroke: "#132a47", text: "#0f2b4c", ring: "#e6cb6e" },
+        seventh: { fill: "#eba7b6", stroke: "#132a47", text: "#0f2b4c", ring: "#eba7b6" },
+        extension: { fill: "#b9cfa9", stroke: "#132a47", text: "#0f2b4c", ring: "#b9cfa9" },
+        other: { fill: "#9fb3c8", stroke: "#132a47", text: "#0f2b4c", ring: "#9fb3c8" }
       }
     };
 }
