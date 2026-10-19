@@ -253,6 +253,11 @@ html[data-theme] .v3-home .home-hero.v4-hero {
     text-align: left;
 }
 
+/* A legacy pages.css rule centres the hero at 1180px and below; v4 keeps it left. */
+html[data-theme] .v3-home .home-hero.v4-hero .home-section-inner {
+    text-align: left;
+}
+
 html[data-theme] .v3-home .v4-hero-stage-row {
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
@@ -283,7 +288,7 @@ html[data-theme] .v3-home .home-hero h1.v4-hero-title {
 
 html[data-theme] .v3-home .v4-title-jam {
     color: var(--highlight);
-    font-size: clamp(140px, 18vw, 260px);
+    font-size: clamp(120px, 18vw, 260px);
     line-height: 0.86;
 }
 
@@ -292,7 +297,7 @@ html[data-theme="light"] .v3-home .v4-title-jam {
 }
 
 html[data-theme] .v3-home .v4-title-line {
-    font-size: clamp(84px, 10.8vw, 156px);
+    font-size: clamp(72px, 10.8vw, 156px);
 }
 
 html[data-theme] .v3-home .v4-volume {
@@ -305,6 +310,39 @@ html[data-theme] .v3-home .v4-volume {
 
 html[data-theme]:lang(zh) .v3-home .v4-volume {
     font-style: normal;
+}
+
+/* Entrance: JAM, TRACKS, HUB and the volume line rise in once, in order.
+   Pure CSS, so it starts with the first paint and never flashes. */
+@keyframes v4-title-rise {
+    from {
+        opacity: 0;
+        translate: 0 28px;
+    }
+
+    to {
+        opacity: 1;
+        translate: 0 0;
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html[data-theme] .v3-home .v4-hero-title > span,
+    html[data-theme] .v3-home .v4-hero-title-block > .v4-volume {
+        animation: v4-title-rise 0.62s cubic-bezier(0.2, 0.7, 0.2, 1) 0.15s both;
+    }
+
+    html[data-theme] .v3-home .v4-hero-title > span:nth-child(2) {
+        animation-delay: 0.24s;
+    }
+
+    html[data-theme] .v3-home .v4-hero-title > span:nth-child(3) {
+        animation-delay: 0.33s;
+    }
+
+    html[data-theme] .v3-home .v4-hero-title-block > .v4-volume {
+        animation-delay: 0.42s;
+    }
 }
 
 /* The record sits on a stage: a navy window in a soft tray by day, the open stage at night. */
@@ -398,8 +436,23 @@ html[data-theme] .v3-home .v4-record-stage .v3-sleeve {
     box-shadow: 0 40px 70px -26px rgba(0, 0, 0, 0.75);
 }
 
+html[data-theme] .v3-home .v4-record-stage .v3-sleeve {
+    container-type: inline-size;
+}
+
+/* The sleeve's lettering is centred and scales with the sleeve, so the
+   tagline fits on one line from phones to desktops. */
 html[data-theme] .v3-home .v4-record-stage :is(.v3-sleeve-brand, .v3-sleeve-tagline) {
     font-family: var(--font-sleeve);
+    text-align: center;
+}
+
+html[data-theme] .v3-home .v4-record-stage .v3-sleeve-brand {
+    font-size: clamp(11px, 6cqi, 18px);
+}
+
+html[data-theme] .v3-home .v4-record-stage .v3-sleeve-tagline {
+    font-size: min(15px, 4.1cqi);
 }
 
 /* Tagline, intro, numbers and actions under the yellow rule. */
@@ -839,9 +892,18 @@ html[data-theme] .v3-home .home-subscribe-button {
 }
 
 /* Homepage on tablets and phones */
+/* Tablets keep the title beside a slightly wider record; only the copy row below stacks. */
+@media (min-width: 641px) and (max-width: 980px) {
+    html[data-theme] .v3-home .v4-hero-title-block {
+        grid-column: span 5;
+    }
+
+    html[data-theme] .v3-home .v4-stage-tray {
+        grid-column: span 7;
+    }
+}
+
 @media (max-width: 980px) {
-    html[data-theme] .v3-home .v4-hero-title-block,
-    html[data-theme] .v3-home .v4-stage-tray,
     html[data-theme] .v3-home .v4-hero-intro,
     html[data-theme] .v3-home .home-hero .home-metrics,
     html[data-theme] .v3-home .home-hero .hero-actions {
@@ -869,6 +931,11 @@ html[data-theme] .v3-home .home-subscribe-button {
 
     html[data-theme] .v3-home .home-hero.v4-hero .home-section-inner {
         width: calc(100% - 32px);
+    }
+
+    html[data-theme] .v3-home .v4-hero-title-block,
+    html[data-theme] .v3-home .v4-stage-tray {
+        grid-column: 1 / -1;
     }
 
     html[data-theme] .v3-home .home-tools .home-section-inner,
@@ -900,10 +967,6 @@ html[data-theme] .v3-home .home-subscribe-button {
 
     html[data-theme] .v3-home .v4-volume {
         text-align: left;
-    }
-
-    html[data-theme] .v3-home .v4-record-stage .v3-sleeve-tagline {
-        font-size: 10px;
     }
 
     html[data-theme] .v3-home .v4-title-line + .v4-title-line {

@@ -5,7 +5,7 @@ const test = require("node:test");
 
 const root = path.resolve(__dirname, "..");
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
-const V4 = "styles/v4.css?v=20261019-v4-polish";
+const V4 = "styles/v4.css?v=20261019-hero-entrance";
 const css = read("styles/v4.css");
 const themes = read("styles/themes.css");
 const pages = fs.readdirSync(root).filter(file => file.endsWith(".html") && read(file).includes("themes.css"));
@@ -135,4 +135,18 @@ test("the PNG background toggle turns yellow with navy text on hover", () => {
 test("the retired v3 hero layout rules are gone from pages.css", () => {
   const pages = fs.readFileSync(path.join(root, "styles/pages.css"), "utf8");
   assert.doesNotMatch(pages, /v3-hero-grid|v3-hero-copy|\.v3-home \.home-hero \.(?:signature-slogan|home-eyebrow)/);
+});
+
+test("tablets keep the hero left-aligned, with the title beside a wider record", () => {
+  assert.match(css, /html\[data-theme\] \.v3-home \.home-hero\.v4-hero \.home-section-inner \{\s*text-align: left;/);
+  assert.match(css, /@media \(min-width: 641px\) and \(max-width: 980px\) \{\s*html\[data-theme\] \.v3-home \.v4-hero-title-block \{\s*grid-column: span 5;\s*\}\s*html\[data-theme\] \.v3-home \.v4-stage-tray \{\s*grid-column: span 7;/);
+  assert.match(css, /\.v4-record-stage \.v3-sleeve \{\s*container-type: inline-size;/);
+  assert.match(css, /\.v4-record-stage \.v3-sleeve-tagline \{\s*font-size: min\(15px, 4\.1cqi\);/);
+});
+
+test("the hero title rises in once with CSS, and stays still for reduced motion", () => {
+  assert.match(css, /@keyframes v4-title-rise \{\s*from \{\s*opacity: 0;\s*translate: 0 28px;/);
+  assert.match(css, /@media \(prefers-reduced-motion: no-preference\) \{\s*html\[data-theme\] \.v3-home \.v4-hero-title > span,\s*html\[data-theme\] \.v3-home \.v4-hero-title-block > \.v4-volume \{\s*animation: v4-title-rise 0\.62s cubic-bezier\(0\.2, 0\.7, 0\.2, 1\) 0\.15s both;/);
+  const animations = fs.readFileSync(path.join(root, "scripts/site-animations.js"), "utf8");
+  assert.doesNotMatch(animations, /v4-hero-title/);
 });
