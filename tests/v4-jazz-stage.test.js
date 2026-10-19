@@ -238,3 +238,9 @@ test("open-string labels keep a gap above the nut, on the site and in the image 
 test("dot labels use the real bold, even digits and a cap-trimmed line box so they sit centred", () => {
   assert.match(css, /:is\(\.progression-fret-marker, \.progression-open-tone\) \{\s*font-weight: 700;\s*font-variant-numeric: tabular-nums;\s*line-height: 1;\s*text-align: center;\s*text-box: trim-both cap alphabetic;/);
 });
+
+test("the share preview image is copied into the Cloudflare build and verified there", () => {
+  assert.match(read("tools/scripts/build-cloudflare.js"), /"share_icon\.png",/);
+  assert.match(read("tools/scripts/verify-cloudflare-build.js"), /\["robots\.txt", "sitemap\.xml", "share_icon\.png"\]\.forEach/);
+  assert.ok(fs.statSync(path.join(root, "share_icon.png")).size < 1024 * 1024);
+});

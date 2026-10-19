@@ -117,7 +117,8 @@ if (/src\/entries\/home\.js/.test(migratedHome)) fail("Homepage source entry lea
 });
 if (/assets\/vue\/home-[^"]+\.css/.test(migratedHome)) fail("Homepage shared CSS was incorrectly rebundled");
 
-["robots.txt", "sitemap.xml"].forEach(function(file) {
+// share_icon.png is every page's og:image and twitter:image.
+["robots.txt", "sitemap.xml", "share_icon.png"].forEach(function(file) {
   if (!fs.existsSync(path.join(dist, file))) fail(`${file} is missing from the Cloudflare build`);
 });
 const sitemap = fs.readFileSync(path.join(dist, "sitemap.xml"), "utf8");
