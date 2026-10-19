@@ -1473,6 +1473,11 @@ html[data-theme] .chord-shape-card-heading strong {
     white-space: nowrap;
 }
 
+/* Open-string labels sat right on the nut; leave a small gap above it. */
+html[data-theme] .chord-diagram .diagram-status-row {
+    padding-bottom: 6px;
+}
+
 /* Song Workspace draws its diagrams with the closest strings (29px). */
 html[data-theme] .song-workspace-page .chord-diagram :is(.diagram-finger, .diagram-string-status strong) {
     width: 23px;

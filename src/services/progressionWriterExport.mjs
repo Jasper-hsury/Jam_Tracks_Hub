@@ -102,17 +102,18 @@ function svgDiagram(chordItem, x, y, palette, shapeEngine) {
   voicing.frets.forEach((fret, stringIndex) => {
     const stringX = leftX + stringIndex * stringGap;
     if (fret < 0) {
-      parts.push(svgText(stringX, y + 20, "X", { fill: palette.text, size: 13, weight: 700, anchor: "middle" }));
+      parts.push(svgText(stringX, y + 15, "X", { fill: palette.text, size: 13, weight: 700, anchor: "middle" }));
       return;
     }
     if (fret === 0) {
       const tone = shapeEngine.chordToneForPitch(shapeEngine.TUNING_MIDI[stringIndex], parsed);
-      parts.push(svgText(stringX, y + 12, "O", { fill: palette.muted, size: 11, weight: 700, anchor: "middle" }));
+      parts.push(svgText(stringX, y + 7, "O", { fill: palette.muted, size: 11, weight: 700, anchor: "middle" }));
       if (tone) {
         const tonePalette = palette.tone[tone.family] || palette.tone.other;
-        parts.push(`<rect x="${stringX - 13}" y="${y + 17}" width="26" height="17" rx="8.5" fill="${tonePalette.fill}"/>`);
-        parts.push(`<rect x="${stringX - 13}" y="${y + 17}" width="26" height="17" rx="8.5" fill="url(#dotShade)"/>`);
-        parts.push(svgText(stringX, y + 30, tone.label, { fill: tonePalette.text, size: 10, weight: 700, anchor: "middle" }));
+        // Open-string labels keep a 5px gap above the nut.
+        parts.push(`<rect x="${stringX - 13}" y="${y + 12}" width="26" height="17" rx="8.5" fill="${tonePalette.fill}"/>`);
+        parts.push(`<rect x="${stringX - 13}" y="${y + 12}" width="26" height="17" rx="8.5" fill="url(#dotShade)"/>`);
+        parts.push(svgText(stringX, y + 25, tone.label, { fill: tonePalette.text, size: 10, weight: 700, anchor: "middle" }));
       }
     }
   });

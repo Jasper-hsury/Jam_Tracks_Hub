@@ -227,3 +227,10 @@ test("chord dots are plain circles with a slight shade, on the site and in the i
   assert.match(exporter, /r="13" fill="url\(#dotShade\)"/);
   assert.match(exporter, /createLinearGradient\(/);
 });
+
+test("open-string labels keep a gap above the nut, on the site and in the image download", () => {
+  assert.match(css, /html\[data-theme\] \.chord-diagram \.diagram-status-row \{\s*padding-bottom: 6px;/);
+  const exporter = read("src/services/progressionWriterExport.mjs");
+  assert.match(exporter, /<rect x="\$\{stringX - 13\}" y="\$\{y \+ 12\}" width="26" height="17"/);
+  assert.match(exporter, /const topY = y \+ 34;/);
+});
