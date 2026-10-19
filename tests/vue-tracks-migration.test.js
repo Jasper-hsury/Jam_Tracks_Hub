@@ -212,12 +212,12 @@ test("keeps Vue-owned filters, card links, localization, and rapid-safe Flip lif
   assert.doesNotMatch(view + card, /v-html|innerHTML|data-umami-event|window\.umami|analytics/i);
 });
 
-test("keeps the download fix and non-Tracks runtimes intact at version 4.0.2", () => {
+test("keeps the download fix and non-Tracks runtimes intact at version 4.0.3", () => {
   const packageJson = JSON.parse(read("package.json"));
   const keyFinder = read("key-finder.html");
   const workspace = read("song-workspace.html");
 
-  assert.equal(packageJson.version, "4.0.2");
+  assert.equal(packageJson.version, "4.0.3");
   assert.deepEqual(packageJson.dependencies, { vue: "3.5.42" });
   assert.match(keyFinder, /src\/entries\/key-finder\.js/);
   assert.doesNotMatch(keyFinder, /scripts\/key-finder\.js/);

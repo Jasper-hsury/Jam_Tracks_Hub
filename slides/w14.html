@@ -5,51 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>W14 Soulful Ballad Backing Track in A | Slides</title>
     <link rel="icon" href="../assets/images/icon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Noto+Serif+TC:wght@600&family=Work+Sans:wght@400;600&display=swap">
     <style>
+        /* v4 Jazz Stage: the slides sit on the night stage. */
         html,
         body {
             margin: 0;
             min-height: 100%;
-            background: #121212;
-            color: #f3eee7;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: #081627;
+            color: #f1e9d8;
+            font-family: "Work Sans", "Noto Sans TC", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         }
 
         header {
             position: sticky;
             top: 0;
             z-index: 1;
-            padding: 14px 18px;
-            background: rgba(18, 18, 18, 0.86);
-            border-bottom: 1px solid rgba(196, 164, 132, 0.24);
+            padding: 14px max(18px, calc((100% - 1180px) / 2));
+            background: rgba(8, 22, 39, 0.88);
+            border-bottom: 4px solid #f2b705;
             backdrop-filter: blur(12px);
+        }
+
+        .kicker {
+            margin: 0 0 4px;
+            color: #f2b705;
+            font-size: 13px;
+            font-weight: 600;
         }
 
         h1 {
             margin: 0;
-            font-size: clamp(18px, 3vw, 24px);
-            line-height: 1.25;
+            font-family: "DM Serif Display", "Noto Serif TC", Georgia, serif;
+            font-size: clamp(20px, 3vw, 28px);
+            font-weight: 400;
+            line-height: 1.2;
         }
 
         main {
             display: grid;
             gap: 18px;
             width: min(1180px, calc(100% - 28px));
-            margin: 18px auto 36px;
+            margin: 22px auto 40px;
         }
 
         img {
             display: block;
             width: 100%;
             height: auto;
-            background: #080808;
-            border-radius: 8px;
-            box-shadow: 0 18px 42px rgba(0, 0, 0, 0.34);
+            background: #0f223a;
+            border-radius: 18px;
+            box-shadow: 0 18px 42px rgba(0, 0, 0, 0.45);
         }
     </style>
 </head>
 <body>
     <header>
+        <p class="kicker">Jam Tracks Hub · Slides</p>
         <h1>W14 Soulful Ballad Backing Track in A</h1>
     </header>
     <main aria-label="W14 slide images">

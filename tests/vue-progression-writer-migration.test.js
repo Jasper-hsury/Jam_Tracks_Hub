@@ -247,9 +247,12 @@ test("preserves current-state SVG/PNG export models, geometry, themes, and injec
   const separated = generateProgressionSvg(data, { shapeEngine: Shapes, theme: "light", separateDownload: true });
   assert.match(full, /width="1200"/);
   assert.match(full, /viewBox="0 0 1200 \d+"/);
-  assert.match(full, /fill="#101010"/);
+  assert.match(full, /fill="#081627"/);
+  assert.match(full, /font-family="'DM Serif Display', 'Noto Serif TC', Georgia, serif"/);
+  assert.match(full, />JAM TRACKS HUB<\/text>/);
+  assert.match(full, /Jam Tracks Hub · Progression Writer/);
   assert.match(separated, /width="1400"/);
-  assert.match(separated, /fill="#f7f4ef"/);
+  assert.match(separated, /fill="#ece7de"/);
   assert.match(separated, /Chord Progression/);
   assert.match(separated, /Chord Shapes/);
   assert.match(separated, /Cmaj7/);
@@ -378,11 +381,51 @@ test("updates deterministic Cloudflare ownership without changing version or bac
   assert.match(verifier, /Progression Writer canonical metadata differs/);
   assert.match(verifier, /Progression Writer still loads a legacy page runtime/);
   assert.match(verifier, /compiled Vue Progression Writer mount marker is missing/);
-  assert.equal(packageJson.version, "4.0.2");
+  assert.equal(packageJson.version, "4.0.3");
   assert.deepEqual(packageJson.dependencies, { vue: "3.5.42" });
   ["vue-router", "pinia", "vue-i18n", "@vueuse/core", "vitest", "@vue/test-utils"].forEach(name => {
     assert.equal(packageJson.dependencies?.[name], undefined);
     assert.equal(packageJson.devDependencies?.[name], undefined);
   });
   ["worker.js", "wrangler.jsonc", "functions/api/feedback.js", "functions/api/subscribe.js", "key-finder.html", "song-workspace.html"].forEach(file => assert.ok(fs.existsSync(path.join(root, file)), file));
+});
+
+test("progression images follow the page language, keep English file names and draw with page fonts", async () => {
+  const { collectDownloadProgression } = await domain();
+  const { generateProgressionSvg, progressionExportFilename } = await import(path.join(root, "src/services/progressionWriterExport.mjs"));
+  const zh = JSON.parse(read("locales/zh-TW/common.json"));
+  const messages = zh.pages.progressionWriter;
+  const state = {
+    mode: "single", songName: "深夜藍調", keyRoot: "A", keyQuality: "major", bpm: "",
+    sections: { single: [{ symbol: "Am7", shapeIndex: 0 }, { symbol: "Dm7", shapeIndex: 0 }], verse: [], chorus: [] }
+  };
+  const data = collectDownloadProgression(state, Shapes);
+  data.fileKey = data.key;
+  data.key = `A ${messages.major}`;
+  const svg = generateProgressionSvg(data, {
+    shapeEngine: Shapes,
+    theme: "light",
+    separateDownload: true,
+    imageText: {
+      tool: zh.term.progressionWriter,
+      standardTuning: zh.pages.scaleExplorer.standardTuning,
+      progression: messages.modeTitle,
+      shapes: messages.imageShapes,
+      bpm: messages.imageBpm,
+      bpmNotSet: messages.imageBpmNotSet,
+      fullCards: messages.fullShapeCards,
+      separate: messages.separateShapes,
+      rights: zh.footer.rights
+    }
+  });
+  ["Jam Tracks Hub · 自訂你的和弦進行", "標準調弦：E A D G B E", "未設定 BPM · A 大調 · 和弦進行與指型分開顯示", ">和弦進行<", ">和弦指型<", "保留所有權利"].forEach(text => {
+    assert.ok(svg.includes(text), text);
+  });
+  assert.equal(progressionExportFilename(data), "custom-progression-a-major-progression");
+  const view = read("src/views/ProgressionWriterView.vue");
+  assert.match(view, /data\.fileKey = data\.key;/);
+  assert.match(view, /imageText: \{\s*tool: locale\.value\.term\.progressionWriter,/);
+  const exporter = read("src/services/progressionWriterExport.mjs");
+  assert.match(exporter, /pngBlob = await renderProgressionPng\(svg, options\);[\s\S]*pngBlob = await svgToPngBlob\(svg, options\);/);
+  assert.match(exporter, /fonts\.load\(`400 48px \$\{DISPLAY_FONT\}`, text\)/);
 });

@@ -258,6 +258,22 @@ html[data-theme] .v3-home .home-hero.v4-hero .home-section-inner {
     text-align: left;
 }
 
+/* Clip only sideways: the buttons sit on the hero's bottom edge, and a
+   vertical clip cut them off while they rose in or lifted on hover. Browsers
+   without overflow: clip keep the legacy hidden, which only clips. */
+@supports (overflow: clip) {
+    html[data-theme] .v3-home .home-hero.v4-hero {
+        overflow-x: clip;
+        overflow-y: visible;
+    }
+}
+
+/* Labels and numbers stay left on tablets too (legacy rules centred them). */
+html[data-theme] .v3-home .home-eyebrow,
+html[data-theme] .v3-home .home-hero .home-metrics {
+    text-align: start;
+}
+
 html[data-theme] .v3-home .v4-hero-stage-row {
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
@@ -714,7 +730,10 @@ html[data-theme] .v3-home .home-releases {
     padding: 120px 0 40px;
 }
 
+/* Title on the left, "View all tracks" on the right at every width; a
+   legacy rule stacked them at 1180px and below, which pushed both right. */
 html[data-theme] .v3-home .home-releases .home-section-heading {
+    flex-direction: row;
     align-items: flex-end;
     padding-bottom: 0;
     border-bottom: 0;
@@ -1318,4 +1337,231 @@ html[data-theme] main.v3-tool-page .scale-summary .scale-image-theme button:not(
 html[data-theme] main.v3-tool-page .scale-summary .scale-image-theme button:focus-visible {
     outline: 2px solid #f2b705;
     outline-offset: 2px;
+}
+
+/* Chord tones: one palette for every chord-shape diagram (Chord Dictionary,
+   Chord Progressions, Progression Writer, Song Workspace, the shape picker
+   and the downloaded progression image). Each interval keeps its hue, but by
+   day the dots are deep with light labels and at night they are light with
+   navy labels, so the 9-10px labels reach 4.5:1 and the dots 3:1 against
+   their cards in both themes. */
+html[data-theme="light"] :is(.chord-dictionary-page, .song-workspace-page, .workspace-shape-dialog, .progression-writer-page, .progression-writer-shape-picker-modal) {
+    --diagram-root-fill: #1d6b6b;
+    --diagram-root-text: #fffaf2;
+    --diagram-root-ring: rgba(29, 107, 107, 0.24);
+    --diagram-third-fill: #8a5528;
+    --diagram-third-text: #fffaf2;
+    --diagram-third-ring: rgba(138, 85, 40, 0.24);
+    --diagram-fifth-fill: #7a6118;
+    --diagram-fifth-text: #fffaf2;
+    --diagram-fifth-ring: rgba(122, 97, 24, 0.24);
+    --diagram-seventh-fill: #9a4a5e;
+    --diagram-seventh-text: #fffaf2;
+    --diagram-seventh-ring: rgba(154, 74, 94, 0.24);
+    --diagram-extension-fill: #4f6a48;
+    --diagram-extension-text: #fffaf2;
+    --diagram-extension-ring: rgba(79, 106, 72, 0.24);
+}
+
+html[data-theme="default"] :is(.chord-dictionary-page, .song-workspace-page, .workspace-shape-dialog, .progression-writer-page, .progression-writer-shape-picker-modal) {
+    --diagram-root-fill: #f1e9d8;
+    --diagram-root-text: #0f2b4c;
+    --diagram-root-ring: rgba(241, 233, 216, 0.24);
+    --diagram-third-fill: #eab183;
+    --diagram-third-text: #0f2b4c;
+    --diagram-third-ring: rgba(234, 177, 131, 0.24);
+    --diagram-fifth-fill: #e6cb6e;
+    --diagram-fifth-text: #0f2b4c;
+    --diagram-fifth-ring: rgba(230, 203, 110, 0.24);
+    --diagram-seventh-fill: #eba7b6;
+    --diagram-seventh-text: #0f2b4c;
+    --diagram-seventh-ring: rgba(235, 167, 182, 0.24);
+    --diagram-extension-fill: #b9cfa9;
+    --diagram-extension-text: #0f2b4c;
+    --diagram-extension-ring: rgba(185, 207, 169, 0.24);
+}
+
+html[data-theme="light"] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone)[data-tone-family="root"] {
+    --tone-bg: #1d6b6b;
+    --tone-fg: #fffaf2;
+}
+
+html[data-theme="light"] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone)[data-tone-family="third"] {
+    --tone-bg: #8a5528;
+    --tone-fg: #fffaf2;
+}
+
+html[data-theme="light"] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone)[data-tone-family="fifth"] {
+    --tone-bg: #7a6118;
+    --tone-fg: #fffaf2;
+}
+
+html[data-theme="light"] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone)[data-tone-family="seventh"] {
+    --tone-bg: #9a4a5e;
+    --tone-fg: #fffaf2;
+}
+
+html[data-theme="light"] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone)[data-tone-family="extension"] {
+    --tone-bg: #4f6a48;
+    --tone-fg: #fffaf2;
+}
+
+html[data-theme="default"] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone)[data-tone-family="root"] {
+    --tone-bg: #f1e9d8;
+    --tone-fg: #0f2b4c;
+}
+
+html[data-theme="default"] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone)[data-tone-family="third"] {
+    --tone-bg: #eab183;
+    --tone-fg: #0f2b4c;
+}
+
+html[data-theme="default"] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone)[data-tone-family="fifth"] {
+    --tone-bg: #e6cb6e;
+    --tone-fg: #0f2b4c;
+}
+
+html[data-theme="default"] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone)[data-tone-family="seventh"] {
+    --tone-bg: #eba7b6;
+    --tone-fg: #0f2b4c;
+}
+
+html[data-theme="default"] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone)[data-tone-family="extension"] {
+    --tone-bg: #b9cfa9;
+    --tone-fg: #0f2b4c;
+}
+
+/* Chord diagram dots are fixed circles narrower than one string space. They
+   were content-box pills (25px + padding + border = 37px) on strings 29-37px
+   apart, so neighbouring dots and open-string labels overlapped. */
+html[data-theme] .chord-diagram .diagram-finger {
+    box-sizing: border-box;
+    width: 25px;
+    min-width: 0;
+    height: 25px;
+    padding: 0;
+    font-size: 10px;
+}
+
+html[data-theme] .chord-diagram .diagram-string-status strong {
+    box-sizing: border-box;
+    width: 25px;
+    min-width: 0;
+    height: 17px;
+    padding: 0;
+    font-size: 9px;
+}
+
+/* Chord dots are plain circles with a very slight top-to-bottom shade: no
+   halo ring, outline or drop shadow. */
+html[data-theme] .chord-diagram :is(.diagram-finger, .diagram-finger.is-root, .diagram-finger[data-tone-family]),
+html[data-theme] .chord-diagram .diagram-string-status strong[data-tone-family],
+html[data-theme] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone) {
+    border: 0;
+    box-shadow: none;
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(0, 0, 0, 0.08));
+}
+
+/* Shape card headings keep the fret list on one line ("8 10 8 9 10 10"
+   read as two groups when it broke); the position note moves underneath. */
+html[data-theme] .chord-shape-card-heading {
+    flex-wrap: wrap;
+    row-gap: 4px;
+}
+
+html[data-theme] .chord-shape-card-heading strong {
+    white-space: nowrap;
+}
+
+/* Dot labels sit optically centred: the real 700 weight (800 was synthesised),
+   even-width digits, and a line box trimmed to the cap height and baseline. */
+html[data-theme] .chord-diagram :is(.diagram-finger, .diagram-string-status strong),
+html[data-theme] main.v3-tool-page.chord-progressions-page :is(.progression-fret-marker, .progression-open-tone) {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    text-align: center;
+    text-box: trim-both cap alphabetic;
+}
+
+/* Open-string labels sat right on the nut; leave a small gap above it. */
+html[data-theme] .chord-diagram .diagram-status-row {
+    padding-bottom: 6px;
+}
+
+/* Song Workspace draws its diagrams with the closest strings (29px). */
+html[data-theme] .song-workspace-page .chord-diagram :is(.diagram-finger, .diagram-string-status strong) {
+    width: 23px;
+}
+
+html[data-theme] .song-workspace-page .chord-diagram .diagram-finger {
+    height: 23px;
+}
+
+/* The guitar shape picker (Progression Writer and Song Workspace) uses the
+   same rounded trays and cards as the rest of v4. */
+html[data-theme] .progression-writer-shape-picker-dialog {
+    border-radius: var(--radius-panel);
+}
+
+html[data-theme] .progression-writer-shape-picker-dialog .progression-writer-shape-filter {
+    border-radius: 18px;
+}
+
+html[data-theme] .progression-writer-shape-picker-dialog .progression-writer-shape-picker-card {
+    border-radius: 22px;
+}
+
+/* Song Workspace print and PDF. song-workspace.css is frozen, and its print
+   rules hide every child of <body> except the page, which since the Vue
+   migration also hides the #vue-song-workspace-root wrapper around it. The
+   printed chart uses navy ink on white in both themes and leaves out the
+   editing affordances. */
+@media print {
+    html[data-theme]:has(> body[data-vue-page="song-workspace"]),
+    html[data-theme] body[data-vue-page="song-workspace"] {
+        background: #fff !important;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] > #vue-song-workspace-root {
+        display: block !important;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] #vue-song-workspace-root > :not(.song-workspace-page) {
+        display: none !important;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] :is(.song-workspace-page, .workspace-editor-layout, .workspace-chart-panel, .workspace-line, .workspace-lyric-token, .workspace-title-trigger span, .workspace-section-title-trigger span) {
+        color: #0f2b4c !important;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-chart-panel {
+        background: #fff !important;
+        box-shadow: none !important;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] :is(.workspace-score-kicker-row .result-kicker, .workspace-chord-chip) {
+        color: #1d6b6b !important;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-metadata-view p {
+        color: #4e5d70 !important;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-score-header > span:not(.result-kicker) {
+        color: #0f2b4c !important;
+        background: transparent !important;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-section {
+        border-color: #d6cec0 !important;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] :is(.workspace-title-trigger small, .workspace-section-edit-hint, .workspace-inline-edit-button) {
+        display: none !important;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-empty-line {
+        visibility: hidden !important;
+    }
 }

@@ -23,6 +23,7 @@ const rootFiles = [
   "robots.txt",
   "scale.html",
   "service-waking.html",
+  "share_icon.png",
   "sitemap.xml",
   "song-workspace.html",
   "tracks.html"

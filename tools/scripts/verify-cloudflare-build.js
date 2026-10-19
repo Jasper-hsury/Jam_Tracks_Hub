@@ -107,7 +107,7 @@ if (/src\/entries\/home\.js/.test(migratedHome)) fail("Homepage source entry lea
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261019-v4-polish",
   "styles/themes.css?v=20261018-v4-jazz-stage",
-  "styles/v4.css?v=20261019-hero-entrance",
+  "styles/v4.css?v=20261019-tablet-releases",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
   "assets/vendor/gsap/SplitText.min.js",
@@ -117,7 +117,8 @@ if (/src\/entries\/home\.js/.test(migratedHome)) fail("Homepage source entry lea
 });
 if (/assets\/vue\/home-[^"]+\.css/.test(migratedHome)) fail("Homepage shared CSS was incorrectly rebundled");
 
-["robots.txt", "sitemap.xml"].forEach(function(file) {
+// share_icon.png is every page's og:image and twitter:image.
+["robots.txt", "sitemap.xml", "share_icon.png"].forEach(function(file) {
   if (!fs.existsSync(path.join(dist, file))) fail(`${file} is missing from the Cloudflare build`);
 });
 const sitemap = fs.readFileSync(path.join(dist, "sitemap.xml"), "utf8");
@@ -150,7 +151,7 @@ Array.from(migrated404.matchAll(/(?:href|src)="([^"]+)"/g), match => match[1])
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261019-v4-polish",
   "styles/themes.css?v=20261018-v4-jazz-stage",
-  "styles/v4.css?v=20261019-hero-entrance",
+  "styles/v4.css?v=20261019-tablet-releases",
   "styles/secondary-pages.css?v=20261019-v4-polish",
   "scripts/site-animations.js?v=20261018-v4-jazz-stage"
 ].forEach(function(asset) {
@@ -175,7 +176,7 @@ if (/src\/entries\/legal\.js/.test(migratedLegal)) fail("Legal source entry leak
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261019-v4-polish",
   "styles/themes.css?v=20261018-v4-jazz-stage",
-  "styles/v4.css?v=20261019-hero-entrance",
+  "styles/v4.css?v=20261019-tablet-releases",
   "styles/secondary-pages.css?v=20261019-v4-polish"
 ].forEach(function(asset) {
   if (!migratedLegal.includes(asset)) fail(`Legal legacy asset path differs: ${asset}`);
@@ -199,7 +200,7 @@ if (/src\/entries\/privacy\.js/.test(migratedPrivacy)) fail("Privacy source entr
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261019-v4-polish",
   "styles/themes.css?v=20261018-v4-jazz-stage",
-  "styles/v4.css?v=20261019-hero-entrance",
+  "styles/v4.css?v=20261019-tablet-releases",
   "styles/secondary-pages.css?v=20261019-v4-polish",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
@@ -235,7 +236,7 @@ if (/src\/entries\/service-waking\.js/.test(migratedServiceWaking)) {
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261019-v4-polish",
   "styles/themes.css?v=20261018-v4-jazz-stage",
-  "styles/v4.css?v=20261019-hero-entrance",
+  "styles/v4.css?v=20261019-tablet-releases",
   "styles/secondary-pages.css?v=20261019-v4-polish",
   "scripts/site-config.js?v=20260729-youtube-key-api",
   "assets/vendor/gsap/gsap.min.js",
@@ -271,7 +272,7 @@ if (/src\/entries\/feedback\.js/.test(migratedFeedback)) {
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261019-v4-polish",
   "styles/themes.css?v=20261018-v4-jazz-stage",
-  "styles/v4.css?v=20261019-hero-entrance",
+  "styles/v4.css?v=20261019-tablet-releases",
   "styles/secondary-pages.css?v=20261019-v4-polish",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
@@ -309,7 +310,7 @@ if (/src\/entries\/tracks\.js/.test(migratedTracks)) {
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261019-v4-polish",
   "styles/themes.css?v=20261018-v4-jazz-stage",
-  "styles/v4.css?v=20261019-hero-entrance",
+  "styles/v4.css?v=20261019-tablet-releases",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/Flip.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
@@ -350,7 +351,7 @@ if (/src\/entries\/fretboard-trainer\.js/.test(migratedFretboardTrainer)) {
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261019-v4-polish",
   "styles/themes.css?v=20261018-v4-jazz-stage",
-  "styles/v4.css?v=20261019-hero-entrance",
+  "styles/v4.css?v=20261019-tablet-releases",
   "styles/tool-pages.css?v=20261019-v4-polish",
   "styles/fretboard-trainer.css?v=20261014-v3-liner-notes",
   "assets/vendor/gsap/gsap.min.js",
@@ -392,7 +393,7 @@ if (/src\/entries\/chord-progressions\.js/.test(migratedChordProgressions)) {
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261019-v4-polish",
   "styles/themes.css?v=20261018-v4-jazz-stage",
-  "styles/v4.css?v=20261019-hero-entrance",
+  "styles/v4.css?v=20261019-tablet-releases",
   "styles/tool-pages.css?v=20261019-v4-polish",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
@@ -433,7 +434,7 @@ if (/src\/entries\/scale-explorer\.js/.test(migratedScaleExplorer)) {
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261019-v4-polish",
   "styles/themes.css?v=20261018-v4-jazz-stage",
-  "styles/v4.css?v=20261019-hero-entrance",
+  "styles/v4.css?v=20261019-tablet-releases",
   "styles/tool-pages.css?v=20261019-v4-polish",
   "styles/scale.css?v=20261014-v3-liner-notes",
   "assets/vendor/gsap/gsap.min.js",
@@ -475,7 +476,7 @@ if (/src\/entries\/chord-dictionary\.js/.test(migratedChordDictionary)) {
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261019-v4-polish",
   "styles/themes.css?v=20261018-v4-jazz-stage",
-  "styles/v4.css?v=20261019-hero-entrance",
+  "styles/v4.css?v=20261019-tablet-releases",
   "styles/tool-pages.css?v=20261019-v4-polish",
   "styles/chord-dictionary.css?v=20261014-v3-liner-notes",
   "assets/vendor/gsap/gsap.min.js",
@@ -519,7 +520,7 @@ if (/src\/entries\/progression-writer\.js/.test(migratedProgressionWriter)) {
   "styles/chord-dictionary.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261019-v4-polish",
   "styles/themes.css?v=20261018-v4-jazz-stage",
-  "styles/v4.css?v=20261019-hero-entrance",
+  "styles/v4.css?v=20261019-tablet-releases",
   "styles/tool-pages.css?v=20261019-v4-polish",
   "scripts/chord-shapes.js?v=20260826-workspace-hardening",
   "assets/vendor/gsap/gsap.min.js",
@@ -561,7 +562,7 @@ if (/src\/entries\/key-finder\.js/.test(migratedKeyFinder)) {
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261019-v4-polish",
   "styles/themes.css?v=20261018-v4-jazz-stage",
-  "styles/v4.css?v=20261019-hero-entrance",
+  "styles/v4.css?v=20261019-tablet-releases",
   "styles/tool-pages.css?v=20261019-v4-polish",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
@@ -605,7 +606,7 @@ if (/src\/entries\/song-workspace\.js/.test(migratedSongWorkspace)) {
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261019-v4-polish",
   "styles/themes.css?v=20261018-v4-jazz-stage",
-  "styles/v4.css?v=20261019-hero-entrance",
+  "styles/v4.css?v=20261019-tablet-releases",
   "styles/chord-dictionary.css?v=20261014-v3-liner-notes",
   "styles/song-workspace.css?v=20261014-v3-liner-notes",
   "styles/song-workspace-v3.css?v=20261017-polish",
