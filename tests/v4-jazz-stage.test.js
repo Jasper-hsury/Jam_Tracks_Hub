@@ -156,3 +156,12 @@ test("tablets keep the releases heading on the left and the hero buttons unclipp
   assert.match(css, /html\[data-theme\] \.v3-home \.home-hero\.v4-hero \{\s*overflow-x: clip;\s*overflow-y: visible;/);
   assert.match(css, /html\[data-theme\] \.v3-home \.home-eyebrow,\s*html\[data-theme\] \.v3-home \.home-hero \.home-metrics \{\s*text-align: start;/);
 });
+
+test("Song Workspace prints the chart in day colours, inside the Vue root", () => {
+  const print = css.slice(css.indexOf("/* Song Workspace print and PDF."));
+  assert.match(print, /body\[data-vue-page="song-workspace"\] > #vue-song-workspace-root \{\s*display: block !important;/);
+  assert.match(print, /#vue-song-workspace-root > :not\(\.song-workspace-page\) \{\s*display: none !important;/);
+  assert.match(print, /:is\(\.workspace-score-kicker-row \.result-kicker, \.workspace-chord-chip\) \{\s*color: #1d6b6b !important;/);
+  assert.match(print, /:is\(\.workspace-title-trigger small, \.workspace-section-edit-hint, \.workspace-inline-edit-button\) \{\s*display: none !important;/);
+  assert.match(read("song-workspace.html"), /<body[^>]*data-vue-page="song-workspace"/);
+});

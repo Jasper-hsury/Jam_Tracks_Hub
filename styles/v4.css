@@ -1335,3 +1335,57 @@ html[data-theme] main.v3-tool-page .scale-summary .scale-image-theme button:focu
     outline: 2px solid #f2b705;
     outline-offset: 2px;
 }
+
+/* Song Workspace print and PDF. song-workspace.css is frozen, and its print
+   rules hide every child of <body> except the page, which since the Vue
+   migration also hides the #vue-song-workspace-root wrapper around it. The
+   printed chart uses navy ink on white in both themes and leaves out the
+   editing affordances. */
+@media print {
+    html[data-theme],
+    html[data-theme] body[data-vue-page="song-workspace"] {
+        background: #fff !important;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] > #vue-song-workspace-root {
+        display: block !important;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] #vue-song-workspace-root > :not(.song-workspace-page) {
+        display: none !important;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] :is(.song-workspace-page, .workspace-editor-layout, .workspace-chart-panel, .workspace-line, .workspace-lyric-token, .workspace-title-trigger span, .workspace-section-title-trigger span) {
+        color: #0f2b4c !important;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-chart-panel {
+        background: #fff !important;
+        box-shadow: none !important;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] :is(.workspace-score-kicker-row .result-kicker, .workspace-chord-chip) {
+        color: #1d6b6b !important;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-metadata-view p {
+        color: #4e5d70 !important;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-score-header > span:not(.result-kicker) {
+        color: #0f2b4c !important;
+        background: transparent !important;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-section {
+        border-color: #d6cec0 !important;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] :is(.workspace-title-trigger small, .workspace-section-edit-hint, .workspace-inline-edit-button) {
+        display: none !important;
+    }
+
+    html[data-theme] body[data-vue-page="song-workspace"] .workspace-empty-line {
+        visibility: hidden !important;
+    }
+}
