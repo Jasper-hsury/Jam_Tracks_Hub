@@ -5,7 +5,7 @@ const test = require("node:test");
 
 const root = path.resolve(__dirname, "..");
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
-const V4 = "styles/v4.css?v=20261019-hero-entrance";
+const V4 = "styles/v4.css?v=20261019-tablet-releases";
 const css = read("styles/v4.css");
 const themes = read("styles/themes.css");
 const pages = fs.readdirSync(root).filter(file => file.endsWith(".html") && read(file).includes("themes.css"));
@@ -149,4 +149,10 @@ test("the hero title rises in once with CSS, and stays still for reduced motion"
   assert.match(css, /@media \(prefers-reduced-motion: no-preference\) \{\s*html\[data-theme\] \.v3-home \.v4-hero-title > span,\s*html\[data-theme\] \.v3-home \.v4-hero-title-block > \.v4-volume \{\s*animation: v4-title-rise 0\.62s cubic-bezier\(0\.2, 0\.7, 0\.2, 1\) 0\.15s both;/);
   const animations = fs.readFileSync(path.join(root, "scripts/site-animations.js"), "utf8");
   assert.doesNotMatch(animations, /v4-hero-title/);
+});
+
+test("tablets keep the releases heading on the left and the hero buttons unclipped", () => {
+  assert.match(css, /html\[data-theme\] \.v3-home \.home-releases \.home-section-heading \{\s*flex-direction: row;\s*align-items: flex-end;/);
+  assert.match(css, /html\[data-theme\] \.v3-home \.home-hero\.v4-hero \{\s*overflow-x: clip;\s*overflow-y: visible;/);
+  assert.match(css, /html\[data-theme\] \.v3-home \.home-eyebrow,\s*html\[data-theme\] \.v3-home \.home-hero \.home-metrics \{\s*text-align: start;/);
 });

@@ -258,6 +258,19 @@ html[data-theme] .v3-home .home-hero.v4-hero .home-section-inner {
     text-align: left;
 }
 
+/* Clip only sideways: the buttons sit on the hero's bottom edge, and a
+   vertical clip cut them off while they rose in or lifted on hover. */
+html[data-theme] .v3-home .home-hero.v4-hero {
+    overflow-x: clip;
+    overflow-y: visible;
+}
+
+/* Labels and numbers stay left on tablets too (legacy rules centred them). */
+html[data-theme] .v3-home .home-eyebrow,
+html[data-theme] .v3-home .home-hero .home-metrics {
+    text-align: start;
+}
+
 html[data-theme] .v3-home .v4-hero-stage-row {
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
@@ -714,7 +727,10 @@ html[data-theme] .v3-home .home-releases {
     padding: 120px 0 40px;
 }
 
+/* Title on the left, "View all tracks" on the right at every width; a
+   legacy rule stacked them at 1180px and below, which pushed both right. */
 html[data-theme] .v3-home .home-releases .home-section-heading {
+    flex-direction: row;
     align-items: flex-end;
     padding-bottom: 0;
     border-bottom: 0;
