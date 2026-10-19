@@ -211,3 +211,10 @@ test("chord-tone dots meet contrast in both themes, on every diagram and in the 
     }
   }
 });
+
+test("chord diagram dots are fixed circles narrower than a string space, and fret lists stay on one line", () => {
+  assert.match(css, /html\[data-theme\] \.chord-diagram \.diagram-finger \{\s*box-sizing: border-box;\s*width: 25px;\s*min-width: 0;\s*height: 25px;\s*padding: 0;/);
+  assert.match(css, /html\[data-theme\] \.chord-diagram \.diagram-string-status strong \{\s*box-sizing: border-box;\s*width: 25px;\s*min-width: 0;/);
+  assert.match(css, /html\[data-theme\] \.song-workspace-page \.chord-diagram :is\(\.diagram-finger, \.diagram-string-status strong\) \{\s*width: 23px;/);
+  assert.match(css, /html\[data-theme\] \.chord-shape-card-heading strong \{\s*white-space: nowrap;/);
+});
