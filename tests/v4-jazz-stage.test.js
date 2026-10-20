@@ -5,7 +5,7 @@ const test = require("node:test");
 
 const root = path.resolve(__dirname, "..");
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
-const V4 = "styles/v4.css?v=20261019-tablet-releases";
+const V4 = "styles/v4.css?v=20261021-hero-buttons";
 const css = read("styles/v4.css");
 const themes = read("styles/themes.css");
 const pages = fs.readdirSync(root).filter(file => file.endsWith(".html") && read(file).includes("themes.css"));
@@ -243,4 +243,8 @@ test("the share preview image is copied into the Cloudflare build and verified t
   assert.match(read("tools/scripts/build-cloudflare.js"), /"share_icon\.png",/);
   assert.match(read("tools/scripts/verify-cloudflare-build.js"), /\["robots\.txt", "sitemap\.xml", "share_icon\.png"\]\.forEach/);
   assert.ok(fs.statSync(path.join(root, "share_icon.png")).size < 1024 * 1024);
+});
+
+test("on desktop the two hero buttons share the wider button's width", () => {
+  assert.match(css, /@media \(min-width: 981px\) \{\s*html\[data-theme\] \.v3-home \.home-hero \.hero-actions \{\s*display: grid;\s*justify-self: start;\s*justify-items: stretch;\s*width: max-content;/);
 });
