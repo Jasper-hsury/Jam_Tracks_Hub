@@ -1,7 +1,7 @@
 {
   "baselineSha": "b2752f9320b149ab4349826b2403c19080e11d25",
   "sharedSourceHashes": {
-    "scripts/chord-shapes.js": "00189b548b9d6fe48daab6c3ea68fd2a2a2baf9e39d16d638df1b0e8d19c1c04",
+    "scripts/chord-shapes.js": "298f4e848660115c271bed94a8ec30a8a28989ef73800f7935e9c2571c2ec8da",
     "scripts/progression-writer.js": "7cc1b607b6b82ecebec9b188ac034e25087fcdc444ceb85eec84a6ef1899295d",
     "scripts/song-workspace.js": "cbb2bc6924cd9a038a8efa7cfd20f4b660654041f3916150d79ce624ae49a388",
     "styles/chord-dictionary.css": "0fe2af95a2598cd252e850bbb7035e02a8ca89af671a81234fe7f614f0852653",
@@ -1017,10 +1017,10 @@
       ],
       "displayNotes": [
         "C",
-        "D",
         "E",
         "G",
-        "A#"
+        "Bb",
+        "D"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -1038,10 +1038,10 @@
       ],
       "displayNotes": [
         "C",
-        "D",
         "E",
         "G",
-        "B"
+        "B",
+        "D"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -1059,10 +1059,10 @@
       ],
       "displayNotes": [
         "C",
-        "D",
-        "D#",
+        "Eb",
         "G",
-        "A#"
+        "Bb",
+        "D"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -1081,11 +1081,11 @@
       ],
       "displayNotes": [
         "C",
-        "D",
         "E",
-        "F",
         "G",
-        "A#"
+        "Bb",
+        "D",
+        "F"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -1104,11 +1104,11 @@
       ],
       "displayNotes": [
         "C",
-        "D",
-        "D#",
-        "F",
+        "Eb",
         "G",
-        "A#"
+        "Bb",
+        "D",
+        "F"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -1127,11 +1127,11 @@
       ],
       "displayNotes": [
         "C",
-        "D",
         "E",
         "G",
-        "A",
-        "A#"
+        "Bb",
+        "D",
+        "A"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -1150,11 +1150,11 @@
       ],
       "displayNotes": [
         "C",
-        "D",
         "E",
         "G",
-        "A",
-        "B"
+        "B",
+        "D",
+        "A"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -1173,11 +1173,11 @@
       ],
       "displayNotes": [
         "C",
-        "D",
-        "D#",
+        "Eb",
         "G",
-        "A",
-        "A#"
+        "Bb",
+        "D",
+        "A"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -1666,10 +1666,10 @@
       ],
       "displayNotes": [
         "C#",
-        "Eb",
-        "F",
+        "E#",
         "G#",
-        "B"
+        "B",
+        "D#"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -1687,10 +1687,10 @@
       ],
       "displayNotes": [
         "C#",
-        "Eb",
-        "F",
+        "E#",
         "G#",
-        "C"
+        "B#",
+        "D#"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -1708,10 +1708,10 @@
       ],
       "displayNotes": [
         "C#",
-        "Eb",
         "E",
         "G#",
-        "B"
+        "B",
+        "D#"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -1730,11 +1730,11 @@
       ],
       "displayNotes": [
         "C#",
-        "Eb",
-        "F",
-        "F#",
+        "E#",
         "G#",
-        "B"
+        "B",
+        "D#",
+        "F#"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -1753,11 +1753,11 @@
       ],
       "displayNotes": [
         "C#",
-        "Eb",
         "E",
-        "F#",
         "G#",
-        "B"
+        "B",
+        "D#",
+        "F#"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -1776,11 +1776,11 @@
       ],
       "displayNotes": [
         "C#",
-        "Eb",
-        "F",
+        "E#",
         "G#",
-        "A#",
-        "B"
+        "B",
+        "D#",
+        "A#"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -1799,11 +1799,11 @@
       ],
       "displayNotes": [
         "C#",
-        "Eb",
-        "F",
+        "E#",
         "G#",
-        "A#",
-        "C"
+        "B#",
+        "D#",
+        "A#"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -1822,11 +1822,11 @@
       ],
       "displayNotes": [
         "C#",
-        "Eb",
         "E",
         "G#",
-        "A#",
-        "B"
+        "B",
+        "D#",
+        "A#"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -2315,10 +2315,10 @@
       ],
       "displayNotes": [
         "D",
-        "Fb",
         "F#",
         "A",
-        "C"
+        "C",
+        "E"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -2336,10 +2336,10 @@
       ],
       "displayNotes": [
         "D",
-        "Fb",
         "F#",
         "A",
-        "C#"
+        "C#",
+        "E"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -2357,10 +2357,10 @@
       ],
       "displayNotes": [
         "D",
-        "Fb",
         "F",
         "A",
-        "C"
+        "C",
+        "E"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -2379,11 +2379,11 @@
       ],
       "displayNotes": [
         "D",
-        "Fb",
         "F#",
-        "G",
         "A",
-        "C"
+        "C",
+        "E",
+        "G"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -2402,11 +2402,11 @@
       ],
       "displayNotes": [
         "D",
-        "Fb",
         "F",
-        "G",
         "A",
-        "C"
+        "C",
+        "E",
+        "G"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -2425,11 +2425,11 @@
       ],
       "displayNotes": [
         "D",
-        "Fb",
         "F#",
         "A",
-        "B",
-        "B#"
+        "C",
+        "E",
+        "B"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -2448,11 +2448,11 @@
       ],
       "displayNotes": [
         "D",
-        "Fb",
         "F#",
         "A",
-        "B",
-        "C#"
+        "C#",
+        "E",
+        "B"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -2471,11 +2471,11 @@
       ],
       "displayNotes": [
         "D",
-        "Fb",
         "F",
         "A",
-        "B",
-        "B#"
+        "C",
+        "E",
+        "B"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -2964,10 +2964,10 @@
       ],
       "displayNotes": [
         "Eb",
-        "F",
         "G",
         "Bb",
-        "Db"
+        "Db",
+        "F"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -2985,10 +2985,10 @@
       ],
       "displayNotes": [
         "Eb",
-        "F",
         "G",
         "Bb",
-        "D"
+        "D",
+        "F"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -3006,10 +3006,10 @@
       ],
       "displayNotes": [
         "Eb",
-        "F",
         "Gb",
         "Bb",
-        "Db"
+        "Db",
+        "F"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -3028,11 +3028,11 @@
       ],
       "displayNotes": [
         "Eb",
-        "F",
         "G",
-        "Ab",
         "Bb",
-        "Db"
+        "Db",
+        "F",
+        "Ab"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -3051,11 +3051,11 @@
       ],
       "displayNotes": [
         "Eb",
-        "F",
         "Gb",
-        "Ab",
         "Bb",
-        "Db"
+        "Db",
+        "F",
+        "Ab"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -3074,11 +3074,11 @@
       ],
       "displayNotes": [
         "Eb",
-        "F",
         "G",
         "Bb",
-        "C",
-        "C#"
+        "Db",
+        "F",
+        "C"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -3097,11 +3097,11 @@
       ],
       "displayNotes": [
         "Eb",
-        "F",
         "G",
         "Bb",
-        "C",
-        "D"
+        "D",
+        "F",
+        "C"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -3120,11 +3120,11 @@
       ],
       "displayNotes": [
         "Eb",
-        "F",
         "Gb",
         "Bb",
-        "C",
-        "C#"
+        "Db",
+        "F",
+        "C"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -3613,10 +3613,10 @@
       ],
       "displayNotes": [
         "E",
-        "Gb",
         "G#",
         "B",
-        "D"
+        "D",
+        "F#"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -3634,10 +3634,10 @@
       ],
       "displayNotes": [
         "E",
-        "Gb",
         "G#",
         "B",
-        "D#"
+        "D#",
+        "F#"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -3655,10 +3655,10 @@
       ],
       "displayNotes": [
         "E",
-        "Gb",
         "G",
         "B",
-        "D"
+        "D",
+        "F#"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -3677,11 +3677,11 @@
       ],
       "displayNotes": [
         "E",
-        "Gb",
         "G#",
-        "A",
         "B",
-        "D"
+        "D",
+        "F#",
+        "A"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -3700,11 +3700,11 @@
       ],
       "displayNotes": [
         "E",
-        "Gb",
         "G",
-        "A",
         "B",
-        "D"
+        "D",
+        "F#",
+        "A"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -3723,11 +3723,11 @@
       ],
       "displayNotes": [
         "E",
-        "Gb",
         "G#",
         "B",
-        "C#",
-        "D"
+        "D",
+        "F#",
+        "C#"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -3746,11 +3746,11 @@
       ],
       "displayNotes": [
         "E",
-        "Gb",
         "G#",
         "B",
-        "C#",
-        "D#"
+        "D#",
+        "F#",
+        "C#"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -3769,11 +3769,11 @@
       ],
       "displayNotes": [
         "E",
-        "Gb",
         "G",
         "B",
-        "C#",
-        "D"
+        "D",
+        "F#",
+        "C#"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -4262,10 +4262,10 @@
       ],
       "displayNotes": [
         "F",
-        "G",
         "A",
         "C",
-        "Eb"
+        "Eb",
+        "G"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -4283,10 +4283,10 @@
       ],
       "displayNotes": [
         "F",
-        "G",
         "A",
         "C",
-        "E"
+        "E",
+        "G"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -4304,10 +4304,10 @@
       ],
       "displayNotes": [
         "F",
-        "G",
         "Ab",
         "C",
-        "Eb"
+        "Eb",
+        "G"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -4326,11 +4326,11 @@
       ],
       "displayNotes": [
         "F",
-        "G",
         "A",
-        "Bb",
         "C",
-        "Eb"
+        "Eb",
+        "G",
+        "Bb"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -4349,11 +4349,11 @@
       ],
       "displayNotes": [
         "F",
-        "G",
         "Ab",
-        "Bb",
         "C",
-        "Eb"
+        "Eb",
+        "G",
+        "Bb"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -4372,11 +4372,11 @@
       ],
       "displayNotes": [
         "F",
-        "G",
         "A",
         "C",
-        "D",
-        "D#"
+        "Eb",
+        "G",
+        "D"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -4395,11 +4395,11 @@
       ],
       "displayNotes": [
         "F",
-        "G",
         "A",
         "C",
-        "D",
-        "E"
+        "E",
+        "G",
+        "D"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -4418,11 +4418,11 @@
       ],
       "displayNotes": [
         "F",
-        "G",
         "Ab",
         "C",
-        "D",
-        "D#"
+        "Eb",
+        "G",
+        "D"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -4911,10 +4911,10 @@
       ],
       "displayNotes": [
         "F#",
-        "Ab",
         "A#",
         "C#",
-        "E"
+        "E",
+        "G#"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -4932,10 +4932,10 @@
       ],
       "displayNotes": [
         "F#",
-        "Ab",
         "A#",
         "C#",
-        "F"
+        "E#",
+        "G#"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -4953,10 +4953,10 @@
       ],
       "displayNotes": [
         "F#",
-        "Ab",
         "A",
         "C#",
-        "E"
+        "E",
+        "G#"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -4975,11 +4975,11 @@
       ],
       "displayNotes": [
         "F#",
-        "Ab",
         "A#",
-        "B",
         "C#",
-        "E"
+        "E",
+        "G#",
+        "B"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -4998,11 +4998,11 @@
       ],
       "displayNotes": [
         "F#",
-        "Ab",
         "A",
-        "B",
         "C#",
-        "E"
+        "E",
+        "G#",
+        "B"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -5021,11 +5021,11 @@
       ],
       "displayNotes": [
         "F#",
-        "Ab",
         "A#",
         "C#",
-        "D#",
-        "E"
+        "E",
+        "G#",
+        "D#"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -5044,11 +5044,11 @@
       ],
       "displayNotes": [
         "F#",
-        "Ab",
         "A#",
         "C#",
-        "D#",
-        "F"
+        "E#",
+        "G#",
+        "D#"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -5067,11 +5067,11 @@
       ],
       "displayNotes": [
         "F#",
-        "Ab",
         "A",
         "C#",
-        "D#",
-        "E"
+        "E",
+        "G#",
+        "D#"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -5560,10 +5560,10 @@
       ],
       "displayNotes": [
         "G",
-        "A",
         "B",
         "D",
-        "F"
+        "F",
+        "A"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -5581,10 +5581,10 @@
       ],
       "displayNotes": [
         "G",
-        "A",
         "B",
         "D",
-        "F#"
+        "F#",
+        "A"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -5602,10 +5602,10 @@
       ],
       "displayNotes": [
         "G",
-        "A",
-        "A#",
+        "Bb",
         "D",
-        "F"
+        "F",
+        "A"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -5624,11 +5624,11 @@
       ],
       "displayNotes": [
         "G",
-        "A",
         "B",
-        "C",
         "D",
-        "F"
+        "F",
+        "A",
+        "C"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -5647,11 +5647,11 @@
       ],
       "displayNotes": [
         "G",
-        "A",
-        "A#",
-        "C",
+        "Bb",
         "D",
-        "F"
+        "F",
+        "A",
+        "C"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -5670,11 +5670,11 @@
       ],
       "displayNotes": [
         "G",
-        "A",
         "B",
         "D",
-        "E",
-        "E#"
+        "F",
+        "A",
+        "E"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -5693,11 +5693,11 @@
       ],
       "displayNotes": [
         "G",
-        "A",
         "B",
         "D",
-        "E",
-        "F#"
+        "F#",
+        "A",
+        "E"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -5716,11 +5716,11 @@
       ],
       "displayNotes": [
         "G",
-        "A",
-        "A#",
+        "Bb",
         "D",
-        "E",
-        "E#"
+        "F",
+        "A",
+        "E"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -6209,10 +6209,10 @@
       ],
       "displayNotes": [
         "Ab",
-        "Bb",
         "C",
         "Eb",
-        "Gb"
+        "Gb",
+        "Bb"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -6230,10 +6230,10 @@
       ],
       "displayNotes": [
         "Ab",
-        "Bb",
         "C",
         "Eb",
-        "G"
+        "G",
+        "Bb"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -6251,10 +6251,10 @@
       ],
       "displayNotes": [
         "Ab",
-        "Bb",
-        "B",
+        "Cb",
         "Eb",
-        "Gb"
+        "Gb",
+        "Bb"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -6273,11 +6273,11 @@
       ],
       "displayNotes": [
         "Ab",
-        "Bb",
         "C",
-        "Db",
         "Eb",
-        "Gb"
+        "Gb",
+        "Bb",
+        "Db"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -6296,11 +6296,11 @@
       ],
       "displayNotes": [
         "Ab",
-        "Bb",
-        "B",
-        "Db",
+        "Cb",
         "Eb",
-        "Gb"
+        "Gb",
+        "Bb",
+        "Db"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -6319,11 +6319,11 @@
       ],
       "displayNotes": [
         "Ab",
-        "Bb",
         "C",
         "Eb",
-        "F",
-        "F#"
+        "Gb",
+        "Bb",
+        "F"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -6342,11 +6342,11 @@
       ],
       "displayNotes": [
         "Ab",
-        "Bb",
         "C",
         "Eb",
-        "F",
-        "G"
+        "G",
+        "Bb",
+        "F"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -6365,11 +6365,11 @@
       ],
       "displayNotes": [
         "Ab",
-        "Bb",
-        "B",
+        "Cb",
         "Eb",
-        "F",
-        "F#"
+        "Gb",
+        "Bb",
+        "F"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -6858,10 +6858,10 @@
       ],
       "displayNotes": [
         "A",
-        "Cb",
         "C#",
         "E",
-        "G"
+        "G",
+        "B"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -6879,10 +6879,10 @@
       ],
       "displayNotes": [
         "A",
-        "Cb",
         "C#",
         "E",
-        "G#"
+        "G#",
+        "B"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -6900,10 +6900,10 @@
       ],
       "displayNotes": [
         "A",
-        "Cb",
         "C",
         "E",
-        "G"
+        "G",
+        "B"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -6922,11 +6922,11 @@
       ],
       "displayNotes": [
         "A",
-        "Cb",
         "C#",
-        "D",
         "E",
-        "G"
+        "G",
+        "B",
+        "D"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -6945,11 +6945,11 @@
       ],
       "displayNotes": [
         "A",
-        "Cb",
         "C",
-        "D",
         "E",
-        "G"
+        "G",
+        "B",
+        "D"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -6968,11 +6968,11 @@
       ],
       "displayNotes": [
         "A",
-        "Cb",
         "C#",
         "E",
-        "F#",
-        "G"
+        "G",
+        "B",
+        "F#"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -6991,11 +6991,11 @@
       ],
       "displayNotes": [
         "A",
-        "Cb",
         "C#",
         "E",
-        "F#",
-        "G#"
+        "G#",
+        "B",
+        "F#"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -7014,11 +7014,11 @@
       ],
       "displayNotes": [
         "A",
-        "Cb",
         "C",
         "E",
-        "F#",
-        "G"
+        "G",
+        "B",
+        "F#"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -7507,10 +7507,10 @@
       ],
       "displayNotes": [
         "Bb",
-        "C",
         "D",
         "F",
-        "Ab"
+        "Ab",
+        "C"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -7528,10 +7528,10 @@
       ],
       "displayNotes": [
         "Bb",
-        "C",
         "D",
         "F",
-        "A"
+        "A",
+        "C"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -7549,10 +7549,10 @@
       ],
       "displayNotes": [
         "Bb",
-        "C",
         "Db",
         "F",
-        "Ab"
+        "Ab",
+        "C"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -7571,11 +7571,11 @@
       ],
       "displayNotes": [
         "Bb",
-        "C",
         "D",
-        "Eb",
         "F",
-        "Ab"
+        "Ab",
+        "C",
+        "Eb"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -7594,11 +7594,11 @@
       ],
       "displayNotes": [
         "Bb",
-        "C",
         "Db",
-        "Eb",
         "F",
-        "Ab"
+        "Ab",
+        "C",
+        "Eb"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -7617,11 +7617,11 @@
       ],
       "displayNotes": [
         "Bb",
-        "C",
         "D",
         "F",
-        "G",
-        "G#"
+        "Ab",
+        "C",
+        "G"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -7640,11 +7640,11 @@
       ],
       "displayNotes": [
         "Bb",
-        "C",
         "D",
         "F",
-        "G",
-        "A"
+        "A",
+        "C",
+        "G"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -7663,11 +7663,11 @@
       ],
       "displayNotes": [
         "Bb",
-        "C",
         "Db",
         "F",
-        "G",
-        "G#"
+        "Ab",
+        "C",
+        "G"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -8156,10 +8156,10 @@
       ],
       "displayNotes": [
         "B",
-        "Db",
         "D#",
         "F#",
-        "A"
+        "A",
+        "C#"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -8177,10 +8177,10 @@
       ],
       "displayNotes": [
         "B",
-        "Db",
         "D#",
         "F#",
-        "A#"
+        "A#",
+        "C#"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -8198,10 +8198,10 @@
       ],
       "displayNotes": [
         "B",
-        "Db",
         "D",
         "F#",
-        "A"
+        "A",
+        "C#"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -8220,11 +8220,11 @@
       ],
       "displayNotes": [
         "B",
-        "Db",
         "D#",
-        "E",
         "F#",
-        "A"
+        "A",
+        "C#",
+        "E"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -8243,11 +8243,11 @@
       ],
       "displayNotes": [
         "B",
-        "Db",
         "D",
-        "E",
         "F#",
-        "A"
+        "A",
+        "C#",
+        "E"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -8266,11 +8266,11 @@
       ],
       "displayNotes": [
         "B",
-        "Db",
         "D#",
         "F#",
-        "G#",
-        "A"
+        "A",
+        "C#",
+        "G#"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -8289,11 +8289,11 @@
       ],
       "displayNotes": [
         "B",
-        "Db",
         "D#",
         "F#",
-        "G#",
-        "A#"
+        "A#",
+        "C#",
+        "G#"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },
@@ -8312,11 +8312,11 @@
       ],
       "displayNotes": [
         "B",
-        "Db",
         "D",
         "F#",
-        "G#",
-        "A"
+        "A",
+        "C#",
+        "G#"
       ],
       "bassSemantics": "root identity required; displayed chord has no slash bass"
     },

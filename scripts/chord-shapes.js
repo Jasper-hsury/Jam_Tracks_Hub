@@ -152,6 +152,23 @@
         return "extension";
     }
 
+    // Formulas list chord tones in stacked order (1 3 5 b7 9) while intervals are
+    // sorted by pitch (0 2 4 7 10), so tones are matched by semitone, not index.
+    const DEGREE_SEMITONES = { 1: 0, 2: 2, 3: 4, 4: 5, 5: 7, 6: 9, 7: 11, 9: 2, 11: 5, 13: 9 };
+
+    function degreeSemitones(formula) {
+        const match = String(formula || "").match(/^(bb|b|#)?(\d+)$/);
+        if (!match || DEGREE_SEMITONES[match[2]] === undefined) return null;
+        const shift = match[1] === "bb" ? -2 : match[1] === "b" ? -1 : match[1] === "#" ? 1 : 0;
+        return (DEGREE_SEMITONES[match[2]] + shift + 12) % 12;
+    }
+
+    function formulaIndexForInterval(chord, interval) {
+        const semitone = ((interval % 12) + 12) % 12;
+        const index = chord.formula.findIndex(function(formula) { return degreeSemitones(formula) === semitone; });
+        return index === -1 ? chord.intervals.indexOf(interval) : index;
+    }
+
     function spellChordTone(pitch, formula, index, parsed) {
         const names = noteNames(parsed.rootPitch);
         if (index === 0) return parsed.rootName;
@@ -174,12 +191,14 @@
             return (parsed.rootPitch + interval) % 12 === pitchClass;
         });
         if (index === -1) return null;
+        const formulaIndex = formulaIndexForInterval(parsed.chord, parsed.chord.intervals[index]);
+        const formula = parsed.chord.formula[formulaIndex];
         return {
-            label: intervalLabel(parsed.chord.formula[index]),
-            note: spellChordTone(pitchClass, parsed.chord.formula[index], index, parsed),
+            label: intervalLabel(formula),
+            note: spellChordTone(pitchClass, formula, index, parsed),
             isRoot: index === 0,
-            family: toneFamily(parsed.chord.formula[index]),
-            order: index
+            family: toneFamily(formula),
+            order: formulaIndex
         };
     }
 

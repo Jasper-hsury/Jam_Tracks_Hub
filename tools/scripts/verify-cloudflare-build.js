@@ -522,7 +522,7 @@ if (/src\/entries\/progression-writer\.js/.test(migratedProgressionWriter)) {
   "styles/themes.css?v=20261018-v4-jazz-stage",
   "styles/v4.css?v=20261019-tablet-releases",
   "styles/tool-pages.css?v=20261019-v4-polish",
-  "scripts/chord-shapes.js?v=20260826-workspace-hardening",
+  "scripts/chord-shapes.js?v=20261020-extension-labels",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
   "scripts/site-animations.js?v=20261018-v4-jazz-stage"
@@ -610,7 +610,7 @@ if (/src\/entries\/song-workspace\.js/.test(migratedSongWorkspace)) {
   "styles/chord-dictionary.css?v=20261014-v3-liner-notes",
   "styles/song-workspace.css?v=20261014-v3-liner-notes",
   "styles/song-workspace-v3.css?v=20261017-polish",
-  "scripts/chord-shapes.js?v=20260827-picker-json-fix",
+  "scripts/chord-shapes.js?v=20261020-extension-labels",
   "scripts/song-workspace-core.js?v=20260827-picker-json-fix",
   "scripts/song-workspace-storage.js?v=20260828-settings-ux",
   "scripts/song-workspace-import.js?v=20260827-picker-json-fix",

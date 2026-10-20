@@ -33,8 +33,8 @@ const legacyHtmlAssets = [
   "assets/vendor/gsap/ScrollTrigger.min.js",
   "assets/vendor/gsap/SplitText.min.js",
   "scripts/site-animations.js?v=20261018-v4-jazz-stage",
-  "scripts/chord-shapes.js?v=20260826-workspace-hardening",
-  "scripts/chord-shapes.js?v=20260827-picker-json-fix",
+  "scripts/chord-shapes.js?v=20261020-extension-labels",
+  "scripts/chord-shapes.js?v=20261020-extension-labels",
   "scripts/song-workspace-core.js?v=20260827-picker-json-fix",
   "scripts/song-workspace-storage.js?v=20260828-settings-ux",
   "scripts/song-workspace-import.js?v=20260827-picker-json-fix"
