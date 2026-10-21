@@ -355,7 +355,7 @@ test("preserves SEO, page-level Umami, CSP, URL privacy, and no custom progressi
 
 test("keeps every shared music/backend consumer byte-identical", () => {
   const expectedHashes = {
-    "scripts/chord-shapes.js": "00189b548b9d6fe48daab6c3ea68fd2a2a2baf9e39d16d638df1b0e8d19c1c04",
+    "scripts/chord-shapes.js": "298f4e848660115c271bed94a8ec30a8a28989ef73800f7935e9c2571c2ec8da",
     "styles/chord-dictionary.css": "0fe2af95a2598cd252e850bbb7035e02a8ca89af671a81234fe7f614f0852653",
     "styles/pages.css": "34269430e49516aae97dc0c96ff73e72caa1d3ad54d6f7efd5e13803bc288c1d",
     "styles/themes.css": "677c23f5d5356e15e506d077e693005f365bb81754338b5e143c8d1caf1b9e3a",
@@ -381,7 +381,7 @@ test("updates deterministic Cloudflare ownership without changing version or bac
   assert.match(verifier, /Progression Writer canonical metadata differs/);
   assert.match(verifier, /Progression Writer still loads a legacy page runtime/);
   assert.match(verifier, /compiled Vue Progression Writer mount marker is missing/);
-  assert.equal(packageJson.version, "4.0.3");
+  assert.equal(packageJson.version, "4.0.4");
   assert.deepEqual(packageJson.dependencies, { vue: "3.5.42" });
   ["vue-router", "pinia", "vue-i18n", "@vueuse/core", "vitest", "@vue/test-utils"].forEach(name => {
     assert.equal(packageJson.dependencies?.[name], undefined);

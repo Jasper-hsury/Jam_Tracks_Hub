@@ -588,6 +588,20 @@ html[data-theme] .v3-home .hero-actions .secondary-button {
     background: var(--glass-strong);
 }
 
+/* Desktop stacks the two hero buttons; both take the wider button's width. */
+@media (min-width: 981px) {
+    html[data-theme] .v3-home .home-hero .hero-actions {
+        display: grid;
+        justify-self: start;
+        justify-items: stretch;
+        width: max-content;
+    }
+
+    html[data-theme] .v3-home .hero-actions .secondary-button {
+        justify-content: center;
+    }
+}
+
 html[data-theme] .v3-home .hero-actions .primary-button:hover,
 html[data-theme] .v3-home .hero-actions .secondary-button:hover {
     transform: translateY(-2px);
