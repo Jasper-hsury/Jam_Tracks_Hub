@@ -183,7 +183,7 @@ The screenshot shows the creation/start screen, not an active editor or Performa
 - [Development Log](https://github.com/Jasper-hsury/Jam_Tracks_Hub_Development_Log): public development history, release notes, and product evolution in the separate log repository.
 - [GitHub Workflow](docs/GITHUB_WORKFLOW.md): contribution and review process.
 
-The latest published release is `v4.0.3`, the v4 downloads, chord diagram and tablet polish. `package.json` declares `4.0.4` for the corrected 9th, 11th and 13th chord labels; its tag and Release are published when they ship.
+The latest published release is `v4.0.4`, the corrected extended chord labels and even hero buttons. `package.json` declares `4.0.5` for the form field fixes; its tag and Release are published when they ship.
 
 ## Local Development
 
