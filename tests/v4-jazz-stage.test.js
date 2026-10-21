@@ -5,7 +5,7 @@ const test = require("node:test");
 
 const root = path.resolve(__dirname, "..");
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
-const V4 = "styles/v4.css?v=20261021-hero-buttons";
+const V4 = "styles/v4.css?v=20261021-writer-fields";
 const css = read("styles/v4.css");
 const themes = read("styles/themes.css");
 const pages = fs.readdirSync(root).filter(file => file.endsWith(".html") && read(file).includes("themes.css"));
@@ -247,4 +247,12 @@ test("the share preview image is copied into the Cloudflare build and verified t
 
 test("on desktop the two hero buttons share the wider button's width", () => {
   assert.match(css, /@media \(min-width: 981px\) \{\s*html\[data-theme\] \.v3-home \.home-hero \.hero-actions \{\s*display: grid;\s*justify-self: start;\s*justify-items: stretch;\s*width: max-content;/);
+});
+
+test("Progression Writer song information uses labelled rounded fields that never squeeze on tablets", () => {
+  assert.match(css, /\.progression-writer-meta-field \{\s*display: flex;\s*flex-direction: column-reverse;/);
+  assert.match(css, /\.progression-writer-meta-input:focus ~ \.progression-writer-meta-label \{\s*position: static;/);
+  assert.match(css, /\.progression-writer-meta-input:focus \{\s*min-height: 52px;\s*padding: 10px 14px;[\s\S]*?border: 1px solid var\(--line\);\s*border-radius: 14px;/);
+  assert.match(css, /#progressionBpm::-webkit-inner-spin-button/);
+  assert.match(css, /@media \(min-width: 769px\) and \(max-width: 1180px\) \{\s*html\[data-theme\] main\.v3-tool-page \.progression-writer-meta \{\s*grid-template-columns: minmax\(0, 1fr\) minmax\(120px, 170px\);/);
 });
