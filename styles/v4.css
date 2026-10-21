@@ -1665,3 +1665,29 @@ html[data-theme] main.v3-tool-page .progression-writer-meta {
         grid-column: 1 / -1;
     }
 }
+
+/* Song Workspace selects kept the native look, which Safari draws with its
+   own corners and height (a 24px, 5px-corner menu beside 48px fields). They
+   now share the rounded field and chevron used on Progression Writer. */
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-field select {
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 40px;
+    background-image:
+        linear-gradient(45deg, transparent 50%, currentColor 50%),
+        linear-gradient(135deg, currentColor 50%, transparent 50%);
+    background-position:
+        calc(100% - 21px) 54%,
+        calc(100% - 16px) 54%;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+}
+
+/* On narrow phones the subscribe field and button stack, so the email
+   address has the full width instead of 116px (a v3 two-column grid rule
+   outranked the phone layout). */
+@media (max-width: 480px) {
+    html[data-theme] .v3-home .about-connect .home-subscribe-form {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

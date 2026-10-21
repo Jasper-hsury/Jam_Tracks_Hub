@@ -5,7 +5,7 @@ const test = require("node:test");
 
 const root = path.resolve(__dirname, "..");
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
-const V4 = "styles/v4.css?v=20261021-writer-fields";
+const V4 = "styles/v4.css?v=20261021-fields";
 const css = read("styles/v4.css");
 const themes = read("styles/themes.css");
 const pages = fs.readdirSync(root).filter(file => file.endsWith(".html") && read(file).includes("themes.css"));
@@ -255,4 +255,9 @@ test("Progression Writer song information uses labelled rounded fields that neve
   assert.match(css, /\.progression-writer-meta-input:focus \{\s*min-height: 52px;\s*padding: 10px 14px;[\s\S]*?border: 1px solid var\(--line\);\s*border-radius: 14px;/);
   assert.match(css, /#progressionBpm::-webkit-inner-spin-button/);
   assert.match(css, /@media \(min-width: 769px\) and \(max-width: 1180px\) \{\s*html\[data-theme\] main\.v3-tool-page \.progression-writer-meta \{\s*grid-template-columns: minmax\(0, 1fr\) minmax\(120px, 170px\);/);
+});
+
+test("Song Workspace selects drop the native look, and the subscribe form stacks on narrow phones", () => {
+  assert.match(css, /body\[data-vue-page="song-workspace"\] \.workspace-field select \{\s*appearance: none;\s*-webkit-appearance: none;\s*padding-right: 40px;/);
+  assert.match(css, /@media \(max-width: 480px\) \{\s*html\[data-theme\] \.v3-home \.about-connect \.home-subscribe-form \{\s*grid-template-columns: minmax\(0, 1fr\);/);
 });
