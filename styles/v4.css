@@ -1579,3 +1579,115 @@ html[data-theme] .progression-writer-shape-picker-dialog .progression-writer-sha
         visibility: hidden !important;
     }
 }
+
+/* Progression Writer song information: the floating-label underline fields
+   (label inside the field until it had a value, an underline with rounded
+   ends) become the same rounded boxes as the chord fields below, with the
+   label always above in the chord label style. */
+html[data-theme] main.v3-tool-page .progression-writer-meta-field {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 0;
+}
+
+html[data-theme] main.v3-tool-page .progression-writer-meta-field .progression-writer-meta-label,
+html[data-theme] main.v3-tool-page .progression-writer-meta-input:placeholder-shown ~ .progression-writer-meta-label,
+html[data-theme] main.v3-tool-page .progression-writer-meta-input:focus ~ .progression-writer-meta-label {
+    position: static;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: default;
+}
+
+html[data-theme] main.v3-tool-page .progression-writer-meta-input,
+html[data-theme] main.v3-tool-page .progression-writer-meta-input:focus {
+    min-height: 52px;
+    padding: 10px 14px;
+    color: var(--ink);
+    background-color: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+html[data-theme] main.v3-tool-page .progression-writer-meta-select {
+    padding-right: 40px;
+    background-position:
+        calc(100% - 21px) 54%,
+        calc(100% - 16px) 54%;
+}
+
+/* The Major / Minor switch matches the 52px fields beside it. */
+html[data-theme] main.v3-tool-page .progression-writer-meta .progression-key-mode-control {
+    align-self: end;
+    min-height: 52px;
+}
+
+html[data-theme] main.v3-tool-page .progression-writer-meta .progression-key-mode-control button {
+    min-height: 50px;
+}
+
+html[data-theme] main.v3-tool-page .progression-writer-meta-input:is(:hover, :focus) {
+    border-color: var(--ink);
+}
+
+/* BPM takes numbers without the browser's spin arrows. */
+html[data-theme] main.v3-tool-page #progressionBpm {
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+html[data-theme] main.v3-tool-page #progressionBpm::-webkit-inner-spin-button,
+html[data-theme] main.v3-tool-page #progressionBpm::-webkit-outer-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+}
+
+/* The song information row keeps its fields bottom-aligned. On tablets the
+   three-column grid squeezed Song Name to a few letters (56px at 820px), so
+   the name takes its own row above the key and BPM. */
+html[data-theme] main.v3-tool-page .progression-writer-meta {
+    align-items: end;
+}
+
+@media (min-width: 769px) and (max-width: 1180px) {
+    html[data-theme] main.v3-tool-page .progression-writer-meta {
+        grid-template-columns: minmax(0, 1fr) minmax(120px, 170px);
+    }
+
+    html[data-theme] main.v3-tool-page .progression-writer-meta > .progression-writer-meta-field:first-child {
+        grid-column: 1 / -1;
+    }
+}
+
+/* Song Workspace selects kept the native look, which Safari draws with its
+   own corners and height (a 24px, 5px-corner menu beside 48px fields). They
+   now share the rounded field and chevron used on Progression Writer. */
+html[data-theme] body[data-vue-page="song-workspace"] .workspace-field select {
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 40px;
+    background-image:
+        linear-gradient(45deg, transparent 50%, currentColor 50%),
+        linear-gradient(135deg, currentColor 50%, transparent 50%);
+    background-position:
+        calc(100% - 21px) 54%,
+        calc(100% - 16px) 54%;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+}
+
+/* On narrow phones the subscribe field and button stack, so the email
+   address has the full width instead of 116px (a v3 two-column grid rule
+   outranked the phone layout). */
+@media (max-width: 480px) {
+    html[data-theme] .v3-home .about-connect .home-subscribe-form {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
