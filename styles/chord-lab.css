@@ -13,7 +13,7 @@ html[data-theme] main.chord-lab-page {
 html[data-theme] main.chord-lab-page .chord-lab-dictionary-hint {
     margin: 4px 0 0;
     color: var(--text-muted);
-    font-size: 16px;
+    font-size: 15px;
     line-height: 1.6;
 }
 
@@ -54,27 +54,28 @@ html[data-theme] main.chord-lab-page .chord-lab-field {
     min-width: 0;
 }
 
-html[data-theme] main.chord-lab-page .chord-lab-field span,
+/* Same label size as the Chord Dictionary search field. */
+html[data-theme] main.chord-lab-page .chord-lab-field span {
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 600;
+}
+
 html[data-theme] main.chord-lab-page .chord-lab-input-panel .dictionary-kicker {
     margin: 0;
-    color: var(--text-muted);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
 }
 
 html[data-theme] main.chord-lab-page .chord-lab-field input {
     box-sizing: border-box;
     width: 100%;
-    height: 64px;
-    padding: 0 20px;
+    height: 52px;
+    padding: 0 18px;
     color: var(--ink);
     background: var(--paper);
     border: 1.5px solid color-mix(in srgb, var(--ink) 30%, transparent);
     border-radius: var(--radius-control);
     font-family: var(--font-serif);
-    font-size: 30px;
+    font-size: 22px;
 }
 
 html[data-theme] main.chord-lab-page .chord-lab-field input:focus-visible {
@@ -88,14 +89,14 @@ html[data-theme] main.chord-lab-page .chord-lab-field input[aria-invalid="true"]
 
 html[data-theme] main.chord-lab-page .chord-lab-submit {
     flex: 1 0 160px;
-    height: 64px;
-    padding: 0 28px;
+    height: 52px;
+    padding: 0 26px;
     color: var(--paper);
     background: var(--ink);
     border: 0;
     border-radius: 999px;
     font-family: var(--font-sans);
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 700;
     cursor: pointer;
     transition: background-color 0.18s ease, color 0.18s ease;
@@ -118,7 +119,7 @@ html[data-theme]:not([data-theme="light"]) main.chord-lab-page .chord-lab-submit
 html[data-theme] main.chord-lab-page :is(.chord-lab-hint, .chord-lab-error) {
     margin: -6px 0 0;
     color: var(--text-muted);
-    font-size: 14px;
+    font-size: 13px;
     line-height: 1.6;
 }
 
@@ -165,7 +166,7 @@ html[data-theme] main.chord-lab-page .chord-lab-example-group button {
     border: 1.5px solid var(--line);
     border-radius: 999px;
     font-family: var(--font-serif);
-    font-size: 17px;
+    font-size: 16px;
     cursor: pointer;
 }
 
@@ -207,7 +208,7 @@ html[data-theme] main.chord-lab-page .chord-lab-result-heading h2 {
     margin: 0;
     color: var(--ink);
     font-family: var(--font-serif);
-    font-size: clamp(44px, 6vw, 72px);
+    font-size: clamp(56px, 6vw, 88px);
     font-weight: 400;
     line-height: 1;
     overflow-wrap: anywhere;
@@ -317,7 +318,7 @@ html[data-theme] main.chord-lab-page .chord-lab-filters .dictionary-position-fil
     min-height: 40px;
     padding: 0 15px;
     border-radius: 999px;
-    font-size: 14px;
+    font-size: 13px;
     font-variant-numeric: tabular-nums;
 }
 
@@ -327,7 +328,7 @@ html[data-theme] main.chord-lab-page .chord-lab-outline-button {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    min-height: 44px;
+    min-height: 46px;
     padding: 0 20px;
     color: var(--ink);
     background: transparent;
@@ -395,17 +396,19 @@ html[data-theme] main.chord-lab-page .chord-lab-list-heading {
     margin-top: 8px;
 }
 
+/* Section headings: 30px like every tool page (24px on phones). */
 html[data-theme] main.chord-lab-page .chord-lab-list-heading h2 {
     margin: 0;
+    color: var(--ink);
     font-family: var(--font-serif);
-    font-size: 32px;
-    font-weight: 400;
+    font-size: 30px;
+    line-height: 1.12;
 }
 
 html[data-theme] main.chord-lab-page .chord-lab-list-heading p {
     margin: 0;
     color: var(--text-muted);
-    font-size: 14px;
+    font-size: 13px;
 }
 
 /* Shape cards */
@@ -454,16 +457,16 @@ html[data-theme] main.chord-lab-page .chord-lab-card-heading h3 {
     margin: 0;
     color: var(--ink);
     font-family: var(--font-serif);
-    font-size: 22px;
-    font-weight: 400;
+    font-size: 20px;
     line-height: 1.1;
     overflow-wrap: anywhere;
 }
 
+/* Card text follows the Chord Dictionary shape cards (12-14px). */
 html[data-theme] main.chord-lab-page .chord-lab-card-heading strong {
     padding-top: 2px;
     color: var(--ink);
-    font-size: 13px;
+    font-size: 12px;
     white-space: nowrap;
 }
 
@@ -501,9 +504,9 @@ html[data-theme] main.chord-lab-page .chord-lab-shape-card .chord-diagram {
 html[data-theme] main.chord-lab-page .chord-lab-frets {
     margin: 0;
     color: var(--ink);
-    font-size: 17px;
+    font-size: 14px;
     font-weight: 700;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.04em;
     text-align: center;
     font-variant-numeric: tabular-nums;
 }
@@ -511,14 +514,14 @@ html[data-theme] main.chord-lab-page .chord-lab-frets {
 html[data-theme] main.chord-lab-page .chord-lab-tones {
     margin: -6px 0 0;
     color: var(--text-muted);
-    font-size: 14px;
+    font-size: 12px;
     text-align: center;
 }
 
 html[data-theme] main.chord-lab-page .chord-lab-card-note {
     margin: 0;
     color: var(--text-muted);
-    font-size: 13px;
+    font-size: 12px;
     line-height: 1.5;
     text-align: center;
 }
@@ -535,7 +538,7 @@ html[data-theme] main.chord-lab-page .chord-lab-card-footer {
 
 html[data-theme] main.chord-lab-page .chord-lab-card-footer > span {
     color: var(--text-muted);
-    font-size: 13px;
+    font-size: 12px;
 }
 
 html[data-theme] main.chord-lab-page .chord-lab-play-button {
@@ -586,10 +589,7 @@ html[data-theme] main.chord-lab-page .chord-lab-list-actions:empty {
 }
 
 html[data-theme] main.chord-lab-page .chord-lab-outline-button {
-    min-height: 52px;
-    padding: 0 28px;
-    font-size: 16px;
-    font-weight: 700;
+    padding: 0 26px;
 }
 
 html[data-theme] main.chord-lab-page .chord-lab-empty {
@@ -625,14 +625,14 @@ html[data-theme] main.chord-lab-page .chord-lab-simplify-toggle > span {
 
 html[data-theme] main.chord-lab-page .chord-lab-simplify-toggle strong {
     font-family: var(--font-serif);
-    font-size: clamp(22px, 3vw, 28px);
+    font-size: 26px;
     font-weight: 400;
-    line-height: 1.25;
+    line-height: 1.2;
 }
 
 html[data-theme] main.chord-lab-page .chord-lab-simplify-toggle small {
     color: var(--text-muted);
-    font-size: 15px;
+    font-size: 13px;
     line-height: 1.5;
 }
 
@@ -678,18 +678,19 @@ html[data-theme] main.chord-lab-page .chord-lab-tier > header {
     gap: 12px;
 }
 
+/* Tier titles match the Chord Dictionary's 26px sub-headings. */
 html[data-theme] main.chord-lab-page .chord-lab-tier h3 {
     margin: 0;
+    color: var(--ink);
     font-family: var(--font-serif);
-    font-size: 23px;
-    font-weight: 400;
-    line-height: 1.2;
+    font-size: 26px;
+    line-height: 1.15;
 }
 
 html[data-theme] main.chord-lab-page .chord-lab-tier header p {
     margin: 4px 0 0;
     color: var(--text-muted);
-    font-size: 14px;
+    font-size: 13px;
     line-height: 1.5;
 }
 
@@ -742,7 +743,7 @@ html[data-theme] main.chord-lab-page .chord-lab-legend {
     padding-top: 20px;
     color: var(--text-muted);
     border-top: 1px solid var(--line);
-    font-size: 14px;
+    font-size: 13px;
 }
 
 html[data-theme] main.chord-lab-page .chord-lab-legend > span {
@@ -755,6 +756,16 @@ html[data-theme] main.chord-lab-page .chord-lab-legend .chord-lab-tone-dot {
     width: 24px;
     height: 24px;
     font-size: 10px;
+}
+
+@media (max-width: 760px) {
+    html[data-theme] main.chord-lab-page .chord-lab-list-heading h2 {
+        font-size: 24px;
+    }
+
+    html[data-theme] main.chord-lab-page .chord-lab-simplify-toggle strong {
+        font-size: 22px;
+    }
 }
 
 @media (max-width: 640px) {
