@@ -6,7 +6,7 @@ const dist = path.join(root, "dist");
 const maxWorkerAssetBytes = 24 * 1024 * 1024;
 const renderAssetBaseUrl = "https://api.jamtrackshub.com";
 const copiedDirectories = ["assets", "data", "downloads", "locales", "scripts", "slides", "styles"];
-const viteOwnedRootHtml = new Set(["index.html", "404.html", "legal.html", "privacy-policy.html", "service-waking.html", "feedback.html", "tracks.html", "fretboard-trainer.html", "chord-progressions.html", "scale.html", "chord-dictionary.html", "progression-writer.html", "key-finder.html", "song-workspace.html"]);
+const viteOwnedRootHtml = new Set(["index.html", "404.html", "legal.html", "privacy-policy.html", "service-waking.html", "feedback.html", "tracks.html", "fretboard-trainer.html", "chord-progressions.html", "scale.html", "chord-dictionary.html", "chord-lab.html", "progression-writer.html", "key-finder.html", "song-workspace.html"]);
 const removedLegacyResources = [
   "scripts/home.js",
   "scripts/tracks.js",
@@ -107,7 +107,7 @@ if (/src\/entries\/home\.js/.test(migratedHome)) fail("Homepage source entry lea
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261019-v4-polish",
   "styles/themes.css?v=20261018-v4-jazz-stage",
-  "styles/v4.css?v=20261021-fields",
+  "styles/v4.css?v=20261122-chord-lab",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
   "assets/vendor/gsap/SplitText.min.js",
@@ -151,7 +151,7 @@ Array.from(migrated404.matchAll(/(?:href|src)="([^"]+)"/g), match => match[1])
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261019-v4-polish",
   "styles/themes.css?v=20261018-v4-jazz-stage",
-  "styles/v4.css?v=20261021-fields",
+  "styles/v4.css?v=20261122-chord-lab",
   "styles/secondary-pages.css?v=20261019-v4-polish",
   "scripts/site-animations.js?v=20261018-v4-jazz-stage"
 ].forEach(function(asset) {
@@ -176,7 +176,7 @@ if (/src\/entries\/legal\.js/.test(migratedLegal)) fail("Legal source entry leak
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261019-v4-polish",
   "styles/themes.css?v=20261018-v4-jazz-stage",
-  "styles/v4.css?v=20261021-fields",
+  "styles/v4.css?v=20261122-chord-lab",
   "styles/secondary-pages.css?v=20261019-v4-polish"
 ].forEach(function(asset) {
   if (!migratedLegal.includes(asset)) fail(`Legal legacy asset path differs: ${asset}`);
@@ -200,7 +200,7 @@ if (/src\/entries\/privacy\.js/.test(migratedPrivacy)) fail("Privacy source entr
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261019-v4-polish",
   "styles/themes.css?v=20261018-v4-jazz-stage",
-  "styles/v4.css?v=20261021-fields",
+  "styles/v4.css?v=20261122-chord-lab",
   "styles/secondary-pages.css?v=20261019-v4-polish",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
@@ -236,7 +236,7 @@ if (/src\/entries\/service-waking\.js/.test(migratedServiceWaking)) {
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261019-v4-polish",
   "styles/themes.css?v=20261018-v4-jazz-stage",
-  "styles/v4.css?v=20261021-fields",
+  "styles/v4.css?v=20261122-chord-lab",
   "styles/secondary-pages.css?v=20261019-v4-polish",
   "scripts/site-config.js?v=20260729-youtube-key-api",
   "assets/vendor/gsap/gsap.min.js",
@@ -272,7 +272,7 @@ if (/src\/entries\/feedback\.js/.test(migratedFeedback)) {
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261019-v4-polish",
   "styles/themes.css?v=20261018-v4-jazz-stage",
-  "styles/v4.css?v=20261021-fields",
+  "styles/v4.css?v=20261122-chord-lab",
   "styles/secondary-pages.css?v=20261019-v4-polish",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
@@ -310,7 +310,7 @@ if (/src\/entries\/tracks\.js/.test(migratedTracks)) {
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261019-v4-polish",
   "styles/themes.css?v=20261018-v4-jazz-stage",
-  "styles/v4.css?v=20261021-fields",
+  "styles/v4.css?v=20261122-chord-lab",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/Flip.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
@@ -351,7 +351,7 @@ if (/src\/entries\/fretboard-trainer\.js/.test(migratedFretboardTrainer)) {
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261019-v4-polish",
   "styles/themes.css?v=20261018-v4-jazz-stage",
-  "styles/v4.css?v=20261021-fields",
+  "styles/v4.css?v=20261122-chord-lab",
   "styles/tool-pages.css?v=20261019-v4-polish",
   "styles/fretboard-trainer.css?v=20261014-v3-liner-notes",
   "assets/vendor/gsap/gsap.min.js",
@@ -393,7 +393,7 @@ if (/src\/entries\/chord-progressions\.js/.test(migratedChordProgressions)) {
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261019-v4-polish",
   "styles/themes.css?v=20261018-v4-jazz-stage",
-  "styles/v4.css?v=20261021-fields",
+  "styles/v4.css?v=20261122-chord-lab",
   "styles/tool-pages.css?v=20261019-v4-polish",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
@@ -434,7 +434,7 @@ if (/src\/entries\/scale-explorer\.js/.test(migratedScaleExplorer)) {
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261019-v4-polish",
   "styles/themes.css?v=20261018-v4-jazz-stage",
-  "styles/v4.css?v=20261021-fields",
+  "styles/v4.css?v=20261122-chord-lab",
   "styles/tool-pages.css?v=20261019-v4-polish",
   "styles/scale.css?v=20261014-v3-liner-notes",
   "assets/vendor/gsap/gsap.min.js",
@@ -476,7 +476,7 @@ if (/src\/entries\/chord-dictionary\.js/.test(migratedChordDictionary)) {
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261019-v4-polish",
   "styles/themes.css?v=20261018-v4-jazz-stage",
-  "styles/v4.css?v=20261021-fields",
+  "styles/v4.css?v=20261122-chord-lab",
   "styles/tool-pages.css?v=20261019-v4-polish",
   "styles/chord-dictionary.css?v=20261014-v3-liner-notes",
   "assets/vendor/gsap/gsap.min.js",
@@ -492,6 +492,30 @@ if (/assets\/vue\/chord-dictionary-[^"]+\.css/.test(migratedChordDictionary)) {
 if (/scripts\/(?:site|i18n|chord-dictionary)\.js/.test(migratedChordDictionary)) {
   fail("Chord Dictionary still loads a legacy page runtime");
 }
+
+const chordLabHtml = fs.readFileSync(path.join(dist, "chord-lab.html"), "utf8");
+if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/chord-lab">/.test(chordLabHtml)) {
+  fail("Chord Lab canonical metadata differs");
+}
+if (!/<div id="vue-chord-lab-root"><\/div>/.test(chordLabHtml)) {
+  fail("Chord Lab Vue mount target is missing");
+}
+if (!/<script type="module" crossorigin src="\/assets\/vue\/chord-lab-[^"]+\.js"><\/script>/.test(chordLabHtml)) {
+  fail("Chord Lab compiled Vue entry is missing");
+}
+if (/src\/entries\/chord-lab\.js/.test(chordLabHtml)) {
+  fail("Chord Lab source entry leaked into production HTML");
+}
+[
+  "styles/v4.css?v=20261122-chord-lab",
+  "styles/tool-pages.css?v=20261019-v4-polish",
+  "styles/chord-dictionary.css?v=20261014-v3-liner-notes",
+  "styles/chord-lab.css?v=20261122-chord-lab",
+  "scripts/site-animations.js?v=20261018-v4-jazz-stage"
+].forEach(function(asset) {
+  if (!chordLabHtml.includes(asset)) fail(`Chord Lab legacy asset path differs: ${asset}`);
+});
+if (!fs.existsSync(path.join(dist, "styles/chord-lab.css"))) fail("Chord Lab stylesheet is missing from dist");
 
 const migratedProgressionWriter = fs.readFileSync(path.join(dist, "progression-writer.html"), "utf8");
 if (!/<link rel="canonical" href="https:\/\/jamtrackshub\.com\/progression-writer">/.test(migratedProgressionWriter)) {
@@ -520,7 +544,7 @@ if (/src\/entries\/progression-writer\.js/.test(migratedProgressionWriter)) {
   "styles/chord-dictionary.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261019-v4-polish",
   "styles/themes.css?v=20261018-v4-jazz-stage",
-  "styles/v4.css?v=20261021-fields",
+  "styles/v4.css?v=20261122-chord-lab",
   "styles/tool-pages.css?v=20261019-v4-polish",
   "scripts/chord-shapes.js?v=20261020-extension-labels",
   "assets/vendor/gsap/gsap.min.js",
@@ -562,7 +586,7 @@ if (/src\/entries\/key-finder\.js/.test(migratedKeyFinder)) {
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261019-v4-polish",
   "styles/themes.css?v=20261018-v4-jazz-stage",
-  "styles/v4.css?v=20261021-fields",
+  "styles/v4.css?v=20261122-chord-lab",
   "styles/tool-pages.css?v=20261019-v4-polish",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
@@ -606,7 +630,7 @@ if (/src\/entries\/song-workspace\.js/.test(migratedSongWorkspace)) {
   "styles/components.css?v=20261014-v3-liner-notes",
   "styles/pages.css?v=20261019-v4-polish",
   "styles/themes.css?v=20261018-v4-jazz-stage",
-  "styles/v4.css?v=20261021-fields",
+  "styles/v4.css?v=20261122-chord-lab",
   "styles/chord-dictionary.css?v=20261014-v3-liner-notes",
   "styles/song-workspace.css?v=20261014-v3-liner-notes",
   "styles/song-workspace-v3.css?v=20261017-polish",
@@ -798,6 +822,12 @@ if (!fs.readFileSync(migratedChordDictionaryBundle, "utf8").includes("vue-chord-
   fail("compiled Vue Chord Dictionary mount marker is missing");
 }
 
+const chordLabBundle = vueJavaScript.find(filePath => path.basename(filePath).startsWith("chord-lab-"));
+if (!chordLabBundle) fail("missing compiled Vue Chord Lab entry");
+if (!fs.readFileSync(chordLabBundle, "utf8").includes("vue-chord-lab-root")) {
+  fail("compiled Vue Chord Lab mount marker is missing");
+}
+
 const migratedProgressionWriterBundle = vueJavaScript.find(filePath => path.basename(filePath).startsWith("progression-writer-"));
 if (!migratedProgressionWriterBundle) fail("missing compiled Vue Progression Writer entry");
 if (!fs.readFileSync(migratedProgressionWriterBundle, "utf8").includes("vue-progression-writer-root")) {
@@ -871,6 +901,9 @@ rootHtml.forEach(function(relativePath) {
   }
   if (relativePath !== "chord-dictionary.html" && /assets\/vue\/chord-dictionary-|src\/entries\/chord-dictionary\.js/i.test(html)) {
     fail(`unmigrated production HTML references the Vue Chord Dictionary entry: ${relativePath}`);
+  }
+  if (relativePath !== "chord-lab.html" && /assets\/vue\/chord-lab-|src\/entries\/chord-lab\.js/i.test(html)) {
+    fail(`unmigrated production HTML references the Vue Chord Lab entry: ${relativePath}`);
   }
   if (relativePath !== "progression-writer.html" && /assets\/vue\/progression-writer-|src\/entries\/progression-writer\.js/i.test(html)) {
     fail(`unmigrated production HTML references the Vue Progression Writer entry: ${relativePath}`);

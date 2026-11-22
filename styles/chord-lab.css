@@ -1,0 +1,780 @@
+/* ====================
+   Chord Lab (v4 Jazz Stage)
+   The page reuses the Chord Dictionary card, diagram and filter styles
+   (main also carries .chord-dictionary-page); this file adds its own layout.
+   ==================== */
+
+html[data-theme] main.chord-lab-page {
+    display: grid;
+    gap: 28px;
+    max-width: 1240px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-dictionary-hint {
+    margin: 4px 0 0;
+    color: var(--text-muted);
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-dictionary-hint a {
+    color: var(--accent);
+    font-weight: 600;
+    text-underline-offset: 3px;
+}
+
+/* Input tray */
+html[data-theme] main.chord-lab-page .chord-lab-input-panel {
+    display: grid;
+    gap: 16px;
+    padding: clamp(20px, 3vw, 32px);
+    background: var(--surface);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-card);
+    box-shadow: 0 30px 60px -44px var(--shadow-color);
+}
+
+html[data-theme="light"] main.chord-lab-page .chord-lab-input-panel {
+    box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.9) inset,
+        0 30px 60px -44px var(--shadow-color);
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-field {
+    display: grid;
+    flex: 999 1 280px;
+    gap: 8px;
+    min-width: 0;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-field span,
+html[data-theme] main.chord-lab-page .chord-lab-input-panel .dictionary-kicker {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-field input {
+    box-sizing: border-box;
+    width: 100%;
+    height: 64px;
+    padding: 0 20px;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1.5px solid color-mix(in srgb, var(--ink) 30%, transparent);
+    border-radius: var(--radius-control);
+    font-family: var(--font-serif);
+    font-size: 30px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-field input:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-field input[aria-invalid="true"] {
+    border-color: var(--danger);
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-submit {
+    flex: 1 0 160px;
+    height: 64px;
+    padding: 0 28px;
+    color: var(--paper);
+    background: var(--ink);
+    border: 0;
+    border-radius: 999px;
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.18s ease, color 0.18s ease;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-submit:hover {
+    color: var(--on-highlight);
+    background: var(--highlight);
+}
+
+html[data-theme]:not([data-theme="light"]) main.chord-lab-page .chord-lab-submit {
+    color: var(--on-highlight);
+    background: var(--highlight);
+}
+
+html[data-theme]:not([data-theme="light"]) main.chord-lab-page .chord-lab-submit:hover {
+    background: var(--accent-hover);
+}
+
+html[data-theme] main.chord-lab-page :is(.chord-lab-hint, .chord-lab-error) {
+    margin: -6px 0 0;
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-error {
+    color: var(--danger);
+    font-weight: 600;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-examples {
+    display: grid;
+    gap: 12px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-example-groups {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 12px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-example-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 4px 4px 14px;
+    background: color-mix(in srgb, var(--ink) 4%, transparent);
+    border: 1px solid var(--line);
+    border-radius: 26px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-example-group > span {
+    margin-right: 4px;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-example-group button {
+    min-height: 40px;
+    padding: 0 14px;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    font-family: var(--font-serif);
+    font-size: 17px;
+    cursor: pointer;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-example-group button:hover {
+    border-color: var(--ink);
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-example-group button.is-selected {
+    color: var(--paper);
+    background: var(--ink);
+    border-color: var(--ink);
+}
+
+html[data-theme]:not([data-theme="light"]) main.chord-lab-page .chord-lab-example-group button.is-selected {
+    color: var(--on-highlight);
+    background: var(--highlight);
+    border-color: var(--highlight);
+}
+
+/* Result heading and tone pills */
+html[data-theme] main.chord-lab-page .chord-lab-result {
+    display: grid;
+    gap: 10px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-result-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px 40px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-result-heading .dictionary-kicker {
+    margin: 0 0 8px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-result-heading h2 {
+    margin: 0;
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: clamp(44px, 6vw, 72px);
+    font-weight: 400;
+    line-height: 1;
+    overflow-wrap: anywhere;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-result-heading h2:focus {
+    outline: none;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-tones-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-tones-list li {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 48px;
+    padding: 0 16px 0 8px;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-tones-list li.is-optional {
+    border-style: dashed;
+    border-color: color-mix(in srgb, var(--ink) 38%, transparent);
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-tones-list strong {
+    font-size: 16px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-tones-list small {
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-tone-dot {
+    display: inline-grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 32px;
+    height: 32px;
+    color: var(--diagram-tone-text);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(0, 0, 0, 0.08)), var(--diagram-tone-fill);
+    border-radius: 50%;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-tone-dot[data-tone-family="root"] { color: var(--diagram-root-text); background-color: var(--diagram-root-fill); }
+html[data-theme] main.chord-lab-page .chord-lab-tone-dot[data-tone-family="third"] { color: var(--diagram-third-text); background-color: var(--diagram-third-fill); }
+html[data-theme] main.chord-lab-page .chord-lab-tone-dot[data-tone-family="fifth"] { color: var(--diagram-fifth-text); background-color: var(--diagram-fifth-fill); }
+html[data-theme] main.chord-lab-page .chord-lab-tone-dot[data-tone-family="seventh"] { color: var(--diagram-seventh-text); background-color: var(--diagram-seventh-fill); }
+html[data-theme] main.chord-lab-page .chord-lab-tone-dot[data-tone-family="extension"] { color: var(--diagram-extension-text); background-color: var(--diagram-extension-fill); }
+
+html[data-theme] main.chord-lab-page .chord-lab-result-note {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+/* Filters, rootless note and list heading */
+html[data-theme] main.chord-lab-page .chord-lab-shapes {
+    display: grid;
+    gap: 16px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 24px;
+    padding: 16px 20px;
+    background: var(--surface);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-filters .dictionary-position-filter {
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: 0;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-filters .dictionary-position-filter > span {
+    color: var(--text-muted);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-filters .dictionary-position-filter button {
+    min-height: 40px;
+    padding: 0 15px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-download,
+html[data-theme] main.chord-lab-page .chord-lab-outline-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 20px;
+    color: var(--ink);
+    background: transparent;
+    border: 1.5px solid var(--ink);
+    border-radius: 999px;
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-download {
+    margin-left: auto;
+}
+
+html[data-theme] main.chord-lab-page :is(.chord-lab-download, .chord-lab-outline-button):hover:not(:disabled) {
+    color: var(--on-highlight);
+    background: var(--highlight);
+    border-color: var(--highlight);
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-download:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-status:empty {
+    display: none;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-status {
+    margin: -4px 0 0;
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-rootless-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 18px;
+    color: var(--ink);
+    background: color-mix(in srgb, var(--highlight) 18%, var(--paper));
+    border-radius: 18px;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-rootless-note svg {
+    flex: 0 0 auto;
+    margin-top: 2px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-rootless-note p {
+    margin: 0;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-list-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6px 20px;
+    margin-top: 8px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-list-heading h2 {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: 32px;
+    font-weight: 400;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-list-heading p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+/* Shape cards */
+html[data-theme] main.chord-lab-page .chord-lab-shape-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 214px), 1fr));
+    gap: 16px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-shape-card {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 18px;
+    background: var(--surface);
+    border-radius: 24px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-shape-card.is-highlighted {
+    border: 2px solid var(--accent);
+    padding: 17px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-card-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-card-heading > div {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-rank {
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-card-heading h3 {
+    margin: 0;
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.1;
+    overflow-wrap: anywhere;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-card-heading strong {
+    padding-top: 2px;
+    color: var(--ink);
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-tag,
+html[data-theme] main.chord-lab-page .chord-lab-change {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    min-height: 26px;
+    margin: 0;
+    padding: 2px 10px;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    border-radius: 13px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+html[data-theme] main.chord-lab-page :is(.chord-lab-tag.is-rootless, .chord-lab-change.is-color-change) {
+    color: var(--ink);
+    background: color-mix(in srgb, var(--highlight) 30%, transparent);
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-shape-card .chord-diagram {
+    max-width: 196px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-frets {
+    margin: 0;
+    color: var(--ink);
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-tones {
+    margin: -6px 0 0;
+    color: var(--text-muted);
+    font-size: 14px;
+    text-align: center;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-card-note {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.5;
+    text-align: center;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-card-footer > span {
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-play-button {
+    display: inline-grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    color: var(--paper);
+    background: var(--ink);
+    border: 0;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.18s ease, color 0.18s ease;
+}
+
+html[data-theme]:not([data-theme="light"]) main.chord-lab-page .chord-lab-play-button {
+    color: var(--on-highlight);
+    background: var(--highlight);
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-play-button:hover,
+html[data-theme] main.chord-lab-page .chord-lab-play-button.is-playing {
+    color: var(--on-highlight);
+    background: var(--highlight);
+}
+
+html[data-theme]:not([data-theme="light"]) main.chord-lab-page .chord-lab-play-button:hover,
+html[data-theme]:not([data-theme="light"]) main.chord-lab-page .chord-lab-play-button.is-playing {
+    background: var(--accent-hover);
+}
+
+html[data-theme] main.chord-lab-page :is(.chord-lab-play-button, .chord-lab-download, .chord-lab-outline-button, .chord-lab-simplify-toggle):focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-list-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-list-actions:empty {
+    display: none;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-outline-button {
+    min-height: 52px;
+    padding: 0 28px;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-empty {
+    margin: 0;
+}
+
+/* Simplify panel */
+html[data-theme] main.chord-lab-page .chord-lab-simplify {
+    display: grid;
+    gap: 18px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-simplify-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    padding: 22px 26px;
+    color: var(--ink);
+    background: transparent;
+    border: 1.5px dashed var(--accent);
+    border-radius: 24px;
+    font-family: var(--font-sans);
+    text-align: left;
+    cursor: pointer;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-simplify-toggle > span {
+    display: grid;
+    gap: 6px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-simplify-toggle strong {
+    font-family: var(--font-serif);
+    font-size: clamp(22px, 3vw, 28px);
+    font-weight: 400;
+    line-height: 1.25;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-simplify-toggle small {
+    color: var(--text-muted);
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-simplify-toggle i {
+    display: inline-grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 44px;
+    height: 44px;
+    background: var(--surface);
+    border-radius: 50%;
+    transition: transform 0.2s ease;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-simplify-toggle[aria-expanded="true"] i {
+    transform: rotate(180deg);
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-simplify-toggle:hover {
+    border-style: solid;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-tiers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+    gap: 16px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-tier {
+    display: grid;
+    align-content: start;
+    gap: 14px;
+    min-width: 0;
+    padding: 20px;
+    background: color-mix(in srgb, var(--surface) 70%, var(--paper));
+    border: 1px solid var(--glass-border);
+    border-radius: 28px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-tier > header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-tier h3 {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: 23px;
+    font-weight: 400;
+    line-height: 1.2;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-tier header p {
+    margin: 4px 0 0;
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-tier-number {
+    display: inline-grid;
+    place-items: center;
+    flex: 0 0 auto;
+    box-sizing: border-box;
+    width: 36px;
+    height: 36px;
+    color: var(--on-accent);
+    background: var(--accent);
+    border-radius: 50%;
+    font-family: var(--font-display);
+    font-size: 18px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-tier[data-tier="2"] .chord-lab-tier-number {
+    color: var(--ink);
+    background: transparent;
+    border: 1.5px solid var(--ink);
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-tier[data-tier="3"] .chord-lab-tier-number {
+    color: var(--on-highlight);
+    background: var(--highlight);
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-tier-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+    gap: 12px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-shape-card.is-compact {
+    padding: 14px;
+    border-radius: 20px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-shape-card.is-compact .chord-diagram {
+    max-width: 176px;
+}
+
+/* Legend */
+html[data-theme] main.chord-lab-page .chord-lab-legend {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 22px;
+    padding-top: 20px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--line);
+    font-size: 14px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-legend > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+html[data-theme] main.chord-lab-page .chord-lab-legend .chord-lab-tone-dot {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
+}
+
+@media (max-width: 640px) {
+    html[data-theme] main.chord-lab-page {
+        gap: 22px;
+    }
+
+    html[data-theme] main.chord-lab-page .chord-lab-filters {
+        padding: 14px 16px;
+    }
+
+    html[data-theme] main.chord-lab-page .chord-lab-download {
+        margin-left: 0;
+    }
+
+    html[data-theme] main.chord-lab-page .chord-lab-simplify-toggle {
+        padding: 18px 18px 18px 20px;
+    }
+
+    html[data-theme] main.chord-lab-page .chord-lab-tier {
+        padding: 16px;
+    }
+}

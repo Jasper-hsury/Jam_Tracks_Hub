@@ -11,6 +11,7 @@ const rootFiles = [
   "_headers",
   "404.html",
   "chord-dictionary.html",
+  "chord-lab.html",
   "chord-progressions.html",
   "feedback.html",
   "fretboard-trainer.html",

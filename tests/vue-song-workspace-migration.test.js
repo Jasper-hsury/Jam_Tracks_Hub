@@ -25,7 +25,7 @@ test("mounts Song Workspace as the fourteenth Vue-owned Vite MPA page", () => {
   assert.match(entry, /activePage: "song-workspace"/);
   assert.match(entry, /view: SongWorkspaceView/);
   assert.match(config, /"song-workspace": resolve\(root, "song-workspace\.html"\)/);
-  assert.equal((config.match(/resolve\(root, "[^"]+\.html"\)/g) || []).length, 14);
+  assert.equal((config.match(/resolve\(root, "[^"]+\.html"\)/g) || []).length, 15);
 });
 
 test("uses one Vue view and one composable lifecycle with no parallel legacy controller", () => {

@@ -12,6 +12,7 @@ const TOOL_PAGES = [
   { name: "Home", patterns: [/^\/$/, /^\/index\.html$/] },
   { name: "Tracks", patterns: [/^\/tracks(?:\.html)?$/] },
   { name: "Chord Dictionary", patterns: [/^\/chord-dictionary(?:\.html)?$/] },
+  { name: "Chord Lab", patterns: [/^\/chord-lab(?:\.html)?$/] },
   { name: "Scale Explorer", patterns: [/^\/scale(?:\.html)?$/] },
   { name: "Key Finder", patterns: [/^\/key-finder(?:\.html)?$/] },
   { name: "Chord Progressions", patterns: [/^\/chord-progressions(?:\.html)?$/] },

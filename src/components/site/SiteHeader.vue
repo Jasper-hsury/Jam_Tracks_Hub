@@ -21,12 +21,14 @@ const navItems = [
   { href: "/chord-progressions.html", page: "chord-progressions", key: "nav.chordProgressions", fallback: "Chord Progressions" },
   { href: "/song-workspace.html", page: "song-workspace", key: "nav.songWorkspace", fallback: "Song Workspace" },
   { href: "/fretboard-trainer.html", page: "fretboard-trainer", key: "nav.fretboardTrainer", fallback: "Fretboard Trainer" },
+  { href: "/chord-lab.html", page: "chord-lab", key: "nav.chordLab", fallback: "Chord Lab" },
   { href: "/index.html#about", page: "about", key: "nav.about", fallback: "About" }
 ];
 const compactToolItems = navItems.filter(item => [
   "key-finder",
   "song-workspace",
-  "fretboard-trainer"
+  "fretboard-trainer",
+  "chord-lab"
 ].includes(item.page));
 
 const navbar = ref(null);

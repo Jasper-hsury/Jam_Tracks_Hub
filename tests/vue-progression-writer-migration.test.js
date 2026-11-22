@@ -310,7 +310,7 @@ test("mounts Progression Writer as the twelfth Vue-owned Vite MPA page and remov
   assert.match(html, /scripts\/chord-shapes\.js/);
   assert.match(entry, /activePage: "chord-progressions"/);
   assert.equal(fs.existsSync(path.join(root, "scripts/progression-writer.js")), false);
-  assert.equal((config.match(/resolve\(root, "[^\"]+\.html"\)/g) || []).length, 14);
+  assert.equal((config.match(/resolve\(root, "[^\"]+\.html"\)/g) || []).length, 15);
 });
 
 test("uses native Vue DOM ownership while preserving shell, i18n, theme, responsive, and accessibility contracts", () => {
