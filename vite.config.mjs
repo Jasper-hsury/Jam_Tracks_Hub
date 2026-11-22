@@ -4,7 +4,7 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 
 const root = fileURLToPath(new URL(".", import.meta.url));
-const viteOwnedHtml = new Set(["/", "/index.html", "/404.html", "/legal.html", "/privacy-policy.html", "/service-waking.html", "/feedback.html", "/tracks", "/tracks.html", "/fretboard-trainer", "/fretboard-trainer.html", "/chord-progressions", "/chord-progressions.html", "/scale", "/scale.html", "/chord-dictionary", "/chord-dictionary.html", "/progression-writer", "/progression-writer.html", "/key-finder", "/key-finder.html", "/song-workspace", "/song-workspace.html"]);
+const viteOwnedHtml = new Set(["/", "/index.html", "/404.html", "/legal.html", "/privacy-policy.html", "/service-waking.html", "/feedback.html", "/tracks", "/tracks.html", "/fretboard-trainer", "/fretboard-trainer.html", "/chord-progressions", "/chord-progressions.html", "/scale", "/scale.html", "/chord-dictionary", "/chord-dictionary.html", "/chord-lab", "/chord-lab.html", "/progression-writer", "/progression-writer.html", "/key-finder", "/key-finder.html", "/song-workspace", "/song-workspace.html"]);
 const legacyHtmlAssets = [
   "assets/images/icon.png",
   "scripts/theme-init.js?v=20261014-v3-paper-default",
@@ -18,11 +18,12 @@ const legacyHtmlAssets = [
   "styles/pages.css?v=20261019-v4-polish",
   "styles/pages.css?v=20261019-v4-polish",
   "styles/themes.css?v=20261018-v4-jazz-stage",
-  "styles/v4.css?v=20261021-fields",
+  "styles/v4.css?v=20261122-chord-lab",
   "styles/fretboard-trainer.css?v=20261014-v3-liner-notes",
   "styles/scale.css?v=20261014-v3-liner-notes",
   "styles/chord-dictionary.css?v=20261014-v3-liner-notes",
   "styles/chord-dictionary.css?v=20261014-v3-liner-notes",
+  "styles/chord-lab.css?v=20261122-chord-lab",
   "styles/song-workspace.css?v=20261014-v3-liner-notes",
   "styles/song-workspace-v3.css?v=20261017-polish",
   "styles/tool-pages.css?v=20261019-v4-polish",
@@ -104,6 +105,7 @@ export default defineConfig({
         "chord-progressions": resolve(root, "chord-progressions.html"),
         "scale-explorer": resolve(root, "scale.html"),
         "chord-dictionary": resolve(root, "chord-dictionary.html"),
+        "chord-lab": resolve(root, "chord-lab.html"),
         "progression-writer": resolve(root, "progression-writer.html"),
         "key-finder": resolve(root, "key-finder.html"),
         "song-workspace": resolve(root, "song-workspace.html"),

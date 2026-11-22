@@ -554,3 +554,17 @@ export async function exportProgressionImage(data, {
     return { format: "svg", blob: svgBlob, filename: `${filename}.svg`, svg };
   }
 }
+
+// Shared with the Chord Lab image so both downloads use one v4 look.
+export {
+  BRAND_FONT,
+  DISPLAY_FONT,
+  HIGHLIGHT,
+  paletteForTheme,
+  STAGE_MUTED,
+  STAGE_TEXT,
+  svgGlow,
+  svgRoundedRect,
+  svgText,
+  TEXT_FONT
+};

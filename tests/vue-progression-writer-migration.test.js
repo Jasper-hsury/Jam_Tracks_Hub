@@ -310,7 +310,7 @@ test("mounts Progression Writer as the twelfth Vue-owned Vite MPA page and remov
   assert.match(html, /scripts\/chord-shapes\.js/);
   assert.match(entry, /activePage: "chord-progressions"/);
   assert.equal(fs.existsSync(path.join(root, "scripts/progression-writer.js")), false);
-  assert.equal((config.match(/resolve\(root, "[^\"]+\.html"\)/g) || []).length, 14);
+  assert.equal((config.match(/resolve\(root, "[^\"]+\.html"\)/g) || []).length, 15);
 });
 
 test("uses native Vue DOM ownership while preserving shell, i18n, theme, responsive, and accessibility contracts", () => {
@@ -381,7 +381,7 @@ test("updates deterministic Cloudflare ownership without changing version or bac
   assert.match(verifier, /Progression Writer canonical metadata differs/);
   assert.match(verifier, /Progression Writer still loads a legacy page runtime/);
   assert.match(verifier, /compiled Vue Progression Writer mount marker is missing/);
-  assert.equal(packageJson.version, "4.0.5");
+  assert.equal(packageJson.version, "4.1.0");
   assert.deepEqual(packageJson.dependencies, { vue: "3.5.42" });
   ["vue-router", "pinia", "vue-i18n", "@vueuse/core", "vitest", "@vue/test-utils"].forEach(name => {
     assert.equal(packageJson.dependencies?.[name], undefined);

@@ -5,7 +5,7 @@ const test = require("node:test");
 
 const root = path.resolve(__dirname, "..");
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
-const V4 = "styles/v4.css?v=20261021-fields";
+const V4 = "styles/v4.css?v=20261122-chord-lab";
 const css = read("styles/v4.css");
 const themes = read("styles/themes.css");
 const pages = fs.readdirSync(root).filter(file => file.endsWith(".html") && read(file).includes("themes.css"));
@@ -13,13 +13,13 @@ const en = JSON.parse(read("locales/en/common.json"));
 const zh = JSON.parse(read("locales/zh-TW/common.json"));
 
 test("every page loads the v4 stylesheet last, and the build keeps it as a legacy asset", () => {
-  assert.equal(pages.length, 14);
+  assert.equal(pages.length, 15);
   pages.forEach(page => {
     const links = read(page).match(/<link rel="stylesheet" href="\/?styles\/[^"]+"\s*\/?>/g);
     assert.match(links.at(-1), new RegExp(`href="/?${V4.replace(/[.?]/g, "\\$&")}"`), page);
   });
   assert.ok(read("vite.config.mjs").includes(`"${V4}"`));
-  assert.equal(read("tools/scripts/verify-cloudflare-build.js").split(`"${V4}"`).length - 1, 14);
+  assert.equal(read("tools/scripts/verify-cloudflare-build.js").split(`"${V4}"`).length - 1, 15);
 });
 
 test("day and night themes use the Jazz Stage palette and the stored theme values stay the same", () => {

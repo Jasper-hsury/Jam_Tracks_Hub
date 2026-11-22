@@ -10,6 +10,7 @@ const TOOL_STYLESHEET = "styles/tool-pages.css?v=20261019-v4-polish";
 
 const toolPages = [
   { html: "chord-dictionary.html", view: "ChordDictionaryView", aside: "standardTuning" },
+  { html: "chord-lab.html", view: "ChordLabView", aside: "standardTuning" },
   { html: "scale.html", view: "ScaleExplorerView", aside: "standardTuning" },
   { html: "chord-progressions.html", view: "ChordProgressionsView", aside: null },
   { html: "progression-writer.html", view: "ProgressionWriterView", aside: "standardTuning" },

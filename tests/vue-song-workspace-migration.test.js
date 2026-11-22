@@ -25,7 +25,7 @@ test("mounts Song Workspace as the fourteenth Vue-owned Vite MPA page", () => {
   assert.match(entry, /activePage: "song-workspace"/);
   assert.match(entry, /view: SongWorkspaceView/);
   assert.match(config, /"song-workspace": resolve\(root, "song-workspace\.html"\)/);
-  assert.equal((config.match(/resolve\(root, "[^"]+\.html"\)/g) || []).length, 14);
+  assert.equal((config.match(/resolve\(root, "[^"]+\.html"\)/g) || []).length, 15);
 });
 
 test("uses one Vue view and one composable lifecycle with no parallel legacy controller", () => {
@@ -123,7 +123,7 @@ test("extends deterministic Cloudflare verification for Vue ownership and privac
 test("keeps dependency, backend, schema, and release boundaries unchanged", () => {
   const packageJson = JSON.parse(read("package.json"));
 
-  assert.equal(packageJson.version, "4.0.5");
+  assert.equal(packageJson.version, "4.1.0");
   assert.deepEqual(packageJson.dependencies, { vue: "3.5.42" });
   ["vue-router", "pinia", "vue-i18n", "@vueuse/core"].forEach(name => {
     assert.equal(packageJson.dependencies?.[name], undefined);

@@ -12,7 +12,7 @@ const workspaceCss = read("styles/song-workspace-v3.css");
 const secondaryCss = read("styles/secondary-pages.css");
 const pagesCss = read("styles/pages.css");
 const indexablePages = [
-  "tracks", "chord-dictionary", "scale", "chord-progressions", "progression-writer",
+  "tracks", "chord-dictionary", "chord-lab", "scale", "chord-progressions", "progression-writer",
   "fretboard-trainer", "key-finder", "song-workspace", "feedback", "legal", "privacy-policy"
 ];
 
