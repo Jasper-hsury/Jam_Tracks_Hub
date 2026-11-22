@@ -486,8 +486,14 @@ export function useKeyFinder(options = {}) {
 
   function initialize() {
     checkApiStatus();
-    checkYoutubeHelperStatus();
-    helperInterval = setIntervalFn(checkYoutubeHelperStatus, 15000);
+    if (config.autoProbeYoutubeHelper === false) {
+      // Public hosts: the Helper is only probed after a user-initiated YouTube fallback
+      // or Start Helper click, never on page load or on a background interval.
+      useSiteApiForYoutube();
+    } else {
+      checkYoutubeHelperStatus();
+      helperInterval = setIntervalFn(checkYoutubeHelperStatus, 15000);
+    }
     const latest = history.value.find(item => item.analysisData);
     if (latest) {
       result.value = latest.analysisData;

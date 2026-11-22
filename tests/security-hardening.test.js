@@ -251,6 +251,10 @@ test("static build tracks CSP, browser restrictions, and bounded cache policy", 
     assert.match(headers, /script-src 'self' https:\/\/cloud\.umami\.is/);
     assert.match(headers, /connect-src 'self' https:\/\/cloud\.umami\.is https:\/\/gateway\.umami\.is https:\/\/api\.jamtrackshub\.com/);
     assert.doesNotMatch(headers, /script-src[^;]*(?:unsafe-inline|unsafe-eval)/);
+    // Umami is the only telemetry provider and the Key Finder Helper is opt-in loopback:
+    // neither Cloudflare Web Analytics nor loopback origins belong in the production CSP.
+    assert.doesNotMatch(headers, /cloudflareinsights|'unsafe-hashes'|'strict-dynamic'/);
+    assert.doesNotMatch(headers, /connect-src[^;]*(?:localhost|127\.0\.0\.1|\*)/);
     assert.match(headers, /frame-ancestors 'none'/);
     assert.match(headers, /X-Content-Type-Options: nosniff/);
     assert.match(headers, /Referrer-Policy: strict-origin-when-cross-origin/);

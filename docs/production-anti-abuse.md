@@ -158,6 +158,15 @@ The tracked `_headers` file applies:
 
 The one inline service-waking script was moved to an external file so it works under the script policy. Inline CSS remains allowed because existing weekly slides and page presentation use it. This should be reduced only through a separately tested migration.
 
+#### Edge-injected scripts and CSP console noise (2026-11-22)
+
+Production HTML receives two scripts that are not in the repository, and the strict CSP blocks both. Neither should be fixed by loosening `script-src`:
+
+- **Cloudflare JavaScript Detections** (an inline bootstrap that loads `/cdn-cgi/challenge-platform/scripts/jsd/main.js`). Bot Fight Mode forces JSD on and it cannot be disabled separately on the Free plan. The bootstrap embeds a per-request ray ID, so a hash cannot match it; Cloudflare only adds a nonce when the CSP header carries one, and the static `_headers` file cannot mint per-request nonces. On Free, a failed JSD run has no enforcement effect (JSD enforcement needs Enterprise custom rules), so the "Executing inline script violates ... script-src" console error is accepted. Do not add `unsafe-inline`, `unsafe-hashes`, or a fixed nonce. Removing the message requires either turning Bot Fight Mode off or a separately reviewed per-request nonce at the edge.
+- **Cloudflare Web Analytics beacon** (`static.cloudflareinsights.com/beacon.min.js`, added by Web Analytics automatic setup). Umami is the only telemetry provider, so the fix is in the Dashboard: Web Analytics → the `jamtrackshub.com` site → Manage site → automatic setup **Disable**. Do not allowlist `cloudflareinsights` in the CSP. `tests/security-hardening.test.js` guards this.
+
+The Key Finder local YouTube Helper (`http://localhost:8765` / `http://127.0.0.1:8765`) is not in `connect-src`. Public hosts do not probe it on page load or on an interval (`autoProbeYoutubeHelper: false`). It is only tried after a user-initiated YouTube fallback or a Start Helper click. Local development hosts keep the automatic probe.
+
 HSTS is intentionally not enabled in source during Phase 1. Before enabling it, verify HTTPS for the canonical host and every covered subdomain, redirect behavior, certificate health, rollback constraints, and whether `includeSubDomains`/preload is actually safe.
 
 ### Worker API policy

@@ -27,6 +27,9 @@ export function resolveKeyFinderConfiguration(windowObject) {
     apiBaseUrl: apiBaseUrl.replace(/\/$/, ""),
     productionApiBaseUrl,
     youtubeHelperBaseUrl: youtubeHelperBaseUrl.replace(/\/$/, ""),
+    // Public pages must not probe the optional loopback Helper on load; production CSP
+    // connect-src does not list it, so every automatic probe is a console violation.
+    autoProbeYoutubeHelper: isLocalSite,
     youtubeSiteApiBaseUrlCandidates: Array.from(new Set([apiBaseUrl, productionApiBaseUrl])),
     youtubeHelperBaseUrlCandidates: Array.from(new Set([
       youtubeHelperBaseUrl,

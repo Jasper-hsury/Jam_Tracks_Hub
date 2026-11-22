@@ -284,6 +284,41 @@ test("cleans up abortable work on cancel and unmount without stale state", async
   assert.equal(helperSignal.aborted, true);
 });
 
+test("public hosts never probe the loopback Helper on load and only try it after a user-initiated fallback", async () => {
+  const healthCalls = [];
+  const createCalls = [];
+  let intervals = 0;
+  const isLoopback = url => /^http:\/\/(?:localhost|127\.0\.0\.1):8765$/.test(url);
+  const finder = await useFinder({
+    config: { ...config(), autoProbeYoutubeHelper: false },
+    api: {
+      health: async baseUrl => {
+        healthCalls.push(baseUrl);
+        if (baseUrl === "https://api.jamtrackshub.com") return fixture.responses.health;
+        throw new TypeError("Failed to fetch");
+      },
+      createYoutubeJob: async baseUrl => {
+        createCalls.push(baseUrl);
+        throw new Error("Site analyzer unavailable.");
+      }
+    },
+    setIntervalFn: () => { intervals += 1; return null; },
+    clearIntervalFn: () => {}
+  });
+  finder.initialize();
+  await new Promise(resolve => setTimeout(resolve, 0));
+  assert.equal(intervals, 0);
+  assert.deepEqual(healthCalls.filter(isLoopback), []);
+  assert.equal(finder.helperStatus.state, "is-online");
+  assert.equal(finder.helperStatus.code, "siteApi");
+
+  assert.equal(await finder.submitYoutube("https://youtu.be/public-fallback"), false);
+  assert.deepEqual(createCalls, ["https://api.jamtrackshub.com"]);
+  assert.deepEqual(healthCalls.filter(isLoopback), ["http://localhost:8765", "http://127.0.0.1:8765"]);
+  assert.equal(finder.helperStatus.code, "helperOffline");
+  finder.dispose();
+});
+
 test("preserves result mode/history storage and locale/theme-independent request state", async () => {
   const local = storage({ jasperMusicKeyFinderResultMode: "detailed" });
   let resolveCreate;
@@ -337,7 +372,7 @@ test("keeps backend, established tools, CSS, and current version byte-identical"
     const hash = crypto.createHash("sha256").update(fs.readFileSync(path.join(root, file))).digest("hex");
     assert.equal(hash, expected, file);
   });
-  assert.equal(JSON.parse(read("package.json")).version, "4.1.0");
+  assert.equal(JSON.parse(read("package.json")).version, "4.1.1");
 });
 
 test("declares the complete 44-case responsive matrix and preserves mobile-safe controls", () => {

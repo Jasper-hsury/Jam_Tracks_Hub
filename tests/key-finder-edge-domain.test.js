@@ -28,6 +28,7 @@ test("production Key Finder uses only the Cloudflare-proxied public API hostname
   assert.equal(config.apiBaseUrl, "https://api.jamtrackshub.com");
   assert.equal(config.productionApiBaseUrl, "https://api.jamtrackshub.com");
   assert.deepEqual(removed, ["jasperMusicApiBaseUrl"]);
+  assert.equal(config.autoProbeYoutubeHelper, false);
   const productionSources = [
     read("src/services/keyFinderApi.mjs"),
     read("src/composables/useKeyFinder.js"),
@@ -41,6 +42,7 @@ test("local development keeps an explicit local API override", async () => {
   assert.equal(config.apiBaseUrl, "http://localhost:8001");
   assert.equal(config.productionApiBaseUrl, "https://api.jamtrackshub.com");
   assert.deepEqual(removed, []);
+  assert.equal(config.autoProbeYoutubeHelper, true);
 });
 
 test("CSP and large-slide embeds use the proxied service hostname", () => {
