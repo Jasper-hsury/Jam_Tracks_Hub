@@ -79,7 +79,7 @@ test("homepage workflow uses four visible responsive groups without horizontal t
     assert.equal((home.match(/class="home-workflow-group v3-tracklist-group"/g) || []).length, 1);
     assert.doesNotMatch(home, /home-step-card|home-step-track|home-step-rail/);
     assert.match(home, /v-for="group in workflowGroups"/);
-    assert.match(home, /\{ href: "\/song-workspace", title: "songWorkspace", workspace: true, no: "B2" \}/);
+    assert.match(home, /\{ href: "\/song-workspace", title: "songWorkspace", workspace: true, no: "A2" \}/);
     assert.match(home, /<nav class="home-workflow-links" :aria-label="home\.workflow\[group\.id\]">/);
     assert.doesNotMatch(home, /home-workflow-group--workspace|home-workspace-badges|home-workspace-link/);
 });

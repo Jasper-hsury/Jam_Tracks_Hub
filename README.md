@@ -41,10 +41,9 @@ Last updated: Nov 22, 2026, 10:14 AM
 
 | Goal | Start here | What you can do |
 | --- | --- | --- |
-| Practice | [Backing Tracks](https://jamtrackshub.com/tracks.html) · [Fretboard Trainer](https://jamtrackshub.com/fretboard-trainer.html) | Filter tracks by relative-key groups, sort newest/oldest, follow available YouTube links, download practice slides, and learn note positions. |
-| Understand | [Key Finder](https://jamtrackshub.com/key-finder.html) · [Scale Explorer](https://jamtrackshub.com/scale.html) · [Chord Dictionary](https://jamtrackshub.com/chord-dictionary.html) · [Chord Lab](https://jamtrackshub.com/chord-lab.html) | Estimate a tonal center, map scales on a fretboard, compare guitar chord voicings, and work out shapes for any chord symbol. |
-| Create | [Chord Progressions](https://jamtrackshub.com/chord-progressions.html) · [Progression Writer](https://jamtrackshub.com/progression-writer.html) | Explore common progressions, write your own, save/load and duplicate them locally, and export JSON or chord diagrams. |
-| Play your songs | [Song Workspace](https://jamtrackshub.com/song-workspace.html) | Arrange chord-and-lyric charts, transpose, choose capo positions, and use Read or Performance Mode. |
+| Play | [Backing Tracks](https://jamtrackshub.com/tracks.html) · [Song Workspace](https://jamtrackshub.com/song-workspace.html) | Filter tracks by relative-key groups, sort newest/oldest, follow available YouTube links and download practice slides; arrange chord-and-lyric charts, transpose, choose capo positions, and use Read or Performance Mode. |
+| Chords | [Chord Dictionary](https://jamtrackshub.com/chord-dictionary.html) · [Chord Lab](https://jamtrackshub.com/chord-lab.html) · [Chord Progressions](https://jamtrackshub.com/chord-progressions.html) · [Progression Writer](https://jamtrackshub.com/progression-writer.html) | Compare guitar chord voicings, work out shapes for any chord symbol, explore common progressions, write your own, save/load and duplicate them locally, and export JSON or chord diagrams. |
+| Fretboard & key | [Scale Explorer](https://jamtrackshub.com/scale.html) · [Fretboard Trainer](https://jamtrackshub.com/fretboard-trainer.html) · [Key Finder](https://jamtrackshub.com/key-finder.html) | Map scales on a fretboard, learn note positions, and estimate a song's tonal center. |
 
 ## Product Showcase
 

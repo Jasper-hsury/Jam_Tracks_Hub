@@ -233,8 +233,8 @@ test("surfaces Song Workspace through the hero and four purpose-led workflow gro
   assert.match(view, /<a href="\/song-workspace" class="secondary-button">\{\{ home\.hero\.openSongWorkspace \}\}<\/a>/);
   assert.ok(view.indexOf('href="tracks.html" class="primary-button v4-knob-button"') < view.indexOf('href="/song-workspace" class="secondary-button"'));
 
-  assert.equal((view.match(/id: "(?:practice|understand|create|playSongs)"/g) || []).length, 4);
-  ["practice", "understand", "create", "playSongs"].forEach(group => {
+  assert.equal((view.match(/id: "(?:play|chords|fretboard|key)"/g) || []).length, 4);
+  ["play", "chords", "fretboard", "key"].forEach(group => {
     assert.ok(view.includes(`id: "${group}"`), group);
   });
   [
@@ -243,6 +243,7 @@ test("surfaces Song Workspace through the hero and four purpose-led workflow gro
     "key-finder.html",
     "scale.html",
     "chord-dictionary.html",
+    "chord-lab.html",
     "chord-progressions.html",
     "/song-workspace"
   ].forEach(href => assert.ok(view.includes(`href: "${href}"`), href));
@@ -261,17 +262,20 @@ test("surfaces Song Workspace through the hero and four purpose-led workflow gro
   assert.equal(zh.home.hero.exploreTracks, "瀏覽即興伴奏");
   assert.equal(zh.home.hero.openSongWorkspace, "開啟歌曲工作區");
   assert.deepEqual([
-    en.home.workflow.practice,
-    en.home.workflow.understand,
-    en.home.workflow.create,
-    en.home.workflow.playSongs
-  ], ["Practice", "Understand", "Create", "Play your songs"]);
+    en.home.workflow.play,
+    en.home.workflow.chords,
+    en.home.workflow.fretboard,
+    en.home.workflow.key
+  ], ["Play", "Chords", "Fretboard", "Key"]);
   assert.deepEqual([
-    zh.home.workflow.practice,
-    zh.home.workflow.understand,
-    zh.home.workflow.create,
-    zh.home.workflow.playSongs
-  ], ["練習", "理解", "創作", "彈奏自己的歌曲"]);
+    zh.home.workflow.play,
+    zh.home.workflow.chords,
+    zh.home.workflow.fretboard,
+    zh.home.workflow.key
+  ], ["演奏", "和弦", "指板", "調性"]);
+  assert.equal(en.home.tools.chordLab, "Chord Lab");
+  assert.equal(zh.home.tools.chordLab, "和弦實驗室");
+  assert.ok(en.home.extra.chordLab && zh.home.extra.chordLab);
   assert.equal(en.home.workflow.songWorkspace.description, "Build chord-and-lyric sheets, transpose songs, and find a comfortable capo position. Your songs stay in this browser.");
   assert.equal(zh.home.workflow.songWorkspace.description, "建立和弦歌詞譜、移調並尋找適合的 Capo 位置。歌曲只會保存在這個瀏覽器中。");
 });
