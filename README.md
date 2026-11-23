@@ -186,7 +186,7 @@ The screenshot shows the creation/start screen, not an active editor or Performa
 - [Development Log](https://github.com/Jasper-hsury/Jam_Tracks_Hub_Development_Log): public development history, release notes, and product evolution in the separate log repository.
 - [GitHub Workflow](docs/GITHUB_WORKFLOW.md): contribution and review process.
 
-The latest published release is [`v4.1.1`](https://github.com/Jasper-hsury/Jam_Tracks_Hub/releases/tag/v4.1.1), the quieter Key Finder console: Key Finder no longer probes the optional local YouTube Helper on public page load (a CSP console error on every visit). It follows [`v4.1.0`](https://github.com/Jasper-hsury/Jam_Tracks_Hub/releases/tag/v4.1.0), which added Chord Lab, the new advanced chord page. `package.json` declares `4.1.2`: it groups the header links by task (play, chords, then fretboard and key) and orders the homepage tracklist the same way, adding Chord Lab to it. Its tag and Release are published when it ships.
+The latest published release is [`v4.1.2`](https://github.com/Jasper-hsury/Jam_Tracks_Hub/releases/tag/v4.1.2), tools grouped by task: the header links read play, chords, then fretboard and key, and the homepage tracklist follows the same order, now including Chord Lab. Before it came [`v4.1.1`](https://github.com/Jasper-hsury/Jam_Tracks_Hub/releases/tag/v4.1.1), which stopped Key Finder from probing the optional local YouTube Helper on public page load, and [`v4.1.0`](https://github.com/Jasper-hsury/Jam_Tracks_Hub/releases/tag/v4.1.0), which added Chord Lab. `package.json` declares `4.1.2`.
 
 ## Local Development
 
