@@ -8,13 +8,15 @@ const read = file => fs.readFileSync(path.join(root, file), "utf8");
 const view = read("src/views/HomeView.vue");
 const css = read("styles/pages.css");
 
-test("workflows read as a two-sided tracklist numbered A1 to B2", () => {
+test("workflows read as a two-sided tracklist numbered A1 to B3 in header order", () => {
   const numbers = [...view.matchAll(/no: "([AB]\d)"/g)].map(match => match[1]);
-  assert.deepEqual(numbers, ["A1", "A2", "A3", "A4", "A5", "B1", "B2"]);
-  assert.match(view, /id: "practice",\s*side: "a",\s*sideStart: true/);
-  assert.match(view, /id: "understand",\s*side: "a",/);
-  assert.match(view, /id: "create",\s*side: "b",\s*sideStart: true/);
-  assert.match(view, /id: "playSongs",\s*side: "b",/);
+  assert.deepEqual(numbers, ["A1", "A2", "A3", "A4", "A5", "B1", "B2", "B3"]);
+  const hrefs = [...view.matchAll(/\{ href: "([^"]+)", title:/g)].map(match => match[1]);
+  assert.deepEqual(hrefs, ["tracks.html", "/song-workspace", "chord-dictionary.html", "chord-lab.html", "chord-progressions.html", "scale.html", "fretboard-trainer.html", "key-finder.html"]);
+  assert.match(view, /id: "play",\s*side: "a",\s*sideStart: true/);
+  assert.match(view, /id: "chords",\s*side: "a",/);
+  assert.match(view, /id: "fretboard",\s*side: "b",\s*sideStart: true/);
+  assert.match(view, /id: "key",\s*side: "b",/);
   assert.match(view, /<p v-if="group\.sideStart" class="v3-side-title">\{\{ home\.tracklist\.sides\[group\.side\] \}\}<\/p>/);
   assert.match(view, /<span class="v3-track-no" aria-hidden="true">\{\{ tool\.no \}\}<\/span>/);
 });
@@ -25,12 +27,12 @@ test("tracklist copy is localized in English and Traditional Chinese", () => {
   assert.deepEqual(en, {
     label: "Tracklist",
     recordSide: "Side A",
-    sides: { a: "Side A — Practice & Understand", b: "Side B — Create & Play" }
+    sides: { a: "Side A — Play & Chords", b: "Side B — Fretboard & Key" }
   });
   assert.deepEqual(zh, {
     label: "曲目表",
     recordSide: "A 面",
-    sides: { a: "A 面 — 練習與理解", b: "B 面 — 創作與演奏" }
+    sides: { a: "A 面 — 演奏與和弦", b: "B 面 — 指板與調性" }
   });
 });
 

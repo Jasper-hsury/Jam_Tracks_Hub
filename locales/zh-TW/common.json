@@ -89,14 +89,15 @@
       "keyFinder": "調性分析",
       "progressions": "和弦進行",
       "trainer": "指板練習",
-      "songWorkspace": "歌曲工作區"
+      "songWorkspace": "歌曲工作區",
+      "chordLab": "和弦實驗室"
     },
     "workflow": {
       "label": "選擇音樂使用流程",
-      "practice": "練習",
-      "understand": "理解",
-      "create": "創作",
-      "playSongs": "彈奏自己的歌曲",
+      "play": "演奏",
+      "chords": "和弦",
+      "fretboard": "指板",
+      "key": "調性",
       "songWorkspace": {
         "description": "建立和弦歌詞譜、移調並尋找適合的 Capo 位置。歌曲只會保存在這個瀏覽器中。",
         "cta": "開啟歌曲工作區",
@@ -112,8 +113,8 @@
       "label": "曲目表",
       "recordSide": "A 面",
       "sides": {
-        "a": "A 面 — 練習與理解",
-        "b": "B 面 — 創作與演奏"
+        "a": "A 面 — 演奏與和弦",
+        "b": "B 面 — 指板與調性"
       }
     },
     "about": {
@@ -198,7 +199,8 @@
       "28": "訂閱",
       "29": "提供意見",
       "30": "聯絡我",
-      "31": "已傳送"
+      "31": "已傳送",
+      "chordLab": "輸入任何和弦符號，找出最好按的五個吉他指型，也包含無根音指型。"
     }
   },
   "pages": {

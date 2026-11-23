@@ -147,14 +147,18 @@ html[data-theme] .navbar .nav-compact-tools-menu {
     box-shadow: 0 24px 50px -30px var(--shadow-color);
 }
 
-/* Chord Lab joins the Key Finder, Song Workspace and Fretboard Trainer in the
-   Tools menu. With ten links the full row only fits from 1461px, so the menu
-   (1181-1380px in pages.css) now runs up to 1460px. */
+/* The links are grouped by task, and the last tool group (Scale Explorer,
+   Fretboard Trainer, Key Finder) moves into the Tools menu on mid-size
+   screens. With ten links the full row only fits from 1461px, so the menu
+   (1181-1380px in pages.css) runs up to 1460px. pages.css hides links by
+   position, so every link is shown again here and only the ones marked
+   .nav-item-in-tools are hidden. */
 @media (min-width: 1181px) and (max-width: 1460px) {
-    html[data-theme] .navbar .nav-links > li:nth-child(5),
-    html[data-theme] .navbar .nav-links > li:nth-child(7),
-    html[data-theme] .navbar .nav-links > li:nth-child(8),
-    html[data-theme] .navbar .nav-links > li:nth-child(9) {
+    html[data-theme] .navbar .nav-links > li:not(.nav-item-in-tools):not(.nav-compact-tools-item):not(.nav-theme-item) {
+        display: list-item;
+    }
+
+    html[data-theme] .navbar .nav-links > li.nav-item-in-tools {
         display: none;
     }
 

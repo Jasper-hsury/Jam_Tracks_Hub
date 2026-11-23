@@ -160,8 +160,7 @@ test("registers Chord Lab as its own Vue page in the Tools menu", () => {
   assert.match(read("tools/scripts/verify-cloudflare-build.js"), /Chord Lab compiled Vue entry is missing/);
   const header = read("src/components/site/SiteHeader.vue");
   assert.match(header, /href: "\/chord-lab\.html", page: "chord-lab", key: "nav\.chordLab"/);
-  assert.match(header, /"fretboard-trainer",\s*"chord-lab"\s*\]\.includes\(item\.page\)/);
-  assert.match(read("styles/v4.css"), /@media \(min-width: 1181px\) and \(max-width: 1460px\) \{[\s\S]*?li:nth-child\(9\) \{\s*display: none;/);
+  assert.match(header, /"nav\.chordDictionary"[^\n]*\n[^\n]*"nav\.chordLab"/, "Chord Lab sits right after Chord Dictionary");
 });
 
 test("Chord Lab copy exists in both languages with the same keys", () => {

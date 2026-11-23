@@ -12,23 +12,26 @@ const props = defineProps({
   }
 });
 
+// Grouped by task: play (Tracks, Song Workspace), chords (Dictionary, Lab,
+// Progressions), then fretboard and analysis (Scale Explorer, Fretboard
+// Trainer, Key Finder). That last group moves into the Tools menu on
+// mid-size desktop screens (v4.css).
 const navItems = [
   { href: "/index.html#home", page: "index", key: "nav.home", fallback: "Home" },
   { href: "/tracks.html", page: "tracks", key: "nav.tracks", fallback: "Tracks" },
-  { href: "/chord-dictionary.html", page: "chord-dictionary", key: "nav.chordDictionary", fallback: "Chord Dictionary" },
-  { href: "/scale.html", page: "scale", key: "nav.scaleExplorer", fallback: "Scale Explorer" },
-  { href: "/key-finder.html", page: "key-finder", key: "nav.keyFinder", fallback: "Key Finder" },
-  { href: "/chord-progressions.html", page: "chord-progressions", key: "nav.chordProgressions", fallback: "Chord Progressions" },
   { href: "/song-workspace.html", page: "song-workspace", key: "nav.songWorkspace", fallback: "Song Workspace" },
-  { href: "/fretboard-trainer.html", page: "fretboard-trainer", key: "nav.fretboardTrainer", fallback: "Fretboard Trainer" },
+  { href: "/chord-dictionary.html", page: "chord-dictionary", key: "nav.chordDictionary", fallback: "Chord Dictionary" },
   { href: "/chord-lab.html", page: "chord-lab", key: "nav.chordLab", fallback: "Chord Lab" },
+  { href: "/chord-progressions.html", page: "chord-progressions", key: "nav.chordProgressions", fallback: "Chord Progressions" },
+  { href: "/scale.html", page: "scale", key: "nav.scaleExplorer", fallback: "Scale Explorer" },
+  { href: "/fretboard-trainer.html", page: "fretboard-trainer", key: "nav.fretboardTrainer", fallback: "Fretboard Trainer" },
+  { href: "/key-finder.html", page: "key-finder", key: "nav.keyFinder", fallback: "Key Finder" },
   { href: "/index.html#about", page: "about", key: "nav.about", fallback: "About" }
 ];
 const compactToolItems = navItems.filter(item => [
-  "key-finder",
-  "song-workspace",
+  "scale",
   "fretboard-trainer",
-  "chord-lab"
+  "key-finder"
 ].includes(item.page));
 
 const navbar = ref(null);
@@ -81,7 +84,11 @@ function isCompactCurrent(item) {
       <span aria-hidden="true"></span>
     </button>
     <ul ref="navLinks" id="primaryNavigation" class="nav-links" @click="handleNavClick">
-      <li v-for="item in navItems" :key="item.href">
+      <li
+        v-for="item in navItems"
+        :key="item.href"
+        :class="{ 'nav-item-in-tools': compactToolItems.includes(item) }"
+      >
         <a
           :href="item.href"
           :class="{ active: isCurrent(item) }"

@@ -89,14 +89,15 @@
       "keyFinder": "Key Finder",
       "progressions": "Chord Progressions",
       "trainer": "Fretboard Trainer",
-      "songWorkspace": "Song Workspace"
+      "songWorkspace": "Song Workspace",
+      "chordLab": "Chord Lab"
     },
     "workflow": {
       "label": "Choose a music workflow",
-      "practice": "Practice",
-      "understand": "Understand",
-      "create": "Create",
-      "playSongs": "Play your songs",
+      "play": "Play",
+      "chords": "Chords",
+      "fretboard": "Fretboard",
+      "key": "Key",
       "songWorkspace": {
         "description": "Build chord-and-lyric sheets, transpose songs, and find a comfortable capo position. Your songs stay in this browser.",
         "cta": "Open Song Workspace",
@@ -112,8 +113,8 @@
       "label": "Tracklist",
       "recordSide": "Side A",
       "sides": {
-        "a": "Side A — Practice & Understand",
-        "b": "Side B — Create & Play"
+        "a": "Side A — Play & Chords",
+        "b": "Side B — Fretboard & Key"
       }
     },
     "about": {
@@ -198,7 +199,8 @@
       "28": "Subscribe",
       "29": "Give Feedback",
       "30": "Contact",
-      "31": "Sent"
+      "31": "Sent",
+      "chordLab": "Type any chord symbol and get the five best guitar shapes, rootless grips included."
     }
   },
   "pages": {

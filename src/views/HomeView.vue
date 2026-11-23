@@ -14,40 +14,42 @@ const messages = {
   en: englishMessages,
   "zh-TW": traditionalChineseMessages
 };
-// The four workflows read as a record tracklist: Side A to practice and
-// understand, Side B to create and play your own songs.
+// The four workflows read as a record tracklist in the same order as the
+// header: Side A to play and work out chords, Side B for the fretboard and
+// the key.
 const workflowGroups = [
   {
-    id: "practice",
+    id: "play",
     side: "a",
     sideStart: true,
     tools: [
       { href: "tracks.html", title: "tracks", copy: "02", no: "A1" },
-      { href: "fretboard-trainer.html", title: "trainer", copy: "12", no: "A2" }
+      { href: "/song-workspace", title: "songWorkspace", workspace: true, no: "A2" }
     ]
   },
   {
-    id: "understand",
+    id: "chords",
     side: "a",
     tools: [
-      { href: "key-finder.html", title: "keyFinder", copy: "08", no: "A3" },
-      { href: "scale.html", title: "scale", copy: "06", no: "A4" },
-      { href: "chord-dictionary.html", title: "dictionary", copy: "04", no: "A5" }
+      { href: "chord-dictionary.html", title: "dictionary", copy: "04", no: "A3" },
+      { href: "chord-lab.html", title: "chordLab", copy: "chordLab", no: "A4" },
+      { href: "chord-progressions.html", title: "progressions", copy: "10", no: "A5" }
     ]
   },
   {
-    id: "create",
+    id: "fretboard",
     side: "b",
     sideStart: true,
     tools: [
-      { href: "chord-progressions.html", title: "progressions", copy: "10", no: "B1" }
+      { href: "scale.html", title: "scale", copy: "06", no: "B1" },
+      { href: "fretboard-trainer.html", title: "trainer", copy: "12", no: "B2" }
     ]
   },
   {
-    id: "playSongs",
+    id: "key",
     side: "b",
     tools: [
-      { href: "/song-workspace", title: "songWorkspace", workspace: true, no: "B2" }
+      { href: "key-finder.html", title: "keyFinder", copy: "08", no: "B3" }
     ]
   }
 ];

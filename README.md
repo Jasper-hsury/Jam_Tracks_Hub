@@ -41,10 +41,9 @@ Last updated: Nov 22, 2026, 10:14 AM
 
 | Goal | Start here | What you can do |
 | --- | --- | --- |
-| Practice | [Backing Tracks](https://jamtrackshub.com/tracks.html) · [Fretboard Trainer](https://jamtrackshub.com/fretboard-trainer.html) | Filter tracks by relative-key groups, sort newest/oldest, follow available YouTube links, download practice slides, and learn note positions. |
-| Understand | [Key Finder](https://jamtrackshub.com/key-finder.html) · [Scale Explorer](https://jamtrackshub.com/scale.html) · [Chord Dictionary](https://jamtrackshub.com/chord-dictionary.html) · [Chord Lab](https://jamtrackshub.com/chord-lab.html) | Estimate a tonal center, map scales on a fretboard, compare guitar chord voicings, and work out shapes for any chord symbol. |
-| Create | [Chord Progressions](https://jamtrackshub.com/chord-progressions.html) · [Progression Writer](https://jamtrackshub.com/progression-writer.html) | Explore common progressions, write your own, save/load and duplicate them locally, and export JSON or chord diagrams. |
-| Play your songs | [Song Workspace](https://jamtrackshub.com/song-workspace.html) | Arrange chord-and-lyric charts, transpose, choose capo positions, and use Read or Performance Mode. |
+| Play | [Backing Tracks](https://jamtrackshub.com/tracks.html) · [Song Workspace](https://jamtrackshub.com/song-workspace.html) | Filter tracks by relative-key groups, sort newest/oldest, follow available YouTube links and download practice slides; arrange chord-and-lyric charts, transpose, choose capo positions, and use Read or Performance Mode. |
+| Chords | [Chord Dictionary](https://jamtrackshub.com/chord-dictionary.html) · [Chord Lab](https://jamtrackshub.com/chord-lab.html) · [Chord Progressions](https://jamtrackshub.com/chord-progressions.html) · [Progression Writer](https://jamtrackshub.com/progression-writer.html) | Compare guitar chord voicings, work out shapes for any chord symbol, explore common progressions, write your own, save/load and duplicate them locally, and export JSON or chord diagrams. |
+| Fretboard & key | [Scale Explorer](https://jamtrackshub.com/scale.html) · [Fretboard Trainer](https://jamtrackshub.com/fretboard-trainer.html) · [Key Finder](https://jamtrackshub.com/key-finder.html) | Map scales on a fretboard, learn note positions, and estimate a song's tonal center. |
 
 ## Product Showcase
 
@@ -187,7 +186,7 @@ The screenshot shows the creation/start screen, not an active editor or Performa
 - [Development Log](https://github.com/Jasper-hsury/Jam_Tracks_Hub_Development_Log): public development history, release notes, and product evolution in the separate log repository.
 - [GitHub Workflow](docs/GITHUB_WORKFLOW.md): contribution and review process.
 
-The latest published release is [`v4.1.1`](https://github.com/Jasper-hsury/Jam_Tracks_Hub/releases/tag/v4.1.1), the quieter Key Finder console: Key Finder no longer probes the optional local YouTube Helper on public page load (a CSP console error on every visit). It follows [`v4.1.0`](https://github.com/Jasper-hsury/Jam_Tracks_Hub/releases/tag/v4.1.0), which added Chord Lab, the new advanced chord page. `package.json` declares `4.1.1`.
+The latest published release is [`v4.1.1`](https://github.com/Jasper-hsury/Jam_Tracks_Hub/releases/tag/v4.1.1), the quieter Key Finder console: Key Finder no longer probes the optional local YouTube Helper on public page load (a CSP console error on every visit). It follows [`v4.1.0`](https://github.com/Jasper-hsury/Jam_Tracks_Hub/releases/tag/v4.1.0), which added Chord Lab, the new advanced chord page. `package.json` declares `4.1.2`: it groups the header links by task (play, chords, then fretboard and key) and orders the homepage tracklist the same way, adding Chord Lab to it. Its tag and Release are published when it ships.
 
 ## Local Development
 
