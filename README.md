@@ -28,7 +28,7 @@ Start with an original backing track, explore its key and chord shapes, then org
 
 Daily Umami analytics snapshot for Jam Tracks Hub.
 
-Last updated: Nov 23, 2026, 10:45 AM
+Last updated: Nov 26, 2026, 12:10 PM
 
 <p align="center">
   <img src="assets/analytics/umami-dashboard.png" alt="Umami analytics dashboard" width="100%" />
