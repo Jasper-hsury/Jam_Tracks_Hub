@@ -30,7 +30,15 @@ test("the Tools menu holds the last tool group on mid-size screens", () => {
   assert.deepEqual([...compact.matchAll(/"([^"]+)"/g)].map(match => match[1]), ["scale", "fretboard-trainer", "key-finder"]);
   assert.match(header, /:class="\{ 'nav-item-in-tools': compactToolItems\.includes\(item\) \}"/);
   const rule = v4.match(/@media \(min-width: 1181px\) and \(max-width: 1460px\) \{([\s\S]*?)\n\}/)[1];
-  assert.match(rule, /li:not\(\.nav-item-in-tools\):not\(\.nav-compact-tools-item\):not\(\.nav-theme-item\) \{\s*display: list-item;/);
   assert.match(rule, /li\.nav-item-in-tools \{\s*display: none;/);
-  assert.doesNotMatch(rule, /nth-child/, "links are hidden by class, not by position");
+  assert.doesNotMatch(rule, /nth-child|display: list-item/, "links are hidden by class, not by position");
+});
+
+test("no stylesheet hides header links by their position", () => {
+  ["styles/pages.css", "styles/components.css", "styles/base.css", "styles/themes.css", "styles/v4.css"].forEach(file => {
+    const css = fs.readFileSync(path.join(root, file), "utf8");
+    const hidden = [...css.matchAll(/([^{}]*nav-links\s*>\s*li:nth-child[^{}]*)\{([^}]*)\}/g)]
+      .filter(([, , body]) => /display:\s*none/.test(body));
+    assert.deepEqual(hidden.map(([, selector]) => selector.trim()), [], file);
+  });
 });

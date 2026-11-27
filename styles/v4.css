@@ -150,14 +150,10 @@ html[data-theme] .navbar .nav-compact-tools-menu {
 /* The links are grouped by task, and the last tool group (Scale Explorer,
    Fretboard Trainer, Key Finder) moves into the Tools menu on mid-size
    screens. With ten links the full row only fits from 1461px, so the menu
-   (1181-1380px in pages.css) runs up to 1460px. pages.css hides links by
-   position, so every link is shown again here and only the ones marked
-   .nav-item-in-tools are hidden. */
+   (1181-1380px in pages.css) runs up to 1460px. Links are hidden by the
+   .nav-item-in-tools class, never by position, so reordering the header
+   needs no CSS change. */
 @media (min-width: 1181px) and (max-width: 1460px) {
-    html[data-theme] .navbar .nav-links > li:not(.nav-item-in-tools):not(.nav-compact-tools-item):not(.nav-theme-item) {
-        display: list-item;
-    }
-
     html[data-theme] .navbar .nav-links > li.nav-item-in-tools {
         display: none;
     }
