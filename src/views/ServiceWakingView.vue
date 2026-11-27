@@ -13,6 +13,7 @@ import {
   checkServiceHealth,
   resolveServiceApiBase
 } from "../services/serviceHealthApi.mjs";
+import { isPreviewHost } from "../services/siteHost.mjs";
 
 const HEALTH_TIMEOUT_MS = 8000;
 const RETRY_DELAY_MS = 4000;
@@ -38,7 +39,9 @@ const statusKey = ref("starting");
 const pendingTimers = new Set();
 let activeController = null;
 
+const onPreview = isPreviewHost(window.location.hostname);
 const statusMessage = computed(() => {
+  if (statusKey.value === "preview") return copy.value.keyFinder.previewCopy;
   if (statusKey.value === "checking") return copy.value.keyFinder.checkingApi;
   if (statusKey.value === "ready") return copy.value.keyFinder.apiReady;
   if (statusKey.value === "unavailable") return copy.value.keyFinder.unavailableCopy;
@@ -54,6 +57,10 @@ function schedule(callback, delay) {
 }
 
 async function checkService() {
+  if (onPreview) {
+    statusKey.value = "preview";
+    return;
+  }
   attempts.value += 1;
   checking.value = true;
   statusKey.value = "checking";
@@ -126,7 +133,7 @@ onBeforeUnmount(function() {
           class="primary-button"
           id="retryWakeButton"
           type="button"
-          :disabled="checking"
+          :disabled="checking || onPreview"
           @click="checkService"
         >
           {{ copy.service.checkAgain }}

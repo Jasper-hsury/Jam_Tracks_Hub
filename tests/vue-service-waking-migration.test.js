@@ -85,7 +85,7 @@ test("preserves Service Waking UI states, polling, navigation, and locale owners
   assert.match(view, /attempts\.value < MAX_AUTOMATIC_ATTEMPTS[\s\S]*?"starting"[\s\S]*?: "unavailable"/);
   assert.match(view, /window\.location\.href = "key-finder\.html"/);
   assert.match(view, /<p id="wakeMessage" role="status" aria-live="polite">/);
-  assert.match(view, /:disabled="checking"/);
+  assert.match(view, /:disabled="checking \|\| onPreview"/);
   assert.match(view, /useSiteLocale\(\)/);
   assert.doesNotMatch(view, /data-i18n|umami|analytics|data-umami-event/i);
 });

@@ -20,8 +20,15 @@ const resultRegion = ref(null);
 
 const apiStatusText = computed(() => messages.value[finder.apiStatus.code] || messages.value.checkingApi);
 const helperStatusText = computed(() => messages.value[finder.helperStatus.code] || messages.value.checkingYoutube);
-const serviceWakeTitle = computed(() => finder.apiStatus.state === "is-offline" ? messages.value.unavailableTitle : messages.value.wakingTitle);
-const serviceWakeCopy = computed(() => finder.apiStatus.state === "is-offline" ? messages.value.unavailableCopy : messages.value.wakingCopy);
+const apiOnPreview = computed(() => finder.apiStatus.code === "apiPreview");
+const serviceWakeTitle = computed(() => {
+  if (apiOnPreview.value) return messages.value.previewTitle;
+  return finder.apiStatus.state === "is-offline" ? messages.value.unavailableTitle : messages.value.wakingTitle;
+});
+const serviceWakeCopy = computed(() => {
+  if (apiOnPreview.value) return messages.value.previewCopy;
+  return finder.apiStatus.state === "is-offline" ? messages.value.unavailableCopy : messages.value.wakingCopy;
+});
 const serviceWakeVisible = computed(() => finder.apiStatus.state !== "is-online");
 const resultClass = computed(() => {
   if (["submitting", "queued", "processing"].includes(finder.phase.value)) return "is-loading";
@@ -117,7 +124,7 @@ onUnmounted(finder.dispose);
         <div>
           <strong>{{ serviceWakeTitle }}</strong>
           <p>{{ serviceWakeCopy }}</p>
-          <a class="service-wake-link" href="service-waking.html">{{ messages.openServiceStatus }}</a>
+          <a v-if="!apiOnPreview" class="service-wake-link" href="service-waking.html">{{ messages.openServiceStatus }}</a>
         </div>
       </div>
 
