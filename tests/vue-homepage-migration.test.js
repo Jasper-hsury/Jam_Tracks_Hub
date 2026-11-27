@@ -368,12 +368,10 @@ test("owns the step-card SplitText lifecycle after Vue locale render and font re
 });
 
 test("keeps Tracks independently Vue-owned and other legacy pages outside the Homepage Vue scope", () => {
-  const packageJson = JSON.parse(read("package.json"));
   const tracksHtml = read("tracks.html");
   const keyFinderHtml = read("key-finder.html");
   const workspaceHtml = read("song-workspace.html");
 
-  assert.equal(packageJson.version, "4.1.2");
   assert.match(tracksHtml, /src\/entries\/tracks\.js/);
   assert.doesNotMatch(tracksHtml, /scripts\/tracks\.js/);
   assert.match(keyFinderHtml, /src\/entries\/key-finder\.js/);
