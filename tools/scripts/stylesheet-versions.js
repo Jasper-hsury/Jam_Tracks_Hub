@@ -7,7 +7,7 @@ const root = path.resolve(__dirname, "../..");
 // Stylesheets that still change between releases. The HTML links them without a
 // ?v= query; the build adds one from the file's own content, so editing the file
 // is enough to refresh browser caches. Frozen stylesheets keep hand-written keys.
-const HASHED_STYLESHEETS = ["styles/v4.css", "styles/chord-lab.css"];
+const HASHED_STYLESHEETS = ["styles/pages.css", "styles/v4.css", "styles/chord-lab.css"];
 
 function stylesheetVersion(file) {
   const content = fs.readFileSync(path.join(root, file));

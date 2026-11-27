@@ -55,10 +55,10 @@ test("the record slides out only for hover-capable pointers without reduced moti
   assert.match(block, /\.v3-download-button \{[^}]*width: 44px;[^}]*height: 44px;/);
 });
 
-test("pages.css carries a fresh cache key so v3.1 markup never meets the cached v3.0 stylesheet", () => {
+test("pages.css gets its cache key from its content, so new markup never meets a cached stylesheet", () => {
   const pages = ["tracks.html", "index.html", "song-workspace.html"];
-  pages.forEach(page => assert.match(read(page), /styles\/pages\.css\?v=20261019-v4-polish/, page));
-  assert.doesNotMatch(read("tracks.html"), /styles\/pages\.css\?v=20261014-v3-liner-notes/);
+  pages.forEach(page => assert.match(read(page), /href="styles\/pages\.css"/, page));
+  assert.ok(require("../tools/scripts/stylesheet-versions.js").HASHED_STYLESHEETS.includes("styles/pages.css"));
 });
 
 test("the Tracks toolbar animates in once, from the entrance timeline only", () => {

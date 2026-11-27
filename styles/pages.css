@@ -639,12 +639,6 @@ iframe {
         gap: clamp(10px, 1vw, 16px);
     }
 
-    .nav-links > li:nth-child(5),
-    .nav-links > li:nth-child(7),
-    .nav-links > li:nth-child(8) {
-        display: none;
-    }
-
     .nav-links > .nav-compact-tools-item {
         display: flex;
         position: relative;

@@ -1,3 +1,5 @@
+import { isPreviewHost } from "./siteHost.mjs";
+
 export const KEY_FINDER_PRODUCTION_API_ORIGIN = "https://api.jamtrackshub.com";
 export const DEFAULT_LOCAL_API_ORIGIN = "http://127.0.0.1:8000";
 export const DEFAULT_HELPER_ORIGIN = "http://localhost:8765";
@@ -6,6 +8,7 @@ export function resolveKeyFinderConfiguration(windowObject) {
   const localHosts = new Set(["localhost", "127.0.0.1", ""]);
   const hostname = windowObject.location.hostname;
   const isLocalSite = localHosts.has(hostname);
+  const apiAvailable = !isPreviewHost(hostname);
   let savedApiBaseUrl = null;
   try {
     savedApiBaseUrl = windowObject.localStorage.getItem("jasperMusicApiBaseUrl");
@@ -26,11 +29,13 @@ export function resolveKeyFinderConfiguration(windowObject) {
   return {
     apiBaseUrl: apiBaseUrl.replace(/\/$/, ""),
     productionApiBaseUrl,
+    // Preview builds skip every analyzer request; see siteHost.mjs.
+    apiAvailable,
     youtubeHelperBaseUrl: youtubeHelperBaseUrl.replace(/\/$/, ""),
     // Public pages must not probe the optional loopback Helper on load; production CSP
     // connect-src does not list it, so every automatic probe is a console violation.
     autoProbeYoutubeHelper: isLocalSite,
-    youtubeSiteApiBaseUrlCandidates: Array.from(new Set([apiBaseUrl, productionApiBaseUrl])),
+    youtubeSiteApiBaseUrlCandidates: apiAvailable ? Array.from(new Set([apiBaseUrl, productionApiBaseUrl])) : [],
     youtubeHelperBaseUrlCandidates: Array.from(new Set([
       youtubeHelperBaseUrl,
       DEFAULT_HELPER_ORIGIN,

@@ -15,7 +15,7 @@ const read = file => fs.readFileSync(path.join(root, file), "utf8");
 const escape = text => text.replace(/[.?]/g, "\\$&");
 
 test("the cache key is the first ten hex digits of the stylesheet's SHA-256", () => {
-  assert.deepEqual(HASHED_STYLESHEETS, ["styles/v4.css", "styles/chord-lab.css"]);
+  assert.deepEqual(HASHED_STYLESHEETS, ["styles/pages.css", "styles/v4.css", "styles/chord-lab.css"]);
   HASHED_STYLESHEETS.forEach(file => {
     const expected = crypto.createHash("sha256").update(fs.readFileSync(path.join(root, file))).digest("hex").slice(0, 10);
     assert.equal(stylesheetVersion(file), expected, file);
@@ -30,14 +30,14 @@ test("adds the key to relative and root-relative links and leaves everything els
     '<link rel="stylesheet" href="styles/v4.css">',
     '<link rel="stylesheet" href="/styles/v4.css">',
     '<link rel="stylesheet" href="styles/chord-lab.css">',
-    '<link rel="stylesheet" href="styles/pages.css?v=20261019-v4-polish">',
+    '<link rel="stylesheet" href="styles/base.css?v=20261014-v3-liner-notes">',
     '<link rel="stylesheet" href="styles/v4.css?v=already">'
   ].join("\n");
   assert.equal(addStylesheetVersions(html), [
     `<link rel="stylesheet" href="${v4}">`,
     `<link rel="stylesheet" href="/${v4}">`,
     `<link rel="stylesheet" href="${lab}">`,
-    '<link rel="stylesheet" href="styles/pages.css?v=20261019-v4-polish">',
+    '<link rel="stylesheet" href="styles/base.css?v=20261014-v3-liner-notes">',
     '<link rel="stylesheet" href="styles/v4.css?v=already">'
   ].join("\n"));
   assert.equal(addStylesheetVersions(addStylesheetVersions(html)), addStylesheetVersions(html));

@@ -166,7 +166,16 @@ export function useKeyFinder(options = {}) {
     phase.value = "failed";
   }
 
+  function markApiUnavailableOnPreview() {
+    apiStatus.state = "is-offline";
+    apiStatus.code = "apiPreview";
+  }
+
   async function ensureApiIsReachable(signal) {
+    if (config.apiAvailable === false) {
+      markApiUnavailableOnPreview();
+      throw new Error("The Key Finder API is not available on preview builds.");
+    }
     try {
       await api.health(config.apiBaseUrl, signal);
       apiStatus.state = "is-online";
@@ -402,6 +411,10 @@ export function useKeyFinder(options = {}) {
 
   async function checkApiStatus() {
     if (isDisposed.value) return;
+    if (config.apiAvailable === false) {
+      markApiUnavailableOnPreview();
+      return;
+    }
     healthController?.abort();
     const controller = new AbortController();
     healthController = controller;
