@@ -10,7 +10,12 @@ test("pins the minimal private Vue and Vite foundation", () => {
   const packageJson = JSON.parse(read("package.json"));
 
   assert.equal(packageJson.name, "jam-tracks-hub");
+  // The one place the release version is pinned. A version bump changes this line,
+  // package.json and package-lock.json together; nothing else in the tests should.
   assert.equal(packageJson.version, "4.1.2");
+  const packageLock = JSON.parse(read("package-lock.json"));
+  assert.equal(packageLock.version, packageJson.version);
+  assert.equal(packageLock.packages[""].version, packageJson.version);
   assert.equal(packageJson.private, true);
   assert.equal(packageJson.engines.node, ">=22.12.0");
   assert.deepEqual(packageJson.dependencies, { vue: "3.5.42" });

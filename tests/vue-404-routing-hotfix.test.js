@@ -58,12 +58,10 @@ test("keeps the Vue 404 document safe at nested unknown URLs", () => {
   assert.match(header, /:href="item\.href"/);
 });
 
-test("keeps HTML routing implicit and records the patch version", () => {
-  const packageJson = JSON.parse(read("package.json"));
+test("keeps HTML routing implicit", () => {
   const verifier = read("tools/scripts/verify-cloudflare-build.js");
   const viteConfig = read("vite.config.mjs");
 
-  assert.equal(packageJson.version, "4.1.2");
   assert.match(verifier, /native 404-page fallback/);
   assert.match(verifier, /Worker-first routing is not limited to API paths/);
   assert.match(verifier, /404 local reference is not root-relative/);

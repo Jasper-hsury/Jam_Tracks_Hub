@@ -358,7 +358,7 @@ test("uses Vue text bindings and adds no analytics, URL, console, router, or dir
   assert.doesNotMatch(read("_headers"), /unsafe-eval|connect-src[^\n]*\*/);
 });
 
-test("keeps backend, established tools, CSS, and current version byte-identical", () => {
+test("keeps backend, established tools and CSS byte-identical", () => {
   backendFiles.forEach(file => {
     const hash = crypto.createHash("sha256").update(fs.readFileSync(path.join(root, file))).digest("hex");
     assert.equal(hash, backendHashes[file], file);
@@ -372,7 +372,6 @@ test("keeps backend, established tools, CSS, and current version byte-identical"
     const hash = crypto.createHash("sha256").update(fs.readFileSync(path.join(root, file))).digest("hex");
     assert.equal(hash, expected, file);
   });
-  assert.equal(JSON.parse(read("package.json")).version, "4.1.2");
 });
 
 test("declares the complete 44-case responsive matrix and preserves mobile-safe controls", () => {

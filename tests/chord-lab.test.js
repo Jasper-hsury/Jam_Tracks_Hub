@@ -150,12 +150,12 @@ test("registers Chord Lab as its own Vue page in the Tools menu", () => {
   assert.match(html, /data-i18n-title="titles\.chordLab" data-vue-page="chord-lab"/);
   assert.match(html, /<div id="vue-chord-lab-root"><\/div>/);
   assert.match(html, /<script type="module" src="\/src\/entries\/chord-lab\.js"><\/script>/);
-  assert.match(html, /styles\/chord-lab\.css\?v=20261122-chord-lab">\s*<link rel="stylesheet" href="styles\/tool-pages\.css/);
+  assert.match(html, /styles\/chord-lab\.css">\s*<link rel="stylesheet" href="styles\/tool-pages\.css/);
   assert.match(read("src/entries/chord-lab.js"), /activePage: "chord-lab"/);
   const config = read("vite.config.mjs");
   assert.match(config, /"chord-lab": resolve\(root, "chord-lab\.html"\)/);
   assert.match(config, /"\/chord-lab", "\/chord-lab\.html"/);
-  assert.match(config, /"styles\/chord-lab\.css\?v=20261122-chord-lab"/);
+  assert.match(read("tools/scripts/stylesheet-versions.js"), /"styles\/chord-lab\.css"/);
   assert.match(read("tools/scripts/build-cloudflare.js"), /"chord-lab\.html",/);
   assert.match(read("tools/scripts/verify-cloudflare-build.js"), /Chord Lab compiled Vue entry is missing/);
   const header = read("src/components/site/SiteHeader.vue");

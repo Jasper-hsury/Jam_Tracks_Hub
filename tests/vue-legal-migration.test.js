@@ -53,11 +53,10 @@ test("renders the established Legal structure from canonical locale resources", 
   assert.equal(Object.keys(english.legal).length, 18);
 });
 
-test("keeps the Legal migration bounded at the current patch version", () => {
+test("keeps the Legal migration bounded", () => {
   const packageJson = JSON.parse(read("package.json"));
   const verifier = read("tools/scripts/verify-cloudflare-build.js");
 
-  assert.equal(packageJson.version, "4.1.2");
   assert.equal(packageJson.dependencies.vue, "3.5.42");
   assert.match(verifier, /const viteOwnedRootHtml = new Set\([^)]*"key-finder\.html"/);
   assert.match(verifier, /Legal canonical metadata differs/);
