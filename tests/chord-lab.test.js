@@ -155,7 +155,7 @@ test("registers Chord Lab as its own Vue page in the Tools menu", () => {
   const config = read("vite.config.mjs");
   assert.match(config, /"chord-lab": resolve\(root, "chord-lab\.html"\)/);
   assert.match(config, /"\/chord-lab", "\/chord-lab\.html"/);
-  assert.match(read("tools/scripts/stylesheet-versions.js"), /"styles\/chord-lab\.css"/);
+  assert.ok(require("../tools/scripts/asset-versions.js").HASHED_ASSETS.includes("styles/chord-lab.css"));
   assert.match(read("tools/scripts/build-cloudflare.js"), /"chord-lab\.html",/);
   assert.match(read("tools/scripts/verify-cloudflare-build.js"), /Chord Lab compiled Vue entry is missing/);
   const header = read("src/components/site/SiteHeader.vue");

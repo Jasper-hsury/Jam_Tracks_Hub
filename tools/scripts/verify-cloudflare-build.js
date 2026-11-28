@@ -1,6 +1,6 @@
 const fs = require("node:fs");
 const path = require("node:path");
-const { HASHED_STYLESHEETS, versionedStylesheet } = require("./stylesheet-versions.js");
+const { HASHED_ASSETS, versionedAsset } = require("./asset-versions.js");
 
 const root = path.resolve(__dirname, "../..");
 const dist = path.join(root, "dist");
@@ -16,9 +16,9 @@ const removedLegacyResources = [
   "styles/style.css",
   "src/i18n/useLegacyLocale.js"
 ];
-const PAGES_STYLESHEET = versionedStylesheet("styles/pages.css");
-const V4_STYLESHEET = versionedStylesheet("styles/v4.css");
-const CHORD_LAB_STYLESHEET = versionedStylesheet("styles/chord-lab.css");
+const PAGES_STYLESHEET = versionedAsset("styles/pages.css");
+const V4_STYLESHEET = versionedAsset("styles/v4.css");
+const CHORD_LAB_STYLESHEET = versionedAsset("styles/chord-lab.css");
 const workerConfig = JSON.parse(fs.readFileSync(path.join(root, "wrangler.jsonc"), "utf8"));
 
 function fail(message) {
@@ -105,30 +105,30 @@ if (!/<script type="module" crossorigin src="\/assets\/vue\/home-[^"]+\.js"><\/s
 }
 if (/src\/entries\/home\.js/.test(migratedHome)) fail("Homepage source entry leaked into production HTML");
 [
-  "scripts/theme-init.js?v=20261014-v3-paper-default",
-  "scripts/i18n-init.js?v=20260804-no-language-flash",
-  "styles/base.css?v=20261014-v3-liner-notes",
-  "styles/components.css?v=20261014-v3-liner-notes",
+  versionedAsset("scripts/theme-init.js"),
+  versionedAsset("scripts/i18n-init.js"),
+  versionedAsset("styles/base.css"),
+  versionedAsset("styles/components.css"),
   PAGES_STYLESHEET,
-  "styles/themes.css?v=20261018-v4-jazz-stage",
+  versionedAsset("styles/themes.css"),
   V4_STYLESHEET,
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
   "assets/vendor/gsap/SplitText.min.js",
-  "scripts/site-animations.js?v=20261018-v4-jazz-stage"
+  versionedAsset("scripts/site-animations.js")
 ].forEach(function(asset) {
   if (!migratedHome.includes(asset)) fail(`Homepage legacy asset path differs: ${asset}`);
 });
 if (/assets\/vue\/home-[^"]+\.css/.test(migratedHome)) fail("Homepage shared CSS was incorrectly rebundled");
 
-// Hashed stylesheets must reach production with their content key, never bare
-// or with a stale hand-written key.
+// Local stylesheets and scripts must reach production with their content key,
+// never bare or with a stale hand-written key.
 viteOwnedRootHtml.forEach(function(file) {
   const html = fs.readFileSync(path.join(dist, file), "utf8");
-  HASHED_STYLESHEETS.forEach(function(stylesheet) {
-    const links = html.match(new RegExp(`href="/?${stylesheet.replace(/[.]/g, "\\.")}[^"]*"`, "g")) || [];
+  HASHED_ASSETS.forEach(function(asset) {
+    const links = html.match(new RegExp(`(?:href|src)="/?${asset.replace(/[.]/g, "\\.")}[^"]*"`, "g")) || [];
     links.forEach(function(link) {
-      if (!link.includes(versionedStylesheet(stylesheet))) fail(`${file} links ${stylesheet} without its content key: ${link}`);
+      if (!link.includes(versionedAsset(asset))) fail(`${file} links ${asset} without its content key: ${link}`);
     });
   });
 });
@@ -162,14 +162,14 @@ Array.from(migrated404.matchAll(/(?:href|src)="([^"]+)"/g), match => match[1])
     if (!reference.startsWith("/")) fail(`404 local reference is not root-relative: ${reference}`);
   });
 [
-  "scripts/i18n-init.js?v=20260902-404-route-root",
-  "styles/base.css?v=20261014-v3-liner-notes",
-  "styles/components.css?v=20261014-v3-liner-notes",
+  versionedAsset("scripts/i18n-init.js"),
+  versionedAsset("styles/base.css"),
+  versionedAsset("styles/components.css"),
   PAGES_STYLESHEET,
-  "styles/themes.css?v=20261018-v4-jazz-stage",
+  versionedAsset("styles/themes.css"),
   V4_STYLESHEET,
-  "styles/secondary-pages.css?v=20261019-v4-polish",
-  "scripts/site-animations.js?v=20261018-v4-jazz-stage"
+  versionedAsset("styles/secondary-pages.css"),
+  versionedAsset("scripts/site-animations.js")
 ].forEach(function(asset) {
   if (!migrated404.includes(asset)) fail(`404 legacy asset path differs: ${asset}`);
 });
@@ -188,12 +188,12 @@ if (!/<script type="module" crossorigin src="\/assets\/vue\/legal-[^"]+\.js"><\/
 }
 if (/src\/entries\/legal\.js/.test(migratedLegal)) fail("Legal source entry leaked into production HTML");
 [
-  "styles/base.css?v=20261014-v3-liner-notes",
-  "styles/components.css?v=20261014-v3-liner-notes",
+  versionedAsset("styles/base.css"),
+  versionedAsset("styles/components.css"),
   PAGES_STYLESHEET,
-  "styles/themes.css?v=20261018-v4-jazz-stage",
+  versionedAsset("styles/themes.css"),
   V4_STYLESHEET,
-  "styles/secondary-pages.css?v=20261019-v4-polish"
+  versionedAsset("styles/secondary-pages.css")
 ].forEach(function(asset) {
   if (!migratedLegal.includes(asset)) fail(`Legal legacy asset path differs: ${asset}`);
 });
@@ -212,15 +212,15 @@ if (!/<script type="module" crossorigin src="\/assets\/vue\/privacy-[^"]+\.js"><
 }
 if (/src\/entries\/privacy\.js/.test(migratedPrivacy)) fail("Privacy source entry leaked into production HTML");
 [
-  "styles/base.css?v=20261014-v3-liner-notes",
-  "styles/components.css?v=20261014-v3-liner-notes",
+  versionedAsset("styles/base.css"),
+  versionedAsset("styles/components.css"),
   PAGES_STYLESHEET,
-  "styles/themes.css?v=20261018-v4-jazz-stage",
+  versionedAsset("styles/themes.css"),
   V4_STYLESHEET,
-  "styles/secondary-pages.css?v=20261019-v4-polish",
+  versionedAsset("styles/secondary-pages.css"),
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20261018-v4-jazz-stage"
+  versionedAsset("scripts/site-animations.js")
 ].forEach(function(asset) {
   if (!migratedPrivacy.includes(asset)) fail(`Privacy legacy asset path differs: ${asset}`);
 });
@@ -246,18 +246,18 @@ if (/src\/entries\/service-waking\.js/.test(migratedServiceWaking)) {
   fail("Service Waking source entry leaked into production HTML");
 }
 [
-  "scripts/theme-init.js?v=20261014-v3-paper-default",
-  "scripts/i18n-init.js?v=20260804-no-language-flash",
-  "styles/base.css?v=20261014-v3-liner-notes",
-  "styles/components.css?v=20261014-v3-liner-notes",
+  versionedAsset("scripts/theme-init.js"),
+  versionedAsset("scripts/i18n-init.js"),
+  versionedAsset("styles/base.css"),
+  versionedAsset("styles/components.css"),
   PAGES_STYLESHEET,
-  "styles/themes.css?v=20261018-v4-jazz-stage",
+  versionedAsset("styles/themes.css"),
   V4_STYLESHEET,
-  "styles/secondary-pages.css?v=20261019-v4-polish",
-  "scripts/site-config.js?v=20260729-youtube-key-api",
+  versionedAsset("styles/secondary-pages.css"),
+  versionedAsset("scripts/site-config.js"),
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20261018-v4-jazz-stage"
+  versionedAsset("scripts/site-animations.js")
 ].forEach(function(asset) {
   if (!migratedServiceWaking.includes(asset)) fail(`Service Waking legacy asset path differs: ${asset}`);
 });
@@ -282,17 +282,17 @@ if (/src\/entries\/feedback\.js/.test(migratedFeedback)) {
   fail("Feedback source entry leaked into production HTML");
 }
 [
-  "scripts/theme-init.js?v=20261014-v3-paper-default",
-  "scripts/i18n-init.js?v=20260804-no-language-flash",
-  "styles/base.css?v=20261014-v3-liner-notes",
-  "styles/components.css?v=20261014-v3-liner-notes",
+  versionedAsset("scripts/theme-init.js"),
+  versionedAsset("scripts/i18n-init.js"),
+  versionedAsset("styles/base.css"),
+  versionedAsset("styles/components.css"),
   PAGES_STYLESHEET,
-  "styles/themes.css?v=20261018-v4-jazz-stage",
+  versionedAsset("styles/themes.css"),
   V4_STYLESHEET,
-  "styles/secondary-pages.css?v=20261019-v4-polish",
+  versionedAsset("styles/secondary-pages.css"),
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20261018-v4-jazz-stage"
+  versionedAsset("scripts/site-animations.js")
 ].forEach(function(asset) {
   if (!migratedFeedback.includes(asset)) fail(`Feedback legacy asset path differs: ${asset}`);
 });
@@ -320,17 +320,17 @@ if (/src\/entries\/tracks\.js/.test(migratedTracks)) {
   fail("Tracks source entry leaked into production HTML");
 }
 [
-  "scripts/theme-init.js?v=20261014-v3-paper-default",
-  "scripts/i18n-init.js?v=20260804-no-language-flash",
-  "styles/base.css?v=20261014-v3-liner-notes",
-  "styles/components.css?v=20261014-v3-liner-notes",
+  versionedAsset("scripts/theme-init.js"),
+  versionedAsset("scripts/i18n-init.js"),
+  versionedAsset("styles/base.css"),
+  versionedAsset("styles/components.css"),
   PAGES_STYLESHEET,
-  "styles/themes.css?v=20261018-v4-jazz-stage",
+  versionedAsset("styles/themes.css"),
   V4_STYLESHEET,
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/Flip.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20261018-v4-jazz-stage"
+  versionedAsset("scripts/site-animations.js")
 ].forEach(function(asset) {
   if (!migratedTracks.includes(asset)) fail(`Tracks legacy asset path differs: ${asset}`);
 });
@@ -361,18 +361,18 @@ if (/src\/entries\/fretboard-trainer\.js/.test(migratedFretboardTrainer)) {
   fail("Fretboard Trainer source entry leaked into production HTML");
 }
 [
-  "scripts/theme-init.js?v=20261014-v3-paper-default",
-  "scripts/i18n-init.js?v=20260804-no-language-flash",
-  "styles/base.css?v=20261014-v3-liner-notes",
-  "styles/components.css?v=20261014-v3-liner-notes",
+  versionedAsset("scripts/theme-init.js"),
+  versionedAsset("scripts/i18n-init.js"),
+  versionedAsset("styles/base.css"),
+  versionedAsset("styles/components.css"),
   PAGES_STYLESHEET,
-  "styles/themes.css?v=20261018-v4-jazz-stage",
+  versionedAsset("styles/themes.css"),
   V4_STYLESHEET,
-  "styles/tool-pages.css?v=20261019-v4-polish",
-  "styles/fretboard-trainer.css?v=20261014-v3-liner-notes",
+  versionedAsset("styles/tool-pages.css"),
+  versionedAsset("styles/fretboard-trainer.css"),
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20261018-v4-jazz-stage"
+  versionedAsset("scripts/site-animations.js")
 ].forEach(function(asset) {
   if (!migratedFretboardTrainer.includes(asset)) fail(`Fretboard Trainer legacy asset path differs: ${asset}`);
 });
@@ -403,17 +403,17 @@ if (/src\/entries\/chord-progressions\.js/.test(migratedChordProgressions)) {
   fail("Chord Progressions source entry leaked into production HTML");
 }
 [
-  "scripts/theme-init.js?v=20261014-v3-paper-default",
-  "scripts/i18n-init.js?v=20260804-no-language-flash",
-  "styles/base.css?v=20261014-v3-liner-notes",
-  "styles/components.css?v=20261014-v3-liner-notes",
+  versionedAsset("scripts/theme-init.js"),
+  versionedAsset("scripts/i18n-init.js"),
+  versionedAsset("styles/base.css"),
+  versionedAsset("styles/components.css"),
   PAGES_STYLESHEET,
-  "styles/themes.css?v=20261018-v4-jazz-stage",
+  versionedAsset("styles/themes.css"),
   V4_STYLESHEET,
-  "styles/tool-pages.css?v=20261019-v4-polish",
+  versionedAsset("styles/tool-pages.css"),
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20261018-v4-jazz-stage"
+  versionedAsset("scripts/site-animations.js")
 ].forEach(function(asset) {
   if (!migratedChordProgressions.includes(asset)) fail(`Chord Progressions legacy asset path differs: ${asset}`);
 });
@@ -444,18 +444,18 @@ if (/src\/entries\/scale-explorer\.js/.test(migratedScaleExplorer)) {
   fail("Scale Explorer source entry leaked into production HTML");
 }
 [
-  "scripts/theme-init.js?v=20261014-v3-paper-default",
-  "scripts/i18n-init.js?v=20260804-no-language-flash",
-  "styles/base.css?v=20261014-v3-liner-notes",
-  "styles/components.css?v=20261014-v3-liner-notes",
+  versionedAsset("scripts/theme-init.js"),
+  versionedAsset("scripts/i18n-init.js"),
+  versionedAsset("styles/base.css"),
+  versionedAsset("styles/components.css"),
   PAGES_STYLESHEET,
-  "styles/themes.css?v=20261018-v4-jazz-stage",
+  versionedAsset("styles/themes.css"),
   V4_STYLESHEET,
-  "styles/tool-pages.css?v=20261019-v4-polish",
-  "styles/scale.css?v=20261014-v3-liner-notes",
+  versionedAsset("styles/tool-pages.css"),
+  versionedAsset("styles/scale.css"),
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20261018-v4-jazz-stage"
+  versionedAsset("scripts/site-animations.js")
 ].forEach(function(asset) {
   if (!migratedScaleExplorer.includes(asset)) fail(`Scale Explorer legacy asset path differs: ${asset}`);
 });
@@ -486,19 +486,19 @@ if (/src\/entries\/chord-dictionary\.js/.test(migratedChordDictionary)) {
   fail("Chord Dictionary source entry leaked into production HTML");
 }
 [
-  "scripts/theme-init.js?v=20261014-v3-paper-default",
-  "scripts/i18n-init.js?v=20260804-no-language-flash",
-  "styles/base.css?v=20261014-v3-liner-notes",
-  "styles/components.css?v=20261014-v3-liner-notes",
+  versionedAsset("scripts/theme-init.js"),
+  versionedAsset("scripts/i18n-init.js"),
+  versionedAsset("styles/base.css"),
+  versionedAsset("styles/components.css"),
   PAGES_STYLESHEET,
-  "styles/themes.css?v=20261018-v4-jazz-stage",
+  versionedAsset("styles/themes.css"),
   V4_STYLESHEET,
-  "styles/tool-pages.css?v=20261019-v4-polish",
-  "styles/chord-dictionary.css?v=20261014-v3-liner-notes",
+  versionedAsset("styles/tool-pages.css"),
+  versionedAsset("styles/chord-dictionary.css"),
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/Flip.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20261018-v4-jazz-stage"
+  versionedAsset("scripts/site-animations.js")
 ].forEach(function(asset) {
   if (!migratedChordDictionary.includes(asset)) fail(`Chord Dictionary legacy asset path differs: ${asset}`);
 });
@@ -524,10 +524,10 @@ if (/src\/entries\/chord-lab\.js/.test(chordLabHtml)) {
 }
 [
   V4_STYLESHEET,
-  "styles/tool-pages.css?v=20261019-v4-polish",
-  "styles/chord-dictionary.css?v=20261014-v3-liner-notes",
+  versionedAsset("styles/tool-pages.css"),
+  versionedAsset("styles/chord-dictionary.css"),
   CHORD_LAB_STYLESHEET,
-  "scripts/site-animations.js?v=20261018-v4-jazz-stage"
+  versionedAsset("scripts/site-animations.js")
 ].forEach(function(asset) {
   if (!chordLabHtml.includes(asset)) fail(`Chord Lab legacy asset path differs: ${asset}`);
 });
@@ -553,19 +553,19 @@ if (/src\/entries\/progression-writer\.js/.test(migratedProgressionWriter)) {
   fail("Progression Writer source entry leaked into production HTML");
 }
 [
-  "scripts/theme-init.js?v=20261014-v3-paper-default",
-  "scripts/i18n-init.js?v=20260804-no-language-flash",
-  "styles/base.css?v=20261014-v3-liner-notes",
-  "styles/components.css?v=20261014-v3-liner-notes",
-  "styles/chord-dictionary.css?v=20261014-v3-liner-notes",
+  versionedAsset("scripts/theme-init.js"),
+  versionedAsset("scripts/i18n-init.js"),
+  versionedAsset("styles/base.css"),
+  versionedAsset("styles/components.css"),
+  versionedAsset("styles/chord-dictionary.css"),
   PAGES_STYLESHEET,
-  "styles/themes.css?v=20261018-v4-jazz-stage",
+  versionedAsset("styles/themes.css"),
   V4_STYLESHEET,
-  "styles/tool-pages.css?v=20261019-v4-polish",
-  "scripts/chord-shapes.js?v=20261020-extension-labels",
+  versionedAsset("styles/tool-pages.css"),
+  versionedAsset("scripts/chord-shapes.js"),
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20261018-v4-jazz-stage"
+  versionedAsset("scripts/site-animations.js")
 ].forEach(function(asset) {
   if (!migratedProgressionWriter.includes(asset)) fail(`Progression Writer legacy asset path differs: ${asset}`);
 });
@@ -596,17 +596,17 @@ if (/src\/entries\/key-finder\.js/.test(migratedKeyFinder)) {
   fail("Key Finder source entry leaked into production HTML");
 }
 [
-  "scripts/theme-init.js?v=20261014-v3-paper-default",
-  "scripts/i18n-init.js?v=20260804-no-language-flash",
-  "styles/base.css?v=20261014-v3-liner-notes",
-  "styles/components.css?v=20261014-v3-liner-notes",
+  versionedAsset("scripts/theme-init.js"),
+  versionedAsset("scripts/i18n-init.js"),
+  versionedAsset("styles/base.css"),
+  versionedAsset("styles/components.css"),
   PAGES_STYLESHEET,
-  "styles/themes.css?v=20261018-v4-jazz-stage",
+  versionedAsset("styles/themes.css"),
   V4_STYLESHEET,
-  "styles/tool-pages.css?v=20261019-v4-polish",
+  versionedAsset("styles/tool-pages.css"),
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
-  "scripts/site-animations.js?v=20261018-v4-jazz-stage"
+  versionedAsset("scripts/site-animations.js")
 ].forEach(function(asset) {
   if (!migratedKeyFinder.includes(asset)) fail(`Key Finder legacy asset path differs: ${asset}`);
 });
@@ -640,22 +640,22 @@ if (/src\/entries\/song-workspace\.js/.test(migratedSongWorkspace)) {
   fail("Song Workspace source entry leaked into production HTML");
 }
 [
-  "scripts/theme-init.js?v=20261014-v3-paper-default",
-  "scripts/i18n-init.js?v=20260826-song-workspace",
-  "styles/base.css?v=20261014-v3-liner-notes",
-  "styles/components.css?v=20261014-v3-liner-notes",
+  versionedAsset("scripts/theme-init.js"),
+  versionedAsset("scripts/i18n-init.js"),
+  versionedAsset("styles/base.css"),
+  versionedAsset("styles/components.css"),
   PAGES_STYLESHEET,
-  "styles/themes.css?v=20261018-v4-jazz-stage",
+  versionedAsset("styles/themes.css"),
   V4_STYLESHEET,
-  "styles/chord-dictionary.css?v=20261014-v3-liner-notes",
-  "styles/song-workspace.css?v=20261014-v3-liner-notes",
-  "styles/song-workspace-v3.css?v=20261017-polish",
-  "scripts/chord-shapes.js?v=20261020-extension-labels",
-  "scripts/song-workspace-core.js?v=20260827-picker-json-fix",
-  "scripts/song-workspace-storage.js?v=20260828-settings-ux",
-  "scripts/song-workspace-import.js?v=20260827-picker-json-fix",
+  versionedAsset("styles/chord-dictionary.css"),
+  versionedAsset("styles/song-workspace.css"),
+  versionedAsset("styles/song-workspace-v3.css"),
+  versionedAsset("scripts/chord-shapes.js"),
+  versionedAsset("scripts/song-workspace-core.js"),
+  versionedAsset("scripts/song-workspace-storage.js"),
+  versionedAsset("scripts/song-workspace-import.js"),
   "assets/vendor/gsap/gsap.min.js",
-  "scripts/site-animations.js?v=20261018-v4-jazz-stage"
+  versionedAsset("scripts/site-animations.js")
 ].forEach(function(asset) {
   if (!migratedSongWorkspace.includes(asset)) fail(`Song Workspace legacy-compatible asset path differs: ${asset}`);
 });

@@ -19,7 +19,7 @@ test("the homepage title stays still instead of the old SplitText character rise
     assert.match(indexHtml, /<div id="vue-home-root"><\/div>/);
     assert.match(indexHtml, /assets\/vendor\/gsap\/SplitText\.min\.js/);
     assert.doesNotMatch(indexHtml, /scripts\/i18n\.js/);
-    assert.match(indexHtml, /scripts\/site-animations\.js\?v=20261018-v4-jazz-stage/);
+    assert.match(indexHtml, /scripts\/site-animations\.js"/);
     assert.doesNotMatch(animationsJs, /\.home-hero h1|\.home-hero \.signature-slogan|home-split-char|animateHomeHeroText|homeHeroSplits/);
     assert.match(animationsJs, /The homepage title stays still; the record on its stage carries the motion \(HomeView\.vue\)\./);
 });
@@ -81,7 +81,7 @@ test("Privacy uses stable policy typography without panel hover or title transfo
 
 test("Song Workspace reuses the shared page entrance without changing its application modules", () => {
     assert.match(workspaceHtml, /assets\/vendor\/gsap\/gsap\.min\.js/);
-    assert.match(workspaceHtml, /scripts\/site-animations\.js\?v=20261018-v4-jazz-stage/);
+    assert.match(workspaceHtml, /scripts\/site-animations\.js"/);
     assert.match(animationsJs, /const isSongWorkspacePage = Boolean\(document\.querySelector\("\.song-workspace-page"\)\)/);
     assert.match(animationsJs, /"\.song-workspace-hero > \.result-kicker"[\s\S]*"\.workspace-create-area > \.workspace-section-heading"/s);
     assert.match(animationsJs, /if \(isSongWorkspacePage\) \{[\s\S]*\.workspace-entry-grid > \.workspace-entry-card[\s\S]*stagger:\s*0\.065/s);

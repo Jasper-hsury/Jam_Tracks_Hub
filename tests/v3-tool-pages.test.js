@@ -6,7 +6,8 @@ const test = require("node:test");
 const root = path.resolve(__dirname, "..");
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
 const css = read("styles/tool-pages.css");
-const TOOL_STYLESHEET = "styles/tool-pages.css?v=20261019-v4-polish";
+const TOOL_STYLESHEET = "styles/tool-pages.css";
+const { HASHED_ASSETS, versionedAsset } = require("../tools/scripts/asset-versions.js");
 
 const toolPages = [
   { html: "chord-dictionary.html", view: "ChordDictionaryView", aside: "standardTuning" },
@@ -24,9 +25,9 @@ test("every tool page loads the v3 tool stylesheet right before v4.css", () => {
     const links = source.match(/<link rel="stylesheet" href="styles\/[^"]+">/g);
     assert.equal(links.at(-2), `<link rel="stylesheet" href="${TOOL_STYLESHEET}">`, html);
   });
-  assert.ok(read("vite.config.mjs").includes(`"${TOOL_STYLESHEET}"`));
+  assert.ok(HASHED_ASSETS.includes(TOOL_STYLESHEET));
   const verifier = read("tools/scripts/verify-cloudflare-build.js");
-  assert.equal(verifier.split(`"${TOOL_STYLESHEET}"`).length - 1, toolPages.length);
+  assert.equal(verifier.split(`versionedAsset("${TOOL_STYLESHEET}")`).length - 1, toolPages.length);
 });
 
 test("other pages keep their stylesheets unchanged", () => {
@@ -164,7 +165,7 @@ test("the band is the v4 stage navy in both themes and every page fetches the ne
   assert.equal((themes.match(/--band: #0f2b4c;\s*--band-edge: #1c3a5e;\s*--on-band: #f1e9d8;\s*--on-band-muted: #c9d3de;\s*--accent-on-band: #f2b705;/g) || []).length, 2);
   const pages = fs.readdirSync(root).filter(file => file.endsWith(".html") && read(file).includes("themes.css"));
   assert.ok(pages.length >= 14);
-  pages.forEach(page => assert.match(read(page), /themes\.css\?v=20261018-v4-jazz-stage"/, page));
+  pages.forEach(page => assert.match(read(page), /themes\.css"/, page));
   assert.doesNotMatch(read("vite.config.mjs") + read("tools/scripts/verify-cloudflare-build.js"), /themes\.css\?v=20261014-v3-(?:liner-notes|cocoa-band)/);
 });
 

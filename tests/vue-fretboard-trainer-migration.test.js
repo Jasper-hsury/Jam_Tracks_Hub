@@ -42,10 +42,10 @@ test("preserves Fretboard Trainer SEO, analytics, CSS, and animation assets", ()
   assert.match(html, /property="og:url" content="https:\/\/jamtrackshub\.com\/fretboard-trainer"/);
   assert.match(html, /name="twitter:card" content="summary_large_image"/);
   assert.match(html, /<script defer src="https:\/\/cloud\.umami\.is\/script\.js" data-website-id="[^"]+"><\/script>/);
-  assert.match(html, /styles\/fretboard-trainer\.css\?v=20261014-v3-liner-notes/);
+  assert.match(html, /styles\/fretboard-trainer\.css"/);
   assert.match(html, /assets\/vendor\/gsap\/gsap\.min\.js/);
   assert.match(html, /assets\/vendor\/gsap\/ScrollTrigger\.min\.js/);
-  assert.match(html, /scripts\/site-animations\.js\?v=20261018-v4-jazz-stage/);
+  assert.match(html, /scripts\/site-animations\.js"/);
   assert.doesNotMatch(html, /data-umami-event|unsafe-eval|unsafe-inline|vue(?:\.global)?\.js/);
 });
 

@@ -5,7 +5,7 @@ const test = require("node:test");
 
 const root = path.resolve(__dirname, "..");
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
-const { versionedStylesheet } = require("../tools/scripts/stylesheet-versions.js");
+const { versionedAsset } = require("../tools/scripts/asset-versions.js");
 const css = read("styles/v4.css");
 const themes = read("styles/themes.css");
 const pages = fs.readdirSync(root).filter(file => file.endsWith(".html") && read(file).includes("themes.css"));
@@ -19,12 +19,12 @@ test("every page loads the v4 stylesheet last, and the build adds its content ke
     assert.match(links.at(-1), /href="\/?styles\/v4\.css"/, page);
   });
   const config = read("vite.config.mjs");
-  assert.match(config, /HASHED_STYLESHEETS\.map\(stylesheetVersions\.versionedStylesheet\)/);
-  assert.match(config, /plugins: \[versionHashedStylesheets\(\), \.\.\.preserveLegacyHtmlAssets\(\), vue\(\)\]/);
+  assert.match(config, /HASHED_ASSETS\.map\(assetVersions\.versionedAsset\)/);
+  assert.match(config, /plugins: \[versionHashedAssets\(\), \.\.\.preserveLegacyHtmlAssets\(\), vue\(\)\]/);
   const verifier = read("tools/scripts/verify-cloudflare-build.js");
-  assert.match(verifier, /const V4_STYLESHEET = versionedStylesheet\("styles\/v4\.css"\);/);
+  assert.match(verifier, /const V4_STYLESHEET = versionedAsset\("styles\/v4\.css"\);/);
   assert.equal(verifier.split("  V4_STYLESHEET,").length - 1, 15);
-  assert.match(versionedStylesheet("styles/v4.css"), /^styles\/v4\.css\?v=[0-9a-f]{10}$/);
+  assert.match(versionedAsset("styles/v4.css"), /^styles\/v4\.css\?v=[0-9a-f]{10}$/);
 });
 
 test("day and night themes use the Jazz Stage palette and the stored theme values stay the same", () => {

@@ -2,39 +2,17 @@ import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
-import stylesheetVersions from "./tools/scripts/stylesheet-versions.js";
+import assetVersions from "./tools/scripts/asset-versions.js";
 
 const root = fileURLToPath(new URL(".", import.meta.url));
 const viteOwnedHtml = new Set(["/", "/index.html", "/404.html", "/legal.html", "/privacy-policy.html", "/service-waking.html", "/feedback.html", "/tracks", "/tracks.html", "/fretboard-trainer", "/fretboard-trainer.html", "/chord-progressions", "/chord-progressions.html", "/scale", "/scale.html", "/chord-dictionary", "/chord-dictionary.html", "/chord-lab", "/chord-lab.html", "/progression-writer", "/progression-writer.html", "/key-finder", "/key-finder.html", "/song-workspace", "/song-workspace.html"]);
 const legacyHtmlAssets = [
   "assets/images/icon.png",
-  "scripts/theme-init.js?v=20261014-v3-paper-default",
-  "scripts/i18n-init.js?v=20260804-no-language-flash",
-  "scripts/i18n-init.js?v=20260902-404-route-root",
-  "scripts/i18n-init.js?v=20260826-song-workspace",
-  "styles/base.css?v=20261014-v3-liner-notes",
-  "styles/components.css?v=20261014-v3-liner-notes",
-  "styles/themes.css?v=20261018-v4-jazz-stage",
-  "styles/fretboard-trainer.css?v=20261014-v3-liner-notes",
-  "styles/scale.css?v=20261014-v3-liner-notes",
-  "styles/chord-dictionary.css?v=20261014-v3-liner-notes",
-  "styles/chord-dictionary.css?v=20261014-v3-liner-notes",
-  "styles/song-workspace.css?v=20261014-v3-liner-notes",
-  "styles/song-workspace-v3.css?v=20261017-polish",
-  "styles/tool-pages.css?v=20261019-v4-polish",
-  "styles/secondary-pages.css?v=20261019-v4-polish",
-  "scripts/site-config.js?v=20260729-youtube-key-api",
   "assets/vendor/gsap/gsap.min.js",
   "assets/vendor/gsap/Flip.min.js",
   "assets/vendor/gsap/ScrollTrigger.min.js",
   "assets/vendor/gsap/SplitText.min.js",
-  "scripts/site-animations.js?v=20261018-v4-jazz-stage",
-  "scripts/chord-shapes.js?v=20261020-extension-labels",
-  "scripts/chord-shapes.js?v=20261020-extension-labels",
-  "scripts/song-workspace-core.js?v=20260827-picker-json-fix",
-  "scripts/song-workspace-storage.js?v=20260828-settings-ux",
-  "scripts/song-workspace-import.js?v=20260827-picker-json-fix",
-  ...stylesheetVersions.HASHED_STYLESHEETS.map(stylesheetVersions.versionedStylesheet)
+  ...assetVersions.HASHED_ASSETS.map(assetVersions.versionedAsset)
 ];
 const legacyAssetSentinel = "https://vite-preserved-legacy.invalid/";
 
@@ -43,15 +21,15 @@ function isViteOwned(context) {
     || Array.from(viteOwnedHtml).some(page => context.filename?.endsWith(page));
 }
 
-// Runs before the legacy-asset hooks so they see the versioned stylesheet paths.
-function versionHashedStylesheets() {
+// Runs before the legacy-asset hooks so they see the versioned asset paths.
+function versionHashedAssets() {
   return {
-    name: "jth:version-hashed-stylesheets",
+    name: "jth:version-hashed-assets",
     enforce: "pre",
     transformIndexHtml: {
       order: "pre",
       handler(html, context) {
-        return isViteOwned(context) ? stylesheetVersions.addStylesheetVersions(html) : html;
+        return isViteOwned(context) ? assetVersions.addAssetVersions(html) : html;
       }
     }
   };
@@ -96,7 +74,7 @@ function preserveLegacyHtmlAssets() {
 export default defineConfig({
   base: "/",
   publicDir: false,
-  plugins: [versionHashedStylesheets(), ...preserveLegacyHtmlAssets(), vue()],
+  plugins: [versionHashedAssets(), ...preserveLegacyHtmlAssets(), vue()],
   build: {
     outDir: "dist",
     emptyOutDir: true,

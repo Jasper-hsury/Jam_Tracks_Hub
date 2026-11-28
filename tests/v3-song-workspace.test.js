@@ -6,7 +6,8 @@ const test = require("node:test");
 const root = path.resolve(__dirname, "..");
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
 const css = read("styles/song-workspace-v3.css");
-const STYLESHEET = "styles/song-workspace-v3.css?v=20261017-polish";
+const STYLESHEET = "styles/song-workspace-v3.css";
+const { HASHED_ASSETS, versionedAsset } = require("../tools/scripts/asset-versions.js");
 const SCOPE = /^html\[data-theme(?:="default")?\](?::lang\(zh\))? body\[data-vue-page="song-workspace"\]/;
 
 function splitTopLevel(group) {
@@ -30,8 +31,8 @@ test("Song Workspace loads the v3 stylesheet right before v4.css, and only Song 
   const html = read("song-workspace.html");
   const links = html.match(/<link rel="stylesheet" href="styles\/[^"]+">/g);
   assert.equal(links.at(-2), `<link rel="stylesheet" href="${STYLESHEET}">`);
-  assert.ok(read("vite.config.mjs").includes(`"${STYLESHEET}"`));
-  assert.ok(read("tools/scripts/verify-cloudflare-build.js").includes(`"${STYLESHEET}"`));
+  assert.ok(HASHED_ASSETS.includes(STYLESHEET));
+  assert.ok(read("tools/scripts/verify-cloudflare-build.js").includes(`versionedAsset("${STYLESHEET}")`));
   fs.readdirSync(root).filter(file => file.endsWith(".html") && file !== "song-workspace.html")
     .forEach(file => assert.doesNotMatch(read(file), /song-workspace-v3\.css/, file));
 });
