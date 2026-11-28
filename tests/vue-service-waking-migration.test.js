@@ -29,7 +29,7 @@ test("preserves Service Waking metadata, analytics, shell, and shared runtime", 
   assert.match(html, /<meta property="og:url" content="https:\/\/jamtrackshub\.com\/service-waking">/);
   assert.match(html, /<body data-i18n-title="service\.wakingAnalyzer">/);
   assert.match(html, /<script defer src="https:\/\/cloud\.umami\.is\/script\.js" data-website-id="[^"]+"><\/script>/);
-  assert.match(html, /scripts\/site-config\.js\?v=20260729-youtube-key-api/);
+  assert.match(html, /scripts\/site-config\.js"/);
   assert.doesNotMatch(html, /<nav class="navbar"/);
   assert.doesNotMatch(html, /<footer class="footer">/);
   assert.doesNotMatch(html, /scripts\/(?:site|i18n)\.js/);

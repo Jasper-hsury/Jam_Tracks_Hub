@@ -58,17 +58,16 @@ test("the record slides out only for hover-capable pointers without reduced moti
 test("pages.css gets its cache key from its content, so new markup never meets a cached stylesheet", () => {
   const pages = ["tracks.html", "index.html", "song-workspace.html"];
   pages.forEach(page => assert.match(read(page), /href="styles\/pages\.css"/, page));
-  assert.ok(require("../tools/scripts/stylesheet-versions.js").HASHED_STYLESHEETS.includes("styles/pages.css"));
+  assert.ok(require("../tools/scripts/asset-versions.js").HASHED_ASSETS.includes("styles/pages.css"));
 });
 
 test("the Tracks toolbar animates in once, from the entrance timeline only", () => {
   const animations = read("scripts/site-animations.js");
   assert.match(animations, /timeline\.from\("\.tracks-library-page \.track-controls"/);
   assert.match(animations, /\.filter\(target => !target\.matches\("\.tracks-library-page \.track-controls"\)\)/);
-  const key = "scripts/site-animations.js?v=20261018-v4-jazz-stage";
   fs.readdirSync(root).filter(file => file.endsWith(".html") && read(file).includes("site-animations.js"))
-    .forEach(file => assert.ok(read(file).includes(key), file));
-  assert.equal(read("vite.config.mjs").split("scripts/site-animations.js?v=").length - 1, 1);
+    .forEach(file => assert.match(read(file), /src="\/?scripts\/site-animations\.js"/, file));
+  assert.ok(require("../tools/scripts/asset-versions.js").HASHED_ASSETS.includes("scripts/site-animations.js"));
 });
 
 test("Tracks shares the tool pages' column, heading size and compact centred phone heading", () => {

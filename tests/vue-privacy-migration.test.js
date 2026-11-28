@@ -36,14 +36,14 @@ test("preserves Privacy metadata, analytics, theme, locale, shell, and animation
   assert.match(html, /<link rel="canonical" href="https:\/\/jamtrackshub\.com\/privacy-policy">/);
   assert.match(html, /<meta property="og:url" content="https:\/\/jamtrackshub\.com\/privacy-policy">/);
   assert.match(html, /<body data-i18n-title="titles\.privacy">/);
-  assert.match(html, /scripts\/theme-init\.js\?v=20261014-v3-paper-default/);
-  assert.match(html, /scripts\/i18n-init\.js\?v=20260804-no-language-flash/);
+  assert.match(html, /scripts\/theme-init\.js"/);
+  assert.match(html, /scripts\/i18n-init\.js"/);
   assert.match(html, /<script defer src="https:\/\/cloud\.umami\.is\/script\.js" data-website-id="[^"]+"><\/script>/);
   assert.doesNotMatch(html, /<nav class="navbar"/);
   assert.doesNotMatch(html, /<footer class="footer">/);
   assert.doesNotMatch(html, /scripts\/(?:site|i18n)\.js/);
   assert.match(html, /assets\/vendor\/gsap\/gsap\.min\.js/);
-  assert.match(html, /scripts\/site-animations\.js\?v=20261018-v4-jazz-stage/);
+  assert.match(html, /scripts\/site-animations\.js"/);
 });
 
 test("renders the established Privacy structure from canonical locale resources", () => {

@@ -6,7 +6,8 @@ const test = require("node:test");
 const root = path.resolve(__dirname, "..");
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
 const css = read("styles/secondary-pages.css");
-const STYLESHEET = "styles/secondary-pages.css?v=20261019-v4-polish";
+const STYLESHEET = "styles/secondary-pages.css";
+const { HASHED_ASSETS, versionedAsset } = require("../tools/scripts/asset-versions.js");
 const PAGES = {
   "feedback.html": "",
   "legal.html": "",
@@ -38,9 +39,9 @@ test("the five secondary pages load the v3 stylesheet right before v4.css, and n
     const links = read(file).match(/<link rel="stylesheet" href="\/?styles\/[^"]+">/g);
     assert.equal(links.at(-2), `<link rel="stylesheet" href="${prefix}${STYLESHEET}">`, file);
   });
-  assert.ok(read("vite.config.mjs").includes(`"${STYLESHEET}"`));
+  assert.ok(HASHED_ASSETS.includes(STYLESHEET));
   const verifier = read("tools/scripts/verify-cloudflare-build.js");
-  assert.equal(verifier.split(`"${STYLESHEET}"`).length - 1, Object.keys(PAGES).length);
+  assert.equal(verifier.split(`versionedAsset("${STYLESHEET}")`).length - 1, Object.keys(PAGES).length);
   fs.readdirSync(root).filter(file => file.endsWith(".html") && !(file in PAGES))
     .forEach(file => assert.doesNotMatch(read(file), /secondary-pages\.css/, file));
 });
